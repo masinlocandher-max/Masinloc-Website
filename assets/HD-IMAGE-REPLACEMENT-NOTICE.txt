@@ -1,0 +1,1 @@
+HD tourism image replacement is in progress. Do not use low-resolution placeholder assets in production.
