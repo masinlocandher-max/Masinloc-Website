@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#071d58">
+<title>Masinloc Connect Admin</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div id="loginView" class="login-shell">
+  <section class="login-card">
+    <img src="assets/masinloc-logo.webp" alt="Masinloc Zambales" class="admin-logo">
+    <p class="kicker">PRIVATE WORKSPACE</p>
+    <h1>Masinloc Connect Admin</h1>
+    <p class="muted">Review submissions, manage listings, verify stories, and handle resume requests.</p>
+    <form id="passwordForm" class="stack">
+      <label>Email<input id="email" type="email" autocomplete="email" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <button class="primary" type="submit">Sign in</button>
+    </form>
+    <div class="divider"><span>or</span></div>
+    <button id="magicLinkBtn" class="secondary" type="button">Send me a secure sign-in link</button>
+    <p id="loginMessage" class="message" aria-live="polite"></p>
+  </section>
+</div>
+
+<div id="appView" hidden>
+  <header class="topbar">
+    <div class="brand-row"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"><div><strong>Masinloc Connect</strong><span>Admin Workspace</span></div></div>
+    <div class="top-actions"><span id="adminEmail"></span><button id="refreshBtn">Refresh</button><button id="logoutBtn">Sign out</button></div>
+  </header>
+
+  <main class="dashboard">
+    <section class="hero-row">
+      <div><p class="kicker">SUBMISSION CONTROL CENTER</p><h1>Community submissions</h1><p class="muted">Everything here is private until you decide otherwise.</p></div>
+      <button id="exportBtn" class="secondary">Export current view</button>
+    </section>
+
+    <section class="metrics" id="metrics"></section>
+
+    <section class="workspace">
+      <div class="toolbar">
+        <div class="tabs" id="tabs">
+          <button class="active" data-type="business">Business</button>
+          <button data-type="story">Story / History</button>
+          <button data-type="professional">Professionals</button>
+          <button data-type="resume">Resume Support</button>
+        </div>
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Search submissions">
+          <select id="statusFilter"><option value="">All statuses</option></select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+        <div id="emptyState" class="empty" hidden>No submissions found.</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="detailModal" class="modal" hidden>
+  <div class="modal-card">
+    <button id="closeModal" class="close" aria-label="Close">×</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+<script type="module" src="admin.js"></script>
+</body>
+</html>
