@@ -3,7 +3,6 @@
     if(!input || input.type!=='file') return;
     if(input.name==='brandLogo') input.accept='image/jpeg,image/png,image/webp';
     if(input.name==='media') input.accept='image/jpeg,image/png,image/webp,application/pdf';
-    if(input.name==='existingResume') input.accept='application/pdf';
   }
 
   document.addEventListener('click',e=>{
@@ -18,31 +17,14 @@
     const files=[...input.files];
     const allowed=input.name==='brandLogo'
       ? new Set(['image/jpeg','image/png','image/webp'])
-      : input.name==='media'
-        ? new Set(['image/jpeg','image/png','image/webp','application/pdf'])
-        : new Set(['application/pdf']);
+      : new Set(['image/jpeg','image/png','image/webp','application/pdf']);
     const bad=files.find(f=>!allowed.has(f.type));
     if(bad){
       input.value='';
-      alert(input.name==='existingResume'
-        ? 'For security, resumes must be uploaded as PDF.'
-        : 'For security, documents must be PDF. Images may be JPG, PNG, or WebP.');
+      alert('For security, documents must be PDF. Images may be JPG, PNG, or WebP.');
     }
   },true);
 
   window.masinlocTurnstileToken='';
   window.masinlocSetTurnstileToken=function(token){ window.masinlocTurnstileToken=token||''; };
-
-  const nativeFetch=window.fetch.bind(window);
-  window.fetch=function(input,init){
-    try{
-      const url=typeof input==='string'?input:(input&&input.url)||'';
-      if(url.includes('/functions/v1/submit-masinloc') && init && init.body instanceof FormData){
-        if(window.masinlocTurnstileToken && !init.body.has('turnstileToken')){
-          init.body.append('turnstileToken',window.masinlocTurnstileToken);
-        }
-      }
-    }catch{}
-    return nativeFetch(input,init);
-  };
 })();
