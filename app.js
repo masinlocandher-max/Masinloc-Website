@@ -49,6 +49,7 @@
     delete clean.brandLogo;
     delete clean.media;
     form.append('payload',JSON.stringify(clean));
+    if(window.masinlocTurnstileToken) form.append('turnstileToken',window.masinlocTurnstileToken);
     selectedFilesFor(category).forEach((file,i)=>form.append(`file_${i}`,file,file.name));
 
     const response=await fetch(ENDPOINT,{method:'POST',body:form});
