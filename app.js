@@ -15,7 +15,6 @@
   function selectedFilesFor(category){
     if(category==='business') return fileStore.brandLogo||[];
     if(category==='story') return fileStore.media||[];
-    if(category==='resume') return fileStore.existingResume||[];
     return [];
   }
 
@@ -49,7 +48,6 @@
     delete clean.consent;
     delete clean.brandLogo;
     delete clean.media;
-    delete clean.existingResume;
     form.append('payload',JSON.stringify(clean));
     selectedFilesFor(category).forEach((file,i)=>form.append(`file_${i}`,file,file.name));
 
@@ -72,7 +70,7 @@
     const note=document.querySelector('#successView .success-small');
     if(category==='resume'){
       lead.textContent='Your resume information has been submitted.';
-      note.textContent='Your information can now be reviewed and organized for resume preparation and future job-application support.';
+      note.textContent='We will use your submitted credentials to prepare your resume using the unified Masinloc Connect resume design.';
     }else if(category==='professional' && (payload.publicProfile==='no' || payload.publicProfile===false)){
       lead.textContent='Thank you for your submission.';
       note.textContent='Your professional profile will not be posted publicly, as requested.';
@@ -87,6 +85,14 @@
   const base=document.createElement('script');
   base.src='app-base.js';
   base.onload=()=>{
+    configs.resume.steps[3]={
+      label:'Review',
+      title:'Review your resume information.',
+      help:'We will use these details to prepare your resume using one standard Masinloc Connect design.',
+      review:true,
+      consent:'I confirm that the information I submitted may be used to prepare my resume and support future job applications.'
+    };
+
     show=function(name){
       Object.entries(views).forEach(([k,v])=>{
         const active=k===name;
@@ -124,7 +130,7 @@
 
         const modal=document.createElement('div');
         modal.className='resume-modal';
-        modal.innerHTML=`<div class="resume-modal-card"><button class="modal-close" type="button" id="resumeNoTop">×</button><p class="modal-kicker">YOUR PROFILE WILL STAY PRIVATE</p><h2>Would you like help preparing a resume?</h2><p>We can use your professional information as a starting point, then ask a few more questions so your credentials can later be organized into a resume for job applications.</p><div class="modal-actions"><button type="button" class="modal-primary" id="resumeYes">Yes, help me with my resume</button><button type="button" class="modal-secondary" id="resumeNo">No, thank you</button></div></div>`;
+        modal.innerHTML=`<div class="resume-modal-card"><button class="modal-close" type="button" id="resumeNoTop">×</button><p class="modal-kicker">YOUR PROFILE WILL STAY PRIVATE</p><h2>Would you like us to create your resume?</h2><p>We can use your professional information as a starting point, ask a few more questions about your credentials, then prepare your resume using the standard Masinloc Connect resume design.</p><div class="modal-actions"><button type="button" class="modal-primary" id="resumeYes">Yes, create my resume</button><button type="button" class="modal-secondary" id="resumeNo">No, thank you</button></div></div>`;
         document.body.appendChild(modal);
 
         document.querySelector('#resumeYes').addEventListener('click',()=>{
