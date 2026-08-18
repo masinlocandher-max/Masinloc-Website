@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Contact | Masinloc, Zambales</title>
+  <meta name="description" content="Contact the independent Masinloc, Zambales community platform for questions, corrections, collaborations and local information.">
+  <link rel="canonical" href="https://masinloc-zambales.com/contact.html">
+  <link rel="stylesheet" href="site.css">
+  <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+  <header class="site-header light-header" id="siteHeader">
+    <a class="brand" href="index.html" aria-label="Masinloc, Zambales home">
+      <img src="assets/masinloc-logo.webp" alt="Masinloc Zambales" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <span class="brand-fallback" hidden>MASINLOC <small>ZAMBALES</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
+    <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
+      <a href="index.html">Home</a>
+      <a href="a-closer-look-at-masinloc.html">A Closer Look</a>
+      <a class="connect-link" href="connect.html">Masinloc Connect</a>
+      <a class="active" href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main class="contact-main">
+    <div class="contact-shell">
+      <section class="contact-copy">
+        <h1>Contact<br>Masinloc</h1>
+        <div class="brand-rule" aria-hidden="true"><i></i><b></b><span></span></div>
+        <p>Have a question, correction, collaboration idea, or something about Masinloc you think we should know?</p>
+        <p class="contact-note">For business listings, professional profiles, stories or historical materials, please use Masinloc Connect so your submission can follow the proper review process.</p>
+      </section>
+
+      <section class="contact-card" aria-labelledby="contact-form-title">
+        <h2 id="contact-form-title" style="margin:0 0 28px;color:var(--navy);font-size:30px;letter-spacing:-.025em">Send us a message.</h2>
+        <form class="contact-form" id="contactForm">
+          <label>Your name
+            <input name="name" type="text" autocomplete="name" required>
+          </label>
+          <label>Email address
+            <input name="email" type="email" autocomplete="email" required>
+          </label>
+          <label>Subject
+            <input name="subject" type="text" required>
+          </label>
+          <label>Message
+            <textarea name="message" required></textarea>
+          </label>
+          <button class="button button-primary" type="submit">Continue to email</button>
+          <p class="contact-status" id="contactStatus" aria-live="polite"></p>
+        </form>
+        <p class="contact-direct">You can also email us directly at <a href="mailto:hello@masinloc-zambales.com">hello@masinloc-zambales.com</a>.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <img src="assets/masinloc-logo.webp" alt="Masinloc Zambales" onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+      <span class="brand-fallback footer-fallback" hidden>MASINLOC <small>ZAMBALES</small></span>
+    </div>
+    <div class="footer-links">
+      <a href="a-closer-look-at-masinloc.html">A Closer Look</a>
+      <a href="connect.html">Masinloc Connect</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>masinloc-zambales.com</span></div>
+  </footer>
+
+  <script src="site.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const data = new FormData(this);
+      const name = String(data.get('name') || '').trim();
+      const email = String(data.get('email') || '').trim();
+      const subject = String(data.get('subject') || '').trim();
+      const message = String(data.get('message') || '').trim();
+      const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+      document.getElementById('contactStatus').textContent = 'Opening your email app so you can review and send your message.';
+      window.location.href = `mailto:hello@masinloc-zambales.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  </script>
+</body>
+</html>
