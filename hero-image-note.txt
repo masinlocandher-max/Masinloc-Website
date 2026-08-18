@@ -1,0 +1,1 @@
+Stage 1 production hero must use the user-approved original photograph exactly as supplied in the ChatGPT conversation (A8BA57EF-507D-417D-AD64-5C9A61D56B93.jpeg). Do not generate, retouch, reconstruct, remove, add, or alter scene content. This branch intentionally does not substitute a repository image for the approved photograph.
