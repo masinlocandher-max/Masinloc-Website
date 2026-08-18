@@ -24,13 +24,13 @@ jobs:
           count=$(find .stage1-hd-upload -maxdepth 1 -type f -name 'chunk-*' 2>/dev/null | wc -l)
           echo "count=$count" >> "$GITHUB_OUTPUT"
       - name: Assemble verified HD derivative of approved photo
-        if: steps.chunks.outputs.count == '8'
+        if: steps.chunks.outputs.count == '4'
         shell: bash
         run: |
           cat $(find .stage1-hd-upload -maxdepth 1 -type f -name 'chunk-*' | sort) | base64 -d > assets/masinloc-stage1-hero.avif
           echo '3faf64cf2105bbf5850023b90d2059dfefcf868c8a8f9cb8c3730be78eb07390  assets/masinloc-stage1-hero.avif' | sha256sum -c -
       - name: Commit HD hero
-        if: steps.chunks.outputs.count == '8'
+        if: steps.chunks.outputs.count == '4'
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
