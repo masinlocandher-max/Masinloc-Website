@@ -1,4 +1,4 @@
-.hero-media > .hero-photo{
+.hero-media > .js-approved-hero{
   position:absolute;
   inset:0;
   display:block;
@@ -7,9 +7,14 @@
   object-fit:contain;
   object-position:center;
   background:#dce7f4;
+  opacity:0;
 }
 
-.about-photo > .hero-photo{
+.hero-media > .js-approved-hero.is-loaded{
+  opacity:1;
+}
+
+.about-photo > .js-approved-hero{
   position:relative;
   inset:auto;
   display:block;
@@ -18,4 +23,9 @@
   object-fit:contain;
   object-position:center;
   background:#dce7f4;
+  opacity:0;
+}
+
+.about-photo > .js-approved-hero.is-loaded{
+  opacity:1;
 }
