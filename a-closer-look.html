@@ -11,7 +11,6 @@
 <meta property="og:title" content="A Closer Look at Masinloc, Zambales">
 <meta property="og:description" content="History, Sambal Tina culture, people, traditions and local life in Masinloc, Zambales.">
 <meta property="og:url" content="https://masinloc-zambales.com/a-closer-look.html">
-<meta property="og:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.jpg">
 <link rel="stylesheet" href="home.css">
 <link rel="stylesheet" href="hero-single.css">
 </head>
@@ -38,7 +37,7 @@
   </section>
 
   <figure class="about-photo">
-    <img class="hero-photo" src="assets/stage1/masinloc-hero.jpg" alt="Aerial view of the church and surrounding town of Masinloc, Zambales">
+    <img class="js-approved-hero" alt="Aerial view of the church and surrounding town of Masinloc, Zambales">
   </figure>
 
   <article class="about-body">
@@ -116,6 +115,7 @@
   <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="connect.html">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>masinloc-zambales.com</span></div>
 </footer>
+<script src="hero-loader.js"></script>
 <script>
 const toggle=document.getElementById('menuToggle');const nav=document.getElementById('primaryNav');toggle.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!open));nav.classList.toggle('open',!open)});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{toggle.setAttribute('aria-expanded','false');nav.classList.remove('open')}));
 </script>
