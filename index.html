@@ -11,9 +11,9 @@
 <meta property="og:title" content="Masinloc, Zambales | History, Culture & Local Guide">
 <meta property="og:description" content="Discover the place. Know the stories. Meet the people of Masinloc, Zambales.">
 <meta property="og:url" content="https://masinloc-zambales.com/">
-<meta property="og:image" content="https://masinloc-zambales.com/assets/masinloc-sign.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="hero-single.css">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Masinloc, Zambales","url":"https://masinloc-zambales.com/","description":"An independent digital guide to Masinloc, Zambales focused on local history, culture, people, community and discovery."}</script>
 </head>
 <body>
@@ -33,10 +33,8 @@
 
 <main id="main">
   <section class="hero" aria-labelledby="heroTitle">
-    <div class="hero-media" role="img" aria-label="Aerial view of San Andres Church and the surrounding town of Masinloc, Zambales">
-      <div class="hero-photo" aria-hidden="true">
-        <img src="assets/stage1/hero-01.webp" alt=""><img src="assets/stage1/hero-02.webp" alt=""><img src="assets/stage1/hero-03.webp" alt=""><img src="assets/stage1/hero-04.webp" alt=""><img src="assets/stage1/hero-05.webp" alt=""><img src="assets/stage1/hero-06.webp" alt=""><img src="assets/stage1/hero-07.webp" alt=""><img src="assets/stage1/hero-08.webp" alt=""><img src="assets/stage1/hero-09.webp" alt=""><img src="assets/stage1/hero-10.webp" alt=""><img src="assets/stage1/hero-11.webp" alt=""><img src="assets/stage1/hero-12.webp" alt="">
-      </div>
+    <div class="hero-media">
+      <img class="js-approved-hero" alt="Aerial view of the church and surrounding town of Masinloc, Zambales">
       <div class="hero-shade" aria-hidden="true"></div>
     </div>
     <div class="hero-copy">
@@ -110,6 +108,7 @@
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>masinloc-zambales.com</span></div>
 </footer>
 
+<script src="hero-loader.js"></script>
 <script>
 const toggle=document.getElementById('menuToggle');
 const nav=document.getElementById('primaryNav');
