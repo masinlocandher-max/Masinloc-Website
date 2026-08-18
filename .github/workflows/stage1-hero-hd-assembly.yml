@@ -1,0 +1,41 @@
+name: Assemble HD Stage 1 hero
+
+on:
+  push:
+    branches:
+      - stage-1-home-about
+    paths:
+      - '.stage1-hd-upload/**'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: stage-1-home-about
+      - name: Check all chunks are present
+        id: chunks
+        shell: bash
+        run: |
+          count=$(find .stage1-hd-upload -maxdepth 1 -type f -name 'chunk-*' 2>/dev/null | wc -l)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+      - name: Assemble verified HD derivative of approved photo
+        if: steps.chunks.outputs.count == '8'
+        shell: bash
+        run: |
+          cat $(find .stage1-hd-upload -maxdepth 1 -type f -name 'chunk-*' | sort) | base64 -d > assets/masinloc-stage1-hero.avif
+          echo '3faf64cf2105bbf5850023b90d2059dfefcf868c8a8f9cb8c3730be78eb07390  assets/masinloc-stage1-hero.avif' | sha256sum -c -
+      - name: Commit HD hero
+        if: steps.chunks.outputs.count == '8'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf .stage1-hd-upload
+          git add assets/masinloc-stage1-hero.avif .stage1-hd-upload
+          git commit -m 'Upgrade approved Masinloc Stage 1 hero to HD web format'
+          git push origin HEAD:stage-1-home-about
