@@ -1,0 +1,42 @@
+name: Assemble Stage 1 hero
+
+on:
+  push:
+    branches:
+      - stage-1-home-about
+    paths:
+      - '.stage1-upload/**'
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: stage-1-home-about
+      - name: Check all chunks are present
+        id: chunks
+        shell: bash
+        run: |
+          count=$(find .stage1-upload -maxdepth 1 -type f -name 'chunk-*' 2>/dev/null | wc -l)
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+      - name: Assemble verified original-photo derivative
+        if: steps.chunks.outputs.count == '11'
+        shell: bash
+        run: |
+          mkdir -p assets
+          cat $(find .stage1-upload -maxdepth 1 -type f -name 'chunk-*' | sort) | base64 -d > assets/masinloc-stage1-hero.webp
+          echo 'ed129b1951396f1d0228154825385562f5605bb285935a92c4db2202367622bc  assets/masinloc-stage1-hero.webp' | sha256sum -c -
+      - name: Commit assembled hero
+        if: steps.chunks.outputs.count == '11'
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          rm -rf .stage1-upload
+          git add assets/masinloc-stage1-hero.webp .stage1-upload
+          git commit -m 'Add approved Masinloc Stage 1 hero photo'
+          git push origin HEAD:stage-1-home-about
