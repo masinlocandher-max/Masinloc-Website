@@ -1,20 +1,20 @@
 name: One-time exact hero rebuild
 
 on:
-  push:
-    branches: [agent/final-stage1-update]
-    paths: [.github/workflows/fix-hero-once.yml]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   rebuild:
+    if: github.head_ref == 'agent/final-stage1-update'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: agent/final-stage1-update
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -116,4 +116,4 @@ jobs:
             exit 0
           fi
           git commit -m "Install verified exact Masinloc hero asset"
-          git push origin HEAD:agent/final-stage1-update
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
