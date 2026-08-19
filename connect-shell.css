@@ -1,0 +1,117 @@
+/* Responsive navigation shell for Masinloc Connect.
+   Kept separate from submission styling and data logic. */
+
+.connect-menu-toggle{
+  display:none;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:#061A46;
+  position:relative;
+  flex:0 0 44px;
+}
+
+.connect-menu-toggle span{
+  position:absolute;
+  left:12px;
+  right:12px;
+  height:2px;
+  border-radius:999px;
+  background:currentColor;
+  transition:transform 220ms cubic-bezier(.16,1,.3,1),top 220ms cubic-bezier(.16,1,.3,1);
+}
+
+.connect-menu-toggle span:first-child{top:16px}
+.connect-menu-toggle span:last-child{top:26px}
+
+.connect-menu-toggle:focus-visible{
+  outline:3px solid rgba(30,99,233,.24);
+  outline-offset:2px;
+}
+
+@media(max-width:800px){
+  body.connect-menu-open{overflow:hidden}
+
+  .overlay-nav,
+  .form-header{
+    z-index:90;
+  }
+
+  .connect-menu-toggle{
+    display:block;
+    margin-left:auto;
+  }
+
+  .overlay-nav nav,
+  .form-header nav{
+    display:none!important;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    z-index:95;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0!important;
+    padding:8px 18px 18px;
+    background:rgba(255,255,255,.98);
+    border-top:1px solid rgba(17,24,39,.06);
+    border-bottom:1px solid #E6E9F0;
+    box-shadow:0 22px 50px rgba(3,17,47,.14);
+    backdrop-filter:saturate(145%) blur(16px);
+    -webkit-backdrop-filter:saturate(145%) blur(16px);
+  }
+
+  .overlay-nav.nav-open nav,
+  .form-header.nav-open nav{
+    display:flex!important;
+    animation:connect-menu-in 240ms cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .overlay-nav nav a,
+  .form-header nav a{
+    min-height:46px;
+    display:flex;
+    align-items:center;
+    padding:0!important;
+    font-size:12px!important;
+    color:#111827!important;
+    border-bottom:1px solid #EEF1F5;
+  }
+
+  .overlay-nav nav a:last-child,
+  .form-header nav a:last-child{
+    border-bottom:0;
+  }
+
+  .overlay-nav nav a::after{
+    display:none!important;
+  }
+
+  .nav-open .connect-menu-toggle span:first-child{
+    top:21px;
+    transform:rotate(45deg);
+  }
+
+  .nav-open .connect-menu-toggle span:last-child{
+    top:21px;
+    transform:rotate(-45deg);
+  }
+
+  @keyframes connect-menu-in{
+    from{opacity:0;transform:translateY(-8px)}
+    to{opacity:1;transform:none}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .connect-menu-toggle span,
+  .overlay-nav.nav-open nav,
+  .form-header.nav-open nav{
+    transition:none!important;
+    animation:none!important;
+  }
+}
