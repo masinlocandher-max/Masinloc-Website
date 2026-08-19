@@ -19,7 +19,7 @@ This repository is built in stages. Keep each stage stable before expanding the 
 5. Route changes require redirects and canonical review. Do not casually rename public URLs after they are indexed.
 6. Keep secrets out of the repository. Local `.env` files are ignored. Public Supabase keys may be client-safe, but authorization must remain enforced server-side and with database policies.
 7. New stages must not create navigation links, cards, or promises for pages that are not ready.
-8. Run the repository integrity check before merging. It verifies Stage 1 pages, local file references, the hero asset, and known obsolete hero mechanisms.
+8. The `Site integrity` GitHub check must pass before merging. It verifies Stage 1 pages, local file references, the hero asset, and known obsolete hero mechanisms.
 
 ## Current hero contract
 
