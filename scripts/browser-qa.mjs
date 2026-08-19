@@ -23,11 +23,44 @@ const viewports = [
 const browser = await chromium.launch({ headless: true });
 const failures = [];
 
+async function revealPage(page) {
+  await page.evaluate(async () => {
+    const step = Math.max(Math.floor(window.innerHeight * 0.72), 360);
+    const max = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+    for (let y = 0; y <= max; y += step) {
+      window.scrollTo(0, y);
+      await new Promise(resolve => setTimeout(resolve, 70));
+    }
+    window.scrollTo(0, 0);
+    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+  });
+  await page.waitForTimeout(180);
+}
+
+async function assertVerifiedImage(page, selector, label) {
+  const image = page.locator(selector);
+  if (!(await image.isVisible())) {
+    failures.push(`${label}: image is not visible`);
+    return;
+  }
+  const state = await image.evaluate(img => ({
+    naturalWidth: img.naturalWidth,
+    naturalHeight: img.naturalHeight,
+    opacity: Number(getComputedStyle(img).opacity),
+  }));
+  if (state.naturalWidth !== 1536 || state.naturalHeight !== 864) {
+    failures.push(`${label}: image decoded at ${state.naturalWidth}x${state.naturalHeight}, expected 1536x864`);
+  }
+  if (state.opacity < 0.9) failures.push(`${label}: image opacity ${state.opacity}`);
+}
+
 for (const [viewportName, viewport] of viewports) {
   const context = await browser.newContext({ viewport });
+
   for (const [pageName, pathname] of pages) {
     const page = await context.newPage();
     const errors = [];
+
     page.on('pageerror', error => errors.push(`pageerror: ${error.message}`));
     page.on('console', message => {
       if (message.type() === 'error') errors.push(`console: ${message.text()}`);
@@ -49,26 +82,17 @@ for (const [viewportName, viewport] of viewports) {
       }
 
       if (pageName === 'home') {
-        const heroImage = page.locator('.hero-media img');
-        if (!(await heroImage.isVisible())) {
-          failures.push(`${viewportName}/home: hero image is not visible`);
-        } else {
-          const heroState = await heroImage.evaluate(img => ({
-            naturalWidth: img.naturalWidth,
-            naturalHeight: img.naturalHeight,
-            opacity: Number(getComputedStyle(img).opacity),
-          }));
-          if (heroState.naturalWidth !== 1536 || heroState.naturalHeight !== 864) {
-            failures.push(`${viewportName}/home: hero decoded at ${heroState.naturalWidth}x${heroState.naturalHeight}, expected 1536x864`);
-          }
-          if (heroState.opacity < 0.9) failures.push(`${viewportName}/home: hero opacity ${heroState.opacity}`);
-        }
-
+        await assertVerifiedImage(page, '.hero-media img', `${viewportName}/home hero`);
         await page.evaluate(() => window.scrollTo(0, 160));
         await page.waitForTimeout(250);
         if (!(await page.locator('#siteNav').evaluate(el => el.classList.contains('is-scrolled')))) {
           failures.push(`${viewportName}/home: sticky/scrolled navigation state did not activate`);
         }
+        await page.evaluate(() => window.scrollTo(0, 0));
+      }
+
+      if (pageName === 'connect') {
+        await assertVerifiedImage(page, '.landing-view .hero-img', `${viewportName}/connect hero`);
       }
 
       if (viewportName === 'mobile' && pageName !== 'connect' && pageName !== 'not-found') {
@@ -84,10 +108,32 @@ for (const [viewportName, viewport] of viewports) {
         }
       }
 
+      if (viewportName === 'mobile' && pageName === 'connect') {
+        const toggle = page.locator('.landing-view').locator('xpath=preceding-sibling::*[1]');
+        const connectToggle = page.locator('#overlayNav .connect-menu-toggle');
+        if (!(await connectToggle.isVisible())) {
+          failures.push('mobile/connect: menu toggle is not visible');
+        } else {
+          await connectToggle.click();
+          if (!(await page.locator('#overlayNav').evaluate(el => el.classList.contains('nav-open')))) {
+            failures.push('mobile/connect: responsive navigation did not open');
+          }
+          if (!(await page.locator('#overlayNav nav').isVisible())) {
+            failures.push('mobile/connect: responsive navigation panel is not visible');
+          }
+          await page.keyboard.press('Escape');
+        }
+      }
+
       if (pageName === 'verified-history' || pageName === 'bulletin') {
         const entryCount = await page.locator('time, .article-card, .article-list, .post-card, .story-card').count();
         if (entryCount !== 0) failures.push(`${viewportName}/${pageName}: purpose page is not empty`);
       }
+
+      await revealPage(page);
+
+      const finalOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      if (finalOverflow > 1) failures.push(`${viewportName}/${pageName}: horizontal overflow after interaction ${finalOverflow}px`);
 
       await page.screenshot({
         path: path.join(outputDir, `${viewportName}-${pageName}.png`),
@@ -102,6 +148,7 @@ for (const [viewportName, viewport] of viewports) {
     }
     await page.close();
   }
+
   await context.close();
 }
 
@@ -114,4 +161,4 @@ if (failures.length) {
 }
 
 console.log('BROWSER QA PASSED');
-console.log('Desktop and mobile screenshots generated for all current public surfaces.');
+console.log('Desktop and mobile screenshots generated after interaction and scroll-reveal checks.');
