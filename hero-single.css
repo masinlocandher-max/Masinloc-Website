@@ -1,3 +1,7 @@
+.hero-media{
+  background:#071d58 url('assets/stage1/masinloc-hero-v2.avif?v=20260819-1') center/contain no-repeat;
+}
+
 .hero-media > .js-approved-hero{
   position:absolute;
   inset:0;
@@ -6,12 +10,12 @@
   height:100%;
   object-fit:contain;
   object-position:center;
-  background:#dce7f4;
-  opacity:0;
+  background:transparent;
+  opacity:1;
 }
 
-.hero-media > .js-approved-hero.is-loaded{
-  opacity:1;
+.about-photo{
+  background:#dce7f4 url('assets/stage1/masinloc-hero-v2.avif?v=20260819-1') center/contain no-repeat;
 }
 
 .about-photo > .js-approved-hero{
@@ -22,11 +26,7 @@
   height:100%;
   object-fit:contain;
   object-position:center;
-  background:#dce7f4;
-  opacity:0;
-}
-
-.about-photo > .js-approved-hero.is-loaded{
+  background:transparent;
   opacity:1;
 }
 
@@ -73,13 +73,13 @@
     height:100%;
     min-height:100svh;
     aspect-ratio:auto;
-    background:#071d58;
+    background:#071d58 url('assets/stage1/masinloc-hero-v2.avif?v=20260819-1') center/cover no-repeat;
   }
 
   body:not(.about-page) .hero-media > .js-approved-hero{
     object-fit:cover;
     object-position:50% 50%;
-    background:#071d58;
+    background:transparent;
   }
 
   body:not(.about-page) .hero-shade{
