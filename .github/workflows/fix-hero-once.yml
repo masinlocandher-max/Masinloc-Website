@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Recover and verify exact approved hero
+      - name: Rebuild and verify exact approved hero
         shell: bash
         run: |
           set -euo pipefail
@@ -26,47 +26,27 @@ jobs:
           work=/tmp/masinloc-hero
           mkdir -p "$work"
 
-          for i in 01 02 03 04 05 06 07; do
+          for i in 01 03 04 06; do
             git show "${old}:assets/stage1/hero-b64-${i}.txt" > "$work/${i}.b64"
           done
 
           cat "$work/01.b64" \
-              "$work/02.b64" .repair/hero-tail-02.txt \
+              .repair/exact-prefix-02.txt .repair/hero-tail-02.txt \
               "$work/03.b64" \
               "$work/04.b64" \
-              "$work/05.b64" .repair/hero-tail-05.txt \
+              .repair/exact-prefix-05.txt .repair/hero-tail-05.txt \
               "$work/06.b64" \
-              "$work/07.b64" .repair/hero-tail-07.txt \
+              .repair/exact-prefix-07.txt .repair/hero-tail-07.txt \
             | tr -d '\r\n\t ' > "$work/all.b64"
 
           python3 - <<'PY'
           from pathlib import Path
           import base64, hashlib
 
-          source = list(Path('/tmp/masinloc-hero/all.b64').read_text())
-          expected_pads = [70030, 70031, 101955, 101956, 102551]
-          actual_pads = [i for i, ch in enumerate(source) if ch == '=']
-          if len(source) != 102552 or actual_pads != expected_pads:
-              raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={actual_pads}')
-
-          # Exact characters from the approved 1536x864 AVIF source.
-          # Four characters at the end of historical chunk 02 were altered,
-          # and two characters each in chunks 05 and 07 were replaced by
-          # padding during earlier text-based uploads.
-          replacements = {
-              27655: 'A',
-              27656: 'U',
-              27657: 'N',
-              27658: '8',
-              70030: 'h',
-              70031: '5',
-              101955: 'Z',
-              101956: '4',
-          }
-          for pos, value in replacements.items():
-              source[pos] = value
-
-          data = base64.b64decode(''.join(source), validate=True)
+          encoded = Path('/tmp/masinloc-hero/all.b64').read_text()
+          if len(encoded) != 102552:
+              raise SystemExit(f'Unexpected exact source length: {len(encoded)}')
+          data = base64.b64decode(encoded, validate=True)
           target_hash = 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5'
           digest = hashlib.sha256(data).hexdigest()
           if len(data) != 76913:
@@ -74,8 +54,7 @@ jobs:
           if digest != target_hash:
               raise SystemExit(f'Exact-photo hash mismatch: {digest}')
 
-          output = Path('assets/stage1/masinloc-hero.avif')
-          output.write_bytes(data)
+          Path('assets/stage1/masinloc-hero.avif').write_bytes(data)
           print(f'exact approved hero recovered: {len(data)} bytes sha256={digest}')
           PY
 
