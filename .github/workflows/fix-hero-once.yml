@@ -49,7 +49,15 @@ jobs:
           if len(source) != 102552 or actual_pads != expected_pads:
               raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={actual_pads}')
 
+          # Exact characters from the approved 1536x864 AVIF source.
+          # Four characters at the end of historical chunk 02 were altered,
+          # and two characters each in chunks 05 and 07 were replaced by
+          # padding during earlier text-based uploads.
           replacements = {
+              27655: 'A',
+              27656: 'U',
+              27657: 'N',
+              27658: '8',
               70030: 'h',
               70031: '5',
               101955: 'Z',
