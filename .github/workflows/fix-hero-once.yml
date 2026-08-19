@@ -1,6 +1,5 @@
 name: One-time exact hero rebuild
 
-# PR branch is synced with main; run once, install the verified binary, then delete this workflow.
 on:
   pull_request:
     branches: [main]
@@ -17,7 +16,7 @@ jobs:
         with:
           ref: agent/fmb-approved-stage1
           fetch-depth: 0
-      - name: Rebuild and verify exact approved hero
+      - name: Measure historical chunks before reconstruction
         shell: bash
         run: |
           set -euo pipefail
@@ -25,21 +24,26 @@ jobs:
           mkdir -p /tmp/masinloc-hero
           for i in 01 02 03 04 05 06 07; do
             git show "${old}:assets/stage1/hero-b64-${i}.txt" > "/tmp/masinloc-hero/${i}.b64"
+            raw=$(wc -c < "/tmp/masinloc-hero/${i}.b64")
+            clean=$(tr -d '\r\n' < "/tmp/masinloc-hero/${i}.b64" | wc -c)
+            bad=$(tr -d '\r\nA-Za-z0-9+/=' < "/tmp/masinloc-hero/${i}.b64" | wc -c)
+            pads=$(tr -cd '=' < "/tmp/masinloc-hero/${i}.b64" | wc -c)
+            echo "chunk ${i}: raw=${raw} clean=${clean} invalid=${bad} padding=${pads}"
           done
-          cat .repair/hero-tail-02.txt >> /tmp/masinloc-hero/02.b64
-          cat .repair/hero-tail-05.txt >> /tmp/masinloc-hero/05.b64
-          cat .repair/hero-tail-07.txt >> /tmp/masinloc-hero/07.b64
-          cat /tmp/masinloc-hero/01.b64 /tmp/masinloc-hero/02.b64 /tmp/masinloc-hero/03.b64 /tmp/masinloc-hero/04.b64 /tmp/masinloc-hero/05.b64 /tmp/masinloc-hero/06.b64 /tmp/masinloc-hero/07.b64 \
-            | tr -d '\r\n' | base64 --decode > assets/stage1/masinloc-hero.avif
-          test "$(stat -c%s assets/stage1/masinloc-hero.avif)" -eq 76913
-          echo 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5  assets/stage1/masinloc-hero.avif' | sha256sum -c -
-          python3 scripts/check-site.py
-      - name: Commit verified binary to PR branch
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add assets/stage1/masinloc-hero.avif
-          git commit -m "Install verified exact Masinloc hero asset"
-          git push origin HEAD:agent/fmb-approved-stage1
+          for i in 02 05 07; do
+            raw=$(wc -c < ".repair/hero-tail-${i}.txt")
+            clean=$(tr -d '\r\n' < ".repair/hero-tail-${i}.txt" | wc -c)
+            bad=$(tr -d '\r\nA-Za-z0-9+/=' < ".repair/hero-tail-${i}.txt" | wc -c)
+            pads=$(tr -cd '=' < ".repair/hero-tail-${i}.txt" | wc -c)
+            echo "tail ${i}: raw=${raw} clean=${clean} invalid=${bad} padding=${pads}"
+          done
+          cat /tmp/masinloc-hero/01.b64 /tmp/masinloc-hero/02.b64 .repair/hero-tail-02.txt /tmp/masinloc-hero/03.b64 /tmp/masinloc-hero/04.b64 /tmp/masinloc-hero/05.b64 .repair/hero-tail-05.txt /tmp/masinloc-hero/06.b64 /tmp/masinloc-hero/07.b64 .repair/hero-tail-07.txt | tr -d '\r\n' > /tmp/masinloc-hero/all.b64
+          echo "combined clean length: $(wc -c < /tmp/masinloc-hero/all.b64)"
+          echo "combined padding count: $(tr -cd '=' < /tmp/masinloc-hero/all.b64 | wc -c)"
+          echo "combined invalid count: $(tr -d 'A-Za-z0-9+/=' < /tmp/masinloc-hero/all.b64 | wc -c)"
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('/tmp/masinloc-hero/all.b64').read_text()
+          print('first padding index:', s.find('='), 'length:', len(s), 'tail:', repr(s[-12:]))
+          PY
+          exit 1
