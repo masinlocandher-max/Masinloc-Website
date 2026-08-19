@@ -24,17 +24,35 @@ const browser = await chromium.launch({ headless: true });
 const failures = [];
 
 async function revealPage(page) {
-  await page.evaluate(async () => {
-    const step = Math.max(Math.floor(window.innerHeight * 0.72), 360);
-    const max = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-    for (let y = 0; y <= max; y += step) {
-      window.scrollTo(0, y);
-      await new Promise(resolve => setTimeout(resolve, 70));
+  const revealTargets = page.locator('[data-reveal]');
+  const count = await revealTargets.count();
+
+  for (let index = 0; index < count; index += 1) {
+    const target = revealTargets.nth(index);
+    try {
+      await target.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(100);
+    } catch {
+      // A detached target is not a visual failure; the page-level checks below will catch broken layout.
     }
+  }
+
+  if (count === 0) {
+    await page.evaluate(async () => {
+      const step = Math.max(Math.floor(window.innerHeight * 0.72), 360);
+      const max = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      for (let y = 0; y <= max; y += step) {
+        window.scrollTo(0, y);
+        await new Promise(resolve => setTimeout(resolve, 55));
+      }
+    });
+  }
+
+  await page.evaluate(() => {
     window.scrollTo(0, 0);
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
   });
-  await page.waitForTimeout(180);
+  await page.waitForTimeout(500);
 }
 
 async function assertVerifiedImage(page, selector, label) {
@@ -83,16 +101,26 @@ for (const [viewportName, viewport] of viewports) {
 
       if (pageName === 'home') {
         await assertVerifiedImage(page, '.hero-media img', `${viewportName}/home hero`);
+      }
+
+      if (pageName === 'connect') {
+        await assertVerifiedImage(page, '.landing-view .hero-img', `${viewportName}/connect hero`);
+      }
+
+      if (pageName === 'home' || pageName === 'connect') {
+        await page.screenshot({
+          path: path.join(outputDir, `${viewportName}-${pageName}-top.png`),
+          fullPage: false,
+        });
+      }
+
+      if (pageName === 'home') {
         await page.evaluate(() => window.scrollTo(0, 160));
         await page.waitForTimeout(250);
         if (!(await page.locator('#siteNav').evaluate(el => el.classList.contains('is-scrolled')))) {
           failures.push(`${viewportName}/home: sticky/scrolled navigation state did not activate`);
         }
         await page.evaluate(() => window.scrollTo(0, 0));
-      }
-
-      if (pageName === 'connect') {
-        await assertVerifiedImage(page, '.landing-view .hero-img', `${viewportName}/connect hero`);
       }
 
       if (viewportName === 'mobile' && pageName !== 'connect' && pageName !== 'not-found') {
@@ -109,7 +137,6 @@ for (const [viewportName, viewport] of viewports) {
       }
 
       if (viewportName === 'mobile' && pageName === 'connect') {
-        const toggle = page.locator('.landing-view').locator('xpath=preceding-sibling::*[1]');
         const connectToggle = page.locator('#overlayNav .connect-menu-toggle');
         if (!(await connectToggle.isVisible())) {
           failures.push('mobile/connect: menu toggle is not visible');
