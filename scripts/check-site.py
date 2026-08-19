@@ -33,6 +33,7 @@ REQUIRED = [
     "assets/masinloc-logo.webp",
     "assets/stage1/masinloc-hero.avif",
 ]
+MENU_LINKS = ["verified-history.html", "masinloc-bulletin.html"]
 FORBIDDEN_FILES = [
     "hero-loader.js",
     "hero-single.css",
@@ -143,6 +144,9 @@ for html in ROOT.glob("*.html"):
             fail(f"{html.name}: duplicate IDs: {', '.join(duplicate_ids)}")
         if FUTURE_ROUTE.search(text):
             fail(f"{html.name}: links to an unfinished future-stage route")
+        for menu_link in MENU_LINKS:
+            if menu_link not in parser.refs:
+                fail(f"{html.name}: missing required public menu link to {menu_link}")
 
 for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glob("*.js")):
     text = path.read_text(encoding="utf-8", errors="replace")
@@ -206,4 +210,5 @@ print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
 print("Hero is one direct 1536x864 AVIF with a complete container; obsolete reconstruction assets are absent.")
 print("Verified History and Masinloc Bulletin are valid purpose pages with no invented content entries.")
+print("Both editorial sections remain reachable from every public surface.")
 print("No unfinished future-stage route is exposed by the current public pages.")
