@@ -3,6 +3,7 @@ name: Build single Masinloc hero image
 on:
   push:
     branches:
+      - main
       - agent/fix-exact-hero-file
     paths:
       - .github/workflows/build-single-hero.yml
@@ -16,8 +17,6 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: agent/fix-exact-hero-file
 
       - name: Reconstruct approved hero as one static file
         shell: bash
@@ -48,4 +47,4 @@ jobs:
             exit 0
           fi
           git commit -m "Build single static Masinloc hero image"
-          git push origin HEAD:agent/fix-exact-hero-file
+          git push origin "HEAD:${GITHUB_REF_NAME}"
