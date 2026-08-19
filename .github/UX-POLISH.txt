@@ -1,1 +1,0 @@
-Modern UX/UI polish pass: persistent navigation, accessible motion, scroll reveals, page transitions, and Masinloc Connect visual refinement. No content architecture or submission logic changes.
