@@ -1,0 +1,44 @@
+name: One-time exact hero rebuild
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/fix-hero-once.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Rebuild and verify exact approved hero
+        shell: bash
+        run: |
+          set -euo pipefail
+          old=e684aada9cd667f0a2ed2b23bf8ea201e1fe2655
+          mkdir -p /tmp/masinloc-hero
+          for i in 01 02 03 04 05 06 07; do
+            git show "${old}:assets/stage1/hero-b64-${i}.txt" > "/tmp/masinloc-hero/${i}.b64"
+          done
+          cat .repair/hero-tail-02.txt >> /tmp/masinloc-hero/02.b64
+          cat .repair/hero-tail-05.txt >> /tmp/masinloc-hero/05.b64
+          cat .repair/hero-tail-07.txt >> /tmp/masinloc-hero/07.b64
+          cat /tmp/masinloc-hero/01.b64 /tmp/masinloc-hero/02.b64 /tmp/masinloc-hero/03.b64 /tmp/masinloc-hero/04.b64 /tmp/masinloc-hero/05.b64 /tmp/masinloc-hero/06.b64 /tmp/masinloc-hero/07.b64 \
+            | tr -d '\r\n' | base64 --decode > assets/stage1/masinloc-hero.avif
+          test "$(stat -c%s assets/stage1/masinloc-hero.avif)" -eq 76913
+          echo 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5  assets/stage1/masinloc-hero.avif' | sha256sum -c -
+          python3 scripts/check-site.py
+      - name: Commit verified binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/stage1/masinloc-hero.avif
+          git commit -m "Install verified exact Masinloc hero asset"
+          git push origin HEAD:main
