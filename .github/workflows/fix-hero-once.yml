@@ -1,5 +1,6 @@
 name: One-time exact hero rebuild
 
+# Temporary workflow: remove after the verified binary lands.
 on:
   push:
     branches: [main]
