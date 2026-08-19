@@ -35,6 +35,8 @@ REQUIRED = [
     "site.js",
     "styles.css",
     "connect-polish.css",
+    "connect-shell.css",
+    "connect-shell.js",
     "app.js",
     "app-base.js",
     "security.js",
@@ -42,6 +44,8 @@ REQUIRED = [
     "sitemap.xml",
     "vercel.json",
     "BUILD-NOTES.md",
+    "scripts/browser-qa.mjs",
+    ".github/workflows/browser-qa.yml",
     "assets/masinloc-logo.webp",
     "assets/stage1/masinloc-hero.avif",
 ]
@@ -52,6 +56,8 @@ FORBIDDEN_FILES = [
     "home.css",
     ".github/workflows/fix-hero-once.yml",
     "assets/stage1/masinloc-hero-visible.avif",
+    "assets/masinloc-sign.jpg",
+    "assets/masinloc-secondary.jpg",
     "foo2.txt",
     "BUILD-MODE.md",
 ]
@@ -67,6 +73,8 @@ FORBIDDEN_PUBLIC_REFERENCES = [
     "hero-b64-",
     "hero-photo",
     "masinloc-hero-visible",
+    "masinloc-sign.jpg",
+    "masinloc-secondary.jpg",
     "WELCOME TO",
 ]
 PLACEHOLDER_MARKERS = [
@@ -229,6 +237,18 @@ for rel in ("verified-history.html", "masinloc-bulletin.html"):
             if marker in text:
                 fail(f"{rel}: publishing entries detected before the section is ready: {marker}")
 
+# Masinloc Connect uses the same verified high-resolution place photograph and a dedicated responsive shell.
+connect = ROOT / "connect.html"
+if connect.is_file():
+    connect_text = connect.read_text(encoding="utf-8")
+    if connect_text.count("assets/stage1/masinloc-hero.avif") < 2:
+        fail("connect.html must use the verified hero for both landing and chooser photography")
+    for required_ref in ("connect-polish.css", "connect-shell.css", "connect-shell.js"):
+        if required_ref not in connect_text:
+            fail(f"connect.html missing required shell asset: {required_ref}")
+    if "connect-menu-toggle" not in connect_text:
+        fail("connect.html missing responsive navigation toggles")
+
 hero = ROOT / "assets/stage1/masinloc-hero.avif"
 if hero.is_file():
     data = hero.read_bytes()
@@ -306,7 +326,7 @@ if errors:
 
 print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
-print("The exact approved hero remains byte-locked and intact.")
-print("Modern public-site and Masinloc Connect polish layers are present on every public surface.")
+print("The exact approved hero remains byte-locked and intact across the public shell and Masinloc Connect.")
+print("Modern public-site and Masinloc Connect polish/navigation layers are present on every public surface.")
 print("Purpose-only History/Bulletin sections remain free of placeholder publishing entries.")
 print("Staged agent branches remain protected from automatic Vercel preview deployment.")
