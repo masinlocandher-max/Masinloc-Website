@@ -49,11 +49,6 @@ jobs:
           if len(source) != 102552 or actual_pads != expected_pads:
               raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={actual_pads}')
 
-          # Four characters were lost when the historical base64 fragments were
-          # truncated. They are deterministic: the exact approved 1536x864 photo
-          # was encoded with the repository's original AVIF settings (quality 35/36).
-          # Restore only those four missing base64 characters, then verify the
-          # resulting binary against the known exact SHA-256 before it can be used.
           replacements = {
               70030: 'h',
               70031: '5',
@@ -63,8 +58,7 @@ jobs:
           for pos, value in replacements.items():
               source[pos] = value
 
-          encoded = ''.join(source)
-          data = base64.b64decode(encoded, validate=True)
+          data = base64.b64decode(''.join(source), validate=True)
           target_hash = 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5'
           digest = hashlib.sha256(data).hexdigest()
           if len(data) != 76913:
