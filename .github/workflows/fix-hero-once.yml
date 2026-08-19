@@ -43,63 +43,38 @@ jobs:
           from pathlib import Path
           import base64, hashlib
 
-          source = Path('/tmp/masinloc-hero/all.b64').read_text()
-          target = bytes.fromhex('e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5')
-          expected_size = 76913
-          pads = [i for i, ch in enumerate(source) if ch == '=']
+          source = list(Path('/tmp/masinloc-hero/all.b64').read_text())
           expected_pads = [70030, 70031, 101955, 101956, 102551]
-          if len(source) != 102552 or pads != expected_pads:
-              raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={pads}')
+          actual_pads = [i for i, ch in enumerate(source) if ch == '=']
+          if len(source) != 102552 or actual_pads != expected_pads:
+              raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={actual_pads}')
 
-          chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-          val = {c:i for i,c in enumerate(chars)}
-          masked = list(source)
-          for pos in pads[:-1]:
-              masked[pos] = 'A'
-          baseline = bytearray(base64.b64decode(''.join(masked), validate=True))
-          if len(baseline) != expected_size:
-              raise SystemExit(f'Unexpected decoded size: {len(baseline)}')
+          # Four characters were lost when the historical base64 fragments were
+          # truncated. They are deterministic: the exact approved 1536x864 photo
+          # was encoded with the repository's original AVIF settings (quality 35/36).
+          # Restore only those four missing base64 characters, then verify the
+          # resulting binary against the known exact SHA-256 before it can be used.
+          replacements = {
+              70030: 'h',
+              70031: '5',
+              101955: 'Z',
+              101956: '4',
+          }
+          for pos, value in replacements.items():
+              source[pos] = value
 
-          b = val[source[70029]]
-          first_pairs = []
-          for x in range(64):
-              for y in range(64):
-                  first_pairs.append(bytes((((b & 15) << 4) | (x >> 2), ((x & 3) << 6) | y)))
+          encoded = ''.join(source)
+          data = base64.b64decode(encoded, validate=True)
+          target_hash = 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5'
+          digest = hashlib.sha256(data).hexdigest()
+          if len(data) != 76913:
+              raise SystemExit(f'Unexpected recovered size: {len(data)} bytes')
+          if digest != target_hash:
+              raise SystemExit(f'Exact-photo hash mismatch: {digest}')
 
-          x2 = val[source[101954]]
-          bnext = val[source[101957]]
-          second_pairs = []
-          for y in range(64):
-              for a in range(64):
-                  second_pairs.append(bytes((((x2 & 3) << 6) | y, (a << 2) | (bnext >> 4))))
-
-          off1 = (70028 // 4) * 3 + 1
-          off2 = (101952 // 4) * 3 + 2
-          prefix = hashlib.sha256(bytes(baseline[:off1]))
-          middle = bytes(baseline[off1 + 2:off2])
-          suffix = bytes(baseline[off2 + 2:])
-
-          found = None
-          for p1 in first_pairs:
-              h1 = prefix.copy(); h1.update(p1); h1.update(middle)
-              for p2 in second_pairs:
-                  h = h1.copy(); h.update(p2); h.update(suffix)
-                  if h.digest() == target:
-                      found = (p1, p2)
-                      break
-              if found:
-                  break
-          if not found:
-              raise SystemExit('Exact approved hero could not be recovered from historical fragments')
-
-          baseline[off1:off1 + 2] = found[0]
-          baseline[off2:off2 + 2] = found[1]
           output = Path('assets/stage1/masinloc-hero.avif')
-          output.write_bytes(baseline)
-          digest = hashlib.sha256(baseline).hexdigest()
-          print(f'recovered hero: {len(baseline)} bytes sha256={digest}')
-          if len(baseline) != expected_size or digest != target.hex():
-              raise SystemExit('Recovered hero failed exact size/hash verification')
+          output.write_bytes(data)
+          print(f'exact approved hero recovered: {len(data)} bytes sha256={digest}')
           PY
 
           python3 scripts/check-site.py
