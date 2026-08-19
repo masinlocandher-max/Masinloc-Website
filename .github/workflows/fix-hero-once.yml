@@ -1,6 +1,6 @@
 name: One-time exact hero rebuild
 
-# Temporary workflow: remove after the verified binary lands.
+# Temporary workflow: this merge intentionally triggers the exact-photo rebuild.
 on:
   push:
     branches: [main]
