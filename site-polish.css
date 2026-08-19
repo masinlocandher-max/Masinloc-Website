@@ -142,6 +142,7 @@ html.js [data-reveal][data-delay="5"]{transition-delay:275ms}
   .site-nav{position:absolute}
   body:not(.about-page) .site-nav.is-scrolled{height:68px;padding:0 20px}
   body:not(.about-page) .site-nav.is-scrolled .brand img{width:142px}
+  body:not(.about-page) .site-nav.is-scrolled .primary-nav{top:68px}
   .about-page .site-nav{position:sticky}
   .primary-nav{max-height:calc(100svh - 68px);overflow:auto;overscroll-behavior:contain;padding:8px 20px 24px;border-radius:0 0 18px 18px}
   .primary-nav.open{animation:mobile-nav-in 260ms var(--ease-out) both}
