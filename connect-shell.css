@@ -38,11 +38,23 @@
   .overlay-nav,
   .form-header{
     z-index:90;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    flex-wrap:nowrap!important;
+  }
+
+  .overlay-nav .logo-link,
+  .form-header .form-logo{
+    display:flex;
+    align-items:center;
+    min-width:0;
   }
 
   .connect-menu-toggle{
     display:block;
-    margin-left:auto;
+    margin:0 0 0 auto;
+    align-self:center;
   }
 
   .overlay-nav nav,
