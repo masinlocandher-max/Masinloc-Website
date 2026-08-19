@@ -24,8 +24,10 @@ REQUIRED = [
     "admin.html",
     "404.html",
     "site.css",
+    "site-polish.css",
     "site.js",
     "styles.css",
+    "connect-polish.css",
     "app.js",
     "app-base.js",
     "security.js",
@@ -155,6 +157,11 @@ for html in ROOT.glob("*.html"):
             if menu_link not in parser.refs:
                 fail(f"{html.name}: missing required public menu link to {menu_link}")
 
+        local_ref_paths = {urlsplit(ref).path for ref in parser.refs}
+        expected_polish = "connect-polish.css" if html.name == "connect.html" else "site-polish.css"
+        if expected_polish not in local_ref_paths:
+            fail(f"{html.name}: missing modern polish stylesheet {expected_polish}")
+
 for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glob("*.js")):
     text = path.read_text(encoding="utf-8", errors="replace")
     for forbidden in FORBIDDEN_PUBLIC_REFERENCES:
@@ -218,7 +225,5 @@ if errors:
 
 print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
-print("Hero matches the locked 1536x864 asset by exact byte size and SHA-256.")
-print("Verified History and Masinloc Bulletin are valid purpose pages with no invented content entries.")
-print("Both editorial sections remain reachable from every public surface.")
-print("No repair leftovers, obsolete hero mechanisms or unfinished future-stage routes are exposed.")
+print("The exact approved hero remains byte-locked and intact.")
+print("Modern public-site and Masinloc Connect polish layers are present on every public surface.")

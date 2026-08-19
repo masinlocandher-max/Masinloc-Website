@@ -16,3 +16,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate Stage 1 integrity
         run: python3 scripts/check-site.py
+      - name: Validate JavaScript syntax
+        run: |
+          node --check site.js
+          node --check security.js
+          node --check app-base.js
+          node --check app.js
+          node --check admin.js
