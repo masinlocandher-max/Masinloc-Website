@@ -7,10 +7,18 @@ import struct
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLIC_PAGES = ["index.html", "a-closer-look.html", "connect.html"]
+PUBLIC_PAGES = [
+    "index.html",
+    "a-closer-look.html",
+    "verified-history.html",
+    "masinloc-bulletin.html",
+    "connect.html",
+]
 REQUIRED = [
     "index.html",
     "a-closer-look.html",
+    "verified-history.html",
+    "masinloc-bulletin.html",
     "connect.html",
     "admin.html",
     "404.html",
@@ -157,7 +165,6 @@ if hero.is_file():
         if (width, height) != (1536, 864):
             fail(f"hero dimensions changed unexpectedly: {width}x{height}")
 
-    # Walk top-level ISO BMFF boxes to catch a file cut off mid-box.
     cursor = 0
     seen_mdat = False
     while cursor + 8 <= len(data):
@@ -196,6 +203,7 @@ if errors:
     sys.exit(1)
 
 print("SITE INTEGRITY CHECK PASSED")
-print("Stage 1 routes, SEO essentials, local references and protected boundaries are present.")
+print("Current public routes, SEO essentials, local references and protected boundaries are present.")
 print("Hero is one direct 1536x864 AVIF with a complete container; obsolete reconstruction assets are absent.")
+print("Verified History and Masinloc Bulletin are valid purpose pages with no invented content entries.")
 print("No unfinished future-stage route is exposed by the current public pages.")
