@@ -7,10 +7,6 @@
   object-fit:contain;
   object-position:center;
   background:#dce7f4;
-  opacity:0;
-}
-
-.hero-media > .js-approved-hero.is-loaded{
   opacity:1;
 }
 
@@ -23,10 +19,6 @@
   object-fit:contain;
   object-position:center;
   background:#dce7f4;
-  opacity:0;
-}
-
-.about-photo > .js-approved-hero.is-loaded{
   opacity:1;
 }
 
