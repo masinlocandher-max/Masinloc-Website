@@ -20,6 +20,8 @@ jobs:
         run: |
           node --check site.js
           node --check security.js
+          node --check connect-shell.js
           node --check app-base.js
           node --check app.js
           node --check admin.js
+          node --check scripts/browser-qa.mjs
