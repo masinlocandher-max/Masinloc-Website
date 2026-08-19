@@ -1,0 +1,52 @@
+name: Rebuild Stage 1 hero
+
+on:
+  push:
+    branches:
+      - agent/stage1-stability-cleanup
+    paths:
+      - .github/workflows/rebuild-stage1-hero.yml
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repair branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/stage1-stability-cleanup
+
+      - name: Rebuild and verify complete hero asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat \
+            assets/stage1/hero-b64-01.txt \
+            assets/stage1/hero-b64-02.txt \
+            assets/stage1/hero-b64-03.txt \
+            assets/stage1/hero-b64-04.txt \
+            assets/stage1/hero-b64-05.txt \
+            assets/stage1/hero-b64-06.txt \
+            assets/stage1/hero-b64-07.txt \
+            | tr -d '\r\n' \
+            | base64 --decode \
+            > assets/stage1/masinloc-hero.avif
+
+          bytes=$(stat -c%s assets/stage1/masinloc-hero.avif)
+          echo "hero bytes: ${bytes}"
+          test "$bytes" -gt 60000
+          file assets/stage1/masinloc-hero.avif | tee /tmp/hero-file.txt
+          grep -Eiq 'avif|av1 image|iso media' /tmp/hero-file.txt
+
+      - name: Commit verified hero binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/stage1/masinloc-hero.avif
+          git commit -m "Rebuild verified Stage 1 hero asset"
+          git push origin HEAD:agent/stage1-stability-cleanup
