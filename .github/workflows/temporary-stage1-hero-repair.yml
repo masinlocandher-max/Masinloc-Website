@@ -19,28 +19,52 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Rebuild and validate approved hero
+      - name: Inspect, rebuild, and validate approved hero
         shell: bash
         run: |
           set -euo pipefail
-          output='assets/stage1/masinloc-hero.avif'
-          : > "$output"
-          for part in \
-            assets/stage1/hero-b64-01.txt \
-            assets/stage1/hero-b64-02.txt \
-            assets/stage1/hero-b64-03.txt \
-            assets/stage1/hero-b64-04.txt \
-            assets/stage1/hero-b64-05.txt \
-            assets/stage1/hero-b64-06.txt \
-            assets/stage1/hero-b64-07.txt
-          do
-            tr -d '\r\n' < "$part" | base64 --decode >> "$output"
-          done
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, re
 
-          bytes=$(stat -c%s "$output")
+          files=[Path(f'assets/stage1/hero-b64-{i:02d}.txt') for i in range(1,8)]
+          cleaned=[]
+          for p in files:
+              raw=p.read_text(encoding='utf-8')
+              invalid=''.join(sorted(set(re.sub(r'[A-Za-z0-9+/=\r\n\t ]','',raw))))
+              c=''.join(raw.split())
+              cleaned.append(c)
+              print(f'{p.name}: raw={len(raw)} clean={len(c)} mod4={len(c)%4} equals={c.count("=")} first={c[:8]} last={c[-12:]} invalid={invalid!r}')
+
+          combined=''.join(cleaned)
+          eq=[i for i,ch in enumerate(combined) if ch=='=']
+          print(f'combined chars={len(combined)} mod4={len(combined)%4} equals={len(eq)} first_eq={eq[:10]} last_eq={eq[-10:]}')
+
+          methods=[]
+          methods.append(('combined-as-stored', combined))
+          methods.append(('combined-with-intermediate-padding-removed', ''.join(c.rstrip('=') for c in cleaned[:-1])+cleaned[-1]))
+
+          output=Path('assets/stage1/masinloc-hero.avif')
+          last_error=None
+          for name,s in methods:
+              try:
+                  data=base64.b64decode(s, validate=True)
+                  print(f'{name}: decoded={len(data)} bytes header={data[:16]!r}')
+                  if len(data)>60000 and data[4:12] in (b'ftypavif', b'ftypavis'):
+                      output.write_bytes(data)
+                      print(f'accepted method: {name}')
+                      break
+              except Exception as exc:
+                  last_error=exc
+                  print(f'{name}: FAILED {type(exc).__name__}: {exc}')
+          else:
+              raise SystemExit(f'No reconstruction method produced a valid complete AVIF; last error={last_error!r}')
+          PY
+
+          bytes=$(stat -c%s assets/stage1/masinloc-hero.avif)
           echo "hero bytes: ${bytes}"
           test "$bytes" -gt 60000
-          file "$output" | tee /tmp/hero-type.txt
+          file assets/stage1/masinloc-hero.avif | tee /tmp/hero-type.txt
           grep -Eiq 'AVIF|AV1|ISO Media' /tmp/hero-type.txt
 
       - name: Commit verified binary to repair branch
