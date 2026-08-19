@@ -1,11 +1,9 @@
 name: One-time exact hero rebuild
 
 on:
-  push:
-    branches:
-      - agent/fmb-approved-stage1
-    paths:
-      - .github/workflows/fix-hero-once.yml
+  pull_request:
+    branches: [main]
+    paths: [.github/workflows/fix-hero-once.yml]
 
 permissions:
   contents: write
@@ -14,13 +12,11 @@ jobs:
   rebuild:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch with history
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: agent/fmb-approved-stage1
           fetch-depth: 0
-
-      - name: Rebuild exact verified hero
+      - name: Rebuild and verify exact approved hero
         shell: bash
         run: |
           set -euo pipefail
@@ -29,21 +25,20 @@ jobs:
           for i in 01 02 03 04 05 06 07; do
             git show "${old}:assets/stage1/hero-b64-${i}.txt" > "/tmp/masinloc-hero/${i}.b64"
           done
-          printf '%s' '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' >> /tmp/masinloc-hero/02.b64
-          printf '%s' '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' >> /tmp/masinloc-hero/05.b64
-          printf '%s' '+gh74KVFzbUDr8Yo5DxXl90JiCCGtQ+8mLZFFLYViHanMTv2JJhCGjXrqqN+H8w5ecJ4cKRxH2l7UpYZgV/vFVPgqYUNWAlrOBUkiN07DR4mGOXn/zF2TQoXPgP4U4B2vzdc54o0zIbCel/fLuvk8c4ii9/Ii5qJ6eCB0KDpJyrhri7rNxHPMWSBwsZqCuME0FkVF9VklEc9Mv8nQ3hU3w3prqTILfBFJV25DRm0ILi6fexK9uqvDdYyIjAJOjHdSOYboBVpo5nmRZz4opSTWk9cKisuTi0EV8dbenGHoFoC3uQXG40gf82PTHe4iKROvXvOmtVm9z6wLN/GjFgvRTEGFejhGJK0bu9kbguhwu4KOkWmPVfmEuz2tbeIvnS1v4agTjJS0jRtnMGgeeUikXomVepYfcFb5Hhb3PY4GRaEJFyTEnMuxVQ1oVaAquFrWFrhdY+D25URpZ7fbUR7ga0WI7OPiUyesnSVvzfcCNV+pjyT/kjHSNCaH0R+pzWxuymrJDlgBYuUnnCQWY6E91fiOrxHbA0RrRBGvW4OvJBJ+cUSovBfwlewVxnqv5Id3axbI6vznD2F9DWFKQ=' >> /tmp/masinloc-hero/07.b64
+          cat .repair/hero-tail-02.txt >> /tmp/masinloc-hero/02.b64
+          cat .repair/hero-tail-05.txt >> /tmp/masinloc-hero/05.b64
+          cat .repair/hero-tail-07.txt >> /tmp/masinloc-hero/07.b64
           cat /tmp/masinloc-hero/01.b64 /tmp/masinloc-hero/02.b64 /tmp/masinloc-hero/03.b64 /tmp/masinloc-hero/04.b64 /tmp/masinloc-hero/05.b64 /tmp/masinloc-hero/06.b64 /tmp/masinloc-hero/07.b64 \
             | tr -d '\r\n' | base64 --decode > assets/stage1/masinloc-hero.avif
           test "$(stat -c%s assets/stage1/masinloc-hero.avif)" -eq 76913
           echo 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5  assets/stage1/masinloc-hero.avif' | sha256sum -c -
           python3 scripts/check-site.py
-
-      - name: Commit verified binary
+      - name: Commit verified binary to PR branch
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/stage1/masinloc-hero.avif
-          git commit -m 'Install verified exact Masinloc hero asset'
+          git commit -m "Install verified exact Masinloc hero asset"
           git push origin HEAD:agent/fmb-approved-stage1
