@@ -23,22 +23,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat \
+          output='assets/stage1/masinloc-hero.avif'
+          : > "$output"
+          for part in \
             assets/stage1/hero-b64-01.txt \
             assets/stage1/hero-b64-02.txt \
             assets/stage1/hero-b64-03.txt \
             assets/stage1/hero-b64-04.txt \
             assets/stage1/hero-b64-05.txt \
             assets/stage1/hero-b64-06.txt \
-            assets/stage1/hero-b64-07.txt \
-            | tr -d '\r\n' \
-            | base64 --decode \
-            > assets/stage1/masinloc-hero.avif
+            assets/stage1/hero-b64-07.txt
+          do
+            tr -d '\r\n' < "$part" | base64 --decode >> "$output"
+          done
 
-          bytes=$(stat -c%s assets/stage1/masinloc-hero.avif)
+          bytes=$(stat -c%s "$output")
           echo "hero bytes: ${bytes}"
           test "$bytes" -gt 60000
-          file assets/stage1/masinloc-hero.avif | tee /tmp/hero-type.txt
+          file "$output" | tee /tmp/hero-type.txt
           grep -Eiq 'AVIF|AV1|ISO Media' /tmp/hero-type.txt
 
       - name: Commit verified binary to repair branch
