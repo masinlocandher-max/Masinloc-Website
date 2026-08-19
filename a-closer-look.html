@@ -11,32 +11,32 @@
 <meta property="og:title" content="A Closer Look at Masinloc, Zambales">
 <meta property="og:description" content="History, Sambal Tina culture, people, traditions and local life in Masinloc, Zambales.">
 <meta property="og:url" content="https://masinloc-zambales.com/a-closer-look.html">
-<link rel="stylesheet" href="home.css">
+<meta property="og:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
+<link rel="stylesheet" href="site.css?v=20260820-1">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>
-<div class="about-header">
-  <header class="site-nav" id="siteNav">
-    <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
-    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
-    <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-      <a href="index.html">Home</a>
-      <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
-      <a class="connect-link" href="connect.html">Masinloc Connect</a>
-      <a href="mailto:hello@masinloc-zambales.com">Contact</a>
-    </nav>
-  </header>
-</div>
+<header class="site-nav" id="siteNav">
+  <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
+  <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
+    <a href="index.html">Home</a>
+    <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
+    <a href="verified-history.html">Verified History</a>
+    <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
+    <a class="connect-link" href="connect.html">Masinloc Connect</a>
+    <a href="mailto:hello@masinloc-zambales.com">Contact</a>
+  </nav>
+</header>
 
 <main id="main">
   <section class="about-hero">
-    <p class="section-label">A CLOSER LOOK AT MASINLOC</p>
     <h1>Masinloc is more than a place on the map.</h1>
     <p class="lead">It is a community shaped by history, language, culture, nature, livelihood, memory, and the people who call it home.</p>
   </section>
 
   <figure class="about-photo">
-    <img class="hero-image" src="assets/stage1/masinloc-hero.avif" width="1536" height="864" alt="Aerial view of the church and surrounding town of Masinloc, Zambales" loading="lazy" decoding="async">
+    <img src="assets/stage1/masinloc-hero.avif" alt="Aerial view of the church and surrounding town of Masinloc, Zambales" decoding="async">
   </figure>
 
   <article class="about-body">
@@ -58,23 +58,9 @@
 
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="connect.html">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></div>
+  <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>masinloc-zambales.com</span></div>
 </footer>
-<script>
-const toggle=document.getElementById('menuToggle');
-const nav=document.getElementById('primaryNav');
-if(toggle&&nav){
-  toggle.addEventListener('click',()=>{
-    const open=toggle.getAttribute('aria-expanded')==='true';
-    toggle.setAttribute('aria-expanded',String(!open));
-    nav.classList.toggle('open',!open);
-  });
-  nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-    toggle.setAttribute('aria-expanded','false');
-    nav.classList.remove('open');
-  }));
-}
-</script>
+<script src="site.js?v=20260820-1"></script>
 </body>
 </html>

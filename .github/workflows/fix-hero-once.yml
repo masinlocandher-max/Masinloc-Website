@@ -1,8 +1,7 @@
 name: One-time exact hero rebuild
 
-# Temporary workflow: this merge intentionally triggers the exact-photo rebuild.
 on:
-  push:
+  pull_request:
     branches: [main]
     paths: [.github/workflows/fix-hero-once.yml]
 
@@ -15,31 +14,125 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: agent/fmb-approved-stage1
           fetch-depth: 0
-      - name: Rebuild and verify exact approved hero
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Recover and verify exact approved hero
         shell: bash
         run: |
           set -euo pipefail
           old=e684aada9cd667f0a2ed2b23bf8ea201e1fe2655
-          mkdir -p /tmp/masinloc-hero
+          work=/tmp/masinloc-hero
+          mkdir -p "$work"
+
           for i in 01 02 03 04 05 06 07; do
-            git show "${old}:assets/stage1/hero-b64-${i}.txt" > "/tmp/masinloc-hero/${i}.b64"
+            git show "${old}:assets/stage1/hero-b64-${i}.txt" > "$work/${i}.b64"
           done
-          cat .repair/hero-tail-02.txt >> /tmp/masinloc-hero/02.b64
-          cat .repair/hero-tail-05.txt >> /tmp/masinloc-hero/05.b64
-          cat .repair/hero-tail-07.txt >> /tmp/masinloc-hero/07.b64
-          cat /tmp/masinloc-hero/01.b64 /tmp/masinloc-hero/02.b64 /tmp/masinloc-hero/03.b64 /tmp/masinloc-hero/04.b64 /tmp/masinloc-hero/05.b64 /tmp/masinloc-hero/06.b64 /tmp/masinloc-hero/07.b64 \
-            | tr -d '\r\n' | base64 --decode > assets/stage1/masinloc-hero.avif
-          test "$(stat -c%s assets/stage1/masinloc-hero.avif)" -eq 76913
-          echo 'e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5  assets/stage1/masinloc-hero.avif' | sha256sum -c -
+
+          cat "$work/01.b64" \
+              "$work/02.b64" .repair/hero-tail-02.txt \
+              "$work/03.b64" \
+              "$work/04.b64" \
+              "$work/05.b64" .repair/hero-tail-05.txt \
+              "$work/06.b64" \
+              "$work/07.b64" .repair/hero-tail-07.txt \
+            | tr -d '\r\n\t ' > "$work/all.b64"
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, hashlib
+
+          source = Path('/tmp/masinloc-hero/all.b64').read_text()
+          target = bytes.fromhex('e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5')
+          expected_size = 76913
+
+          # The reconstructed text has the correct total length. Four '=' characters
+          # are historical truncation placeholders inside the stream; only the final
+          # '=' is legitimate base64 padding. Recover those four characters by using
+          # the known SHA-256 of the exact approved AVIF. This changes no image content;
+          # it restores missing source characters from the original stored asset.
+          pads = [i for i, ch in enumerate(source) if ch == '=']
+          expected_pads = [70030, 70031, 101955, 101956, 102551]
+          if len(source) != 102552 or pads != expected_pads:
+              raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={pads}')
+
+          chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+          val = {c:i for i,c in enumerate(chars)}
+
+          masked = list(source)
+          for pos in pads[:-1]:
+              masked[pos] = 'A'
+          baseline = bytearray(base64.b64decode(''.join(masked), validate=True))
+          if len(baseline) != expected_size:
+              raise SystemExit(f'Unexpected decoded size: {len(baseline)}')
+
+          # First missing pair is positions 2-3 of base64 quantum 70028..70031.
+          b = val[source[70029]]
+          first_pairs = []
+          for x in range(64):
+              for y in range(64):
+                  first_pairs.append(bytes((((b & 15) << 4) | (x >> 2), ((x & 3) << 6) | y)))
+
+          # Second pair crosses two adjacent quanta: position 3 of 101952..101955,
+          # then position 0 of 101956..101959.
+          x2 = val[source[101954]]
+          bnext = val[source[101957]]
+          second_pairs = []
+          for y in range(64):
+              for a in range(64):
+                  second_pairs.append(bytes((((x2 & 3) << 6) | y, (a << 2) | (bnext >> 4))))
+
+          off1 = (70028 // 4) * 3 + 1
+          off2 = (101952 // 4) * 3 + 2
+          if (off1, off2) != (52522, 76466):
+              raise SystemExit(f'Unexpected patch offsets: {(off1, off2)}')
+
+          prefix = hashlib.sha256(bytes(baseline[:off1]))
+          middle = bytes(baseline[off1 + 2:off2])
+          suffix = bytes(baseline[off2 + 2:])
+
+          found = None
+          for p1 in first_pairs:
+              h1 = prefix.copy()
+              h1.update(p1)
+              h1.update(middle)
+              for p2 in second_pairs:
+                  h = h1.copy()
+                  h.update(p2)
+                  h.update(suffix)
+                  if h.digest() == target:
+                      found = (p1, p2)
+                      break
+              if found:
+                  break
+
+          if not found:
+              raise SystemExit('Exact approved hero could not be recovered from historical fragments')
+
+          baseline[off1:off1 + 2] = found[0]
+          baseline[off2:off2 + 2] = found[1]
+          output = Path('assets/stage1/masinloc-hero.avif')
+          output.write_bytes(baseline)
+
+          digest = hashlib.sha256(baseline).hexdigest()
+          print(f'recovered hero: {len(baseline)} bytes sha256={digest}')
+          if len(baseline) != expected_size or bytes.fromhex(digest) != target:
+              raise SystemExit('Recovered hero failed exact size/hash verification')
+          PY
+
           python3 scripts/check-site.py
-      - name: Commit verified binary
+
+      - name: Commit verified hero to repair branch
         shell: bash
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/stage1/masinloc-hero.avif
+          if git diff --cached --quiet; then
+            echo "Verified hero already present."
+            exit 0
+          fi
           git commit -m "Install verified exact Masinloc hero asset"
-          git push origin HEAD:main
+          git push origin HEAD:agent/fmb-approved-stage1
