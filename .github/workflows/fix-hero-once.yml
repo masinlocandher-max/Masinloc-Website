@@ -1,6 +1,6 @@
 name: One-time exact hero rebuild
 
-# This PR-only workflow exists solely to install the verified binary, then it is deleted.
+# PR branch is synced with main; run once, install the verified binary, then delete this workflow.
 on:
   pull_request:
     branches: [main]
