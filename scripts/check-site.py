@@ -2,6 +2,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
+import hashlib
 import re
 import struct
 import sys
@@ -38,9 +39,13 @@ FORBIDDEN_FILES = [
     "hero-loader.js",
     "hero-single.css",
     "home.css",
+    ".github/workflows/fix-hero-once.yml",
     "assets/stage1/masinloc-hero-visible.avif",
 ]
-FORBIDDEN_GLOBS = ["assets/stage1/hero-b64-*.txt"]
+FORBIDDEN_GLOBS = [
+    "assets/stage1/hero-b64-*.txt",
+    ".repair/*",
+]
 FORBIDDEN_PUBLIC_REFERENCES = [
     "hero-loader",
     "hero-b64-",
@@ -52,6 +57,8 @@ FUTURE_ROUTE = re.compile(
     r'href=["\'](?:/?)(?:discover|destinations|stories|sambal|local)(?:[/._-]|["\'])',
     re.I,
 )
+EXPECTED_HERO_BYTES = 76913
+EXPECTED_HERO_SHA256 = "e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5"
 
 errors = []
 
@@ -70,7 +77,7 @@ for rel in FORBIDDEN_FILES:
 
 for pattern in FORBIDDEN_GLOBS:
     for path in ROOT.glob(pattern):
-        fail(f"obsolete hero reconstruction artifact: {path.relative_to(ROOT)}")
+        fail(f"obsolete repair/reconstruction artifact: {path.relative_to(ROOT)}")
 
 
 class PageParser(HTMLParser):
@@ -157,8 +164,11 @@ for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glo
 hero = ROOT / "assets/stage1/masinloc-hero.avif"
 if hero.is_file():
     data = hero.read_bytes()
-    if len(data) <= 60000:
-        fail(f"hero asset is suspiciously small: {len(data)} bytes")
+    if len(data) != EXPECTED_HERO_BYTES:
+        fail(f"hero asset bytes changed unexpectedly: {len(data)} != {EXPECTED_HERO_BYTES}")
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != EXPECTED_HERO_SHA256:
+        fail(f"hero asset hash changed unexpectedly: {digest}")
     if b"ftypavif" not in data[:32]:
         fail("hero asset does not have an AVIF file signature")
     pos = data.find(b"ispe")
@@ -208,7 +218,7 @@ if errors:
 
 print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
-print("Hero is one direct 1536x864 AVIF with a complete container; obsolete reconstruction assets are absent.")
+print("Hero matches the locked 1536x864 asset by exact byte size and SHA-256.")
 print("Verified History and Masinloc Bulletin are valid purpose pages with no invented content entries.")
 print("Both editorial sections remain reachable from every public surface.")
-print("No unfinished future-stage route is exposed by the current public pages.")
+print("No repair leftovers, obsolete hero mechanisms or unfinished future-stage routes are exposed.")
