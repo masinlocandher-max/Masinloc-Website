@@ -50,6 +50,10 @@ jobs:
               raise SystemExit(f'Unexpected historical source shape: len={len(source)} pads={actual_pads}')
 
           replacements = {
+              27655: 'A',
+              27656: 'U',
+              27657: 'N',
+              27658: '8',
               70030: 'h',
               70031: '5',
               101955: 'Z',
