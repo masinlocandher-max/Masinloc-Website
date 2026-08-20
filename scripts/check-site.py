@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
 import hashlib
+import json
 import re
 import struct
 import sys
@@ -14,6 +15,12 @@ PUBLIC_PAGES = [
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
+]
+EDITORIAL_PAGES = [
+    "index.html",
+    "a-closer-look.html",
+    "verified-history.html",
+    "masinloc-bulletin.html",
 ]
 REQUIRED = [
     "index.html",
@@ -28,11 +35,17 @@ REQUIRED = [
     "site.js",
     "styles.css",
     "connect-polish.css",
+    "connect-shell.css",
+    "connect-shell.js",
     "app.js",
     "app-base.js",
     "security.js",
     "robots.txt",
     "sitemap.xml",
+    "vercel.json",
+    "BUILD-NOTES.md",
+    "scripts/browser-qa.mjs",
+    ".github/workflows/browser-qa.yml",
     "assets/masinloc-logo.webp",
     "assets/stage1/masinloc-hero.avif",
 ]
@@ -43,17 +56,33 @@ FORBIDDEN_FILES = [
     "home.css",
     ".github/workflows/fix-hero-once.yml",
     "assets/stage1/masinloc-hero-visible.avif",
+    "assets/masinloc-sign.jpg",
+    "assets/masinloc-secondary.jpg",
+    "foo2.txt",
+    "BUILD-MODE.md",
 ]
 FORBIDDEN_GLOBS = [
     "assets/stage1/hero-b64-*.txt",
     ".repair/*",
+    "*.tmp",
+    "*.bak",
+    "*~",
 ]
 FORBIDDEN_PUBLIC_REFERENCES = [
     "hero-loader",
     "hero-b64-",
     "hero-photo",
     "masinloc-hero-visible",
+    "masinloc-sign.jpg",
+    "masinloc-secondary.jpg",
     "WELCOME TO",
+]
+PLACEHOLDER_MARKERS = [
+    "lorem ipsum",
+    "sample article",
+    "example headline",
+    "dummy content",
+    "placeholder article",
 ]
 FUTURE_ROUTE = re.compile(
     r'href=["\'](?:/?)(?:discover|destinations|stories|sambal|local)(?:[/._-]|["\'])',
@@ -75,11 +104,11 @@ for rel in REQUIRED:
 
 for rel in FORBIDDEN_FILES:
     if (ROOT / rel).exists():
-        fail(f"obsolete file must not return: {rel}")
+        fail(f"obsolete/scratch file must not return: {rel}")
 
 for pattern in FORBIDDEN_GLOBS:
     for path in ROOT.glob(pattern):
-        fail(f"obsolete repair/reconstruction artifact: {path.relative_to(ROOT)}")
+        fail(f"temporary or reconstruction artifact: {path.relative_to(ROOT)}")
 
 
 class PageParser(HTMLParser):
@@ -90,6 +119,9 @@ class PageParser(HTMLParser):
         self.h1_count = 0
         self.has_description = False
         self.has_canonical = False
+        self.has_viewport = False
+        self.images = []
+        self.empty_hrefs = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -97,12 +129,20 @@ class PageParser(HTMLParser):
             self.h1_count += 1
         if attrs.get("id"):
             self.ids.append(attrs["id"])
+        if tag == "img":
+            self.images.append(attrs)
         for key in ("src", "href"):
             value = attrs.get(key)
-            if value:
-                self.refs.append(value.strip())
+            if value is not None:
+                value = value.strip()
+                if key == "href" and not value:
+                    self.empty_hrefs += 1
+                if value:
+                    self.refs.append(value)
         if tag == "meta" and attrs.get("name") == "description" and attrs.get("content"):
             self.has_description = True
+        if tag == "meta" and attrs.get("name") == "viewport" and attrs.get("content"):
+            self.has_viewport = True
         if tag == "link" and attrs.get("rel") == "canonical" and attrs.get("href"):
             self.has_canonical = True
 
@@ -126,6 +166,7 @@ def local_target(source: Path, value: str):
 
 for html in ROOT.glob("*.html"):
     text = html.read_text(encoding="utf-8")
+    lower = text.lower()
     parser = PageParser()
     parser.feed(text)
 
@@ -141,6 +182,13 @@ for html in ROOT.glob("*.html"):
         if not target.exists():
             fail(f"broken local reference: {html.name} -> {ref}")
 
+    if parser.empty_hrefs:
+        fail(f"{html.name}: contains empty href values")
+
+    for image in parser.images:
+        if "alt" not in image:
+            fail(f"{html.name}: image missing alt attribute: {image.get('src', '[inline image]')}")
+
     if html.name in PUBLIC_PAGES:
         if parser.h1_count != 1:
             fail(f"{html.name}: expected exactly one H1, found {parser.h1_count}")
@@ -148,6 +196,8 @@ for html in ROOT.glob("*.html"):
             fail(f"{html.name}: missing meta description")
         if not parser.has_canonical:
             fail(f"{html.name}: missing canonical link")
+        if not parser.has_viewport:
+            fail(f"{html.name}: missing viewport meta")
         duplicate_ids = sorted({value for value in parser.ids if parser.ids.count(value) > 1})
         if duplicate_ids:
             fail(f"{html.name}: duplicate IDs: {', '.join(duplicate_ids)}")
@@ -156,17 +206,48 @@ for html in ROOT.glob("*.html"):
         for menu_link in MENU_LINKS:
             if menu_link not in parser.refs:
                 fail(f"{html.name}: missing required public menu link to {menu_link}")
+        if "admin.html" in {urlsplit(ref).path for ref in parser.refs}:
+            fail(f"{html.name}: public navigation must not expose admin.html")
+        for marker in PLACEHOLDER_MARKERS:
+            if marker in lower:
+                fail(f"{html.name}: placeholder content detected: {marker}")
 
         local_ref_paths = {urlsplit(ref).path for ref in parser.refs}
         expected_polish = "connect-polish.css" if html.name == "connect.html" else "site-polish.css"
         if expected_polish not in local_ref_paths:
             fail(f"{html.name}: missing modern polish stylesheet {expected_polish}")
 
+    if html.name in EDITORIAL_PAGES:
+        local_ref_paths = {urlsplit(ref).path for ref in parser.refs}
+        if "site.js" not in local_ref_paths:
+            fail(f"{html.name}: missing shared public interaction script site.js")
+
 for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glob("*.js")):
     text = path.read_text(encoding="utf-8", errors="replace")
     for forbidden in FORBIDDEN_PUBLIC_REFERENCES:
         if forbidden in text:
             fail(f"obsolete Stage 1 mechanism referenced in {path.name}: {forbidden}")
+
+# The empty publishing sections must remain purpose-only until real reviewed material exists.
+for rel in ("verified-history.html", "masinloc-bulletin.html"):
+    path = ROOT / rel
+    if path.is_file():
+        text = path.read_text(encoding="utf-8").lower()
+        for marker in ("<time", "article-card", "article-list", "post-card", "story-card"):
+            if marker in text:
+                fail(f"{rel}: publishing entries detected before the section is ready: {marker}")
+
+# Masinloc Connect uses the same verified high-resolution place photograph and a dedicated responsive shell.
+connect = ROOT / "connect.html"
+if connect.is_file():
+    connect_text = connect.read_text(encoding="utf-8")
+    if connect_text.count("assets/stage1/masinloc-hero.avif") < 2:
+        fail("connect.html must use the verified hero for both landing and chooser photography")
+    for required_ref in ("connect-polish.css", "connect-shell.css", "connect-shell.js"):
+        if required_ref not in connect_text:
+            fail(f"connect.html missing required shell asset: {required_ref}")
+    if "connect-menu-toggle" not in connect_text:
+        fail("connect.html missing responsive navigation toggles")
 
 hero = ROOT / "assets/stage1/masinloc-hero.avif"
 if hero.is_file():
@@ -217,6 +298,26 @@ if admin.is_file():
     if "noindex" not in admin_text or "nofollow" not in admin_text:
         fail("admin.html must remain noindex,nofollow")
 
+sitemap = ROOT / "sitemap.xml"
+if sitemap.is_file():
+    sitemap_text = sitemap.read_text(encoding="utf-8").lower()
+    for forbidden in ("admin.html", "404.html"):
+        if forbidden in sitemap_text:
+            fail(f"sitemap.xml must not publish {forbidden}")
+    for rel in ("a-closer-look.html", "verified-history.html", "masinloc-bulletin.html", "connect.html"):
+        if rel not in sitemap_text:
+            fail(f"sitemap.xml missing current public route: {rel}")
+
+vercel = ROOT / "vercel.json"
+if vercel.is_file():
+    try:
+        config = json.loads(vercel.read_text(encoding="utf-8"))
+        deployment_enabled = config.get("git", {}).get("deploymentEnabled", {})
+        if not isinstance(deployment_enabled, dict) or deployment_enabled.get("agent/*") is not False:
+            fail("vercel.json must keep agent/* preview deployments disabled during staged development")
+    except json.JSONDecodeError as exc:
+        fail(f"vercel.json is invalid JSON: {exc}")
+
 if errors:
     print("SITE INTEGRITY CHECK FAILED")
     for item in errors:
@@ -225,5 +326,7 @@ if errors:
 
 print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
-print("The exact approved hero remains byte-locked and intact.")
-print("Modern public-site and Masinloc Connect polish layers are present on every public surface.")
+print("The exact approved hero remains byte-locked and intact across the public shell and Masinloc Connect.")
+print("Modern public-site and Masinloc Connect polish/navigation layers are present on every public surface.")
+print("Purpose-only History/Bulletin sections remain free of placeholder publishing entries.")
+print("Staged agent branches remain protected from automatic Vercel preview deployment.")

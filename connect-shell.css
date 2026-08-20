@@ -1,0 +1,237 @@
+/* Responsive navigation and brand-consistency shell for Masinloc Connect.
+   Presentation only: submission and data logic remain untouched. */
+
+:root{
+  --masinloc-blue:#0D3B9E;
+  --masinloc-blue-bright:#1E63E9;
+  --masinloc-red:#E61E25;
+  --masinloc-yellow:#FFC700;
+  --masinloc-navy:#061A46;
+  --masinloc-navy-deep:#03112F;
+  --masinloc-ink:#111827;
+  --masinloc-line:#E6E9F0;
+}
+
+.overlay-nav,
+.form-header{
+  background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid rgba(17,24,39,.08)!important;
+  -webkit-backdrop-filter:saturate(150%) blur(18px);
+  backdrop-filter:saturate(150%) blur(18px);
+}
+
+.overlay-nav img,
+.form-header img{
+  width:clamp(150px,13vw,184px)!important;
+  height:auto;
+}
+
+.overlay-nav nav,
+.form-header nav{
+  align-items:center;
+}
+
+.overlay-nav nav a,
+.form-header nav a{
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:.02em!important;
+}
+
+.overlay-nav nav .connect-current,
+.form-header nav .connect-current{
+  color:#fff!important;
+  background:var(--masinloc-blue)!important;
+  border-radius:999px;
+  padding:11px 17px!important;
+  box-shadow:0 7px 22px rgba(13,59,158,.16);
+}
+
+.overlay-nav nav .connect-current::after{display:none!important}
+
+/* Make the functional Connect footer read as part of the same Masinloc family. */
+.site-footer{
+  position:relative;
+  background:var(--masinloc-navy-deep)!important;
+  color:#fff;
+}
+
+.site-footer::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--masinloc-blue-bright) 0 33.333%,var(--masinloc-red) 33.333% 66.666%,var(--masinloc-yellow) 66.666%);
+}
+
+.site-footer .footer-brand img{
+  width:184px!important;
+  filter:brightness(0) invert(1)!important;
+}
+
+.site-footer .footer-brand p,
+.site-footer .footer-bottom{
+  color:rgba(255,255,255,.48)!important;
+}
+
+.site-footer .footer-item span{
+  color:var(--masinloc-yellow)!important;
+  letter-spacing:.14em;
+}
+
+.connect-menu-toggle{
+  display:none;
+  width:44px;
+  height:44px;
+  padding:0;
+  border:0;
+  border-radius:999px;
+  background:transparent;
+  color:var(--masinloc-navy);
+  position:relative;
+  flex:0 0 44px;
+}
+
+.connect-menu-toggle span{
+  position:absolute;
+  left:12px;
+  right:12px;
+  height:2px;
+  border-radius:999px;
+  background:currentColor;
+  transition:transform 220ms cubic-bezier(.16,1,.3,1),top 220ms cubic-bezier(.16,1,.3,1);
+}
+
+.connect-menu-toggle span:first-child{top:16px}
+.connect-menu-toggle span:last-child{top:26px}
+
+.connect-menu-toggle:focus-visible{
+  outline:3px solid rgba(30,99,233,.24);
+  outline-offset:2px;
+}
+
+@media(max-width:800px){
+  body.connect-menu-open{overflow:hidden}
+
+  .overlay-nav,
+  .form-header{
+    z-index:90;
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    flex-wrap:nowrap!important;
+    gap:0!important;
+    height:76px!important;
+    min-height:76px!important;
+    padding:0 20px!important;
+  }
+
+  .overlay-nav .logo-link,
+  .form-header .form-logo{
+    display:flex;
+    align-items:center;
+    min-width:0;
+    flex:0 0 auto;
+  }
+
+  .overlay-nav img,
+  .form-header img{
+    width:148px!important;
+  }
+
+  .connect-menu-toggle{
+    display:block;
+    margin:0 0 0 auto;
+    align-self:center;
+  }
+
+  .overlay-nav nav,
+  .form-header nav{
+    display:none!important;
+    position:absolute;
+    top:100%;
+    left:0;
+    right:0;
+    z-index:95;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0!important;
+    padding:10px 20px 22px;
+    background:rgba(255,255,255,.985);
+    border-top:1px solid rgba(17,24,39,.06);
+    border-bottom:1px solid var(--masinloc-line);
+    border-radius:0 0 18px 18px;
+    box-shadow:0 22px 50px rgba(3,17,47,.14);
+    -webkit-backdrop-filter:saturate(150%) blur(18px);
+    backdrop-filter:saturate(150%) blur(18px);
+    overflow:visible!important;
+    white-space:normal!important;
+  }
+
+  .overlay-nav.nav-open nav,
+  .form-header.nav-open nav{
+    display:flex!important;
+    animation:connect-menu-in 240ms cubic-bezier(.16,1,.3,1) both;
+  }
+
+  .overlay-nav nav a,
+  .form-header nav a{
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    padding:0!important;
+    font-size:13px!important;
+    color:var(--masinloc-ink)!important;
+    border-bottom:1px solid #EEF1F5;
+    flex:0 0 auto;
+  }
+
+  .overlay-nav nav .connect-current,
+  .form-header nav .connect-current{
+    justify-content:center;
+    min-height:46px;
+    margin:10px 0 4px;
+    padding:0 16px!important;
+    color:#fff!important;
+    border-bottom:0;
+  }
+
+  .overlay-nav nav a:last-child,
+  .form-header nav a:last-child{
+    border-bottom:0;
+  }
+
+  .overlay-nav nav a::after{
+    display:none!important;
+  }
+
+  .landing-view .hero-copy{top:112px!important}
+  .chooser-view{padding-top:76px!important}
+
+  .nav-open .connect-menu-toggle span:first-child{
+    top:21px;
+    transform:rotate(45deg);
+  }
+
+  .nav-open .connect-menu-toggle span:last-child{
+    top:21px;
+    transform:rotate(-45deg);
+  }
+
+  @keyframes connect-menu-in{
+    from{opacity:0;transform:translateY(-8px)}
+    to{opacity:1;transform:none}
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .connect-menu-toggle span,
+  .overlay-nav.nav-open nav,
+  .form-header.nav-open nav{
+    transition:none!important;
+    animation:none!important;
+  }
+}

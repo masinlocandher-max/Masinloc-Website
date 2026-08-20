@@ -1,0 +1,98 @@
+/* Brand-consistency layer for the private Masinloc Connect admin workspace.
+   Keeps the admin information architecture and behavior intact. */
+
+:root{
+  --navy:#061A46;
+  --blue:#0D3B9E;
+  --blue-bright:#1E63E9;
+  --red:#E61E25;
+  --yellow:#FFC700;
+  --ink:#111827;
+  --muted:#6E778C;
+  --line:#E6E9F0;
+  --bg:#F7F8FB;
+  --white:#FFFFFF;
+  --shadow:0 18px 55px rgba(3,17,47,.08);
+  --font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;
+  --font-editorial:Georgia,"Times New Roman",serif;
+}
+
+body{
+  font-family:var(--font-ui)!important;
+  color:var(--ink)!important;
+  background:var(--bg)!important;
+  text-rendering:optimizeLegibility;
+}
+
+::selection{background:rgba(30,99,233,.16);color:var(--navy)}
+button,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid rgba(30,99,233,.24);
+  outline-offset:3px;
+}
+
+.login-shell{background:linear-gradient(180deg,#FFFFFF 0%,#F5F7FB 100%)!important}
+.login-card,.workspace,.metric,.modal-card{
+  border-color:var(--line)!important;
+  box-shadow:var(--shadow)!important;
+}
+.login-card{border-radius:20px!important}
+.admin-logo{width:184px!important}
+.kicker{color:var(--blue)!important;letter-spacing:.18em!important}
+.login-card h1,.hero-row h1,.detail-title{
+  color:var(--navy)!important;
+  letter-spacing:-.03em;
+}
+.login-card h1,.hero-row h1{
+  font-family:var(--font-editorial)!important;
+  font-weight:400!important;
+  font-size:clamp(30px,3vw,44px)!important;
+}
+
+.primary,.editor-actions button{
+  background:var(--blue)!important;
+  border-radius:999px!important;
+}
+.secondary,.top-actions button,.view-btn,.attachment-list button{
+  border-radius:999px!important;
+}
+
+.topbar{
+  background:rgba(255,255,255,.94)!important;
+  border-bottom-color:var(--line)!important;
+  -webkit-backdrop-filter:saturate(150%) blur(18px);
+  backdrop-filter:saturate(150%) blur(18px);
+}
+.brand-row img{width:148px!important}
+.brand-row strong{color:var(--navy)!important}
+
+.dashboard{max-width:1240px!important}
+.metric,.workspace{border-radius:18px!important}
+.tabs button{border-radius:999px!important}
+.tabs button.active{background:rgba(30,99,233,.10)!important;color:var(--blue)!important}
+.filters input,.filters select,.detail-field,.admin-editor select,.admin-editor textarea{
+  border-color:var(--line)!important;
+  border-radius:10px!important;
+}
+
+.workspace{position:relative}
+.workspace::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--blue-bright) 0 33.333%,var(--red) 33.333% 66.666%,var(--yellow) 66.666%);
+  z-index:1;
+}
+
+.status{border-radius:999px!important}
+.modal{background:rgba(3,17,47,.52)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.modal-card{border-radius:20px!important}
+
+@media(max-width:520px){
+  .admin-logo{width:160px!important}
+  .login-card{border-radius:18px!important}
+  .brand-row img{width:132px!important}
+}

@@ -9,18 +9,21 @@
 <link rel="canonical" href="https://masinloc-zambales.com/connect.html">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="connect-polish.css?v=20260820-1">
+<link rel="stylesheet" href="connect-shell.css?v=20260820-2">
 </head>
 <body>
 <div class="site">
 
 <header class="overlay-nav" id="overlayNav">
-  <a href="#" class="logo-link" id="homeLogo"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
-  <nav>
+  <a href="#" class="logo-link" id="homeLogo" aria-label="Masinloc Connect home"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
+  <button class="connect-menu-toggle" type="button" aria-expanded="false" aria-controls="connectPrimaryNav" aria-label="Open menu"><span></span><span></span></button>
+  <nav id="connectPrimaryNav" aria-label="Primary navigation">
     <a href="index.html">Home</a>
     <a href="a-closer-look.html">A Closer Look</a>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
-    <a href="mailto:hello@masinloc-zambales.com">Contact Us</a>
+    <a class="connect-current" href="connect.html" aria-current="page">Masinloc Connect</a>
+    <a href="mailto:hello@masinloc-zambales.com">Contact</a>
   </nav>
 </header>
 
@@ -32,7 +35,7 @@
 <main>
 <section class="view active landing-view" id="landingView">
   <div class="hero">
-    <img class="hero-img" src="assets/masinloc-sign.jpg" alt="Masinloc, Zambales">
+    <img class="hero-img" src="assets/stage1/masinloc-hero.avif" alt="Aerial view of the church and surrounding town of Masinloc, Zambales" fetchpriority="high" decoding="async">
     <div class="hero-fade"></div>
     <div class="hero-copy">
       <p class="eyebrow">BE PART OF</p>
@@ -54,7 +57,7 @@
 </section>
 
 <section class="view chooser-view" id="chooserView" hidden>
-  <div class="chooser-bg"><img src="assets/masinloc-secondary.jpg" alt=""></div><div class="chooser-fade"></div>
+  <div class="chooser-bg"><img src="assets/stage1/masinloc-hero.avif" alt=""></div><div class="chooser-fade"></div>
   <div class="chooser-content">
     <h2>What would you like to share?</h2><div class="brand-rule centered"><i></i><b></b><span></span></div><p>Choose a category to get started.<br>You can only submit one at a time.</p>
     <div class="chooser-grid">
@@ -67,14 +70,22 @@
 </section>
 
 <section class="view form-view" id="formView" hidden>
-  <header class="form-header"><a href="#" class="form-logo"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a><nav><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="mailto:hello@masinloc-zambales.com">Contact Us</a></nav></header>
+  <header class="form-header">
+    <a href="#" class="form-logo" aria-label="Masinloc Connect home"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
+    <button class="connect-menu-toggle" type="button" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button>
+    <nav aria-label="Primary navigation"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a class="connect-current" href="connect.html" aria-current="page">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></nav>
+  </header>
   <div class="form-tools"><button type="button" id="changeCategory">← Change category</button><span id="saveStatus">Saved on this device</span></div>
   <div class="progress-rail" id="progressRail"></div>
   <div class="form-grid"><aside class="category-aside" id="categoryAside"></aside><section class="form-card" id="formCard"></section></div>
 </section>
 
 <section class="view about-view" id="aboutView" hidden>
-  <header class="form-header"><a href="index.html" class="form-logo"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a><nav><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="mailto:hello@masinloc-zambales.com">Contact Us</a></nav></header>
+  <header class="form-header">
+    <a href="index.html" class="form-logo"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"></a>
+    <button class="connect-menu-toggle" type="button" aria-expanded="false" aria-label="Open menu"><span></span><span></span></button>
+    <nav aria-label="Primary navigation"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a class="connect-current" href="connect.html" aria-current="page">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></nav>
+  </header>
   <div class="about-inner"><p class="about-label">MASINLOC CONNECT</p><h2>Our mission.<br>Our vision.</h2>
     <div class="mission-vision">
       <article><span>OUR MISSION</span><h3>To connect, preserve, and create opportunities for Masinloqueños.</h3><p>Masinloc Connect gives local businesses, community stories, historical materials, and professional talent a shared digital space to become more visible, useful, and easier to discover.</p></article>
@@ -90,6 +101,7 @@
 <footer class="site-footer"><div class="footer-main"><div class="footer-brand"><img src="assets/masinloc-logo.webp" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div><div class="footer-item"><span>FACEBOOK</span><strong>Discover Masinloc</strong></div><div class="footer-item"><span>EMAIL</span><a href="mailto:hello@masinloc-zambales.com">hello@masinloc-zambales.com</a></div></div><div class="footer-bottom"><span>© 2026 Masinloc Connect. All rights reserved.</span><span>masinloc-zambales.com</span></div></footer>
 </div>
 <script src="security.js"></script>
+<script src="connect-shell.js?v=20260820-2"></script>
 <script src="app.js"></script>
 </body>
 </html>
