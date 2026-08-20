@@ -1,0 +1,40 @@
+/* Dedicated editorial framing for the user-approved A Closer Look photograph.
+   The source image is never cropped, stretched, or upscaled beyond its native width. */
+
+.about-page .about-photo{
+  width:min(798px,calc(100% - 56px));
+  max-width:798px;
+  max-height:none;
+  aspect-ratio:auto;
+  margin:0 auto;
+  overflow:hidden;
+  background:#fff;
+  border-radius:24px;
+  box-shadow:0 24px 70px rgba(3,17,47,.12);
+}
+
+.about-page .about-photo img{
+  display:block;
+  width:100%;
+  height:auto;
+  max-width:798px;
+  object-fit:contain;
+  object-position:center;
+}
+
+@media(max-width:980px){
+  .about-page .about-photo{
+    width:min(798px,calc(100% - 40px));
+    aspect-ratio:auto;
+    border-radius:20px;
+  }
+}
+
+@media(max-width:520px){
+  .about-page .about-photo{
+    width:calc(100% - 28px);
+    aspect-ratio:auto;
+    border-radius:16px;
+    box-shadow:0 18px 46px rgba(3,17,47,.11);
+  }
+}
