@@ -20,6 +20,7 @@ EXPECTED_NAV = [
     ("mailto:hello@masinloc-zambales.com", "Contact"),
 ]
 EXPECTED_LOGO = "assets/masinloc-logo.webp"
+STABILITY_CSS = "site-stability.css"
 errors = []
 
 
@@ -89,6 +90,9 @@ for page_name in PUBLIC_PAGES:
     if len(current) != 1 or current[0]["href"] != expected_current:
         fail(f"{page_name}: expected exactly one aria-current=page link for {expected_current}")
 
+    if STABILITY_CSS not in parser.stylesheets:
+        fail(f"{page_name}: missing shared mobile stability stylesheet {STABILITY_CSS}")
+
     if page_name == "connect.html":
         for required in ("styles.css", "connect-polish.css", "connect-shell.css"):
             if required not in parser.stylesheets:
@@ -101,14 +105,18 @@ for page_name in PUBLIC_PAGES:
 admin = (ROOT / "admin.html").read_text(encoding="utf-8")
 if "admin-polish.css" not in admin:
     fail("admin.html: missing Masinloc admin polish layer")
+if STABILITY_CSS not in admin:
+    fail("admin.html: missing shared mobile stability layer")
 if EXPECTED_LOGO not in admin:
     fail("admin.html: missing shared Masinloc logo asset")
 
 not_found = (ROOT / "404.html").read_text(encoding="utf-8")
 if EXPECTED_LOGO not in not_found:
     fail("404.html: missing shared Masinloc logo asset")
+if STABILITY_CSS not in not_found:
+    fail("404.html: missing shared mobile stability layer")
 
-for css in ("site.css", "site-polish.css", "connect-polish.css", "connect-shell.css", "admin-polish.css"):
+for css in ("site.css", "site-polish.css", "site-stability.css", "connect-polish.css", "connect-shell.css", "admin-polish.css"):
     if not (ROOT / css).is_file():
         fail(f"missing design-system surface: {css}")
 
@@ -119,4 +127,4 @@ if errors:
     sys.exit(1)
 
 print("DESIGN CONSISTENCY CHECK PASSED")
-print("Public navigation, logo usage, active states and design layers are aligned across Masinloc surfaces.")
+print("Public navigation, logo usage, active states, mobile stability and design layers are aligned across Masinloc surfaces.")
