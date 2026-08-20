@@ -1,0 +1,65 @@
+/* Mobile stability and shared brand rendering fixes. */
+
+img[src="assets/masinloc-logo.webp"]{
+  object-fit:contain;
+  image-rendering:auto;
+  -webkit-user-drag:none;
+}
+
+.brand img,
+.overlay-nav img,
+.form-header img,
+.footer-brand img,
+.admin-logo,
+.brand-row img{
+  aspect-ratio:320/78;
+  height:auto;
+}
+
+.quick-intro{
+  max-width:680px;
+  margin:-18px auto 30px;
+  color:#5E687D;
+  font-size:13px;
+  line-height:1.65;
+  text-align:center;
+}
+
+.hp-field{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden!important;
+  clip:rect(0 0 0 0)!important;
+  clip-path:inset(50%)!important;
+  white-space:nowrap!important;
+  left:-10000px!important;
+  top:auto!important;
+}
+
+@media(max-width:980px){
+  .site-nav .brand img{width:120px!important;max-width:120px!important}
+  .home-footer .footer-brand img{width:136px!important;max-width:136px!important}
+  .home-footer{padding-left:22px!important;padding-right:22px!important}
+}
+
+@media(max-width:800px){
+  .overlay-nav img,
+  .form-header img{width:120px!important;max-width:120px!important}
+  .site-footer .footer-brand img{width:136px!important;max-width:136px!important}
+  .quick-choices{padding-top:44px!important}
+  .quick-choices h2{margin-bottom:22px!important}
+  .quick-intro{margin:-8px auto 26px;padding:0 4px;font-size:12px}
+}
+
+@media(max-width:520px){
+  .site-nav{padding-left:18px!important;padding-right:16px!important}
+  .site-nav .brand img{width:116px!important;max-width:116px!important}
+  .overlay-nav,
+  .form-header{padding-left:18px!important;padding-right:14px!important}
+  .overlay-nav img,
+  .form-header img{width:116px!important;max-width:116px!important}
+  .home-footer .footer-brand img,
+  .site-footer .footer-brand img{width:128px!important;max-width:128px!important}
+  .footer-bottom{gap:10px;flex-wrap:wrap}
+}
