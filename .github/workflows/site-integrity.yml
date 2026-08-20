@@ -27,3 +27,4 @@ jobs:
           node --check app.js
           node --check admin.js
           node --check scripts/browser-qa.mjs
+          node --check scripts/connect-qa.mjs
