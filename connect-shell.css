@@ -119,10 +119,13 @@
   .form-header{
     z-index:90;
     display:flex!important;
+    flex-direction:row!important;
     align-items:center!important;
     justify-content:space-between!important;
     flex-wrap:nowrap!important;
+    gap:0!important;
     height:76px!important;
+    min-height:76px!important;
     padding:0 20px!important;
   }
 
@@ -131,6 +134,7 @@
     display:flex;
     align-items:center;
     min-width:0;
+    flex:0 0 auto;
   }
 
   .overlay-nav img,
@@ -163,6 +167,8 @@
     box-shadow:0 22px 50px rgba(3,17,47,.14);
     -webkit-backdrop-filter:saturate(150%) blur(18px);
     backdrop-filter:saturate(150%) blur(18px);
+    overflow:visible!important;
+    white-space:normal!important;
   }
 
   .overlay-nav.nav-open nav,
@@ -180,6 +186,7 @@
     font-size:13px!important;
     color:var(--masinloc-ink)!important;
     border-bottom:1px solid #EEF1F5;
+    flex:0 0 auto;
   }
 
   .overlay-nav nav .connect-current,
@@ -200,6 +207,9 @@
   .overlay-nav nav a::after{
     display:none!important;
   }
+
+  .landing-view .hero-copy{top:112px!important}
+  .chooser-view{padding-top:76px!important}
 
   .nav-open .connect-menu-toggle span:first-child{
     top:21px;
