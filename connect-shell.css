@@ -1,5 +1,85 @@
-/* Responsive navigation shell for Masinloc Connect.
-   Kept separate from submission styling and data logic. */
+/* Responsive navigation and brand-consistency shell for Masinloc Connect.
+   Presentation only: submission and data logic remain untouched. */
+
+:root{
+  --masinloc-blue:#0D3B9E;
+  --masinloc-blue-bright:#1E63E9;
+  --masinloc-red:#E61E25;
+  --masinloc-yellow:#FFC700;
+  --masinloc-navy:#061A46;
+  --masinloc-navy-deep:#03112F;
+  --masinloc-ink:#111827;
+  --masinloc-line:#E6E9F0;
+}
+
+.overlay-nav,
+.form-header{
+  background:rgba(255,255,255,.94)!important;
+  border-bottom:1px solid rgba(17,24,39,.08)!important;
+  -webkit-backdrop-filter:saturate(150%) blur(18px);
+  backdrop-filter:saturate(150%) blur(18px);
+}
+
+.overlay-nav img,
+.form-header img{
+  width:clamp(150px,13vw,184px)!important;
+  height:auto;
+}
+
+.overlay-nav nav,
+.form-header nav{
+  align-items:center;
+}
+
+.overlay-nav nav a,
+.form-header nav a{
+  font-size:12px!important;
+  font-weight:700!important;
+  letter-spacing:.02em!important;
+}
+
+.overlay-nav nav .connect-current,
+.form-header nav .connect-current{
+  color:#fff!important;
+  background:var(--masinloc-blue)!important;
+  border-radius:999px;
+  padding:11px 17px!important;
+  box-shadow:0 7px 22px rgba(13,59,158,.16);
+}
+
+.overlay-nav nav .connect-current::after{display:none!important}
+
+/* Make the functional Connect footer read as part of the same Masinloc family. */
+.site-footer{
+  position:relative;
+  background:var(--masinloc-navy-deep)!important;
+  color:#fff;
+}
+
+.site-footer::before{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--masinloc-blue-bright) 0 33.333%,var(--masinloc-red) 33.333% 66.666%,var(--masinloc-yellow) 66.666%);
+}
+
+.site-footer .footer-brand img{
+  width:184px!important;
+  filter:brightness(0) invert(1)!important;
+}
+
+.site-footer .footer-brand p,
+.site-footer .footer-bottom{
+  color:rgba(255,255,255,.48)!important;
+}
+
+.site-footer .footer-item span{
+  color:var(--masinloc-yellow)!important;
+  letter-spacing:.14em;
+}
 
 .connect-menu-toggle{
   display:none;
@@ -9,7 +89,7 @@
   border:0;
   border-radius:999px;
   background:transparent;
-  color:#061A46;
+  color:var(--masinloc-navy);
   position:relative;
   flex:0 0 44px;
 }
@@ -42,6 +122,8 @@
     align-items:center!important;
     justify-content:space-between!important;
     flex-wrap:nowrap!important;
+    height:76px!important;
+    padding:0 20px!important;
   }
 
   .overlay-nav .logo-link,
@@ -49,6 +131,11 @@
     display:flex;
     align-items:center;
     min-width:0;
+  }
+
+  .overlay-nav img,
+  .form-header img{
+    width:148px!important;
   }
 
   .connect-menu-toggle{
@@ -68,13 +155,14 @@
     flex-direction:column;
     align-items:stretch;
     gap:0!important;
-    padding:8px 18px 18px;
-    background:rgba(255,255,255,.98);
+    padding:10px 20px 22px;
+    background:rgba(255,255,255,.985);
     border-top:1px solid rgba(17,24,39,.06);
-    border-bottom:1px solid #E6E9F0;
+    border-bottom:1px solid var(--masinloc-line);
+    border-radius:0 0 18px 18px;
     box-shadow:0 22px 50px rgba(3,17,47,.14);
-    backdrop-filter:saturate(145%) blur(16px);
-    -webkit-backdrop-filter:saturate(145%) blur(16px);
+    -webkit-backdrop-filter:saturate(150%) blur(18px);
+    backdrop-filter:saturate(150%) blur(18px);
   }
 
   .overlay-nav.nav-open nav,
@@ -85,13 +173,23 @@
 
   .overlay-nav nav a,
   .form-header nav a{
-    min-height:46px;
+    min-height:48px;
     display:flex;
     align-items:center;
     padding:0!important;
-    font-size:12px!important;
-    color:#111827!important;
+    font-size:13px!important;
+    color:var(--masinloc-ink)!important;
     border-bottom:1px solid #EEF1F5;
+  }
+
+  .overlay-nav nav .connect-current,
+  .form-header nav .connect-current{
+    justify-content:center;
+    min-height:46px;
+    margin:10px 0 4px;
+    padding:0 16px!important;
+    color:#fff!important;
+    border-bottom:0;
   }
 
   .overlay-nav nav a:last-child,
