@@ -70,7 +70,9 @@ The 404 page is a deliberate exception: a minimal deep-navy recovery screen usin
 
 - Real Masinloc photography stays real.
 - No generative recreation, invented structures, altered geography, or fake destination imagery.
-- Use the approved hero as a normal static image asset.
+- Use the approved homepage hero as a normal static image asset.
+- A Closer Look uses its own approved editorial photograph at `assets/editorial/a-closer-look.avif`; do not reuse the homepage hero there.
+- Preserve the A Closer Look photograph's full frame and native proportions. Do not crop, stretch, or upscale it beyond its native 798 px width.
 - HTML and CSS overlays remain separate from photography.
 
 ## Responsive standard
