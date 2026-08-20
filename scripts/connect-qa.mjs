@@ -62,10 +62,7 @@ async function testMobileConnect() {
   const trap = page.locator('#websiteTrap');
   if (await trap.count() !== 1) fail('mobile/connect: honeypot field is missing');
   else {
-    const trapState = await trap.evaluate(el => ({
-      left: getComputedStyle(el.closest('.hp-field')).left,
-      tabIndex: el.tabIndex,
-    }));
+    const trapState = await trap.evaluate(el => ({ tabIndex: el.tabIndex }));
     if (trapState.tabIndex !== -1) fail('mobile/connect: honeypot is keyboard-focusable');
   }
 
@@ -78,6 +75,7 @@ async function testMobileConnect() {
   const businessFile = page.locator('input[name="brandLogo"]');
   if (await businessFile.count() !== 1) fail('mobile/connect: business logo input missing');
   else {
+    await businessFile.dispatchEvent('click');
     const attrs = await businessFile.evaluate(input => ({ accept: input.accept, multiple: input.multiple }));
     if (attrs.multiple) fail('mobile/connect: business logo input allows multiple files');
     for (const mime of ['image/jpeg', 'image/png', 'image/webp']) {
@@ -92,9 +90,16 @@ async function testMobileConnect() {
   await waitForConnectRuntime(page);
   await page.locator('.quick-card.story').click();
   await page.locator('#formView').waitFor({ state: 'visible' });
+  await page.locator('input[name="title"]').fill('QA story');
+  await page.locator('input[name="about"]').fill('QA topic');
+  await page.locator('#nextBtn').click();
+  await page.locator('textarea[name="story"]').fill('QA story details for form-flow validation.');
+  await page.locator('#nextBtn').click();
+
   const storyFile = page.locator('input[name="media"]');
   if (await storyFile.count() !== 1) fail('mobile/connect: story attachment input missing');
   else {
+    await storyFile.dispatchEvent('click');
     const attrs = await storyFile.evaluate(input => ({ accept: input.accept, multiple: input.multiple }));
     if (!attrs.multiple) fail('mobile/connect: story attachment input should allow multiple files');
     if (!attrs.accept.includes('application/pdf')) fail('mobile/connect: story attachment input does not allow PDF');
