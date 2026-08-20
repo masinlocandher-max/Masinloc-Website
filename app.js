@@ -1,5 +1,6 @@
 (function(){
   const ENDPOINT='https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-masinloc';
+  const DRAFT_MAX_AGE_MS=7*24*60*60*1000;
   let fileStore={};
   let persistedProfessional=null;
 
@@ -7,7 +8,7 @@
   style.textContent=`
     .form-header{display:none!important}
     .overlay-nav.inner-nav{position:relative!important;background:#fff!important;border-bottom:1px solid #eff0f4!important}
-    .backend-error{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:#fff1f2;color:#b4232d;font-size:9px;line-height:1.45}
+    .backend-error{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:#fff1f2;color:#b4232d;font-size:11px;line-height:1.45}
     .next[disabled]{opacity:.62;cursor:wait}
   `;
   document.head.appendChild(style);
@@ -15,6 +16,7 @@
   function selectedFilesFor(category){
     if(category==='business') return fileStore.brandLogo||[];
     if(category==='story') return fileStore.media||[];
+    if(category==='resume') return fileStore.existingResume||[];
     return [];
   }
 
@@ -24,6 +26,7 @@
     card.querySelector('.backend-error')?.remove();
     const el=document.createElement('div');
     el.className='backend-error';
+    el.setAttribute('role','alert');
     el.textContent=message || 'We could not submit this right now. Please try again.';
     card.appendChild(el);
   }
@@ -48,11 +51,13 @@
     delete clean.consent;
     delete clean.brandLogo;
     delete clean.media;
+    delete clean.existingResume;
+    clean.website=document.querySelector('#websiteTrap')?.value||'';
     form.append('payload',JSON.stringify(clean));
     if(window.masinlocTurnstileToken) form.append('turnstileToken',window.masinlocTurnstileToken);
     selectedFilesFor(category).forEach((file,i)=>form.append(`file_${i}`,file,file.name));
 
-    const response=await fetch(ENDPOINT,{method:'POST',body:form});
+    const response=await fetch(ENDPOINT,{method:'POST',body:form,credentials:'omit',cache:'no-store'});
     let result={};
     try{ result=await response.json(); }catch{}
     if(!response.ok || !result.ok){
@@ -63,15 +68,16 @@
 
   function showSuccess(result,category,payload){
     const ref=result.reference_code || result.reference || `MC-${Date.now().toString().slice(-6)}`;
-    lastSubmission={reference:ref,type:category,data:{...payload},submittedAt:new Date().toISOString(),backendId:result.id||null};
-    storeSet('masinlocLastSubmission',JSON.stringify(lastSubmission));
+    const submittedAt=new Date().toISOString();
+    lastSubmission={reference:ref,type:category,data:{...payload},submittedAt,backendId:result.id||null};
+    storeSet('masinlocLastSubmission',JSON.stringify({reference:ref,type:category,data:{},submittedAt,backendId:result.id||null}));
     storeRemove('masinlocConnectDraft');
     document.querySelector('#refCode').textContent=ref;
     const lead=document.querySelector('#successView .success-panel>p');
     const note=document.querySelector('#successView .success-small');
     if(category==='resume'){
       lead.textContent='Your resume information has been submitted.';
-      note.textContent='We will use your submitted credentials to prepare your resume using the unified Masinloc Connect resume design.';
+      note.textContent='Your information and any optional PDF you attached are private and available only to the review team.';
     }else if(category==='professional' && (payload.publicProfile==='no' || payload.publicProfile===false)){
       lead.textContent='Thank you for your submission.';
       note.textContent='Your professional profile will not be posted publicly, as requested.';
@@ -89,9 +95,45 @@
     configs.resume.steps[3]={
       label:'Review',
       title:'Review your resume information.',
-      help:'We will use these details to prepare your resume using one standard Masinloc Connect design.',
+      help:'Check the details below. If you already have a resume, you may attach one PDF up to 10 MB.',
+      fields:[{name:'existingResume',label:'Existing resume PDF, if any',type:'file',required:false,full:true}],
       review:true,
       consent:'I confirm that the information I submitted may be used to prepare my resume and support future job applications.'
+    };
+
+    const originalStoreGet=storeGet;
+    const draftIsFresh=(draft)=>{
+      const updated=Date.parse(draft?.updatedAt||'');
+      return Number.isFinite(updated) && Date.now()-updated<=DRAFT_MAX_AGE_MS;
+    };
+
+    saveDraft=function(){
+      if(!type)return;
+      const draftData={...data};
+      delete draftData.brandLogo;
+      delete draftData.media;
+      delete draftData.existingResume;
+      storeSet('masinlocConnectDraft',JSON.stringify({type,step,data:draftData,updatedAt:new Date().toISOString()}));
+      const status=document.querySelector('#saveStatus');
+      if(status) status.textContent='Saved on this device for 7 days';
+    };
+
+    checkDraft=function(){
+      const raw=originalStoreGet('masinlocConnectDraft');
+      if(!raw){document.querySelector('#resumeBar').hidden=true;return}
+      try{
+        const draft=JSON.parse(raw);
+        if(!draftIsFresh(draft)){
+          storeRemove('masinlocConnectDraft');
+          document.querySelector('#resumeBar').hidden=true;
+          return;
+        }
+        document.querySelector('#resumeMeta').textContent=`${configs[draft.type]?.label||'Submission'} · Step ${(draft.step||0)+1} of 4`;
+        document.querySelector('#resumeBar').hidden=false;
+      }catch{
+        storeRemove('masinlocConnectDraft');
+        document.querySelector('#resumeBar').hidden=true;
+      }
     };
 
     show=function(name){
@@ -131,7 +173,7 @@
 
         const modal=document.createElement('div');
         modal.className='resume-modal';
-        modal.innerHTML=`<div class="resume-modal-card"><button class="modal-close" type="button" id="resumeNoTop">×</button><p class="modal-kicker">YOUR PROFILE WILL STAY PRIVATE</p><h2>Would you like us to create your resume?</h2><p>We can use your professional information as a starting point, ask a few more questions about your credentials, then prepare your resume using the standard Masinloc Connect resume design.</p><div class="modal-actions"><button type="button" class="modal-primary" id="resumeYes">Yes, create my resume</button><button type="button" class="modal-secondary" id="resumeNo">No, thank you</button></div></div>`;
+        modal.innerHTML=`<div class="resume-modal-card"><button class="modal-close" type="button" id="resumeNoTop" aria-label="Close">×</button><p class="modal-kicker">YOUR PROFILE WILL STAY PRIVATE</p><h2>Would you like us to create your resume?</h2><p>We can use your professional information as a starting point, ask a few more questions about your credentials, then prepare your resume using the standard Masinloc Connect resume design.</p><div class="modal-actions"><button type="button" class="modal-primary" id="resumeYes">Yes, create my resume</button><button type="button" class="modal-secondary" id="resumeNo">No, thank you</button></div></div>`;
         document.body.appendChild(modal);
 
         document.querySelector('#resumeYes').addEventListener('click',()=>{
@@ -195,6 +237,7 @@
       }
     },true);
 
+    checkDraft();
     show('landing');
   };
   document.body.appendChild(base);
