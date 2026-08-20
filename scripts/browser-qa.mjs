@@ -12,6 +12,7 @@ const pages = [
   ['verified-history', '/verified-history.html'],
   ['bulletin', '/masinloc-bulletin.html'],
   ['connect', '/connect.html'],
+  ['admin', '/admin.html'],
   ['not-found', '/404.html'],
 ];
 
@@ -116,6 +117,19 @@ async function assertSharedNavigation(page, pageName, viewportName) {
   }
 }
 
+async function assertAdminSurface(page, viewportName) {
+  const login = page.locator('#loginView');
+  if (!(await login.isVisible())) failures.push(`${viewportName}/admin: login surface is not visible`);
+  const logo = login.locator('img[src="assets/masinloc-logo.webp"]');
+  if (!(await logo.isVisible())) failures.push(`${viewportName}/admin: Masinloc logo is not visible`);
+  const visibleHeadings = page.locator('h1:visible');
+  if (await visibleHeadings.count() !== 1) failures.push(`${viewportName}/admin: expected exactly one visible H1`);
+  const noindex = await page.locator('meta[name="robots"]').getAttribute('content');
+  if (!noindex?.includes('noindex') || !noindex?.includes('nofollow')) {
+    failures.push(`${viewportName}/admin: private workspace indexing protection is missing`);
+  }
+}
+
 for (const [viewportName, viewport] of viewports) {
   const context = await browser.newContext({ viewport });
 
@@ -137,12 +151,14 @@ for (const [viewportName, viewport] of viewports) {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       if (overflow > 1) failures.push(`${viewportName}/${pageName}: horizontal overflow ${overflow}px`);
 
-      if (pageName !== 'not-found') {
+      if (!['not-found', 'admin'].includes(pageName)) {
         const h1 = page.locator('h1');
         if (await h1.count() !== 1) failures.push(`${viewportName}/${pageName}: expected exactly one H1`);
         else if (!(await h1.isVisible())) failures.push(`${viewportName}/${pageName}: H1 is not visible`);
         await assertSharedNavigation(page, pageName, viewportName);
       }
+
+      if (pageName === 'admin') await assertAdminSurface(page, viewportName);
 
       if (pageName === 'home') {
         await assertVerifiedImage(page, '.hero-media img', `${viewportName}/home hero`);
@@ -168,7 +184,7 @@ for (const [viewportName, viewport] of viewports) {
         await page.evaluate(() => window.scrollTo(0, 0));
       }
 
-      if (viewportName === 'mobile' && pageName !== 'connect' && pageName !== 'not-found') {
+      if (viewportName === 'mobile' && !['connect', 'admin', 'not-found'].includes(pageName)) {
         const toggle = page.locator('#menuToggle');
         if (!(await toggle.isVisible())) {
           failures.push(`mobile/${pageName}: menu toggle is not visible`);
@@ -233,4 +249,4 @@ if (failures.length) {
 }
 
 console.log('BROWSER QA PASSED');
-console.log('Desktop/mobile layout, top states, shared navigation and current-page styling are consistent.');
+console.log('Desktop/mobile layout, public navigation, admin shell and current-page styling are consistent.');
