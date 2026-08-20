@@ -15,6 +15,23 @@ const pages = [
   ['not-found', '/404.html'],
 ];
 
+const expectedNavText = [
+  'Home',
+  'A Closer Look',
+  'Verified History',
+  'Masinloc Bulletin',
+  'Masinloc Connect',
+  'Contact',
+];
+
+const expectedCurrentHref = {
+  home: 'index.html',
+  'closer-look': 'a-closer-look.html',
+  'verified-history': 'verified-history.html',
+  bulletin: 'masinloc-bulletin.html',
+  connect: 'connect.html',
+};
+
 const viewports = [
   ['desktop', { width: 1440, height: 1000 }],
   ['mobile', { width: 390, height: 844 }],
@@ -33,7 +50,7 @@ async function revealPage(page) {
       await target.scrollIntoViewIfNeeded();
       await page.waitForTimeout(100);
     } catch {
-      // A detached target is not a visual failure; the page-level checks below will catch broken layout.
+      // A detached target is not a visual failure; page-level checks below catch broken layout.
     }
   }
 
@@ -72,6 +89,33 @@ async function assertVerifiedImage(page, selector, label) {
   if (state.opacity < 0.9) failures.push(`${label}: image opacity ${state.opacity}`);
 }
 
+async function assertSharedNavigation(page, pageName, viewportName) {
+  const header = page.locator('header').first();
+  const logo = header.locator('img[src="assets/masinloc-logo.webp"]').first();
+  if (!(await logo.isVisible())) failures.push(`${viewportName}/${pageName}: shared Masinloc header logo is not visible`);
+
+  const nav = header.locator('nav').first();
+  const links = nav.locator('a');
+  const labels = [];
+  for (let index = 0; index < await links.count(); index += 1) {
+    labels.push((await links.nth(index).innerText()).trim().replace(/\s+/g, ' '));
+  }
+
+  if (JSON.stringify(labels) !== JSON.stringify(expectedNavText)) {
+    failures.push(`${viewportName}/${pageName}: navigation labels/order differ: ${JSON.stringify(labels)}`);
+  }
+
+  const current = nav.locator('a[aria-current="page"]');
+  if (await current.count() !== 1) {
+    failures.push(`${viewportName}/${pageName}: expected one current navigation item`);
+  } else {
+    const href = await current.getAttribute('href');
+    if (href !== expectedCurrentHref[pageName]) {
+      failures.push(`${viewportName}/${pageName}: current navigation href ${href} != ${expectedCurrentHref[pageName]}`);
+    }
+  }
+}
+
 for (const [viewportName, viewport] of viewports) {
   const context = await browser.newContext({ viewport });
 
@@ -97,6 +141,7 @@ for (const [viewportName, viewport] of viewports) {
         const h1 = page.locator('h1');
         if (await h1.count() !== 1) failures.push(`${viewportName}/${pageName}: expected exactly one H1`);
         else if (!(await h1.isVisible())) failures.push(`${viewportName}/${pageName}: H1 is not visible`);
+        await assertSharedNavigation(page, pageName, viewportName);
       }
 
       if (pageName === 'home') {
@@ -107,7 +152,7 @@ for (const [viewportName, viewport] of viewports) {
         await assertVerifiedImage(page, '.landing-view .hero-img', `${viewportName}/connect hero`);
       }
 
-      if (pageName === 'home' || pageName === 'connect') {
+      if (pageName !== 'not-found') {
         await page.screenshot({
           path: path.join(outputDir, `${viewportName}-${pageName}-top.png`),
           fullPage: false,
@@ -188,4 +233,4 @@ if (failures.length) {
 }
 
 console.log('BROWSER QA PASSED');
-console.log('Desktop and mobile screenshots generated after interaction and scroll-reveal checks.');
+console.log('Desktop/mobile layout, top states, shared navigation and current-page styling are consistent.');
