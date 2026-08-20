@@ -8,7 +8,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const tables={
  business:{table:'business_submissions',label:'Business',statuses:['pending','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.brand_name,sub:r=>r.short_description,cols:[['Brand','brand_name'],['Contact','contact_number'],['Status','status'],['Submitted','created_at']]},
  story:{table:'story_submissions',label:'Story / History',statuses:['pending','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.title,sub:r=>r.about,cols:[['Title','title'],['Contributor','contributor_name'],['Status','status'],['Submitted','created_at']]},
- professional:{table:'professional_submissions',label:'Professionals',statuses:['pending','private','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.full_name,sub:r=>`${r.profession||''}${r.current_location?` · ${r.current_location}:''}`,cols:[['Name','full_name'],['Profession','profession'],['Visibility','public_profile'],['Status','status'],['Submitted','created_at']]},
+ professional:{table:'professional_submissions',label:'Professionals',statuses:['pending','private','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.full_name,sub:r=>`${r.profession||''}${r.current_location?` · ${r.current_location}`:''}`,cols:[['Name','full_name'],['Profession','profession'],['Visibility','public_profile'],['Status','status'],['Submitted','created_at']]},
  resume:{table:'resume_support_submissions',label:'Resume Support',statuses:['pending','in_progress','completed','declined','archived'],title:r=>r.full_name||r.target_job,sub:r=>r.target_job,cols:[['Name','full_name'],['Target','target_job'],['Status','status'],['Submitted','created_at']]},
  security:{table:'security_events',label:'Security',statuses:['low','medium','high','critical'],title:r=>pretty(r.event_type),sub:r=>`${pretty(r.severity||'')} · ${r.category?pretty(r.category):'General'}`,cols:[['Event','event_type'],['Severity','severity'],['Category','category'],['IP','ip_address'],['Detected','created_at']],readOnly:true}
 };
@@ -16,7 +16,7 @@ let activeType='business',rows=[],counts={business:0,story:0,professional:0,resu
 
 function isAdmin(session){return session?.user?.app_metadata?.role==='admin'}
 function formatDate(v){if(!v)return '—';return new Intl.DateTimeFormat('en-PH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(v))}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]))}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
 function pretty(k){return String(k||'').replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase())}
 function statusHTML(s){return `<span class="status ${esc(s)}">${esc(pretty(s))}</span>`}
 
