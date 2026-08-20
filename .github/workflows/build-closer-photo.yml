@@ -1,0 +1,36 @@
+name: Build A Closer Look photo
+
+on:
+  push:
+    branches: [agent/closer-look-photo]
+    paths:
+      - 'assets/.tmp/closer-04.b64'
+      - '.github/workflows/build-closer-photo.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-photo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/closer-look-photo
+      - name: Rebuild approved image
+        run: |
+          mkdir -p assets/editorial
+          cat assets/.tmp/closer-01.b64 assets/.tmp/closer-02.b64 assets/.tmp/closer-03.b64 assets/.tmp/closer-04.b64 | tr -d '\n\r ' | base64 --decode > assets/editorial/a-closer-look.avif
+          test "$(wc -c < assets/editorial/a-closer-look.avif | tr -d ' ')" = "44198"
+          echo "f69ed64ddbe82217fb06fc0b728aebfc27d4ed7a4a81d0d563434b83a0e7a916  assets/editorial/a-closer-look.avif" | sha256sum -c -
+      - name: Remove temporary transport files
+        run: |
+          rm -f assets/.tmp/closer-01.b64 assets/.tmp/closer-02.b64 assets/.tmp/closer-03.b64 assets/.tmp/closer-04.b64
+          rm -f .github/workflows/build-closer-photo.yml
+      - name: Commit clean binary asset
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add optimized A Closer Look photo"
+          git push origin HEAD:agent/closer-look-photo
