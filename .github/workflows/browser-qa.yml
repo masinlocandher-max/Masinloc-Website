@@ -41,6 +41,9 @@ jobs:
       - name: Run desktop and mobile browser checks
         run: node scripts/browser-qa.mjs
 
+      - name: Run Masinloc Connect privacy and mobile checks
+        run: node scripts/connect-qa.mjs
+
       - name: Upload QA screenshots
         if: always()
         uses: actions/upload-artifact@v4

@@ -88,7 +88,7 @@ $$('#tabs button').forEach(b=>b.addEventListener('click',async()=>{$$('#tabs but
 $('#searchInput').addEventListener('input',renderTable);$('#statusFilter').addEventListener('change',renderTable);
 
 function fieldPairs(r){
- const skip=new Set(['id','internal_notes','verification_notes','status','updated_at']);
+ const skip=new Set(['id','internal_notes','verification_notes','status','updated_at','brand_logo_path','attachment_paths','existing_resume_path']);
  return Object.entries(r).filter(([k])=>!skip.has(k));
 }
 function displayValue(k,v){
@@ -104,6 +104,7 @@ async function openDetail(id){
  let attachments='';
  if(activeType==='business'&&r.brand_logo_path) attachments=await attachmentButtons('masinloc-business-assets',[r.brand_logo_path]);
  if(activeType==='story'&&r.attachment_paths?.length) attachments=await attachmentButtons('masinloc-story-assets',r.attachment_paths);
+ if(activeType==='resume'&&r.existing_resume_path) attachments=await attachmentButtons('masinloc-resume-assets',[r.existing_resume_path]);
  const pairs=activeType==='security'?Object.entries(r).filter(([k])=>k!=='id'):fieldPairs(r);
  const fields=pairs.map(([k,v])=>{
    const display=displayValue(k,v);
@@ -118,7 +119,7 @@ async function openDetail(id){
  $('#detailContent').innerHTML=`<p class="detail-kicker">${esc(cfg.label)}</p><h2 class="detail-title">${esc(cfg.title(r)||'Record')}</h2><p class="detail-ref">${refLine}</p>${activeType==='security'&&r.ip_address?'<p class="muted">Raw IP is temporarily retained for this high-severity event. It will be cleared automatically while the hashed fingerprint remains for pattern detection.</p>':''}<div class="detail-grid">${fields}</div>${attachments?`<div class="detail-field full" style="margin-top:12px"><span>Private attachments</span><div class="attachment-list">${attachments}</div></div>`:''}${editor}`;
  $('#detailModal').hidden=false;
  if(!cfg.readOnly)$('#saveRecord').addEventListener('click',()=>saveRecord(r));
- $$('.attachment-list button').forEach(b=>b.addEventListener('click',()=>window.open(b.dataset.url,'_blank','noopener')));
+ $$('.attachment-list button').forEach(b=>b.addEventListener('click',()=>window.open(b.dataset.url,'_blank','noopener,noreferrer')));
 }
 async function attachmentButtons(bucket,paths){const out=[];for(const path of paths){const {data,error}=await supabase.storage.from(bucket).createSignedUrl(path,300);if(!error&&data?.signedUrl)out.push(`<button data-url="${esc(data.signedUrl)}">${esc(path.split('/').pop()||'Attachment')}</button>`)}return out.join('')}
 async function saveRecord(r){
@@ -131,8 +132,13 @@ async function saveRecord(r){
 }
 $('#closeModal').addEventListener('click',()=>$('#detailModal').hidden=true);$('#detailModal').addEventListener('click',e=>{if(e.target===$('#detailModal'))$('#detailModal').hidden=true});
 
+function csvCell(value){
+ let s=String(value??'');
+ if(/^[\t\r ]*[=+\-@]/.test(s)) s=`'${s}`;
+ return `"${s.replace(/"/g,'""')}"`;
+}
 $('#exportBtn').addEventListener('click',()=>{
- const data=filteredRows();if(!data.length)return;const keys=[...new Set(data.flatMap(Object.keys))];const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;const csv=[keys.map(q).join(','),...data.map(r=>keys.map(k=>q(typeof r[k]==='object'&&!Array.isArray(r[k])?JSON.stringify(r[k]):Array.isArray(r[k])?r[k].join(' | '):r[k])).join(','))].join('\n');const blob=new Blob([csv],{type:'text/csv'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`masinloc-${activeType}-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(url);
+ const data=filteredRows();if(!data.length)return;const keys=[...new Set(data.flatMap(Object.keys))];const csv=[keys.map(csvCell).join(','),...data.map(r=>keys.map(k=>csvCell(typeof r[k]==='object'&&!Array.isArray(r[k])?JSON.stringify(r[k]):Array.isArray(r[k])?r[k].join(' | '):r[k])).join(','))].join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`masinloc-${activeType}-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(url);
 });
 
 supabase.auth.onAuthStateChange(async(event,session)=>{if(event==='SIGNED_IN'&&session){if(isAdmin(session)){showApp(session);await loadAll()}else{await supabase.auth.signOut();showLogin()}}});

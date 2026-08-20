@@ -5,8 +5,8 @@ The website has one production source of truth and one active working line at a 
 ## Source of truth
 
 - `main` is the production baseline.
-- `agent/offline-stage-build` is the current non-production working branch while the Vercel deployment quota is unavailable.
-- A finished stage moves to `main` only after Site Integrity, Design Consistency, Browser QA, and visual review pass.
+- `agent/mobile-stability-security-fix` is the current non-production working branch for the mobile, Masinloc Connect privacy, upload, security, and QA hardening pass.
+- A finished change moves to `main` only after Site Integrity, Design Consistency, Browser QA, focused Connect QA, and visual review pass.
 
 ## Historical branches
 
@@ -19,7 +19,7 @@ Do not cherry-pick visual files from an old branch into current work. If an olde
 1. Start from the latest accepted branch or `main`, never from an old repair branch.
 2. Use the shared Masinloc navigation order, logo asset, palette, typography hierarchy, footer treatment, and responsive behavior.
 3. Keep stage-specific features separate from the shared shell.
-4. Run Site Integrity, Design Consistency, and Browser QA before review.
+4. Run Site Integrity, Design Consistency, Browser QA, and any feature-specific QA before review.
 5. Merge only a finished stage. Do not use production hosting as a design-preview environment.
 
-This policy exists to prevent branch drift, duplicated design systems, obsolete hero mechanisms, and visual regressions from returning in later stages.
+This policy exists to prevent branch drift, duplicated design systems, obsolete hero mechanisms, stale deployments, and visual or security regressions from returning in later stages.
