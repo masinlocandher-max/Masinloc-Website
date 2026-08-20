@@ -8,6 +8,11 @@ function fail(message) {
   failures.push(message);
 }
 
+async function waitForConnectRuntime(page) {
+  await page.locator('.quick-card.business').waitFor({ state: 'visible' });
+  await page.waitForFunction(() => document.querySelector('#overlayNav')?.style.display === 'flex');
+}
+
 async function testMobileConnect() {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
@@ -31,8 +36,7 @@ async function testMobileConnect() {
 
   const response = await page.goto(`${baseURL}/connect.html`, { waitUntil: 'networkidle' });
   if (!response || response.status() >= 400) fail(`mobile/connect: HTTP ${response?.status() ?? 'no response'}`);
-
-  await page.locator('.quick-card.business').waitFor({ state: 'visible' });
+  await waitForConnectRuntime(page);
 
   const heading = (await page.locator('#shareTitle').innerText()).trim();
   if (heading !== 'May gusto kang ibahagi tungkol sa Masinloc?') fail(`mobile/connect: unexpected share heading: ${heading}`);
@@ -85,7 +89,9 @@ async function testMobileConnect() {
   if (!statusText.includes('7 days')) fail(`mobile/connect: draft retention notice is unclear: ${statusText}`);
 
   await page.goto(`${baseURL}/connect.html`, { waitUntil: 'networkidle' });
+  await waitForConnectRuntime(page);
   await page.locator('.quick-card.story').click();
+  await page.locator('#formView').waitFor({ state: 'visible' });
   const storyFile = page.locator('input[name="media"]');
   if (await storyFile.count() !== 1) fail('mobile/connect: story attachment input missing');
   else {
