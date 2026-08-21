@@ -84,8 +84,9 @@ PLACEHOLDER_MARKERS = [
     "dummy content",
     "placeholder article",
 ]
+# Sambal Tina is now a published route; other staged route families remain blocked.
 FUTURE_ROUTE = re.compile(
-    r'href=["\'](?:/?)(?:discover|destinations|stories|sambal|local)(?:[/._-]|["\'])',
+    r'href=["\'](?:/?)(?:discover|destinations|stories|local)(?:[/._-]|["\'])',
     re.I,
 )
 EXPECTED_HERO_BYTES = 76913
