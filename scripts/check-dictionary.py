@@ -10,6 +10,7 @@ or a page reference is an entry a reader cannot check.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -40,6 +41,16 @@ source = payload.get("source") or {}
 for key in ("title", "year", "authority", "rule"):
     if not source.get(key):
         fail(f"source block is missing '{key}'; the published data must name its authority")
+
+# The compilation is the project's own work and is credited as such. Losing
+# this block would leave the dictionary looking unauthored.
+compilation = payload.get("compilation") or {}
+for key in ("title", "compiler", "work", "rights"):
+    if not compilation.get(key):
+        fail(f"compilation block is missing '{key}'; the published data must name "
+             f"who compiled it")
+
+PAGE_CREDIT = compilation.get("compiler", "")
 
 statuses = payload.get("statuses") or []
 entries = payload.get("entries") or []
@@ -107,6 +118,16 @@ if PAGE.is_file():
         if f"{value:,}" not in page_text:
             fail(f"sambal-tina.html does not state the {label} count ({value:,}); "
                  f"the page copy has drifted from the data")
+
+    # Compare against the rendered text: a name split by markup ("the
+    # <strong>Sambal Tina…") still reads as credited to a person.
+    rendered = " ".join(re.sub(r"<[^>]+>", " ", page_text).split())
+
+    if PAGE_CREDIT and PAGE_CREDIT.removeprefix("The ") not in rendered:
+        fail(f"sambal-tina.html does not credit the compiler ({PAGE_CREDIT})")
+    if str(source.get("year", "")) not in rendered:
+        fail(f"sambal-tina.html does not cite the source year ({source.get('year')}); "
+             f"the page references are unverifiable without it")
 
 if errors:
     print("DICTIONARY CHECK FAILED")

@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
 """Build data/sambal-tina.json from the Sambal Tina working master.
 
-Source of truth
----------------
-"Sambal Tina Strong Collection" (Google Drive, Masinloc Website Asset), a
-source-coverage working master reconstructed from the 1988 English-Tina
-Sambal-Pilipino Dictionary. The original printed dictionary is the authority.
+What this dictionary is
+-----------------------
+The Masinloc Sambal Tina Dictionary is compiled, transcribed and verified by
+the project named in COMPILER below. That compilation work -- reading three
+source layers, cross-linking them, reviewing ambiguous glyphs, and assigning
+confidence and source status -- is the project's own, and is credited as such.
+
+Cited source
+------------
+The wordlist derives from the 1988 English-Tina Sambal-Pilipino Dictionary,
+by way of the "Sambal Tina Strong Collection" working master. The printed
+dictionary remains the authority for any disputed reading, and is cited by
+page on every entry so a reader can check it.
 
 This script carries the workbook's own provenance columns through to the
 published data: PDF page reference, source status, confidence (1-5) and QA
@@ -28,6 +36,12 @@ import json
 import re
 import sys
 from pathlib import Path
+
+# Who compiled this dictionary. The 1988 printed dictionary is a cited source;
+# the transcription, cross-linking, QA and ratings published here are the
+# project's own work and are credited as such.
+COMPILER = "The Sambal Tina Documentation Project"
+COMPILATION_YEAR = 2026
 
 COLUMNS = ["tina", "pos", "en", "fil", "pages", "status", "conf", "notes"]
 
@@ -239,6 +253,16 @@ def build(export_path: Path, skeleton_path: Path, output_path: Path) -> dict:
 
     return {
         "phrasebook": build_phrasebook(entries),
+        "compilation": {
+            "title": "The Masinloc Sambal Tina Dictionary",
+            "compiler": COMPILER,
+            "work": ("Transcription across three source layers, cross-linking of "
+                     "the main dictionary body against the printed Tina index, "
+                     "QA review of ambiguous readings, and the confidence and "
+                     "source-status ratings published here."),
+            "rights": ("Compilation, transcription, verification and presentation "
+                       f"\u00a9 {COMPILATION_YEAR} {COMPILER}."),
+        },
         "source": {
             "title": "English-Tina Sambal-Pilipino Dictionary",
             "year": 1988,
