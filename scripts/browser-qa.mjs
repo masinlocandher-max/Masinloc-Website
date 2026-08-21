@@ -9,6 +9,7 @@ await fs.mkdir(outputDir, { recursive: true });
 const pages = [
   ['home', '/index.html'],
   ['closer-look', '/a-closer-look.html'],
+  ['sambal-tina', '/sambal-tina.html'],
   ['verified-history', '/verified-history.html'],
   ['bulletin', '/masinloc-bulletin.html'],
   ['connect', '/connect.html'],
@@ -28,6 +29,8 @@ const expectedNavText = [
 const expectedCurrentHref = {
   home: 'index.html',
   'closer-look': 'a-closer-look.html',
+  /* A sub-page of A Closer Look: the parent keeps the current-page state. */
+  'sambal-tina': 'a-closer-look.html',
   'verified-history': 'verified-history.html',
   bulletin: 'masinloc-bulletin.html',
   connect: 'connect.html',

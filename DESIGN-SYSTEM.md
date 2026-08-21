@@ -4,7 +4,15 @@ The website should feel like one Masinloc product across editorial pages, commun
 
 ## Locked identity
 
+All colours below are defined **once**, in `tokens.css`, which every surface
+links before any other stylesheet. No page stylesheet may restate a brand hex,
+and no script may hardcode one — an inline style beats every stylesheet, which
+is exactly how Masinloc Connect drifted onto a superseded palette. The
+`Design consistency` check fails on any identity colour found outside
+`tokens.css`.
+
 - Logo asset: `assets/masinloc-logo.webp`
+- Favicon: `assets/favicon.svg` (with `assets/apple-touch-icon.png`)
 - Primary blue: `#0D3B9E`
 - Bright blue: `#1E63E9`
 - Red: `#E61E25`
@@ -14,6 +22,8 @@ The website should feel like one Masinloc product across editorial pages, commun
 - Ink: `#111827`
 - Soft surface: `#F7F8FB`
 - Divider: `#E6E9F0`
+- Yellow ink: `#8A5A00` — stands in for yellow wherever the colour carries
+  text or sits behind white type, where `#FFC700` fails contrast.
 
 The blue-red-yellow rule is a restrained brand accent, not a decorative pattern to repeat everywhere.
 
@@ -45,11 +55,23 @@ Every public page shows the same destinations, labels, order, logo, mobile menu 
 
 Files: Home, A Closer Look, Verified History, Masinloc Bulletin.
 
-Use `site.css`, `site-polish.css`, and `site.js`. These pages use generous white space, editorial serif headlines, clean dividers, restrained blue-red-yellow accents, deep-navy footer treatment, and subtle motion.
+Use `tokens.css`, `site.css`, `site-polish.css`, and `site.js`. These pages use generous white space, editorial serif headlines, clean dividers, restrained blue-red-yellow accents, deep-navy footer treatment, and subtle motion.
+
+### Sambal Tina dictionary
+
+A sub-page of A Closer Look rather than a seventh primary destination, so the
+permanent six-item navigation does not grow each time a section gains a detail
+page. It keeps the editorial shell and adds `sambal-tina.css` for the search
+and entry layout. Sub-pages are declared in `scripts/check-design-consistency.py`,
+which validates their shell while expecting the parent to hold the
+current-page state.
+
+Provenance is part of the design here, not decoration: a dictionary entry
+shows its confidence badge and printed page reference alongside the word.
 
 ### Masinloc Connect
 
-Masinloc Connect is a functional submission product, so its forms and category interactions may use a more application-like layout. It must still use the same logo, palette, navigation order, typography hierarchy, footer family, motion restraint, and responsive standards. Its presentation layers are `styles.css`, `connect-polish.css`, and `connect-shell.css`.
+Masinloc Connect is a functional submission product, so its forms and category interactions may use a more application-like layout. It must still use the same logo, palette, navigation order, typography hierarchy, footer family, motion restraint, and responsive standards. Its presentation layers are `tokens.css`, `styles.css`, `connect-polish.css`, and `connect-shell.css`. Mobile navigation for both Connect headers belongs to `connect-shell.css` alone; `connect-polish.css` must not set the header bar, or the two layers fight and one silently wins.
 
 ### Admin workspace
 
@@ -81,6 +103,8 @@ The 404 page is a deliberate exception: a minimal deep-navy recovery screen usin
 - No horizontal overflow.
 - Navigation becomes a deliberate hamburger/dropdown system.
 - Touch targets should be at least approximately 44 px.
+- Form controls use `--control-font` (16 px minimum). Anything smaller makes
+  mobile Safari zoom the page on focus.
 - Important copy and calls to action must remain legible over imagery.
 
 ## Release gate
@@ -89,6 +113,6 @@ A stage is not ready until all three checks pass:
 
 - Site Integrity
 - Design Consistency
-- Browser QA
+- Browser QA (which includes Masinloc Connect and Sambal Tina dictionary checks)
 
 Browser QA must include desktop and phone-width rendering and screenshots. Visual review happens from those screenshots before production merge.

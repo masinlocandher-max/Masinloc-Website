@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
+    "sambal-tina.html",
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
@@ -19,6 +20,7 @@ PUBLIC_PAGES = [
 EDITORIAL_PAGES = [
     "index.html",
     "a-closer-look.html",
+    "sambal-tina.html",
     "verified-history.html",
     "masinloc-bulletin.html",
 ]
@@ -30,9 +32,17 @@ REQUIRED = [
     "connect.html",
     "admin.html",
     "404.html",
+    "tokens.css",
     "site.css",
     "site-polish.css",
     "site.js",
+    "sambal-tina.html",
+    "sambal-tina.css",
+    "sambal-tina.js",
+    "data/sambal-tina.json",
+    "assets/favicon.svg",
+    "assets/apple-touch-icon.png",
+    "assets/vendor/supabase.js",
     "styles.css",
     "connect-polish.css",
     "connect-shell.css",
@@ -45,6 +55,9 @@ REQUIRED = [
     "vercel.json",
     "BUILD-NOTES.md",
     "scripts/browser-qa.mjs",
+    "scripts/dictionary-qa.mjs",
+    "scripts/check-dictionary.py",
+    "scripts/build-dictionary.py",
     ".github/workflows/browser-qa.yml",
     "assets/masinloc-logo.webp",
     "assets/stage1/masinloc-hero.avif",
@@ -84,8 +97,12 @@ PLACEHOLDER_MARKERS = [
     "dummy content",
     "placeholder article",
 ]
+# Routes that belong to a later stage. A link to one of these is only a
+# problem while the page does not exist: once a stage genuinely ships, the
+# page is on disk and the link is legitimate. Checking the filesystem means a
+# finished stage never has to loosen this guard to get merged.
 FUTURE_ROUTE = re.compile(
-    r'href=["\'](?:/?)(?:discover|destinations|stories|sambal|local)(?:[/._-]|["\'])',
+    r'href=["\'](?:/?)((?:discover|destinations|stories|sambal|local)[\w./-]*)["\']',
     re.I,
 )
 EXPECTED_HERO_BYTES = 76913
@@ -201,8 +218,10 @@ for html in ROOT.glob("*.html"):
         duplicate_ids = sorted({value for value in parser.ids if parser.ids.count(value) > 1})
         if duplicate_ids:
             fail(f"{html.name}: duplicate IDs: {', '.join(duplicate_ids)}")
-        if FUTURE_ROUTE.search(text):
-            fail(f"{html.name}: links to an unfinished future-stage route")
+        for match in FUTURE_ROUTE.finditer(text):
+            target = urlsplit(match.group(1)).path
+            if target and not (ROOT / target.lstrip("/")).is_file():
+                fail(f"{html.name}: links to an unfinished future-stage route: {target}")
         for menu_link in MENU_LINKS:
             if menu_link not in parser.refs:
                 fail(f"{html.name}: missing required public menu link to {menu_link}")

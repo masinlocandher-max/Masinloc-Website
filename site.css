@@ -1,22 +1,8 @@
 :root{
-  --blue:#0D3B9E;
-  --blue-bright:#1E63E9;
-  --navy:#061A46;
-  --navy-deep:#03112F;
-  --red:#E61E25;
-  --yellow:#FFC700;
-  --ink:#111827;
-  --text:#3B465F;
-  --muted:#6E778C;
-  --line:#E6E9F0;
-  --soft:#F7F8FB;
-  --white:#FFFFFF;
-  --font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;
-  --font-display:"Helvetica Neue","Arial Nova",Arial,sans-serif;
-  --font-editorial:Georgia,"Times New Roman",serif;
+  /* Palette, type and motion live in tokens.css. Only layout measures
+     belong to this file. */
   --content:min(1240px,calc(100% - 56px));
   --wide:min(1440px,calc(100% - 48px));
-  --ease:180ms ease;
 }
 
 *{box-sizing:border-box}

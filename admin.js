@@ -1,4 +1,7 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+// Served from this origin. A CDN outage must not take the admin offline,
+// and Browser QA must not fail on a third-party host being unreachable.
+// Rebuild with scripts/build-vendor.sh.
+import { createClient } from './assets/vendor/supabase.js?v=2.112.3';
 
 const SUPABASE_URL='https://uwcqvsitjtknxsaypjxj.supabase.co';
 const SUPABASE_KEY='sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';

@@ -2,19 +2,9 @@
    Keeps the admin information architecture and behavior intact. */
 
 :root{
-  --navy:#061A46;
-  --blue:#0D3B9E;
-  --blue-bright:#1E63E9;
-  --red:#E61E25;
-  --yellow:#FFC700;
-  --ink:#111827;
-  --muted:#6E778C;
-  --line:#E6E9F0;
-  --bg:#F7F8FB;
-  --white:#FFFFFF;
+  /* Palette and type come from tokens.css. */
+  --bg:var(--soft);
   --shadow:0 18px 55px rgba(3,17,47,.08);
-  --font-ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;
-  --font-editorial:Georgia,"Times New Roman",serif;
 }
 
 body{
