@@ -3,12 +3,17 @@
 
   const PAGE_SIZE = 36;
   const SOURCE_ENTRY_COUNT = 5222;
+  const SOURCE_REVIEW_COUNT = 97;
+  const COMMUNITY_PREVIEW_COUNT = 14;
   const DATA_FILES = [
-    'data/sambal-tina-v2-01.js',
-    'data/sambal-tina-v2-02.js',
-    'data/sambal-tina-v2-03.js',
-    'data/sambal-tina-v2-04.js',
-    'data/sambal-tina-v2-05.js'
+    'data/sambal-tina-v3-01.js',
+    'data/sambal-tina-v3-02.js',
+    'data/sambal-tina-v3-03.js',
+    'data/sambal-tina-v3-04.js',
+    'data/sambal-tina-v3-05.js',
+    'data/sambal-tina-v3-06.js',
+    'data/sambal-tina-v3-07.js',
+    'data/sambal-tina-v3-08.js'
   ];
 
   const state = {
@@ -19,7 +24,8 @@
     visible: PAGE_SIZE,
     letter: 'ALL',
     query: '',
-    sourceReady: false
+    sourceReady: false,
+    showAllCommunity: false
   };
 
   const $ = (id) => document.getElementById(id);
@@ -53,42 +59,36 @@
   function communityRows() {
     const source = window.SAMBAL_TINA_COMMUNITY;
     if (!source || !Array.isArray(source.entries)) return [];
-    return source.entries.map((item) => ({
-      word: String(item.word || '').trim(),
-      pos: String(item.type || '').trim(),
-      english: String(item.english || '').trim(),
-      filipino: String(item.filipino || '').trim(),
-      review: false,
-      community: true,
-      note: String(item.note || '').trim()
-    })).filter((entry) => entry.word);
+    return source.entries
+      .map((item) => ({
+        word: String(item.word || '').trim(),
+        pos: String(item.type || '').trim(),
+        english: String(item.english || '').trim(),
+        filipino: String(item.filipino || '').trim(),
+        review: false,
+        community: true,
+        communityConfirmed: true,
+        note: String(item.note || '').trim()
+      }))
+      .filter((entry) => entry.word);
   }
 
   function bytesFromBase64(value) {
+    if (!value || value.length % 4 !== 0) throw new Error('Dictionary payload has invalid base64 length.');
     const raw = atob(value);
     return Uint8Array.from(raw, (char) => char.charCodeAt(0));
   }
 
-  function concatBytes(parts) {
-    const total = parts.reduce((sum, part) => sum + part.length, 0);
-    const merged = new Uint8Array(total);
-    let offset = 0;
-    parts.forEach((part) => {
-      merged.set(part, offset);
-      offset += part.length;
-    });
-    return merged;
-  }
-
   async function fetchDataChunks() {
-    return Promise.all(DATA_FILES.map(async (path) => {
+    const pieces = await Promise.all(DATA_FILES.map(async (path) => {
       const response = await fetch(path, { cache: 'force-cache' });
       if (!response.ok) throw new Error(`Dictionary data file failed to load: ${path}`);
       const text = await response.text();
-      const match = text.match(/\+"([A-Za-z0-9+/=]+)";?\s*$/);
+      const match = text.match(/\+\s*"([A-Za-z0-9+/=]+)"\s*;?\s*$/);
       if (!match) throw new Error(`Dictionary data wrapper is invalid: ${path}`);
       return match[1];
     }));
+    return pieces.join('');
   }
 
   async function gunzipJson(bytes) {
@@ -101,36 +101,16 @@
   }
 
   async function inflateDataset() {
-    const chunks = await fetchDataChunks();
-    const candidates = [];
+    const encoded = await fetchDataChunks();
+    const parsed = await gunzipJson(bytesFromBase64(encoded));
 
-    // Some build pipelines encode binary chunks separately, while others split
-    // one base64 stream. Support both layouts without rewriting the master data.
-    try {
-      candidates.push(concatBytes(chunks.map(bytesFromBase64)));
-    } catch (error) {
-      console.warn('Per-chunk base64 decode was not usable.', error);
-    }
-    try {
-      candidates.push(bytesFromBase64(chunks.join('')));
-    } catch (error) {
-      console.warn('Joined base64 decode was not usable.', error);
-    }
-
-    let parsed = null;
-    let lastError = null;
-    for (const candidate of candidates) {
-      try {
-        parsed = await gunzipJson(candidate);
-        break;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    if (!parsed) throw lastError || new Error('The dictionary source could not be decoded.');
     if (!Array.isArray(parsed) || parsed.length !== SOURCE_ENTRY_COUNT) {
       throw new Error('The dictionary source did not pass its 5,222-entry integrity check.');
+    }
+
+    const reviewCount = parsed.reduce((count, row) => count + (Number(row?.[4]) === 1 ? 1 : 0), 0);
+    if (reviewCount !== SOURCE_REVIEW_COUNT) {
+      throw new Error('The dictionary source-review count did not pass its integrity check.');
     }
 
     return parsed.map((row) => ({
@@ -139,14 +119,32 @@
       english: String(row[2] || '').trim(),
       filipino: String(row[3] || '').trim(),
       review: Number(row[4]) === 1,
-      community: false
+      community: false,
+      communityConfirmed: false,
+      note: ''
     }));
   }
 
   function mergeSearchLayer() {
-    const seen = new Set(state.sourceEntries.map((entry) => normalized(entry.word)));
-    const supplemental = state.communityEntries.filter((entry) => !seen.has(normalized(entry.word)));
-    state.entries = [...state.sourceEntries, ...supplemental];
+    const livingByWord = new Map(state.communityEntries.map((entry) => [normalized(entry.word), entry]));
+    const sourceWords = new Set();
+
+    const sourceWithLivingContext = state.sourceEntries.map((entry) => {
+      const key = normalized(entry.word);
+      sourceWords.add(key);
+      const living = livingByWord.get(key);
+      if (!living) return entry;
+      return {
+        ...entry,
+        communityConfirmed: true,
+        communityMeaning: living.english,
+        communityFilipino: living.filipino,
+        note: living.note
+      };
+    });
+
+    const supplemental = state.communityEntries.filter((entry) => !sourceWords.has(normalized(entry.word)));
+    state.entries = [...sourceWithLivingContext, ...supplemental];
   }
 
   function dateSeed() {
@@ -165,12 +163,28 @@
     $('wordDayReading').textContent = readingLabel(entry.word);
   }
 
+  function searchForCommunityWord(word) {
+    const input = $('dictionarySearch');
+    input.value = word;
+    state.query = word;
+    state.letter = 'ALL';
+    state.visible = PAGE_SIZE;
+    buildLetters();
+    applyFilters();
+    input.focus();
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
   function renderCommunityWords() {
     const root = $('communityWords');
     if (!root) return;
     root.replaceChildren();
 
-    state.communityEntries.forEach((entry) => {
+    const visible = state.showAllCommunity
+      ? state.communityEntries
+      : state.communityEntries.slice(0, COMMUNITY_PREVIEW_COUNT);
+
+    visible.forEach((entry) => {
       const button = make('button', 'community-word');
       button.type = 'button';
       button.setAttribute('aria-label', `Search for ${entry.word}`);
@@ -178,19 +192,24 @@
         make('strong', '', entry.word),
         make('span', '', entry.filipino || entry.english)
       );
-      button.addEventListener('click', () => {
-        const input = $('dictionarySearch');
-        input.value = entry.word;
-        state.query = entry.word;
-        state.letter = 'ALL';
-        state.visible = PAGE_SIZE;
-        buildLetters();
-        applyFilters();
-        input.focus();
-        input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
+      button.addEventListener('click', () => searchForCommunityWord(entry.word));
       root.append(button);
     });
+
+    if (state.communityEntries.length > COMMUNITY_PREVIEW_COUNT) {
+      const toggle = make(
+        'button',
+        'community-word community-word-toggle',
+        state.showAllCommunity ? 'Show fewer words' : `View all ${state.communityEntries.length} confirmed words`
+      );
+      toggle.type = 'button';
+      toggle.setAttribute('aria-expanded', String(state.showAllCommunity));
+      toggle.addEventListener('click', () => {
+        state.showAllCommunity = !state.showAllCommunity;
+        renderCommunityWords();
+      });
+      root.append(toggle);
+    }
 
     const exampleRoot = $('communityExample');
     const examples = window.SAMBAL_TINA_COMMUNITY?.examples || [];
@@ -232,12 +251,18 @@
       const letterMatch = state.letter === 'ALL' || initialLetter(entry.word) === state.letter;
       if (!letterMatch) return false;
       if (!q) return true;
-      return [entry.word, entry.english, entry.filipino, entry.pos]
-        .some((value) => normalized(value).includes(q));
+      return [
+        entry.word,
+        entry.english,
+        entry.filipino,
+        entry.pos,
+        entry.communityMeaning,
+        entry.communityFilipino
+      ].some((value) => normalized(value).includes(q));
     });
 
     state.filtered.sort((a, b) => {
-      if (a.community !== b.community && q) return a.community ? -1 : 1;
+      if (a.communityConfirmed !== b.communityConfirmed && q) return a.communityConfirmed ? -1 : 1;
       return a.word.localeCompare(b.word, 'fil', { sensitivity: 'base' });
     });
     renderCards();
@@ -247,6 +272,7 @@
     const classes = ['word-card'];
     if (entry.review) classes.push('review');
     if (entry.community) classes.push('community-entry');
+    if (entry.communityConfirmed && !entry.community) classes.push('community-confirmed-source');
 
     const card = make('article', classes.join(' '));
     const head = make('div', 'word-head');
@@ -260,8 +286,14 @@
     const definition = make('p', 'word-definition', entry.english || 'English meaning not supplied in this source entry.');
     const meta = make('div', 'word-meta');
     meta.append(make('span', '', entry.filipino ? `Filipino: ${entry.filipino}` : 'Filipino equivalent not supplied'));
-    if (entry.community) meta.append(make('span', 'community-badge', 'Living usage'));
-    else if (entry.review) meta.append(make('span', 'word-review', 'Source review'));
+
+    if (entry.community) {
+      meta.append(make('span', 'community-badge', 'Living usage'));
+    } else if (entry.communityConfirmed) {
+      meta.append(make('span', 'community-badge', 'Source + living usage'));
+    } else if (entry.review) {
+      meta.append(make('span', 'word-review', 'Source review'));
+    }
 
     card.append(head, reading, definition, meta);
     return card;
@@ -271,9 +303,15 @@
     const grid = $('dictionaryGrid');
     const total = state.filtered.length;
     const shown = Math.min(state.visible, total);
-    $('resultCount').textContent = state.query || state.letter !== 'ALL'
-      ? `${total.toLocaleString()} ${total === 1 ? 'result' : 'results'}`
-      : `${SOURCE_ENTRY_COUNT.toLocaleString()} source entries`;
+    const livingCount = state.communityEntries.length;
+
+    if (state.query || state.letter !== 'ALL') {
+      $('resultCount').textContent = `${total.toLocaleString()} ${total === 1 ? 'result' : 'results'}`;
+    } else if (state.sourceReady) {
+      $('resultCount').textContent = `${SOURCE_ENTRY_COUNT.toLocaleString()} source entries · ${livingCount} living confirmations`;
+    } else {
+      $('resultCount').textContent = `${livingCount} living confirmations`;
+    }
 
     grid.replaceChildren();
     if (!total) {
@@ -322,7 +360,7 @@
       state.sourceReady = true;
       mergeSearchLayer();
       $('dictionaryTotal').textContent = SOURCE_ENTRY_COUNT.toLocaleString();
-      setSourceStatus('Source master verified · 5,222 entries', 'ready');
+      setSourceStatus('Source master verified · 5,222 entries · 97 source-review flags', 'ready');
       renderWordOfDay();
       buildLetters();
       applyFilters();
