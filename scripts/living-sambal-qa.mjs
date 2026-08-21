@@ -33,34 +33,45 @@ async function search(word) {
   await page.waitForTimeout(180);
 }
 
-async function expectLivingOnly(word, english, filipino) {
+async function expectConfirmedMeaning(word, english, filipino, livingOnly = false) {
   await search(word);
   const exact = page.locator(`.dict-entry[data-tina="${word}"]`);
   const count = await exact.count();
   if (count !== 1) {
-    fail(`${word}: expected one exact living result, found ${count}`);
+    fail(`${word}: expected one exact user-confirmed result, found ${count}`);
     return;
   }
   if (await exact.locator('.badge-living').count() !== 1) {
     fail(`${word}: missing User-confirmed badge`);
   }
-  if (await exact.locator('.badge-page').count() !== 0) {
+  if (livingOnly && await exact.locator('.badge-page').count() !== 0) {
     fail(`${word}: living-only entry must not display an archive page`);
   }
-  const en = (await exact.locator('.entry-en').textContent() || '').trim();
-  const fil = (await exact.locator('.entry-fil').textContent() || '').replace(/^Filipino\s*·\s*/i, '').trim();
-  if (!en.includes(english)) {
-    fail(`${word}: English meaning does not include ${JSON.stringify(english)}: ${en}`);
+  const enLocator = exact.locator('.entry-en');
+  const filLocator = exact.locator('.entry-fil');
+  if (await enLocator.count() !== 1) {
+    fail(`${word}: user-confirmed English meaning is not rendered`);
+  } else {
+    const en = (await enLocator.textContent() || '').trim();
+    if (!en.includes(english)) {
+      fail(`${word}: English meaning does not include ${JSON.stringify(english)}: ${en}`);
+    }
   }
-  if (!fil.includes(filipino)) {
-    fail(`${word}: Filipino meaning does not include ${JSON.stringify(filipino)}: ${fil}`);
+  if (await filLocator.count() !== 1) {
+    fail(`${word}: user-confirmed Filipino meaning is not rendered`);
+  } else {
+    const fil = (await filLocator.textContent() || '').replace(/^Filipino\s*·\s*/i, '').trim();
+    if (!fil.includes(filipino)) {
+      fail(`${word}: Filipino meaning does not include ${JSON.stringify(filipino)}: ${fil}`);
+    }
   }
 }
 
-await expectLivingOnly('ayama', 'crab', 'alimasag');
-await expectLivingOnly('cabatwan', 'river', 'ilog');
-await expectLivingOnly('mabanglo', 'fragrant', 'mabango');
-await expectLivingOnly('matibya', 'red', 'pula');
+await expectConfirmedMeaning('ayama', 'crab', 'alimasag', true);
+await expectConfirmedMeaning('cabatwan', 'river', 'ilog', true);
+await expectConfirmedMeaning('mabanglo', 'fragrant', 'mabango', true);
+/* matibya already has an archival headword; living usage supplies missing glosses. */
+await expectConfirmedMeaning('matibya', 'red', 'pula');
 
 /* Archive variants must remain present rather than being overwritten. */
 await search('ayamd');
