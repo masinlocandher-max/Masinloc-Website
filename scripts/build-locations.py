@@ -34,9 +34,14 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "locations.json"
 OUT = ROOT / "assets" / "locations"
 
-# Four widths cover a phone through a 2x desktop display without shipping the
-# full camera resolution to anybody.
-WIDTHS = [640, 1024, 1600, 2400]
+# Widths chosen for the resolutions the project's originals actually carry
+# (798px to 2048px). Nothing is upscaled, so a smaller original simply stops
+# earlier in the ladder.
+WIDTHS = [480, 768, 1120, 1536, 2048]
+
+# The 1:1 pubmat is the social share image and the downloadable card. It is
+# used whole, never cropped, and never has type laid over it.
+CARD_WIDTHS = [600, 1200]
 
 # Quality per format. AVIF and WebP carry the page; JPEG is the last resort
 # for browsers that support neither.
@@ -48,15 +53,23 @@ def load_locations() -> list[dict]:
     return payload["locations"]
 
 
-def find_original(folder: Path, location: dict) -> Path | None:
-    """Locate a location's original, by slug name or by the supplied filename."""
-    for candidate in (f"{location['slug']}.jpg", f"{location['slug']}.jpeg",
-                      location["source"]):
+def find_original(folder: Path, location: dict, key: str = "photo") -> Path | None:
+    """Locate one of a location's originals by slug name or supplied filename.
+
+    `key` is "photo" for the raw photograph or "card" for the 1:1 pubmat.
+    """
+    suffix = "-card" if key == "card" else ""
+    candidates = [f"{location['slug']}{suffix}{extension}"
+                  for extension in (".jpg", ".jpeg", ".png")]
+    candidates.append(location[key])
+
+    for candidate in candidates:
         path = folder / candidate
         if path.is_file():
             return path
+
     # Be tolerant of case differences in the supplied filenames.
-    wanted = location["source"].lower()
+    wanted = location[key].lower()
     for path in folder.iterdir():
         if path.is_file() and path.name.lower() == wanted:
             return path
@@ -75,8 +88,10 @@ def formats_available() -> list[str]:
     return available
 
 
-def derive(original: Path, slug: str, formats: list[str]) -> list[str]:
-    """Write every width/format derivative for one photograph."""
+def derive(original: Path, slug: str, formats: list[str],
+           widths: list[int] | None = None, suffix: str = "") -> list[str]:
+    """Write every width/format derivative for one image."""
+    widths = widths or WIDTHS
     written = []
     with Image.open(original) as source:
         # Honour the camera's orientation tag, then drop it: a rotated image
@@ -84,7 +99,7 @@ def derive(original: Path, slug: str, formats: list[str]) -> list[str]:
         source = ImageOps.exif_transpose(source)
         source = source.convert("RGB")
 
-        for width in WIDTHS:
+        for width in widths:
             if width > source.width:
                 # Never upscale. A smaller original simply stops earlier.
                 continue
@@ -92,7 +107,7 @@ def derive(original: Path, slug: str, formats: list[str]) -> list[str]:
             resized = source.resize((width, height), Image.LANCZOS)
 
             for fmt in formats:
-                target = OUT / f"{slug}-{width}.{fmt}"
+                target = OUT / f"{slug}{suffix}-{width}.{fmt}"
                 params = {"quality": QUALITY[fmt]}
                 if fmt == "jpg":
                     params.update(format="JPEG", optimize=True, progressive=True)
@@ -121,14 +136,24 @@ def main() -> int:
     missing = []
     total = 0
     for location in locations:
-        original = find_original(args.folder, location)
-        if original is None:
-            missing.append(f"{location['name']}: expected {location['source']} "
+        photo = find_original(args.folder, location, "photo")
+        if photo is None:
+            missing.append(f"{location['name']}: photograph {location['photo']} "
                            f"(or {location['slug']}.jpg)")
-            continue
-        written = derive(original, location["slug"], formats)
-        total += len(written)
-        print(f"{location['name']:32s} {original.name} -> {len(written)} files")
+        else:
+            written = derive(photo, location["slug"], formats)
+            total += len(written)
+            print(f"{location['name']:32s} {photo.name:44s} -> {len(written)} files")
+
+        card = find_original(args.folder, location, "card")
+        if card is None:
+            missing.append(f"{location['name']}: card {location['card']} "
+                           f"(or {location['slug']}-card.jpg)")
+        else:
+            written = derive(card, location["slug"], formats,
+                             widths=CARD_WIDTHS, suffix="-card")
+            total += len(written)
+            print(f"{'':32s} {card.name:44s} -> {len(written)} files (card)")
 
     if missing:
         print("\nMISSING ORIGINALS")
@@ -138,8 +163,11 @@ def main() -> int:
               "run this again.")
         return 1
 
-    print(f"\nwrote {total} files to {OUT.relative_to(ROOT)} "
-          f"({', '.join(formats)} at {', '.join(str(w) for w in WIDTHS)}px)")
+    print(f"\nwrote {total} files to {OUT.relative_to(ROOT)}")
+    print(f"photographs: {', '.join(formats)} at "
+          f"{', '.join(str(w) for w in WIDTHS)}px")
+    print(f"cards: {', '.join(formats)} at "
+          f"{', '.join(str(w) for w in CARD_WIDTHS)}px")
     return 0
 
 

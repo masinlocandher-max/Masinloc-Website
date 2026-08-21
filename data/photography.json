@@ -46,7 +46,23 @@
   ],
   "pending": {
     "directory": "assets/locations/",
-    "origin": "Google Drive — Masinloc Website Asset / Location",
-    "note": "Built by scripts/build-locations.py from the eight originals. Each file is named for the place in data/locations.json, which holds the project's fixed photograph-to-place mapping. Nothing may be substituted for a missing original."
-  }
+    "status": "built",
+    "photographs": {
+      "origin": "Google Drive - Masinloc Website Asset / Regular Images",
+      "note": "The raw photographs. Used as the full-bleed website photography. Built by scripts/build-locations.py at 480-2048px, never upscaled."
+    },
+    "cards": {
+      "origin": "Google Drive - Masinloc Website Asset / Location",
+      "note": "The finished 1:1 pubmats. Each already carries the logo, place name, description, things-to-do and tags, so it is used whole as the shareable card and never has type laid over it. Built at 600 and 1200px."
+    },
+    "mapping": "Fixed in data/locations.json. Each raw photograph was matched against the photograph embedded in the correspondingly labelled pubmat, so the place name comes from the project's own labelling."
+  },
+  "unassigned": [
+    {
+      "file": "IMG_9143.JPG",
+      "folder": "Masinloc Website Asset / Regular Images",
+      "shows": "Rows of yellow produce drying on leaves",
+      "decision": "Not used. It matches none of the eight labelled pubmats and cannot be tied to a named place, so it is not labelled as a location."
+    }
+  ]
 }

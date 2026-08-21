@@ -21,7 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "locations.json"
 PAGE = ROOT / "destinations.html"
 
-WIDTHS = [640, 1024, 1600, 2400]
+WIDTHS = [480, 768, 1120, 1536, 2048]
+CARD_WIDTHS = [600, 1200]
 SIZES = "100vw"
 
 HEAD = """<!doctype html>
@@ -105,15 +106,38 @@ FOOT = """</main>
 """
 
 
-def srcset(slug: str, extension: str) -> str:
+ASSETS = ROOT / "assets" / "locations"
+
+
+def available(slug: str, extension: str, widths: list[int], suffix: str = "") -> list[int]:
+    """Widths that were actually produced. Originals differ in resolution and
+    are never upscaled, so a shared list would advertise files that do not
+    exist."""
+    found = [width for width in widths
+             if (ASSETS / f"{slug}{suffix}-{width}.{extension}").is_file()]
+    return found or widths[:1]
+
+
+def srcset(slug: str, extension: str, suffix: str = "",
+           widths: list[int] | None = None) -> str:
+    widths = widths or WIDTHS
     return ", ".join(
-        f"assets/locations/{slug}-{width}.{extension} {width}w" for width in WIDTHS
+        f"assets/locations/{slug}{suffix}-{width}.{extension} {width}w"
+        for width in available(slug, extension, widths, suffix)
     )
+
+
+def largest(slug: str, extension: str, suffix: str = "",
+            widths: list[int] | None = None) -> int:
+    return available(slug, extension, widths or WIDTHS, suffix)[-1]
 
 
 def section(location: dict, position: int, total: int) -> str:
     slug = location["slug"]
-    esc = {key: html.escape(str(value)) for key, value in location.items()}
+    esc = {key: html.escape(str(value)) for key, value in location.items()
+           if isinstance(value, str)}
+    todo = "".join(f"<li>{html.escape(item)}</li>" for item in location["todo"])
+    tags = "".join(f"<li>{html.escape(tag)}</li>" for tag in location["tags"])
     # The first photograph is the page's largest paint; it loads eagerly and at
     # high priority. The rest wait until they are near the viewport.
     first = position == 1
@@ -125,7 +149,7 @@ def section(location: dict, position: int, total: int) -> str:
       <picture>
         <source type="image/avif" srcset="{srcset(slug, 'avif')}" sizes="{SIZES}">
         <source type="image/webp" srcset="{srcset(slug, 'webp')}" sizes="{SIZES}">
-        <img src="assets/locations/{slug}-1600.jpg" srcset="{srcset(slug, 'jpg')}" sizes="{SIZES}"
+        <img src="assets/locations/{slug}-{largest(slug, 'jpg')}.jpg" srcset="{srcset(slug, 'jpg')}" sizes="{SIZES}"
              alt="{esc['alt']}" {loading}>
       </picture>
       <span class="place-scrim" aria-hidden="true"></span>
@@ -135,7 +159,18 @@ def section(location: dict, position: int, total: int) -> str:
       <h2 class="place-name" id="{slug}-name">{esc['name']}</h2>
       <p class="place-locality">{esc['locality']}</p>
       <p class="place-rhyme">{esc['rhyme']}</p>
-      <button class="place-open" type="button" data-open="{slug}">See it bigger</button>
+      <p class="place-description">{esc['description']}</p>
+      <div class="place-detail">
+        <div class="place-todo">
+          <h3>Things to do</h3>
+          <ul>{todo}</ul>
+        </div>
+        <ul class="place-tags">{tags}</ul>
+      </div>
+      <div class="place-actions">
+        <button class="place-open" type="button" data-open="{slug}">See it bigger</button>
+        <a class="place-card" href="assets/locations/{slug}-card-{largest(slug, 'jpg', '-card', CARD_WIDTHS)}.jpg" download>Save the card</a>
+      </div>
     </div>
   </section>
 

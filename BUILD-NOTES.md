@@ -159,32 +159,43 @@ the page references photography for a place that is not on the list.
 static HTML; `destinations.js` only adds parallax, index tracking and the
 full-screen viewer.
 
-### Finishing the locations page
+### The two kinds of Drive asset
 
-The photography is a build output and is **not yet in the repository**. Two
-steps complete the page:
+The Drive folder holds two different things, and they are not
+interchangeable:
 
-1. Put the eight originals in a folder — the filenames listed as `source` in
-   `data/locations.json`, or pre-renamed to `<slug>.jpg` — and run:
+- **`Regular Images`** holds the **raw photographs**. These are the website
+  photography, used full-bleed on `destinations.html`.
+- **`Location`** holds the finished **1:1 pubmats**. Each already carries the
+  logo, place name, description, things-to-do and tags baked in. They are used
+  **whole**, as the shareable card and social image, and never have type laid
+  over them.
 
-       python3 scripts/build-locations.py <folder>
+Putting a pubmat behind a page headline collides with the type already inside
+it, so never treat a `Location` file as raw photography.
 
-   This writes AVIF/WebP/JPEG at 640/1024/1600/2400px into
-   `assets/locations/`. It never upscales, never substitutes, and fails
-   rather than guessing if an original is missing.
+Each raw photograph was matched against the photograph embedded in the
+correspondingly labelled pubmat, so the place name comes from the project's
+own labelling rather than from reading the image. `IMG_9143.JPG` matches no
+pubmat, cannot be tied to a named place, and is recorded as unassigned in
+`data/photography.json`. It is not used and must not be labelled as a
+location.
 
-2. Link the page, which is deliberately unlinked until the photography
-   exists so the site never advertises a gallery of broken images:
+The description, things-to-do and tags on each destination are transcribed
+verbatim from that place's pubmat. Nothing there is invented.
 
-   - `index.html` — add an editorial link to `destinations.html`
-   - `a-closer-look.html` — link it from the destinations paragraph
-   - `sitemap.xml` — add `https://masinloc-zambales.com/destinations.html`
+### Rebuilding the photography
 
-`scripts/check-locations.py` reports **PENDING** while no photography is
-built, **FAILED** on a partial build, and **PASSED** once all eight are in
-place. `scripts/destinations-qa.mjs` skips itself until then, and afterwards
-asserts that every place renders its own photograph, that the index rail
-tracks, and that the viewer opens, navigates and closes.
+    python3 scripts/build-locations.py <folder-with-originals>
+    python3 scripts/build-destinations.py
+
+The folder takes the raw photograph as `<slug>.jpg|png` (or its Drive
+filename) and the pubmat as `<slug>-card.jpg`. Photographs are built at
+480/768/1120/1536/2048px, cards at 600/1200px, in AVIF, WebP and JPEG.
+Originals run from 798px to 2048px and are **never upscaled**, so each place
+stops at the widest size its own original supports — which is why
+`scripts/build-destinations.py` writes `srcset` from the files that actually
+exist rather than from a fixed list.
 
 ## Non-negotiable guardrails
 

@@ -13,6 +13,7 @@ worse than none.
 """
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -23,7 +24,10 @@ DATA = ROOT / "data" / "locations.json"
 PAGE = ROOT / "destinations.html"
 ASSETS = ROOT / "assets" / "locations"
 
-WIDTHS = [640, 1024, 1600, 2400]
+# Originals differ in resolution and are never upscaled, so only the smallest
+# width is guaranteed for every place.
+GUARANTEED_WIDTH = 480
+CARD_WIDTH = 600
 REQUIRED_FORMATS = ["webp", "jpg"]      # AVIF is an enhancement, not a floor.
 
 errors: list[str] = []
@@ -47,21 +51,32 @@ if len(set(slugs)) != len(slugs):
     fail("duplicate slugs in data/locations.json")
 
 for location in locations:
-    for key in ("slug", "name", "locality", "rhyme", "alt", "source"):
+    for key in ("slug", "name", "locality", "rhyme", "alt", "description",
+                "photo", "card"):
         if not str(location.get(key, "")).strip():
             fail(f"{location.get('slug', '?')}: missing '{key}'")
+    for key in ("todo", "tags"):
+        if not location.get(key):
+            fail(f"{location.get('slug', '?')}: missing '{key}'")
 
-# Every photograph belongs to exactly one place.
-sources = [location["source"] for location in locations]
-if len(set(sources)) != len(sources):
-    fail("the same photograph is mapped to more than one location")
+# Every photograph and every card belongs to exactly one place.
+for key, label in (("photo", "photograph"), ("card", "card")):
+    values = [location[key] for location in locations if location.get(key)]
+    if len(set(values)) != len(values):
+        fail(f"the same {label} is mapped to more than one location")
+
+# A raw photograph must never be reused as a card, or vice versa.
+overlap = ({location["photo"] for location in locations}
+           & {location["card"] for location in locations})
+if overlap:
+    fail(f"the same file is used as both photograph and card: {', '.join(sorted(overlap))}")
 
 # --- the page agrees with the mapping ---------------------------------------
 if not PAGE.is_file():
     fail("destinations.html has not been generated; run scripts/build-destinations.py")
 else:
     page_text = PAGE.read_text(encoding="utf-8")
-    rendered = " ".join(re.sub(r"<[^>]+>", " ", page_text).split())
+    rendered = html.unescape(" ".join(re.sub(r"<[^>]+>", " ", page_text).split()))
 
     for location in locations:
         slug = location["slug"]
@@ -76,20 +91,33 @@ else:
         # The alt text names the place, so a photograph swapped onto the wrong
         # section shows up here rather than in front of a reader.
         section = page_text.split(f'id="{slug}"', 1)[1].split("</section>", 1)[0]
-        if f"{slug}-1600.jpg" not in section:
+        if f"{slug}-{GUARANTEED_WIDTH}.jpg" not in section:
             fail(f"{location['name']}: section does not use its own photograph")
+        if f"{slug}-card-" not in section:
+            fail(f"{location['name']}: section does not offer its own card")
+        if location["description"] not in rendered:
+            fail(f"{location['name']}: the approved description is not on the page")
+        for item in location["todo"]:
+            if item not in rendered:
+                fail(f"{location['name']}: things-to-do item '{item}' is missing")
 
-    stray = re.findall(r'assets/locations/([a-z0-9-]+)-\d+\.(?:avif|webp|jpg)', page_text)
-    unknown = sorted({name for name in stray if name not in slugs})
+    stray = re.findall(r'assets/locations/([a-z0-9-]+?)(-card)?-\d+\.(?:avif|webp|jpg)',
+                       page_text)
+    unknown = sorted({name for name, _suffix in
+                      ((match[0], match[1]) for match in stray)
+                      if name not in slugs})
     if unknown:
         fail(f"destinations.html references photography for unlisted locations: "
              f"{', '.join(unknown)}")
 
 # --- built photography -------------------------------------------------------
 expected = {
-    f"{location['slug']}-{width}.{fmt}"
+    f"{location['slug']}-{GUARANTEED_WIDTH}.{fmt}"
     for location in locations
-    for width in WIDTHS
+    for fmt in REQUIRED_FORMATS
+} | {
+    f"{location['slug']}-card-{CARD_WIDTH}.{fmt}"
+    for location in locations
     for fmt in REQUIRED_FORMATS
 }
 present = {path.name for path in ASSETS.glob("*")} if ASSETS.is_dir() else set()
@@ -123,4 +151,5 @@ if missing:
 print("LOCATIONS CHECK PASSED")
 print(f"{len(locations)} locations; every one carries its approved photograph, "
       f"locality and alt text.")
-print(f"{len(present)} image files built across {len(WIDTHS)} widths.")
+print(f"{len(present)} image files built: full-bleed photography plus a "
+      f"shareable card for each place.")

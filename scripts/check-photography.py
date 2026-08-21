@@ -106,7 +106,8 @@ for page in pages:
         # A built location photograph: assets/locations/<slug>-<width>.<ext>
         if path.startswith(pending_dir):
             name = Path(path).stem
-            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)-(?P<width>\d+)", name)
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)(?P<card>-card)?-(?P<width>\d+)",
+                                 name)
             if not match or match.group("slug") not in location_slugs:
                 fail(f"{page.name}: {path} is not one of the approved location "
                      f"photographs listed in data/locations.json")
