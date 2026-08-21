@@ -161,3 +161,44 @@
   });
   observer.observe(document.documentElement, { childList: true, subtree: true });
 })();
+
+/* Professional submissions are job-seeking submissions and enter the hiring pool automatically. */
+(() => {
+  const style = document.createElement('style');
+  style.textContent = `
+    .hiring-pool-notice{margin:18px 0;padding:14px 15px;border:1px solid #e4e7ec;border-radius:10px;background:#f8fafc;font-size:12px;line-height:1.55;color:#333}
+    .hiring-pool-notice strong{display:block;margin-bottom:4px;color:#111;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+  `;
+  document.head.appendChild(style);
+
+  function updateEntryCopy() {
+    const quick = document.querySelector('.quick-card.professional p');
+    const chooser = document.querySelector('.selection-card.professional p');
+    if (quick) quick.textContent = 'Looking for work? Create your professional profile and résumé. Submitted profiles are automatically included in the Masinloc Connect hiring pool.';
+    if (chooser) chooser.textContent = 'Create your professional profile and résumé. When you submit, your profile can be matched with approved hiring partners.';
+  }
+
+  function addNotice() {
+    try {
+      if (typeof type === 'undefined' || type !== 'professional') return;
+      if (typeof configs === 'undefined' || typeof step === 'undefined') return;
+      const card = document.querySelector('#formCard');
+      if (!card || card.querySelector('.hiring-pool-notice')) return;
+      if (step !== configs.professional.steps.length - 1) return;
+
+      const notice = document.createElement('div');
+      notice.className = 'hiring-pool-notice';
+      notice.innerHTML = '<strong>Job opportunities</strong>By submitting this Professional profile, you are telling Masinloc Connect that you are looking for work. Your professional profile will automatically join the Masinloc Connect hiring pool and may be matched with approved hiring partners. You can mark yourself unavailable later to stop employer matching.';
+      const actions = card.querySelector('.form-actions');
+      if (actions) card.insertBefore(notice, actions);
+      else card.appendChild(notice);
+    } catch {}
+  }
+
+  updateEntryCopy();
+  const observer = new MutationObserver(() => {
+    updateEntryCopy();
+    addNotice();
+  });
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+})();
