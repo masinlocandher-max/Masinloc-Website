@@ -31,6 +31,11 @@
 .community-word:hover,.community-word:focus-visible{transform:translateY(-2px);border-color:#9CB2DD;box-shadow:0 12px 30px rgba(3,17,47,.08);outline:none}
 .community-word strong{display:block;color:#061A46;font:400 19px/1.1 var(--font-editorial,Georgia,serif)}
 .community-word span{display:block;margin-top:5px;color:#6B7588;font:700 9px/1.35 var(--font-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif)}
+.community-example{margin-top:28px;padding-top:24px;border-top:1px solid #DDE3EC}
+.community-example-label{margin:0 0 10px;color:#0D3B9E;font:900 9px/1.2 var(--font-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif);letter-spacing:.16em;text-transform:uppercase}
+.community-example blockquote{margin:0;color:#061A46;font:400 clamp(27px,3vw,40px)/1.12 var(--font-editorial,Georgia,serif);letter-spacing:-.025em}
+.community-example-translation{margin:11px 0 0;color:#59657B;font-size:12px;line-height:1.6}
+.community-example small{display:block;margin-top:7px;color:#8A94A6;font:750 9px/1.4 var(--font-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif);letter-spacing:.04em}
 
 .dictionary-tools{padding:46px 0 24px}
 .dictionary-tools .dictionary-section-label{color:#0D3B9E;margin-bottom:13px}
