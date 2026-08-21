@@ -16,6 +16,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate Stage 1 integrity
         run: python3 scripts/check-site.py
+      - name: Validate Sambal Tina dictionary
+        run: python3 scripts/check-dictionary.py
       - name: Validate design consistency
         run: python3 scripts/check-design-consistency.py
       - name: Validate JavaScript syntax
@@ -26,5 +28,7 @@ jobs:
           node --check app-base.js
           node --check app.js
           node --check admin.js
+          node --check sambal-tina.js
           node --check scripts/browser-qa.mjs
           node --check scripts/connect-qa.mjs
+          node --check scripts/dictionary-qa.mjs
