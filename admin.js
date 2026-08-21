@@ -8,11 +8,12 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const tables={
  business:{table:'business_submissions',label:'Business',statuses:['pending','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.brand_name,sub:r=>r.short_description,cols:[['Brand','brand_name'],['Contact','contact_number'],['Status','status'],['Submitted','created_at']]},
  story:{table:'story_submissions',label:'Story / History',statuses:['pending','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.title,sub:r=>r.about,cols:[['Title','title'],['Contributor','contributor_name'],['Status','status'],['Submitted','created_at']]},
+ dictionary:{table:'dictionary_submissions',label:'Sambal Tina',statuses:['pending','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.headword,sub:r=>`${pretty(r.submission_type)} · ${r.filipino_meaning||r.english_meaning||r.contribution_details||''}`,cols:[['Word / Phrase','headword'],['Type','submission_type'],['Contributor','contributor_name'],['Status','status'],['Submitted','created_at']]},
  professional:{table:'professional_submissions',label:'Professionals',statuses:['pending','private','reviewing','needs_review','approved','rejected','published','archived'],title:r=>r.full_name,sub:r=>`${r.profession||''}${r.current_location?` · ${r.current_location}`:''}`,cols:[['Name','full_name'],['Profession','profession'],['Visibility','public_profile'],['Status','status'],['Submitted','created_at']]},
  resume:{table:'resume_support_submissions',label:'Resume Support',statuses:['pending','in_progress','completed','declined','archived'],title:r=>r.full_name||r.target_job,sub:r=>r.target_job,cols:[['Name','full_name'],['Target','target_job'],['Status','status'],['Submitted','created_at']]},
  security:{table:'security_events',label:'Security',statuses:['low','medium','high','critical'],title:r=>pretty(r.event_type),sub:r=>`${pretty(r.severity||'')} · ${r.category?pretty(r.category):'General'}`,cols:[['Event','event_type'],['Severity','severity'],['Category','category'],['IP','ip_address'],['Detected','created_at']],readOnly:true}
 };
-let activeType='business',rows=[],counts={business:0,story:0,professional:0,resume:0,security:0};
+let activeType='business',rows=[],counts={business:0,story:0,dictionary:0,professional:0,resume:0,security:0};
 
 function isAdmin(session){return session?.user?.app_metadata?.role==='admin'}
 function formatDate(v){if(!v)return '—';return new Intl.DateTimeFormat('en-PH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(v))}
@@ -74,6 +75,7 @@ function cellValue(r,key){
  if(key==='created_at')return formatDate(r[key]);
  if(key==='status'||key==='severity')return statusHTML(r[key]);
  if(key==='public_profile')return r[key]?'Public':'Private';
+ if(key==='submission_type')return pretty(r[key]);
  if(key==='ip_address')return r[key]?`<code>${esc(r[key])}</code>`:'Hashed only';
  const v=r[key];return v===null||v===undefined||v===''?'—':esc(v);
 }
@@ -108,15 +110,16 @@ async function openDetail(id){
  const pairs=activeType==='security'?Object.entries(r).filter(([k])=>k!=='id'):fieldPairs(r);
  const fields=pairs.map(([k,v])=>{
    const display=displayValue(k,v);
-   const full=String(display||'').length>100||['story','short_description','professional_description','skills','work_experience','training','achievements','metadata','ip_hash'].includes(k);
+   const full=String(display||'').length>100||['story','short_description','professional_description','skills','work_experience','training','achievements','metadata','ip_hash','contribution_details','example_usage','filipino_meaning','english_meaning'].includes(k);
    return `<div class="detail-field ${full?'full':''}"><span>${pretty(k)}</span><p>${esc(display)}</p></div>`;
  }).join('');
  let editor='';
  if(!cfg.readOnly){
-   editor=`<div class="admin-editor"><label>Status<select id="editStatus">${cfg.statuses.map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${pretty(s)}</option>`).join('')}</select></label>${activeType==='story'?`<label>Verification notes<textarea id="verificationNotes" placeholder="Sources checked, unresolved details, verification status…">${esc(r.verification_notes||'')}</textarea></label>`:''}<label>Internal notes<textarea id="internalNotes" placeholder="Private notes for the Masinloc team…">${esc(r.internal_notes||'')}</textarea></label><div class="editor-actions"><span id="saveMessage" class="muted"></span><button id="saveRecord">Save changes</button></div></div>`;
+   const verification=['story','dictionary'].includes(activeType)?`<label>Verification notes<textarea id="verificationNotes" placeholder="What was checked, whether it already exists, spelling or meaning notes, and anything still unresolved…">${esc(r.verification_notes||'')}</textarea></label>`:'';
+   editor=`<div class="admin-editor"><label>Status<select id="editStatus">${cfg.statuses.map(s=>`<option value="${s}" ${r.status===s?'selected':''}>${pretty(s)}</option>`).join('')}</select></label>${verification}<label>Internal notes<textarea id="internalNotes" placeholder="Private notes for the Masinloc team…">${esc(r.internal_notes||'')}</textarea></label><div class="editor-actions"><span id="saveMessage" class="muted"></span><button id="saveRecord">Save changes</button></div></div>`;
  }
  const refLine=activeType==='security'?`${pretty(r.severity)} · ${formatDate(r.created_at)}`:`${esc(r.reference_code||'')} · ${formatDate(r.created_at)}`;
- $('#detailContent').innerHTML=`<p class="detail-kicker">${esc(cfg.label)}</p><h2 class="detail-title">${esc(cfg.title(r)||'Record')}</h2><p class="detail-ref">${refLine}</p>${activeType==='security'&&r.ip_address?'<p class="muted">Raw IP is temporarily retained for this high-severity event. It will be cleared automatically while the hashed fingerprint remains for pattern detection.</p>':''}<div class="detail-grid">${fields}</div>${attachments?`<div class="detail-field full" style="margin-top:12px"><span>Private attachments</span><div class="attachment-list">${attachments}</div></div>`:''}${editor}`;
+ $('#detailContent').innerHTML=`<p class="detail-kicker">${esc(cfg.label)}</p><h2 class="detail-title">${esc(cfg.title(r)||'Record')}</h2><p class="detail-ref">${refLine}</p>${activeType==='security'&&r.ip_address?'<p class="muted">Raw IP is temporarily retained for this high-severity event. It will be cleared automatically while the hashed fingerprint remains for pattern detection.</p>':''}${activeType==='dictionary'?'<p class="muted">Check whether this word or correction already exists in the collection during review. Intake accepts genuine submissions without requiring the contributor to check first.</p>':''}<div class="detail-grid">${fields}</div>${attachments?`<div class="detail-field full" style="margin-top:12px"><span>Private attachments</span><div class="attachment-list">${attachments}</div></div>`:''}${editor}`;
  $('#detailModal').hidden=false;
  if(!cfg.readOnly)$('#saveRecord').addEventListener('click',()=>saveRecord(r));
  $$('.attachment-list button').forEach(b=>b.addEventListener('click',()=>window.open(b.dataset.url,'_blank','noopener,noreferrer')));
@@ -124,7 +127,7 @@ async function openDetail(id){
 async function attachmentButtons(bucket,paths){const out=[];for(const path of paths){const {data,error}=await supabase.storage.from(bucket).createSignedUrl(path,300);if(!error&&data?.signedUrl)out.push(`<button data-url="${esc(data.signedUrl)}">${esc(path.split('/').pop()||'Attachment')}</button>`)}return out.join('')}
 async function saveRecord(r){
  const cfg=tables[activeType],patch={status:$('#editStatus').value,internal_notes:$('#internalNotes').value.trim()||null,updated_at:new Date().toISOString()};
- if(activeType==='story')patch.verification_notes=$('#verificationNotes').value.trim()||null;
+ if(['story','dictionary'].includes(activeType))patch.verification_notes=$('#verificationNotes').value.trim()||null;
  $('#saveMessage').textContent='Saving…';
  const {error}=await supabase.from(cfg.table).update(patch).eq('id',r.id);
  if(error){$('#saveMessage').textContent=error.message;return}
