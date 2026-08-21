@@ -24,14 +24,15 @@
   function readingLabel(word) {
     const source = String(word || '').trim();
     if (!source) return 'Source spelling unavailable';
-    return source;
+    // In the dictionary's approved modern orthography, a medial hyphen marks a glottal stop.
+    // We surface that one source-supported cue while leaving stress untouched when the resolved
+    // transcription does not preserve the original accent mark.
+    return source.replace(/-/g, ' ʔ ').replace(/\s+/g, ' ').trim();
   }
 
   async function inflateDataset() {
     if (!window.SAMBAL_TINA_DATA) throw new Error('Dictionary data is unavailable.');
-    if (!('DecompressionStream' in window)) {
-      throw new Error('This dictionary needs a current browser with built-in gzip support.');
-    }
+    if (!('DecompressionStream' in window)) throw new Error('This dictionary needs a current browser with built-in gzip support.');
     const raw = atob(window.SAMBAL_TINA_DATA);
     const bytes = Uint8Array.from(raw, (char) => char.charCodeAt(0));
     const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
@@ -97,12 +98,10 @@
   function wordCard(entry) {
     const card = make('article', `word-card${entry.review ? ' review' : ''}`);
     const head = make('div', 'word-head');
-    const word = make('h2', '', entry.word || 'Untitled entry');
-    const pos = make('span', 'word-pos', entry.pos || 'entry');
-    head.append(word, pos);
+    head.append(make('h2', '', entry.word || 'Untitled entry'), make('span', 'word-pos', entry.pos || 'entry'));
 
     const reading = make('p', 'word-reading');
-    reading.append(make('small', '', 'Pronunciation / source orthography'));
+    reading.append(make('small', '', 'Reading guide'));
     reading.append(document.createTextNode(readingLabel(entry.word)));
 
     const definition = make('p', 'word-definition', entry.english || 'English meaning not supplied in this source entry.');
@@ -120,13 +119,8 @@
     const shown = Math.min(state.visible, total);
     $('resultCount').textContent = `${total.toLocaleString()} ${total === 1 ? 'entry' : 'entries'}`;
     grid.replaceChildren();
-
-    if (!total) {
-      grid.append(make('div', 'dictionary-empty', 'No matching entry. Try another spelling, English meaning, or Filipino equivalent.'));
-    } else {
-      state.filtered.slice(0, shown).forEach((entry) => grid.append(wordCard(entry)));
-    }
-
+    if (!total) grid.append(make('div', 'dictionary-empty', 'No matching entry. Try another spelling, English meaning, or Filipino equivalent.'));
+    else state.filtered.slice(0, shown).forEach((entry) => grid.append(wordCard(entry)));
     const more = $('loadMore');
     more.hidden = shown >= total;
     if (!more.hidden) more.textContent = `Show more · ${Math.min(PAGE_SIZE, total - shown)} next`;
@@ -143,10 +137,7 @@
         applyFilters();
       }, 90);
     });
-    $('loadMore').addEventListener('click', () => {
-      state.visible += PAGE_SIZE;
-      renderCards();
-    });
+    $('loadMore').addEventListener('click', () => { state.visible += PAGE_SIZE; renderCards(); });
   }
 
   async function init() {
