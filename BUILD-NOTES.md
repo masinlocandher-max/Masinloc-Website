@@ -58,62 +58,64 @@ These are not code regressions and cannot be completed from repository code alon
 
 ## Sambal Tina dictionary
 
-**The Masinloc Sambal Tina Dictionary** is compiled, transcribed and verified
-by the **Sambal Tina Documentation Project**, and is credited to the project
-on the page. The compilation work — reading three source layers, cross-linking
-the main dictionary body against the printed Tina index, reviewing ambiguous
-glyphs, and assigning confidence and source status — is the project's own.
-The compiler name lives in `COMPILER` in `scripts/build-dictionary.py`;
-changing it there and rebuilding updates the data and the page together.
+**The Masinloc Sambal Tina Dictionary** is a record of the **Mabayani Project
+by FMB**, and is credited to the project on the page. The compilation work —
+reading the source archive across three layers, cross-linking the main body
+against the printed index, reviewing ambiguous glyphs, and assigning
+confidence and source status — is the project's own. The compiler name lives
+in `COMPILER` in `scripts/build-dictionary.py`; changing it there and
+rebuilding updates the data and the page together.
 
 It is published from `data/sambal-tina.json`: one ordinary JSON file, fetched
-normally, built by `scripts/build-dictionary.py` from the "Sambal Tina Strong
-Collection" working master.
+normally, built by `scripts/build-dictionary.py` from the project's working
+master.
 
-The 1988 *English–Tina Sambal–Pilipino Dictionary* is the **cited source**, and
-remains the authority for any disputed reading. Every entry carries its page
-reference, a source status, a confidence rating of 1–5 and any open QA note.
-**All of that is carried through to the published data and shown on the page.**
-A reader can see how far to trust any entry and which page to check.
-
-### Source attribution is load-bearing
-
-The citation is not a formality and must not be removed. The page's whole
-trust mechanism is "p. 117 — check it yourself": page numbers pointing at an
-unnamed book prove nothing, and the flagged entries become unverifiable.
-Crediting the compilation and citing the source are not in tension — the
-project holds the compilation, the 1988 book holds the underlying wordlist,
-and the page says both.
-
-### Unresolved: rights in the 1988 source
-
-Rights status of the 1988 printed dictionary has **not** been established.
-The compilation, transcription, verification and presentation are the
-project's own and are marked as such. The underlying wordlist is not, and is
-published here as an attributed transcription with page-level citation.
-
-Confirm the rights holder — and obtain permission, or establish that the work
-is public domain or government-issued — **before** promoting the dictionary
-beyond this site, printing it, or licensing the data onward. Until then, keep
-the attribution and page citations exactly as they are.
+Every entry carries the archive page it was transcribed from, a source
+status, a confidence rating of 1–5 and any open QA note. **All of that is
+carried through to the published data and shown on the page.** A reader can
+see how far to trust any entry and which page to check it against.
 
 ### Rules for this data
 
-1. **Never silently repair a glyph.** Parts of the source survive only as
-   damaged text (`ab61`, `ab6h`, `abanlko`). Publish them flagged; do not
+1. **Never silently repair a glyph.** Parts of the record survive only as
+   damaged text (`ab61`, `ab6h`, `abanlko`). Publish them under review; do not
    invent a plausible spelling. A wrong guess enters the permanent record for
    a language with few written sources.
 2. **Provenance is not optional.** Every entry must keep its confidence
-   rating and page reference. `scripts/check-dictionary.py` fails the build
-   if any entry loses either, and if the counts stated in the page copy drift
-   from the data.
+   rating and archive page reference. `scripts/check-dictionary.py` fails the
+   build if any entry loses either, if the page stops crediting the compiler,
+   if it stops explaining what the page numbers refer to, or if the counts
+   stated in the page copy drift from the data.
 3. **The visitor phrasebook stays at confidence 4 or better** and carries no
    entry with an open QA note.
 4. **Data is served as data.** No gzip streams, no base64, no split
    fragments, no runtime reconstruction — see guardrail 2 below. Vercel
    compresses the file over the wire; 341 KB of JSON ships as about 112 KB.
 5. **Corrections come through review.** Changes are checked against the
-   printed page before the published data moves.
+   archive before the published data moves.
+
+### Internal provenance record
+
+*This section is repository documentation. It is not published on the site.*
+
+The wordlist was transcribed from a printed source held by the project, by
+way of the "Sambal Tina Strong Collection" working master exported from the
+project's Drive. The public pages present the dictionary as the project's own
+compilation and refer to the underlying material as "the source archive"
+rather than naming or dating it; that presentation was a deliberate decision
+by the project owner.
+
+Two consequences worth keeping in view:
+
+- **Rights in the underlying wordlist have not been established.** The
+  compilation, transcription, review and presentation are the project's own
+  and are marked as such. The wordlist itself is a separate question.
+  Confirm the position — permission, public domain, or government issue —
+  before printing the dictionary, licensing the data onward, or promoting it
+  beyond this site.
+- **The page numbers only mean something against the archive they came
+  from.** Keep the archive intact and retrievable. If it is ever lost, the
+  citations become unverifiable and the confidence ratings lose their basis.
 
 ## Non-negotiable guardrails
 

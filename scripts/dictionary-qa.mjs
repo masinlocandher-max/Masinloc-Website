@@ -90,6 +90,72 @@ async function run(label, viewport) {
     fail(`${label}: the source-check filter is showing ${strongInFiltered} well-supported entries`);
   }
 
+  /* Filter chips carry live counts. */
+  const chipCount = await page.locator('.chip[data-filter="all"] .chip-count').textContent();
+  if (!/[0-9]/.test(chipCount || '')) fail(`${label}: filter chips show no counts`);
+
+  /* Search state is written to the URL so a result can be linked. */
+  await page.fill('#dictQuery', 'dagat');
+  await page.waitForTimeout(350);
+  if (!/q=dagat/.test(page.url())) fail(`${label}: search term is not reflected in the URL`);
+
+  /* "/" reaches the search field. */
+  await page.click('h1');
+  await page.keyboard.press('/');
+  const focused = await page.evaluate(() => document.activeElement?.id);
+  if (focused !== 'dictQuery') fail(`${label}: "/" did not focus the search field`);
+
+  /* The entry of the day renders a real headword. */
+  const dailyHidden = await page.locator('#daily').isHidden();
+  if (dailyHidden) fail(`${label}: entry of the day did not render`);
+  else {
+    const word = await page.locator('.daily-word').textContent();
+    if (!word || !word.trim()) fail(`${label}: entry of the day has no headword`);
+  }
+
+  /* Letter navigation narrows to a single initial. */
+  await page.fill('#dictQuery', '');
+  await page.waitForTimeout(300);
+  const letterButton = page.locator('.dict-alphabet button[data-letter="b"]');
+  if (await letterButton.count()) {
+    await letterButton.click();
+    await page.waitForTimeout(400);
+    const heads = await page.locator('.dict-entry .entry-tina').allTextContents();
+    const stray = heads.filter((head) => !head.trim().toLowerCase().startsWith('b'));
+    if (heads.length === 0) fail(`${label}: letter filter returned nothing`);
+    if (stray.length) fail(`${label}: letter filter leaked ${stray.length} non-B headwords`);
+    await page.locator('.dict-alphabet button[data-letter=""]').click();
+    await page.waitForTimeout(300);
+  }
+
+  /* Scroll reveals must actually fire. A section taller than the viewport can
+     never satisfy a fractional IntersectionObserver threshold, which once left
+     the whole search panel invisible on phones. */
+  await page.evaluate(async () => {
+    const step = Math.floor(window.innerHeight * 0.7);
+    for (let y = 0; y < document.body.scrollHeight; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((resolve) => setTimeout(resolve, 80));
+    }
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+  /* Wait for the reveal transitions to settle rather than guessing a delay. */
+  await page.waitForFunction(
+    () => [...document.querySelectorAll('main > section')]
+      .every((section) => getComputedStyle(section).opacity === '1'),
+    null,
+    { timeout: 6000 }
+  ).catch(() => {});
+
+  const invisible = await page.evaluate(() =>
+    [...document.querySelectorAll('main > section')]
+      .filter((section) => getComputedStyle(section).opacity !== '1')
+      .map((section) => section.className)
+  );
+  if (invisible.length) {
+    fail(`${label}: sections never revealed: ${invisible.join(', ')}`);
+  }
+
   /* No horizontal overflow at any width. */
   const overflow = await page.evaluate(() =>
     document.documentElement.scrollWidth - document.documentElement.clientWidth

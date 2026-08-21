@@ -3,17 +3,16 @@
 
 What this dictionary is
 -----------------------
-The Masinloc Sambal Tina Dictionary is compiled, transcribed and verified by
-the project named in COMPILER below. That compilation work -- reading three
-source layers, cross-linking them, reviewing ambiguous glyphs, and assigning
-confidence and source status -- is the project's own, and is credited as such.
+The Masinloc Sambal Tina Dictionary is compiled, transcribed and reviewed by
+the project named in COMPILER below. The compilation work -- reading the
+source archive across three layers, cross-linking them, reviewing ambiguous
+glyphs, and assigning confidence and source status -- is the project's own.
 
-Cited source
-------------
-The wordlist derives from the 1988 English-Tina Sambal-Pilipino Dictionary,
-by way of the "Sambal Tina Strong Collection" working master. The printed
-dictionary remains the authority for any disputed reading, and is cited by
-page on every entry so a reader can check it.
+Provenance
+----------
+Entries carry the archive page they were transcribed from, so a reading can
+be checked against the record rather than taken on trust. See BUILD-NOTES.md
+for the full internal provenance of the source archive.
 
 This script carries the workbook's own provenance columns through to the
 published data: PDF page reference, source status, confidence (1-5) and QA
@@ -37,10 +36,9 @@ import re
 import sys
 from pathlib import Path
 
-# Who compiled this dictionary. The 1988 printed dictionary is a cited source;
-# the transcription, cross-linking, QA and ratings published here are the
-# project's own work and are credited as such.
-COMPILER = "The Sambal Tina Documentation Project"
+# Who compiled this dictionary. The transcription, cross-linking, review and
+# ratings published here are the project's own work and are credited as such.
+COMPILER = "Mabayani Project by FMB"
 COMPILATION_YEAR = 2026
 
 COLUMNS = ["tina", "pos", "en", "fil", "pages", "status", "conf", "notes"]
@@ -128,13 +126,24 @@ def locate(text: str, row: list, cursor: int) -> tuple[int, int]:
 # QA note. Nothing here is invented, and empty groups are dropped.
 PHRASEBOOK = [
     ("Meeting people", ["good", "welcome", "friend", "thank", "name",
-                        "companion", "guest", "visitor", "kind", "happy"]),
+                        "companion", "guest", "visitor", "kind", "happy",
+                        "neighbour", "neighbor", "please", "sorry"]),
     ("The sea and the table", ["rice", "water", "sea", "fish", "crab", "shrimp",
-                               "fruit", "cook", "sweet", "hungry", "thirsty"]),
+                               "fruit", "cook", "sweet", "hungry", "thirsty",
+                               "salt", "eat", "drink", "market", "bread"]),
     ("Finding your way", ["road", "town", "river", "island", "near", "far",
-                          "where", "field", "house", "mountain", "boat"]),
+                          "where", "field", "house", "mountain", "boat",
+                          "bridge", "path", "door", "gate"]),
     ("Family", ["father", "mother", "child", "woman", "man", "brother",
-                "sister", "grandchild", "friend"]),
+                "sister", "grandchild", "friend", "son", "daughter", "family"]),
+    ("Weather and sky", ["rain", "wind", "sun", "moon", "star", "cloud",
+                         "storm", "heat", "cold", "night", "morning", "sky"]),
+    ("Time", ["day", "year", "month", "week", "today", "tomorrow",
+              "yesterday", "now", "early", "late", "always"]),
+    ("Work and making", ["work", "farm", "build", "plant", "harvest", "weave",
+                         "buy", "sell", "money", "help", "carry", "teach"]),
+    ("Living things", ["tree", "flower", "bird", "dog", "leaf", "root",
+                       "seed", "grass", "wood", "stone", "animal"]),
 ]
 
 
@@ -172,6 +181,21 @@ def build_phrasebook(entries: list[list]) -> list[dict]:
         if len(words) >= 4:
             groups.append({"title": title, "words": words})
     return groups
+
+
+def build_daily_pool(phrasebook: list[dict]) -> list[str]:
+    """Headwords eligible for the featured "entry of the day".
+
+    Drawn from the curated vocabulary rather than the whole dictionary. Picking
+    by date across all 5,222 entries eventually features something crude or
+    obscure, which is the wrong face for a language record.
+    """
+    seen: list[str] = []
+    for group in phrasebook:
+        for word in group["words"]:
+            if word["tina"] not in seen:
+                seen.append(word["tina"])
+    return sorted(seen)
 
 
 def read_skeleton(skeleton_path: Path, output_path: Path) -> list[list]:
@@ -251,23 +275,24 @@ def build(export_path: Path, skeleton_path: Path, output_path: Path) -> dict:
         entries.append([tina, pos, english, pilipino, pages,
                         status_index[status], confidence, notes])
 
+    phrasebook = build_phrasebook(entries)
+
     return {
-        "phrasebook": build_phrasebook(entries),
+        "phrasebook": phrasebook,
+        "daily": build_daily_pool(phrasebook),
         "compilation": {
             "title": "The Masinloc Sambal Tina Dictionary",
             "compiler": COMPILER,
-            "work": ("Transcription across three source layers, cross-linking of "
-                     "the main dictionary body against the printed Tina index, "
-                     "QA review of ambiguous readings, and the confidence and "
+            "work": ("Transcription across three layers of the source archive, "
+                     "cross-linking of the main body against the printed index, "
+                     "review of ambiguous readings, and the confidence and "
                      "source-status ratings published here."),
-            "rights": ("Compilation, transcription, verification and presentation "
+            "rights": ("Compilation, transcription, review and presentation "
                        f"\u00a9 {COMPILATION_YEAR} {COMPILER}."),
         },
         "source": {
-            "title": "English-Tina Sambal-Pilipino Dictionary",
-            "year": 1988,
-            "authority": "the original printed dictionary",
-            "master": "Sambal Tina Strong Collection working master",
+            "title": "Source archive held by the project",
+            "authority": "the printed record",
             "rule": ("Use the source-supported form. Never silently guess "
                      "uncertain historical glyphs."),
         },

@@ -66,8 +66,22 @@ and entry layout. Sub-pages are declared in `scripts/check-design-consistency.py
 which validates their shell while expecting the parent to hold the
 current-page state.
 
-Provenance is part of the design here, not decoration: a dictionary entry
-shows its confidence badge and printed page reference alongside the word.
+Provenance is part of the design here, not decoration: an entry shows its
+review status and archive page alongside the word.
+
+Interaction on this page is reference-grade, not decorative. Search state
+(term, status filter, letter) is written to the URL so a result can be linked
+and returned to; `/` reaches the search field; filter chips carry live counts;
+a headword can be copied in one action. All of it is enhancement — the page's
+purpose, method, legend and terms are complete in HTML without JavaScript.
+
+### Register
+
+The public voice is level and documentary. State what is true, name what is
+uncertain, and stop. No exclamation, no salesmanship, no encouragement of the
+reader, no first-person enthusiasm. An entry that is unresolved is described
+as unresolved, not as an opportunity. This is a record, and it should read
+like one.
 
 ### Masinloc Connect
 

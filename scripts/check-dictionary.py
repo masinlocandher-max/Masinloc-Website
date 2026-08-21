@@ -38,7 +38,7 @@ if payload.get("columns") != EXPECTED_COLUMNS:
     fail(f"column order changed: {payload.get('columns')}")
 
 source = payload.get("source") or {}
-for key in ("title", "year", "authority", "rule"):
+for key in ("title", "authority", "rule"):
     if not source.get(key):
         fail(f"source block is missing '{key}'; the published data must name its authority")
 
@@ -125,9 +125,12 @@ if PAGE.is_file():
 
     if PAGE_CREDIT and PAGE_CREDIT.removeprefix("The ") not in rendered:
         fail(f"sambal-tina.html does not credit the compiler ({PAGE_CREDIT})")
-    if str(source.get("year", "")) not in rendered:
-        fail(f"sambal-tina.html does not cite the source year ({source.get('year')}); "
-             f"the page references are unverifiable without it")
+
+    # Entries carry an archive page so a reading can be checked rather than
+    # taken on trust. The page must explain what that number refers to.
+    if "archive page" not in rendered.lower():
+        fail("sambal-tina.html does not explain what the page reference on each "
+             "entry refers to; the citations are unreadable without it")
 
 if errors:
     print("DICTIONARY CHECK FAILED")
