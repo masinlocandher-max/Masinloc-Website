@@ -25,10 +25,10 @@ EDITORIAL_PAGES = [page for page in PUBLIC_PAGES if page != "connect.html"]
 REQUIRED = [
     *PUBLIC_PAGES,
     "admin.html", "404.html",
-    "site.css", "site-polish.css", "site-stability.css", "stage2.css", "site.js",
+    "site.css", "site-polish.css", "site-stability.css", "stage2.css", "dictionary-fmb.css", "site.js",
     "styles.css", "connect-polish.css", "connect-shell.css", "connect-shell.js",
     "app.js", "app-base.js", "security.js",
-    "sambal-tina.js",
+    "sambal-tina.js", "data/sambal-tina-community.js",
     "data/sambal-tina-v2-01.js", "data/sambal-tina-v2-02.js", "data/sambal-tina-v2-03.js",
     "data/sambal-tina-v2-04.js", "data/sambal-tina-v2-05.js",
     "robots.txt", "sitemap.xml", "vercel.json", "BUILD-NOTES.md",
@@ -176,22 +176,49 @@ for idx in range(1, 6):
         fail(f"dictionary data chunk {idx} has an invalid wrapper")
     else:
         parts.append(match.group(1))
+
 if len(parts) == 5:
+    payload = None
+    decode_errors = []
+    candidates = []
+
     try:
-        payload = json.loads(gzip.decompress(base64.b64decode("".join(parts))).decode("utf-8"))
+        candidates.append(b"".join(base64.b64decode(part) for part in parts))
+    except Exception as exc:
+        decode_errors.append(f"per-chunk base64: {exc}")
+
+    try:
+        candidates.append(base64.b64decode("".join(parts)))
+    except Exception as exc:
+        decode_errors.append(f"joined base64: {exc}")
+
+    for candidate in candidates:
+        try:
+            payload = json.loads(gzip.decompress(candidate).decode("utf-8"))
+            break
+        except Exception as exc:
+            decode_errors.append(f"gzip/json: {exc}")
+
+    if payload is None:
+        fail("dictionary dataset could not be decoded: " + " | ".join(decode_errors))
+    else:
         if len(payload) != EXPECTED_DICTIONARY_ENTRIES:
             fail(f"dictionary entry count changed: {len(payload)} != {EXPECTED_DICTIONARY_ENTRIES}")
         review_count = sum(1 for row in payload if len(row) >= 5 and row[4] == 1)
         if review_count != EXPECTED_DICTIONARY_REVIEW:
             fail(f"dictionary source-review count changed: {review_count} != {EXPECTED_DICTIONARY_REVIEW}")
         if any(len(row) != 5 for row in payload): fail("dictionary compact rows must keep five fields")
-    except Exception as exc:
-        fail(f"dictionary dataset could not be decoded: {exc}")
+
+community_data = ROOT / "data/sambal-tina-community.js"
+if community_data.is_file():
+    text = community_data.read_text(encoding="utf-8")
+    for required in ("lanom", "ayama", "talacaca", "masitas", "cabatwan", "oybon", "awlo", "matibya", "labay-labay", "macicwa", "igwa", "balaybay mi", "mabanglo", "mabata", "Inaro ni Cha Baby yay masitas na."):
+        if required not in text: fail(f"community Sambal Tina layer missing confirmed form: {required}")
 
 dictionary_page = ROOT / "sambal-tina.html"
 if dictionary_page.is_file():
     text = dictionary_page.read_text(encoding="utf-8")
-    for required in ("5,222", "Word of the Day", "Pronunciation / source orthography", "do not invent IPA", "sambal-tina.js"):
+    for required in ("5,222", "Word of the Day", "Living Tina Sambal", "do not invent it", "dictionary-fmb.css", "sambal-tina-community.js", "sambal-tina.js"):
         if required not in text: fail(f"sambal-tina.html missing dictionary contract marker: {required}")
 
 # Masinloc Connect uses the byte-locked place photograph and dedicated responsive shell.
@@ -247,5 +274,6 @@ if errors:
 print("SITE INTEGRITY CHECK PASSED")
 print("Stage 2 public routes, SEO essentials, local references and protected boundaries are present.")
 print("The 5,222-entry Sambal Tina dataset and 97 source-review flags decode exactly from the resolved master.")
+print("The community-confirmed Sambal Tina layer remains separate from documentary source data.")
 print("History source-status labels and the Cleopatra Bulletin editorial safeguards are enforced.")
 print("The approved hero remains byte-locked and staged agent branches remain protected from automatic Vercel preview deployment.")
