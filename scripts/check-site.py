@@ -52,6 +52,8 @@ REQUIRED = [
     "scripts/build-locations.py",
     "scripts/build-destinations.py",
     "scripts/check-locations.py",
+    "scripts/check-photography.py",
+    "data/photography.json",
     "scripts/destinations-qa.mjs",
     "scripts/responsive-qa.mjs",
     "styles.css",

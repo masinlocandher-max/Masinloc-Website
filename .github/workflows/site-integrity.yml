@@ -37,3 +37,5 @@ jobs:
         run: python3 scripts/check-dictionary.py
       - name: Validate locations mapping and photography
         run: python3 scripts/check-locations.py
+      - name: Audit every photograph on the site
+        run: python3 scripts/check-photography.py

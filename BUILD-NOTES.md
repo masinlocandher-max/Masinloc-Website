@@ -117,6 +117,34 @@ Two consequences worth keeping in view:
   from.** Keep the archive intact and retrievable. If it is ever lost, the
   citations become unverifiable and the confidence ratings lose their basis.
 
+## Photography
+
+**Google Drive is the source of truth for Masinloc photography.** The Drive
+folder `Masinloc Website Asset / Location` holds the originals; `assets/`
+holds only what the project supplied.
+
+`data/photography.json` lists every image the site may display, with its
+origin and what it shows. `scripts/check-photography.py` audits every page on
+every build and fails on:
+
+- an image from Unsplash, Pexels, Shutterstock, Getty, a placeholder service
+  or any other banned source
+- an image loaded from any external host
+- a local image not listed in the manifest
+- a file in `assets/locations/` whose slug is not one of the approved places
+- an unaccounted image sitting in `assets/`
+
+Never substitute AI-generated, stock or placeholder photography for a missing
+original. If a photograph cannot be confidently identified, do not label it as
+a specific place. Presentation may be improved through cropping, overlay,
+layout, typography, motion and colour treatment; the physical identity of a
+place must never be altered.
+
+Two icons — `assets/favicon.svg` and `assets/apple-touch-icon.png` — were
+drawn for this site from the locked palette rather than supplied by the
+project. They are marks, not photography, and the audit reports them for
+review on every run. Replace them whenever a project mark is available.
+
 ## Masinloc locations
 
 `data/locations.json` is the source of truth for the eight places. The mapping

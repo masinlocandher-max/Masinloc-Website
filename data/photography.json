@@ -1,0 +1,52 @@
+{
+  "note": "Every image the site can display, and where it came from. Drive is the source of truth for Masinloc photography: assets/ holds only files supplied by the project. scripts/check-photography.py fails the build if a page references an image that is not listed here, or if any page pulls an image from an external host.",
+  "rules": [
+    "No AI-generated imagery.",
+    "No stock photography: Unsplash, Pexels, Shutterstock, Getty or similar.",
+    "No placeholder photography.",
+    "No image may be relabelled as a place it does not show.",
+    "Presentation may be improved by cropping, overlay, layout, typography, motion and colour treatment. The physical identity of a place must not be altered."
+  ],
+  "approved": [
+    {
+      "path": "assets/masinloc-logo.webp",
+      "kind": "brand",
+      "origin": "project-supplied",
+      "use": "Site logo, every page header and footer."
+    },
+    {
+      "path": "assets/stage1/masinloc-hero.avif",
+      "kind": "photograph",
+      "origin": "project-supplied",
+      "subject": "Aerial view of the church and surrounding town of Masinloc, Zambales",
+      "use": "Home hero, Masinloc Connect hero.",
+      "locked": "Byte-locked in scripts/check-site.py."
+    },
+    {
+      "path": "assets/editorial/a-closer-look.avif",
+      "kind": "photograph",
+      "origin": "project-supplied",
+      "subject": "Historic stone church in Masinloc, Zambales at sunset",
+      "use": "A Closer Look editorial photograph."
+    },
+    {
+      "path": "assets/favicon.svg",
+      "kind": "authored-mark",
+      "origin": "drawn for this site from the locked palette",
+      "use": "Browser tab icon.",
+      "review": "Not photography and not a copy of the logo, but the one brand-adjacent asset not supplied by the project. Replace with a project mark whenever one is available."
+    },
+    {
+      "path": "assets/apple-touch-icon.png",
+      "kind": "authored-mark",
+      "origin": "drawn for this site from the locked palette",
+      "use": "Home-screen icon.",
+      "review": "Same standing as assets/favicon.svg."
+    }
+  ],
+  "pending": {
+    "directory": "assets/locations/",
+    "origin": "Google Drive — Masinloc Website Asset / Location",
+    "note": "Built by scripts/build-locations.py from the eight originals. Each file is named for the place in data/locations.json, which holds the project's fixed photograph-to-place mapping. Nothing may be substituted for a missing original."
+  }
+}
