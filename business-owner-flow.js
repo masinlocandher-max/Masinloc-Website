@@ -139,16 +139,16 @@
       promo.innerHTML = `
         <div class="dashboard-promo-copy">
           <span class="dashboard-promo-label">OPTIONAL BUSINESS TOOLS</span>
-          <h3>Want more control over your business on Masinloc Connect?</h3>
-          <p>You can tell us if you want a Business Dashboard with tools for managing and promoting your listing.</p>
+          <h3>Want your own Business Dashboard?</h3>
+          <p>Get more control over how your business appears and performs on Masinloc Connect.</p>
         </div>
         <div class="dashboard-feature-list" aria-label="Business Dashboard features">
-          <div><strong>Edit your business profile</strong><span>Update your business information without registering again.</span></div>
+          <div><strong>Edit your business profile</strong><span>Update business information without registering again.</span></div>
           <div><strong>Manage products and services</strong><span>Keep what you offer current for Marketplace visitors.</span></div>
           <div><strong>Post promos and offers</strong><span>Highlight timely deals and announcements.</span></div>
-          <div><strong>See visibility activity</strong><span>Track listing views and customer clicks to your Facebook Page.</span></div>
+          <div><strong>See your reach</strong><span>Track listing views and customer clicks to your Facebook Page.</span></div>
         </div>
-        <p class="dashboard-scope-note">No ordering, checkout, or booking tools are included at this stage. Customer transactions stay on your Facebook Page.</p>
+        <p class="dashboard-scope-note">Customer orders, payments, and bookings still happen directly through your Facebook Page.</p>
         <div class="dashboard-promo-actions">
           <button type="button" class="dashboard-interest-button">I WANT A BUSINESS DASHBOARD</button>
           <button type="button" class="dashboard-not-now">NOT NOW</button>
