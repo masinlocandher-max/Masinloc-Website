@@ -11,7 +11,9 @@
   const LIVING_URL = 'data/sambal-tina-living.json?v=20260822-1';
   const LIVING_STATUS = 'USER-CONFIRMED LIVING USAGE';
   const LIVING_MARKER = 'User-confirmed living usage.';
+  const ARCHIVE_COUNT = 5222;
   const nativeFetch = window.fetch.bind(window);
+  const numberFormat = new Intl.NumberFormat('en-US');
 
   const fold = (value) => String(value ?? '')
     .toLowerCase()
@@ -85,6 +87,7 @@
       added_to_archive_search: added,
       already_archive_backed: reinforced
     };
+    window.__SAMBAL_LIVING_USAGE__ = archive.living_usage;
 
     return archive;
   }
@@ -157,9 +160,35 @@
     document.querySelectorAll('#dictResults .dict-entry').forEach(decorateEntry);
   }
 
+  function decorateStatus() {
+    const meta = window.__SAMBAL_LIVING_USAGE__;
+    const status = document.getElementById('dictStatus');
+    const query = document.getElementById('dictQuery');
+    const allActive = document.querySelector('.chip[data-filter="all"]')?.classList.contains('is-active');
+    const letterActive = document.querySelector('.dict-alphabet button.is-active[data-letter]:not([data-letter=""])');
+    if (!meta || !status || !query || query.value.trim() || !allActive || letterActive) return;
+
+    const text = status.textContent || '';
+    if (!/^\d[\d,]* entries\.$/.test(text.trim())) return;
+
+    const searchable = ARCHIVE_COUNT + meta.added_to_archive_search;
+    status.textContent = `${numberFormat.format(ARCHIVE_COUNT)} archive entries + `
+      + `${numberFormat.format(meta.added_to_archive_search)} living-only forms `
+      + `(${numberFormat.format(searchable)} searchable). `
+      + `${numberFormat.format(meta.confirmed)} forms are user-confirmed in the living layer.`;
+  }
+
   const results = document.getElementById('dictResults');
   if (results) {
-    new MutationObserver(decorateResults).observe(results, { childList: true, subtree: true });
+    new MutationObserver(() => {
+      decorateResults();
+      decorateStatus();
+    }).observe(results, { childList: true, subtree: true });
     decorateResults();
+  }
+
+  const status = document.getElementById('dictStatus');
+  if (status) {
+    new MutationObserver(decorateStatus).observe(status, { childList: true, characterData: true, subtree: true });
   }
 })();
