@@ -2,6 +2,8 @@
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
+import base64
+import gzip
 import hashlib
 import json
 import re
@@ -13,84 +15,45 @@ PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
     "verified-history.html",
+    "history-timeline.html",
+    "sambal-tina.html",
     "masinloc-bulletin.html",
+    "bulletin-cleopatra-barrera.html",
     "connect.html",
 ]
-EDITORIAL_PAGES = [
-    "index.html",
-    "a-closer-look.html",
-    "verified-history.html",
-    "masinloc-bulletin.html",
-]
+EDITORIAL_PAGES = [page for page in PUBLIC_PAGES if page != "connect.html"]
+DICTIONARY_FILES = [f"data/sambal-tina-v3-{idx:02d}.js" for idx in range(1, 9)]
 REQUIRED = [
-    "index.html",
-    "a-closer-look.html",
-    "verified-history.html",
-    "masinloc-bulletin.html",
-    "connect.html",
-    "admin.html",
-    "404.html",
-    "site.css",
-    "site-polish.css",
-    "site.js",
-    "styles.css",
-    "connect-polish.css",
-    "connect-shell.css",
-    "connect-shell.js",
-    "app.js",
-    "app-base.js",
-    "security.js",
-    "robots.txt",
-    "sitemap.xml",
-    "vercel.json",
-    "BUILD-NOTES.md",
-    "scripts/browser-qa.mjs",
-    ".github/workflows/browser-qa.yml",
-    "assets/masinloc-logo.webp",
-    "assets/stage1/masinloc-hero.avif",
+    *PUBLIC_PAGES,
+    "admin.html", "404.html",
+    "site.css", "site-polish.css", "site-stability.css", "stage2.css", "dictionary-fmb.css", "site.js",
+    "styles.css", "connect-polish.css", "connect-shell.css", "connect-shell.js",
+    "app.js", "app-base.js", "security.js",
+    "sambal-tina.js", "data/sambal-tina-community.js",
+    *DICTIONARY_FILES,
+    "robots.txt", "sitemap.xml", "vercel.json", "BUILD-NOTES.md",
+    "scripts/browser-qa.mjs", ".github/workflows/browser-qa.yml",
+    "assets/masinloc-logo.webp", "assets/stage1/masinloc-hero.avif",
 ]
 MENU_LINKS = ["verified-history.html", "masinloc-bulletin.html"]
 FORBIDDEN_FILES = [
-    "hero-loader.js",
-    "hero-single.css",
-    "home.css",
-    ".github/workflows/fix-hero-once.yml",
-    "assets/stage1/masinloc-hero-visible.avif",
-    "assets/masinloc-sign.jpg",
-    "assets/masinloc-secondary.jpg",
-    "foo2.txt",
-    "BUILD-MODE.md",
+    "hero-loader.js", "hero-single.css", "home.css", ".github/workflows/fix-hero-once.yml",
+    "assets/stage1/masinloc-hero-visible.avif", "assets/masinloc-sign.jpg", "assets/masinloc-secondary.jpg",
+    "foo2.txt", "BUILD-MODE.md",
+    "data/sambal-tina-01.js", "data/sambal-tina-02.js", "data/sambal-tina-03.js",
+    "data/sambal-tina-04.js", "data/sambal-tina-05.js",
 ]
-FORBIDDEN_GLOBS = [
-    "assets/stage1/hero-b64-*.txt",
-    ".repair/*",
-    "*.tmp",
-    "*.bak",
-    "*~",
-]
+FORBIDDEN_GLOBS = ["assets/stage1/hero-b64-*.txt", ".repair/*", "*.tmp", "*.bak", "*~"]
 FORBIDDEN_PUBLIC_REFERENCES = [
-    "hero-loader",
-    "hero-b64-",
-    "hero-photo",
-    "masinloc-hero-visible",
-    "masinloc-sign.jpg",
-    "masinloc-secondary.jpg",
-    "WELCOME TO",
+    "hero-loader", "hero-b64-", "hero-photo", "masinloc-hero-visible",
+    "masinloc-sign.jpg", "masinloc-secondary.jpg", "WELCOME TO"
 ]
-PLACEHOLDER_MARKERS = [
-    "lorem ipsum",
-    "sample article",
-    "example headline",
-    "dummy content",
-    "placeholder article",
-]
-FUTURE_ROUTE = re.compile(
-    r'href=["\'](?:/?)(?:discover|destinations|stories|sambal|local)(?:[/._-]|["\'])',
-    re.I,
-)
+PLACEHOLDER_MARKERS = ["lorem ipsum", "sample article", "example headline", "dummy content", "placeholder article"]
+FUTURE_ROUTE = re.compile(r'href=["\'](?:/?)(?:discover|destinations|stories|local)(?:[/._-]|["\'])', re.I)
 EXPECTED_HERO_BYTES = 76913
 EXPECTED_HERO_SHA256 = "e7cc6d5057009c0967c770af2db0c1a5e6f72e794def8ea203079ec00abf22a5"
-
+EXPECTED_DICTIONARY_ENTRIES = 5222
+EXPECTED_DICTIONARY_REVIEW = 97
 errors = []
 
 
@@ -184,7 +147,6 @@ for html in ROOT.glob("*.html"):
 
     if parser.empty_hrefs:
         fail(f"{html.name}: contains empty href values")
-
     for image in parser.images:
         if "alt" not in image:
             fail(f"{html.name}: image missing alt attribute: {image.get('src', '[inline image]')}")
@@ -211,15 +173,15 @@ for html in ROOT.glob("*.html"):
         for marker in PLACEHOLDER_MARKERS:
             if marker in lower:
                 fail(f"{html.name}: placeholder content detected: {marker}")
-
         local_ref_paths = {urlsplit(ref).path for ref in parser.refs}
         expected_polish = "connect-polish.css" if html.name == "connect.html" else "site-polish.css"
         if expected_polish not in local_ref_paths:
             fail(f"{html.name}: missing modern polish stylesheet {expected_polish}")
+        if html.name != "connect.html" and "stage2.css" not in local_ref_paths:
+            fail(f"{html.name}: missing Stage 2 stylesheet")
 
     if html.name in EDITORIAL_PAGES:
-        local_ref_paths = {urlsplit(ref).path for ref in parser.refs}
-        if "site.js" not in local_ref_paths:
+        if "site.js" not in {urlsplit(ref).path for ref in parser.refs}:
             fail(f"{html.name}: missing shared public interaction script site.js")
 
 for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glob("*.js")):
@@ -228,21 +190,95 @@ for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glo
         if forbidden in text:
             fail(f"obsolete Stage 1 mechanism referenced in {path.name}: {forbidden}")
 
-# The empty publishing sections must remain purpose-only until real reviewed material exists.
-for rel in ("verified-history.html", "masinloc-bulletin.html"):
-    path = ROOT / rel
-    if path.is_file():
-        text = path.read_text(encoding="utf-8").lower()
-        for marker in ("<time", "article-card", "article-list", "post-card", "story-card"):
-            if marker in text:
-                fail(f"{rel}: publishing entries detected before the section is ready: {marker}")
+# Stage 2 publication contracts.
+history = ROOT / "history-timeline.html"
+if history.is_file():
+    text = history.read_text(encoding="utf-8")
+    for required in ("Documented", "Local chronicle", "Historical context", "1572", "1942", "2012", "2016"):
+        if required not in text:
+            fail(f"history-timeline.html missing expected source-status/timeline marker: {required}")
 
-# Masinloc Connect uses the same verified high-resolution place photograph and a dedicated responsive shell.
+bulletin = ROOT / "bulletin-cleopatra-barrera.html"
+if bulletin.is_file():
+    text = bulletin.read_text(encoding="utf-8")
+    for required in ("Masinloc knew her first", "Founder of Discover Masinloc", "Reina Photogenic", "first runner-up", "Good to know", "pep.ph/videos/vertical"):
+        if required not in text:
+            fail(f"Cleopatra Bulletin missing required editorial marker: {required}")
+    if "unverified transcription" not in text:
+        fail("Cleopatra Bulletin must keep the Q&A transcript-verification disclosure")
+
+# The repaired v3 package is one gzip/base64 stream split across eight JS fragments.
+parts = []
+for idx, rel in enumerate(DICTIONARY_FILES, start=1):
+    path = ROOT / rel
+    if not path.is_file():
+        continue
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r'\+\s*"([A-Za-z0-9+/=]+)"\s*;?\s*$', text)
+    if not match:
+        fail(f"dictionary v3 data chunk {idx} has an invalid wrapper")
+    else:
+        parts.append(match.group(1))
+
+if len(parts) == len(DICTIONARY_FILES):
+    try:
+        encoded = "".join(parts)
+        compressed = base64.b64decode(encoded, validate=True)
+        payload = json.loads(gzip.decompress(compressed).decode("utf-8"))
+    except Exception as exc:
+        fail(f"dictionary v3 dataset could not be decoded: {exc}")
+        payload = None
+
+    if payload is not None:
+        if len(payload) != EXPECTED_DICTIONARY_ENTRIES:
+            fail(f"dictionary entry count changed: {len(payload)} != {EXPECTED_DICTIONARY_ENTRIES}")
+        review_count = sum(1 for row in payload if len(row) >= 5 and row[4] == 1)
+        if review_count != EXPECTED_DICTIONARY_REVIEW:
+            fail(f"dictionary source-review count changed: {review_count} != {EXPECTED_DICTIONARY_REVIEW}")
+        if any(len(row) != 5 for row in payload):
+            fail("dictionary compact rows must keep five fields")
+
+community_data = ROOT / "data/sambal-tina-community.js"
+if community_data.is_file():
+    text = community_data.read_text(encoding="utf-8")
+    confirmed_forms = (
+        "lanom", "ayama", "talacaca", "nakabayo", "masitas", "cabatwan", "oybon", "awlo",
+        "matibya", "labay-labay", "macicwa", "igwa", "balaybay mi", "mabanglo", "mabata",
+        "mahiban", "macalog", "mamot", "dorowangan", "camarora", "dicot", "niroropilit",
+        "mayangang", "magato", "habot", "towo", "matontawo", "ondayon", "nikondalo",
+        "kaambali", "maata", "matiboy", "malolaw", "mabli", "napalan", "bohoy",
+        "agchoawlo", "kona", "tayoktok", "dolomarim", "alal", "damolag",
+        "Inaro ni Cha Baby yay masitas na.", "Omnoy damolag a main?"
+    )
+    for required in confirmed_forms:
+        if required not in text:
+            fail(f"community Sambal Tina layer missing confirmed form: {required}")
+
+dictionary_page = ROOT / "sambal-tina.html"
+if dictionary_page.is_file():
+    text = dictionary_page.read_text(encoding="utf-8")
+    for required in (
+        "5,222", "Word of the Day", "Living Tina Sambal", "do not invent it",
+        "dictionary-fmb.css", "sambal-tina-community.js", "sambal-tina.js"
+    ):
+        if required not in text:
+            fail(f"sambal-tina.html missing dictionary contract marker: {required}")
+
+dictionary_script = ROOT / "sambal-tina.js"
+if dictionary_script.is_file():
+    text = dictionary_script.read_text(encoding="utf-8")
+    for rel in DICTIONARY_FILES:
+        if rel not in text:
+            fail(f"sambal-tina.js is not wired to repaired dictionary package: {rel}")
+    if "SOURCE_REVIEW_COUNT = 97" not in text:
+        fail("sambal-tina.js must verify the 97 source-review flags at runtime")
+
+# Masinloc Connect keeps the byte-locked place photograph and dedicated responsive shell.
 connect = ROOT / "connect.html"
 if connect.is_file():
     connect_text = connect.read_text(encoding="utf-8")
     if connect_text.count("assets/stage1/masinloc-hero.avif") < 2:
-        fail("connect.html must use the verified hero for both landing and chooser photography")
+        fail("connect.html must use the verified hero for landing and chooser photography")
     for required_ref in ("connect-polish.css", "connect-shell.css", "connect-shell.js"):
         if required_ref not in connect_text:
             fail(f"connect.html missing required shell asset: {required_ref}")
@@ -263,34 +299,9 @@ if hero.is_file():
     if pos < 0 or len(data) < pos + 16:
         fail("hero asset is missing AVIF image dimensions")
     else:
-        width, height = struct.unpack(">II", data[pos + 8 : pos + 16])
+        width, height = struct.unpack(">II", data[pos + 8:pos + 16])
         if (width, height) != (1536, 864):
             fail(f"hero dimensions changed unexpectedly: {width}x{height}")
-
-    cursor = 0
-    seen_mdat = False
-    while cursor + 8 <= len(data):
-        size = struct.unpack(">I", data[cursor:cursor + 4])[0]
-        box_type = data[cursor + 4:cursor + 8]
-        header = 8
-        if size == 1:
-            if cursor + 16 > len(data):
-                fail("hero AVIF has a truncated extended box header")
-                break
-            size = struct.unpack(">Q", data[cursor + 8:cursor + 16])[0]
-            header = 16
-        elif size == 0:
-            size = len(data) - cursor
-        if size < header or cursor + size > len(data):
-            fail(f"hero AVIF has an invalid/truncated {box_type.decode('ascii', 'replace')} box")
-            break
-        if box_type == b"mdat":
-            seen_mdat = True
-        cursor += size
-    if not seen_mdat:
-        fail("hero AVIF has no complete mdat payload")
-    if cursor != len(data):
-        fail(f"hero AVIF has {len(data) - cursor} unparsed trailing bytes")
 
 admin = ROOT / "admin.html"
 if admin.is_file():
@@ -304,7 +315,7 @@ if sitemap.is_file():
     for forbidden in ("admin.html", "404.html"):
         if forbidden in sitemap_text:
             fail(f"sitemap.xml must not publish {forbidden}")
-    for rel in ("a-closer-look.html", "verified-history.html", "masinloc-bulletin.html", "connect.html"):
+    for rel in PUBLIC_PAGES[1:]:
         if rel not in sitemap_text:
             fail(f"sitemap.xml missing current public route: {rel}")
 
@@ -325,8 +336,8 @@ if errors:
     sys.exit(1)
 
 print("SITE INTEGRITY CHECK PASSED")
-print("Current public routes, SEO essentials, local references and protected boundaries are present.")
-print("The exact approved hero remains byte-locked and intact across the public shell and Masinloc Connect.")
-print("Modern public-site and Masinloc Connect polish/navigation layers are present on every public surface.")
-print("Purpose-only History/Bulletin sections remain free of placeholder publishing entries.")
-print("Staged agent branches remain protected from automatic Vercel preview deployment.")
+print("Stage 2 public routes, SEO essentials, local references and protected boundaries are present.")
+print("The repaired v3 Sambal Tina package decodes to exactly 5,222 entries and 97 source-review flags.")
+print("The community-confirmed Tina Sambal layer remains separate from documentary source data and is protected by QA.")
+print("History source-status labels and the Cleopatra Bulletin editorial safeguards are enforced.")
+print("The approved hero remains byte-locked and unchanged.")

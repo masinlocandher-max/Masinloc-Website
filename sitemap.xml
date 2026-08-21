@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://masinloc-zambales.com/</loc>
-  </url>
-  <url>
-    <loc>https://masinloc-zambales.com/a-closer-look.html</loc>
-  </url>
-  <url>
-    <loc>https://masinloc-zambales.com/verified-history.html</loc>
-  </url>
-  <url>
-    <loc>https://masinloc-zambales.com/masinloc-bulletin.html</loc>
-  </url>
-  <url>
-    <loc>https://masinloc-zambales.com/connect.html</loc>
-  </url>
+  <url><loc>https://masinloc-zambales.com/</loc></url>
+  <url><loc>https://masinloc-zambales.com/a-closer-look.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/sambal-tina.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/verified-history.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/history-timeline.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/masinloc-bulletin.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/bulletin-cleopatra-barrera.html</loc></url>
+  <url><loc>https://masinloc-zambales.com/connect.html</loc></url>
 </urlset>

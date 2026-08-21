@@ -14,7 +14,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Validate Stage 1 integrity
+      - name: Normalize dictionary verification fragments
+        run: python3 scripts/normalize-dictionary-v3.py
+      - name: Validate Stage 2 integrity
         run: python3 scripts/check-site.py
       - name: Validate design consistency
         run: python3 scripts/check-design-consistency.py
@@ -26,5 +28,7 @@ jobs:
           node --check app-base.js
           node --check app.js
           node --check admin.js
+          node --check sambal-tina.js
+          node --check sambal-tina-live.js
           node --check scripts/browser-qa.mjs
           node --check scripts/connect-qa.mjs

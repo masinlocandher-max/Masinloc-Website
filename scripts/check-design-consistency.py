@@ -8,7 +8,10 @@ PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
     "verified-history.html",
+    "history-timeline.html",
+    "sambal-tina.html",
     "masinloc-bulletin.html",
+    "bulletin-cleopatra-barrera.html",
     "connect.html",
 ]
 EXPECTED_NAV = [
@@ -19,6 +22,17 @@ EXPECTED_NAV = [
     ("connect.html", "Masinloc Connect"),
     ("mailto:hello@masinloc-zambales.com", "Contact"),
 ]
+EXPECTED_CURRENT = {
+    "index.html": "index.html",
+    "a-closer-look.html": "a-closer-look.html",
+    "sambal-tina.html": "a-closer-look.html",
+    "verified-history.html": "verified-history.html",
+    "history-timeline.html": "verified-history.html",
+    "masinloc-bulletin.html": "masinloc-bulletin.html",
+    "bulletin-cleopatra-barrera.html": "masinloc-bulletin.html",
+    "connect.html": "connect.html",
+}
+STAGE2_PAGES = set(PUBLIC_PAGES) - {"connect.html"}
 EXPECTED_LOGO = "assets/masinloc-logo.webp"
 STABILITY_CSS = "site-stability.css"
 errors = []
@@ -74,6 +88,9 @@ class ShellParser(HTMLParser):
 
 for page_name in PUBLIC_PAGES:
     path = ROOT / page_name
+    if not path.is_file():
+        fail(f"missing public page: {page_name}")
+        continue
     text = path.read_text(encoding="utf-8")
     parser = ShellParser()
     parser.feed(text)
@@ -86,7 +103,7 @@ for page_name in PUBLIC_PAGES:
         fail(f"{page_name}: header must use the shared Masinloc logo asset")
 
     current = [item for item in parser.nav_items if item["current"]]
-    expected_current = "index.html" if page_name == "index.html" else page_name
+    expected_current = EXPECTED_CURRENT[page_name]
     if len(current) != 1 or current[0]["href"] != expected_current:
         fail(f"{page_name}: expected exactly one aria-current=page link for {expected_current}")
 
@@ -101,6 +118,8 @@ for page_name in PUBLIC_PAGES:
         for required in ("site.css", "site-polish.css"):
             if required not in parser.stylesheets:
                 fail(f"{page_name}: missing shared editorial stylesheet {required}")
+        if page_name in STAGE2_PAGES and "stage2.css" not in parser.stylesheets:
+            fail(f"{page_name}: missing Stage 2 editorial stylesheet stage2.css")
 
 admin = (ROOT / "admin.html").read_text(encoding="utf-8")
 if "admin-polish.css" not in admin:
@@ -116,7 +135,7 @@ if EXPECTED_LOGO not in not_found:
 if STABILITY_CSS not in not_found:
     fail("404.html: missing shared mobile stability layer")
 
-for css in ("site.css", "site-polish.css", "site-stability.css", "connect-polish.css", "connect-shell.css", "admin-polish.css"):
+for css in ("site.css", "site-polish.css", "site-stability.css", "stage2.css", "connect-polish.css", "connect-shell.css", "admin-polish.css"):
     if not (ROOT / css).is_file():
         fail(f"missing design-system surface: {css}")
 
@@ -127,4 +146,4 @@ if errors:
     sys.exit(1)
 
 print("DESIGN CONSISTENCY CHECK PASSED")
-print("Public navigation, logo usage, active states, mobile stability and design layers are aligned across Masinloc surfaces.")
+print("Shared navigation, logo usage, parent active states, mobile stability and Stage 2 design layers are aligned across Masinloc surfaces.")
