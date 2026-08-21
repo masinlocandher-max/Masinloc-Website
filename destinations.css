@@ -150,7 +150,9 @@
   width:100%;
   height:100%;
   object-fit:cover;
-  object-position:center;
+  /* Each place declares where its subject sits. A plain centre crop loses the
+     subject on the portrait originals. */
+  object-position:var(--place-focus,50% 50%);
   /* Set by destinations.js as the section moves through the viewport. A
      generous starting scale means the pan never exposes an edge. */
   transform:scale(1.08) translate3d(0,var(--place-shift,0px),0);
@@ -339,9 +341,6 @@ body.viewer-open{overflow:hidden}
   .place-rhyme{font-size:clamp(17px,4.6vw,22px);max-width:none}
   .place-open{width:100%;text-align:center}
 
-  /* A portrait crop keeps the subject in frame on a phone rather than
-     cropping a landscape photograph down to a letterbox. */
-  .place-media img{object-position:center 42%}
   .place-scrim,
   .place:nth-child(even) .place-scrim{
     background:linear-gradient(0deg,rgba(3,17,47,.95) 0%,rgba(3,17,47,.82) 30%,rgba(3,17,47,.44) 56%,rgba(3,17,47,.08) 80%,rgba(3,17,47,.3) 100%);

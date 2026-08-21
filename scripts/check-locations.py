@@ -55,6 +55,9 @@ for location in locations:
                 "photo", "card"):
         if not str(location.get(key, "")).strip():
             fail(f"{location.get('slug', '?')}: missing '{key}'")
+    focus = str(location.get("focus", ""))
+    if not focus or "%" not in focus:
+        fail(f"{location.get('slug', '?')}: missing a focal point ('focus')")
     for key in ("todo", "tags"):
         if not location.get(key):
             fail(f"{location.get('slug', '?')}: missing '{key}'")
@@ -95,8 +98,15 @@ else:
             fail(f"{location['name']}: section does not use its own photograph")
         if f"{slug}-card-" not in section:
             fail(f"{location['name']}: section does not offer its own card")
-        if location["description"] not in rendered:
-            fail(f"{location['name']}: the approved description is not on the page")
+        # The rhyme leads, and the things to do follow it directly.
+        rhyme_at = section.find("place-rhyme")
+        todo_at = section.find("place-todo")
+        if rhyme_at < 0:
+            fail(f"{location['name']}: the rhyme is missing")
+        elif todo_at >= 0 and todo_at < rhyme_at:
+            fail(f"{location['name']}: things to do appears before the rhyme")
+        # The description is retained in the data and printed on the
+        # downloadable card, but the rhyme carries that job on the page.
         for item in location["todo"]:
             if item not in rendered:
                 fail(f"{location['name']}: things-to-do item '{item}' is missing")

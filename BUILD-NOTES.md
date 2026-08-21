@@ -181,8 +181,28 @@ pubmat, cannot be tied to a named place, and is recorded as unassigned in
 `data/photography.json`. It is not used and must not be labelled as a
 location.
 
-The description, things-to-do and tags on each destination are transcribed
-verbatim from that place's pubmat. Nothing there is invented.
+The things-to-do and tags on each destination are transcribed verbatim from
+that place's pubmat. Nothing there is invented.
+
+### Order on a destination
+
+**Rhyme, then things to do.** The rhyme is the line that lands; the things to
+do are the practical follow-up. `scripts/check-locations.py` fails if that
+order is reversed.
+
+The pubmat's prose description is kept in `data/locations.json` and printed on
+the downloadable card, but is not rendered on the page: it restates the rhyme
+("A refreshing riverside retreat with flowing clear waters" against "Where
+cool waters flow and green forests gleam"), and the rhyme is the better line.
+
+### Focal points
+
+Each place carries a `focus` — a CSS `object-position`. Four of the originals
+are portrait and lose their subject to a plain centre crop in a landscape
+frame: Coto Kidz Pool's turquoise water sits in the lower half, Sitio Buri's
+hills sit under a large sky. Cropping is presentation, so this is allowed; the
+physical identity of the place is untouched. A place without a focal point
+fails the check.
 
 ### Rebuilding the photography
 

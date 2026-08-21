@@ -144,7 +144,7 @@ def section(location: dict, position: int, total: int) -> str:
     loading = 'fetchpriority="high" decoding="async"' if first \
         else 'loading="lazy" decoding="async"'
 
-    return f"""  <section class="place" id="{slug}" data-place="{slug}" data-index="{position}" aria-labelledby="{slug}-name">
+    return f"""  <section class="place" id="{slug}" data-place="{slug}" data-index="{position}" aria-labelledby="{slug}-name" style="--place-focus:{esc.get('focus', '50% 50%')}">
     <figure class="place-media">
       <picture>
         <source type="image/avif" srcset="{srcset(slug, 'avif')}" sizes="{SIZES}">
@@ -159,7 +159,6 @@ def section(location: dict, position: int, total: int) -> str:
       <h2 class="place-name" id="{slug}-name">{esc['name']}</h2>
       <p class="place-locality">{esc['locality']}</p>
       <p class="place-rhyme">{esc['rhyme']}</p>
-      <p class="place-description">{esc['description']}</p>
       <div class="place-detail">
         <div class="place-todo">
           <h3>Things to do</h3>
