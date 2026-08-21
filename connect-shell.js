@@ -70,6 +70,10 @@
   function syncAddress() {
     try {
       if (typeof data === 'undefined') return;
+      const streetInput = document.querySelector('#formCard [name="streetAddress"]');
+      const barangayInput = document.querySelector('#formCard [name="barangay"]');
+      if (streetInput) data.streetAddress = streetInput.value;
+      if (barangayInput) data.barangay = barangayInput.value;
       data.municipality = fixedAddress.municipality;
       data.province = fixedAddress.province;
       data.postalCode = fixedAddress.postalCode;
