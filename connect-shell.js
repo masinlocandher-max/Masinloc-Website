@@ -103,7 +103,6 @@
   function patchProfessionalAddress() {
     try {
       if (typeof configs === 'undefined' || typeof data === 'undefined' || !configs.professional?.steps?.[0]) return false;
-      /* The guided résumé flow has 7 steps. Do not patch the legacy 4-step form. */
       if (configs.professional.steps.length !== 7) return false;
       if (configs.professional.__masinlocAddressLocked) return true;
 
