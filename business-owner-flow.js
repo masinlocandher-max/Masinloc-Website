@@ -87,6 +87,14 @@
     }
   }
 
+  function getStoredInterest(reference) {
+    try { return localStorage.getItem(`masinlocDashboardInterest:${reference}`); } catch { return null; }
+  }
+
+  function storeInterest(reference) {
+    try { localStorage.setItem(`masinlocDashboardInterest:${reference}`, 'yes'); } catch {}
+  }
+
   async function saveDashboardInterest(button, message) {
     const submission = businessSubmission();
     const referenceCode = submission?.reference || '';
@@ -112,7 +120,7 @@
       button.textContent = 'INTEREST SAVED';
       button.classList.add('saved');
       message.textContent = 'Got it. We will use the private contact details from your registration when Business Dashboard access is available.';
-      localStorage.setItem(`masinlocDashboardInterest:${referenceCode}`, 'yes');
+      storeInterest(referenceCode);
     } catch {
       button.disabled = false;
       button.textContent = original;
@@ -163,8 +171,7 @@
       const interestButton = promo.querySelector('.dashboard-interest-button');
       const notNow = promo.querySelector('.dashboard-not-now');
       const message = promo.querySelector('.dashboard-promo-message');
-      const stored = localStorage.getItem(`masinlocDashboardInterest:${submission.reference}`);
-      if (stored === 'yes') {
+      if (getStoredInterest(submission.reference) === 'yes') {
         interestButton.textContent = 'INTEREST SAVED';
         interestButton.disabled = true;
         interestButton.classList.add('saved');
