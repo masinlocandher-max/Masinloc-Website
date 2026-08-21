@@ -1,0 +1,169 @@
+{
+  "title": "Sambal Tina living usage",
+  "source_layer": "User-confirmed living usage",
+  "editorial_rule": "Keep speaker/user-confirmed living usage separate from archival transcription when forms differ. Never invent archive page references for living-only forms.",
+  "entries": [
+    {
+      "tina": "lanom",
+      "pos": "n.",
+      "en": "water",
+      "fil": "tubig",
+      "verification": "User-confirmed + source-supported",
+      "archive_relation": "Source-supported form also present in the project archive.",
+      "note": "Core child-learning word."
+    },
+    {
+      "tina": "ayama",
+      "pos": "n.",
+      "en": "crab / crabs",
+      "fil": "alimasag / alimango",
+      "verification": "User-confirmed",
+      "archive_relation": "The archival source layer preserves the form ayamd.",
+      "note": "Use ayama for user-confirmed contemporary learning materials; keep the archival form separately."
+    },
+    {
+      "tina": "talacaca",
+      "pos": "n.",
+      "en": "sibling",
+      "fil": "kapatid",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Confirmed for children's learning materials."
+    },
+    {
+      "tina": "nakabayo",
+      "pos": "n.",
+      "en": "young man",
+      "fil": "binata",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Confirmed for children's learning materials."
+    },
+    {
+      "tina": "masitas",
+      "pos": "n.",
+      "en": "plant / plants",
+      "fil": "halaman / mga halaman",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Confirmed in the Cha Baby children's materials."
+    },
+    {
+      "tina": "cabatwan",
+      "pos": "n.",
+      "en": "river",
+      "fil": "ilog",
+      "verification": "User-confirmed",
+      "archive_relation": "The archival learning layer preserves the form kabatwan.",
+      "note": "Preserve the documented C/K variation; do not silently normalize the forms."
+    },
+    {
+      "tina": "oybon",
+      "pos": "n.",
+      "en": "egg",
+      "fil": "itlog",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Confirmed for children's learning materials."
+    },
+    {
+      "tina": "damolag",
+      "pos": "n.",
+      "en": "carabao",
+      "fil": "kalabaw",
+      "verification": "User-confirmed + source-supported",
+      "archive_relation": "Source-supported Core 100 form in the project archive.",
+      "note": "Strong teaching word."
+    },
+    {
+      "tina": "matibya",
+      "pos": "adj.",
+      "en": "red",
+      "fil": "pula",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Confirmed color word."
+    },
+    {
+      "tina": "labay-labay",
+      "pos": "expr.",
+      "en": "like very much / love very much",
+      "fil": "gustong-gusto",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Meaning confirmed in current project work."
+    },
+    {
+      "tina": "macicwa",
+      "pos": "v.",
+      "en": "to ask for",
+      "fil": "manghingi",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Meaning confirmed in current project work."
+    },
+    {
+      "tina": "igwa",
+      "pos": "v.",
+      "en": "to put / place",
+      "fil": "ilagay",
+      "verification": "User-confirmed",
+      "archive_relation": "Living speaker/user layer.",
+      "note": "Meaning confirmed in current project work."
+    },
+    {
+      "tina": "awlo",
+      "pos": "n.",
+      "en": "day / sun",
+      "fil": "araw",
+      "verification": "User-confirmed + source-supported",
+      "archive_relation": "Cross-linked Main + Tina Index source-supported form in the project archive.",
+      "note": "High-frequency learning word."
+    },
+    {
+      "tina": "ambay",
+      "pos": "n.",
+      "en": "sea",
+      "fil": "dagat",
+      "verification": "User-confirmed + source-supported",
+      "archive_relation": "Source-supported Core 100 form in the project archive.",
+      "note": "Useful place and environment word."
+    },
+    {
+      "tina": "mabanglo",
+      "pos": "adj.",
+      "en": "fragrant",
+      "fil": "mabango",
+      "verification": "User-confirmed",
+      "archive_relation": "Living usage confirmed after the August 21 master was compiled; archive cross-check pending.",
+      "note": "Confirmed in the Cha Baby story work."
+    },
+    {
+      "tina": "mabata",
+      "pos": "adj.",
+      "en": "smelly",
+      "fil": "mabaho",
+      "verification": "User-confirmed",
+      "archive_relation": "Living usage confirmed after the August 21 master was compiled; archive cross-check pending.",
+      "note": "Confirmed in the Cha Baby story work."
+    },
+    {
+      "tina": "mahiban",
+      "pos": "adj.",
+      "en": "big / large",
+      "fil": "malaki",
+      "verification": "User-confirmed",
+      "archive_relation": "Living usage confirmed after the August 21 master was compiled; archive cross-check pending.",
+      "note": "Confirmed in the Cha Baby story work."
+    },
+    {
+      "tina": "macalog",
+      "pos": "adj.",
+      "en": "small",
+      "fil": "maliit",
+      "verification": "User-confirmed",
+      "archive_relation": "Living usage confirmed after the August 21 master was compiled; archive cross-check pending.",
+      "note": "Confirmed in the Cha Baby story work."
+    }
+  ]
+}
