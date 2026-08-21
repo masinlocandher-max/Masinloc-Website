@@ -27,8 +27,12 @@ jobs:
           node --check app.js
           node --check admin.js
           node --check sambal-tina.js
+          node --check destinations.js
           node --check scripts/browser-qa.mjs
           node --check scripts/connect-qa.mjs
           node --check scripts/dictionary-qa.mjs
+          node --check scripts/destinations-qa.mjs
       - name: Validate published dictionary data
         run: python3 scripts/check-dictionary.py
+      - name: Validate locations mapping and photography
+        run: python3 scripts/check-locations.py

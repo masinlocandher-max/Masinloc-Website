@@ -117,6 +117,47 @@ Two consequences worth keeping in view:
   from.** Keep the archive intact and retrievable. If it is ever lost, the
   citations become unverifiable and the confidence ratings lose their basis.
 
+## Masinloc locations
+
+`data/locations.json` is the source of truth for the eight places. The mapping
+of photograph to place is **fixed by the project**. Do not reassign a
+photograph, substitute stock or generated imagery, or add a place that is not
+listed. `scripts/check-locations.py` fails the build if a section stops using
+its own photograph, if an approved locality or alt text goes missing, or if
+the page references photography for a place that is not on the list.
+
+`destinations.html` is generated from that file by
+`scripts/build-destinations.py`. Every photograph, name, locality and rhyme is
+static HTML; `destinations.js` only adds parallax, index tracking and the
+full-screen viewer.
+
+### Finishing the locations page
+
+The photography is a build output and is **not yet in the repository**. Two
+steps complete the page:
+
+1. Put the eight originals in a folder — the filenames listed as `source` in
+   `data/locations.json`, or pre-renamed to `<slug>.jpg` — and run:
+
+       python3 scripts/build-locations.py <folder>
+
+   This writes AVIF/WebP/JPEG at 640/1024/1600/2400px into
+   `assets/locations/`. It never upscales, never substitutes, and fails
+   rather than guessing if an original is missing.
+
+2. Link the page, which is deliberately unlinked until the photography
+   exists so the site never advertises a gallery of broken images:
+
+   - `index.html` — add an editorial link to `destinations.html`
+   - `a-closer-look.html` — link it from the destinations paragraph
+   - `sitemap.xml` — add `https://masinloc-zambales.com/destinations.html`
+
+`scripts/check-locations.py` reports **PENDING** while no photography is
+built, **FAILED** on a partial build, and **PASSED** once all eight are in
+place. `scripts/destinations-qa.mjs` skips itself until then, and afterwards
+asserts that every place renders its own photograph, that the index rail
+tracks, and that the viewer opens, navigates and closes.
+
 ## Non-negotiable guardrails
 
 1. **Real place photography stays real.** Approved destination/community photography must never be AI-recreated, generatively filled, geographically altered, or have structures invented/removed.

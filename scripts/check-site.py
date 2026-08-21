@@ -13,6 +13,7 @@ PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
     "sambal-tina.html",
+    "destinations.html",
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
@@ -21,6 +22,7 @@ EDITORIAL_PAGES = [
     "index.html",
     "a-closer-look.html",
     "sambal-tina.html",
+    "destinations.html",
     "verified-history.html",
     "masinloc-bulletin.html",
 ]
@@ -43,6 +45,14 @@ REQUIRED = [
     "assets/favicon.svg",
     "assets/apple-touch-icon.png",
     "assets/vendor/supabase.js",
+    "destinations.html",
+    "destinations.css",
+    "destinations.js",
+    "data/locations.json",
+    "scripts/build-locations.py",
+    "scripts/build-destinations.py",
+    "scripts/check-locations.py",
+    "scripts/destinations-qa.mjs",
     "styles.css",
     "connect-polish.css",
     "connect-shell.css",
@@ -190,6 +200,11 @@ for html in ROOT.glob("*.html"):
     for ref in parser.refs:
         target = local_target(html, ref)
         if target is None:
+            continue
+        # Location photography is a build output of scripts/build-locations.py.
+        # scripts/check-locations.py owns its state and gives a far better
+        # message than eight identical broken-reference lines.
+        if ref.lstrip("/").startswith("assets/locations/"):
             continue
         try:
             target.relative_to(ROOT.resolve())

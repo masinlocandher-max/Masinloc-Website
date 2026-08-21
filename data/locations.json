@@ -1,0 +1,70 @@
+{
+  "note": "Source of truth for the Masinloc locations experience. The mapping of photograph to place is fixed and supplied by the project. Do not reassign a photograph to a different location, substitute stock or generated imagery, or add a location that is not listed here. scripts/check-locations.py enforces that destinations.html and the built assets agree with this file.",
+  "credit": "Mabayani Project by FMB",
+  "locations": [
+    {
+      "slug": "hamat-river",
+      "name": "Hamat River",
+      "locality": "Sta. Rita, Masinloc",
+      "rhyme": "Where cool waters flow and green forests gleam, Hamat River feels like nature's quiet dream.",
+      "alt": "Hamat River in Sta. Rita, Masinloc",
+      "source": "456EBF0C-43D9-4526-B815-9B56AE003EE6.jpg"
+    },
+    {
+      "slug": "san-salvador-island",
+      "name": "San Salvador Island",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Where blue waters flow and island shores gleam, San Salvador feels like nature's tropical dream.",
+      "alt": "San Salvador Island in Masinloc, Zambales",
+      "source": "F9BD1F30-806E-4D32-B709-D2A92810F8AD.jpg"
+    },
+    {
+      "slug": "coto-kidz-pool",
+      "name": "Coto Kidz Pool",
+      "locality": "Taltal, Masinloc",
+      "rhyme": "Cool waters waiting beneath the green, Coto Kidz Pool is a refreshing Masinloc scene.",
+      "alt": "Coto Kidz Pool in Taltal, Masinloc",
+      "source": "CC917370-85F4-455D-B1CF-EDF82DF4782B.jpg"
+    },
+    {
+      "slug": "san-andres-church",
+      "name": "San Andres Church",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Through generations its walls still stay, San Andres welcomes those who come to pray.",
+      "alt": "San Andres Church in Masinloc, Zambales",
+      "source": "B04AD6A0-1250-437C-A78A-442DBADF8C7C.jpg"
+    },
+    {
+      "slug": "bunga-cave",
+      "name": "Bunga Cave",
+      "locality": "Sta. Rita, Masinloc",
+      "rhyme": "Go beneath the surface, see what time can make, a hidden Masinloc adventure waits inside Bunga Cave.",
+      "alt": "Bunga Cave in Sta. Rita, Masinloc",
+      "source": "4475E3A1-35E8-4274-A9E8-F50B21337B51.jpg"
+    },
+    {
+      "slug": "bacala-sandbar-guesthouse",
+      "name": "Bacala Sandbar and Guesthouse",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Where calm blue waters meet the sand, Bacala gives you paradise close at hand.",
+      "alt": "Bacala Sandbar and Guesthouse in Masinloc, Zambales",
+      "source": "77ABD272-187D-420D-A135-A17F7962D504.jpg"
+    },
+    {
+      "slug": "sitio-buri",
+      "name": "Sitio Buri",
+      "locality": "Inhobol, Masinloc",
+      "rhyme": "Green hills rising beneath the open sky, Sitio Buri is where the breeze wanders by.",
+      "alt": "Sitio Buri in Inhobol, Masinloc",
+      "source": "7C0E040D-7009-4E42-9E0C-B5E4AF39C4B4.jpg"
+    },
+    {
+      "slug": "masinloc-baywalk",
+      "name": "Masinloc Baywalk",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Catch the breeze and watch the whole sky glow, at Masinloc Baywalk, sunset puts on the show.",
+      "alt": "Masinloc Baywalk in Masinloc, Zambales",
+      "source": "16967159-8517-4F18-9B9C-FA1338724144.jpg"
+    }
+  ]
+}

@@ -8,6 +8,7 @@ PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
     "sambal-tina.html",
+    "destinations.html",
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
@@ -18,6 +19,7 @@ PUBLIC_PAGES = [
 # detail page.
 SUBPAGES = {
     "sambal-tina.html": "a-closer-look.html",
+    "destinations.html": "a-closer-look.html",
 }
 EXPECTED_NAV = [
     ("index.html", "Home"),
@@ -145,7 +147,7 @@ if STABILITY_CSS not in not_found:
 
 for css in ("tokens.css", "site.css", "site-polish.css", "site-stability.css",
             "connect-polish.css", "connect-shell.css", "admin-polish.css",
-            "sambal-tina.css"):
+            "sambal-tina.css", "destinations.css"):
     if not (ROOT / css).is_file():
         fail(f"missing design-system surface: {css}")
 
@@ -159,7 +161,8 @@ for stylesheet in sorted(ROOT.glob("*.css")):
             fail(f"{stylesheet.name}: defines the identity colour {colour} directly; "
                  f"reference the token from {TOKENS_CSS} instead")
 
-for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js"):
+for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js",
+               "destinations.js"):
     path = ROOT / script
     if not path.is_file():
         continue

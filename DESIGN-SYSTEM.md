@@ -83,6 +83,27 @@ reader, no first-person enthusiasm. An entry that is unresolved is described
 as unresolved, not as an opportunity. This is a record, and it should read
 like one.
 
+### Places in Masinloc
+
+A sub-page of A Closer Look. This is the one surface where the shared editorial
+restraint gives way to full-bleed photography: the picture is the page, and type
+sits on it rather than beside it in a card.
+
+- Each place fills the viewport: photograph behind, a scrim carrying it into
+  the deep navy, and the name in editorial serif at display size.
+- Locality sits under the name in small uppercase; the rhyme follows as the
+  emotional line. Nothing else competes.
+- Alternating sides give the sequence a rhythm; the scrim flips with it.
+- Motion is slow and small — a counter-drift of at most 38px and a settle on
+  the copy. It should feel alive, not seasick.
+- Mobile is art-directed, not compressed: the same full-bleed frame, a crop
+  weighted to the subject, a full-width action, and the index rail as a
+  horizontal scroller.
+
+The palette is unchanged — deep navy, white, and yellow for the index and
+numerals. Photography is never AI-recreated, re-cropped beyond framing, or
+substituted; the mapping in `data/locations.json` is fixed.
+
 ### Masinloc Connect
 
 Masinloc Connect is a functional submission product, so its forms and category interactions may use a more application-like layout. It must still use the same logo, palette, navigation order, typography hierarchy, footer family, motion restraint, and responsive standards. Its presentation layers are `tokens.css`, `styles.css`, `connect-polish.css`, and `connect-shell.css`. Mobile navigation for both Connect headers belongs to `connect-shell.css` alone; `connect-polish.css` must not set the header bar, or the two layers fight and one silently wins.
