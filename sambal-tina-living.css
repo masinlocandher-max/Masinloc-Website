@@ -1,5 +1,4 @@
-/* Living-usage provenance for the Sambal Tina dictionary.
-   Identity colours remain defined only in tokens.css. */
+/* Community-confirmed usage and contribution UI for Sambal Tina. */
 
 .badge-living{
   background:var(--soft);
@@ -23,11 +22,6 @@
   opacity:.5;
 }
 
-.entry-status-living{
-  color:var(--blue)!important;
-  font-weight:700;
-}
-
 .dict-layer-note{
   width:var(--content);
   margin:16px auto 0;
@@ -35,9 +29,242 @@
   font-size:13px;
   line-height:1.7;
 }
-
 .dict-layer-note strong{color:var(--navy)}
+
+.dict-community{
+  width:var(--content);
+  margin:0 auto;
+  padding:clamp(66px,7vw,96px) 0;
+  display:grid;
+  grid-template-columns:minmax(0,1.5fr) minmax(250px,.7fr);
+  gap:clamp(36px,6vw,90px);
+  align-items:end;
+  border-top:1px solid var(--line);
+}
+.dict-community-copy{max-width:760px}
+.dict-community .section-label,
+.dict-modal .section-label{
+  margin:0 0 14px;
+  color:var(--blue);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.dict-community h2,
+.dict-modal h2{
+  margin:0 0 18px;
+  color:var(--navy);
+  font-family:var(--font-editorial);
+  font-weight:400;
+  font-size:clamp(32px,4vw,52px);
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+.dict-community p{
+  margin:0 0 14px;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.75;
+}
+.dict-community-actions{
+  display:grid;
+  gap:10px;
+}
+.inline-link{
+  appearance:none;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--blue);
+  font:inherit;
+  font-weight:700;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+
+.dict-modal[hidden]{display:none}
+.dict-modal{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(6,26,70,.54);
+  backdrop-filter:blur(10px);
+}
+.dict-modal-open{overflow:hidden}
+.dict-modal-card{
+  position:relative;
+  width:min(760px,100%);
+  max-height:min(88vh,900px);
+  overflow:auto;
+  padding:clamp(26px,4vw,48px);
+  border:1px solid rgba(255,255,255,.65);
+  border-radius:22px;
+  background:var(--white);
+  box-shadow:0 28px 80px rgba(6,26,70,.24);
+}
+.dict-modal-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:42px;
+  height:42px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:var(--white);
+  color:var(--navy);
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+}
+.dict-modal-intro{
+  margin:0 0 26px;
+  max-width:620px;
+  color:var(--text);
+  font-size:14px;
+  line-height:1.7;
+}
+.contribution-kind{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 24px;
+}
+.contribution-kind button{
+  min-height:42px;
+  padding:0 15px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:var(--white);
+  color:var(--text);
+  font:inherit;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.contribution-kind button.is-active{
+  border-color:var(--blue);
+  background:var(--blue);
+  color:var(--white);
+}
+.dict-form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+}
+.dict-form-grid label{
+  display:grid;
+  gap:7px;
+  color:var(--navy);
+  font-size:12px;
+  font-weight:750;
+}
+.dict-form-grid label.full{grid-column:1/-1}
+.dict-form-grid input,
+.dict-form-grid textarea{
+  width:100%;
+  min-height:48px;
+  padding:12px 13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--white);
+  color:var(--ink);
+  font:inherit;
+  font-size:16px;
+}
+.dict-form-grid textarea{
+  min-height:112px;
+  resize:vertical;
+}
+.dict-form-grid input:focus,
+.dict-form-grid textarea:focus{
+  outline:0;
+  border-color:var(--blue-bright);
+  box-shadow:0 0 0 4px rgba(30,99,233,.10);
+}
+.dict-credit-consent{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin:18px 0 0;
+  color:var(--text);
+  font-size:13px;
+  line-height:1.6;
+}
+.dict-credit-consent input{margin-top:4px}
+.dict-form-note{
+  margin:16px 0 0;
+  padding:14px 16px;
+  border-left:3px solid var(--blue);
+  background:var(--soft);
+  color:var(--text);
+  font-size:12.5px;
+  line-height:1.65;
+}
+.dict-form-message{
+  min-height:20px;
+  margin:14px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+.dict-form-message.is-success{color:#1F6238}
+.dict-form-message.is-error{color:#A3202B}
+.dict-submit{margin-top:6px}
+.dict-submit[disabled]{opacity:.62;cursor:wait}
+.hp-field{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden!important;
+  clip-path:inset(50%)!important;
+}
+
+.contributors-card{width:min(620px,100%)}
+.contributors-list ol{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 24px;
+}
+.contributors-list li{
+  padding:13px 0;
+  border-top:1px solid var(--line);
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.5;
+}
+.contributors-empty{
+  margin:0;
+  padding:18px 0;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+}
+
+@media(max-width:780px){
+  .dict-community{grid-template-columns:1fr;align-items:start}
+  .dict-community-actions{grid-template-columns:1fr 1fr}
+}
 
 @media(max-width:680px){
   .is-living-usage::before{left:-8px}
+  .dict-modal{padding:0;align-items:end}
+  .dict-modal-card{
+    width:100%;
+    max-height:92vh;
+    border-radius:22px 22px 0 0;
+    padding:30px 20px 34px;
+  }
+  .dict-form-grid{grid-template-columns:1fr}
+  .dict-form-grid label.full{grid-column:auto}
+  .contributors-list ol{grid-template-columns:1fr}
+  .dict-community-actions{grid-template-columns:1fr}
 }
