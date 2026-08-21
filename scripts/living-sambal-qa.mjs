@@ -49,8 +49,12 @@ async function expectLivingOnly(word, english, filipino) {
   }
   const en = (await exact.locator('.entry-en').textContent() || '').trim();
   const fil = (await exact.locator('.entry-fil').textContent() || '').replace(/^Filipino\s*·\s*/i, '').trim();
-  if (!en.includes(english)) fail(`${word}: English meaning does not include ${english!r}: ${en}`);
-  if (!fil.includes(filipino)) fail(`${word}: Filipino meaning does not include ${filipino!r}: ${fil}`);
+  if (!en.includes(english)) {
+    fail(`${word}: English meaning does not include ${JSON.stringify(english)}: ${en}`);
+  }
+  if (!fil.includes(filipino)) {
+    fail(`${word}: Filipino meaning does not include ${JSON.stringify(filipino)}: ${fil}`);
+  }
 }
 
 await expectLivingOnly('ayama', 'crab', 'alimasag');
