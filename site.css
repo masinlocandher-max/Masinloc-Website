@@ -84,11 +84,11 @@ button{font:inherit}
 /* Footer */
 .home-footer{background:var(--navy-deep);color:#fff;padding:56px clamp(28px,5vw,76px) 22px;display:grid;grid-template-columns:1fr auto;gap:42px}
 .footer-brand img{width:184px;filter:brightness(0) invert(1)}
-.footer-brand p{margin:15px 0 0;color:rgba(255,255,255,.55);font-size:10px;line-height:1.65;letter-spacing:.02em}
+.footer-brand p{margin:15px 0 0;color:rgba(255,255,255,.62);font-size:12px;line-height:1.7;letter-spacing:.02em}
 .footer-nav{display:grid;grid-template-columns:repeat(2,max-content);column-gap:38px;row-gap:14px;align-content:start;padding-top:4px}
-.footer-nav a{font-size:11px;color:rgba(255,255,255,.76);transition:color var(--ease)}
+.footer-nav a{font-size:12.5px;color:rgba(255,255,255,.8);transition:color var(--ease)}
 .footer-nav a:hover{color:#fff}
-.footer-bottom{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.12);padding-top:16px;display:flex;justify-content:space-between;color:rgba(255,255,255,.38);font-size:10px}
+.footer-bottom{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.12);padding-top:16px;display:flex;justify-content:space-between;color:rgba(255,255,255,.5);font-size:11.5px}
 
 /* A Closer Look */
 .about-page{background:#fff}

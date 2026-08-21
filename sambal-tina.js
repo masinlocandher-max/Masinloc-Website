@@ -50,7 +50,7 @@
   function badgeFor(confidence) {
     if (confidence >= 4) return { className: 'badge-strong', label: 'Well supported' };
     if (confidence === 3) return { className: 'badge-ok', label: 'Readable' };
-    return { className: 'badge-check', label: 'Under review' };
+    return { className: 'badge-check', label: 'Needs another look' };
   }
 
   function passesFilter(entry) {

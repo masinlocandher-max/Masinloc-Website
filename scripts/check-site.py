@@ -53,6 +53,7 @@ REQUIRED = [
     "scripts/build-destinations.py",
     "scripts/check-locations.py",
     "scripts/destinations-qa.mjs",
+    "scripts/responsive-qa.mjs",
     "styles.css",
     "connect-polish.css",
     "connect-shell.css",

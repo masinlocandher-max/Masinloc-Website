@@ -75,13 +75,27 @@ and returned to; `/` reaches the search field; filter chips carry live counts;
 a headword can be copied in one action. All of it is enhancement — the page's
 purpose, method, legend and terms are complete in HTML without JavaScript.
 
-### Register
+### Voice
 
-The public voice is level and documentary. State what is true, name what is
-uncertain, and stop. No exclamation, no salesmanship, no encouragement of the
-reader, no first-person enthusiasm. An entry that is unresolved is described
-as unresolved, not as an opportunity. This is a record, and it should read
-like one.
+Warm, friendly and glad you came. Write the way a Masinloqueño would show a
+visitor around: say "you", use contractions, invite people in, let a little
+delight through. "Come and meet Masinloc", not "Masinloc: an overview".
+
+Two things that warmth must never cost:
+
+- **Accuracy.** Verification labels stay exact. An entry that needs another
+  look says so plainly; friendliness never softens a factual claim, and we do
+  not describe an unresolved reading as anything but unresolved.
+- **Dignity.** Playful, never cutesy. No exclamation marks stacked up, no
+  jokes at the expense of the place or its people.
+
+### Responsive standard in practice
+
+`scripts/responsive-qa.mjs` checks every public page at 21 widths from 320px
+to 2560px, including both sides of each breakpoint. It fails on horizontal
+overflow and on visible text under 10px. Breakpoint edges matter: a layout can
+be correct on a phone and on a desktop and still break at 834px, which is
+exactly what happened to the Masinloc Connect choice grid.
 
 ### Places in Masinloc
 

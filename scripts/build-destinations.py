@@ -30,12 +30,12 @@ HEAD = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#03112F">
-<title>Places in Masinloc</title>
-<meta name="description" content="Eight places in Masinloc, Zambales — river, island, cave, church, sandbar, baywalk and hills — photographed and named by the people who know them.">
+<title>Places you will love in Masinloc</title>
+<meta name="description" content="Eight favourite places in Masinloc, Zambales — a river, an island, a cave, a church, a sandbar, a baywalk and the hills — photographed by the people who know them best.">
 <link rel="canonical" href="https://masinloc-zambales.com/destinations.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Places in Masinloc">
-<meta property="og:description" content="River, island, cave, church, sandbar, baywalk and hills. Eight places in Masinloc, Zambales.">
+<meta property="og:title" content="Places you will love in Masinloc">
+<meta property="og:description" content="A river, an island, a cave, a church, a sandbar and a sunset walk. Come and see Masinloc, Zambales.">
 <meta property="og:url" content="https://masinloc-zambales.com/destinations.html">
 <meta property="og:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
 <meta name="twitter:card" content="summary_large_image">
@@ -65,9 +65,9 @@ HEAD = """<!doctype html>
 <main id="main">
   <section class="places-hero">
     <p class="section-label">A Closer Look · Places</p>
-    <h1>You have not seen<br>Masinloc yet.</h1>
-    <p class="lead">A river under forest. An island offshore. A cave, a church, a sandbar, a shoreline at sunset. {count} places, photographed where they stand.</p>
-    <a class="places-scroll" href="#{first}">Start with {first_name}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M7 13l5 5 5-5"/></svg></a>
+    <h1>Wait until you<br>see Masinloc.</h1>
+    <p class="lead">A river running under the trees. An island just offshore. A cave, a church, a sandbar, and a walk where the whole sky turns gold. Here are {count} of our favourite places &mdash; come and have a look.</p>
+    <a class="places-scroll" href="#{first}">Take me to {first_name}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M7 13l5 5 5-5"/></svg></a>
   </section>
 
   <nav class="places-index" aria-label="Places">
@@ -135,7 +135,7 @@ def section(location: dict, position: int, total: int) -> str:
       <h2 class="place-name" id="{slug}-name">{esc['name']}</h2>
       <p class="place-locality">{esc['locality']}</p>
       <p class="place-rhyme">{esc['rhyme']}</p>
-      <button class="place-open" type="button" data-open="{slug}">View photograph</button>
+      <button class="place-open" type="button" data-open="{slug}">See it bigger</button>
     </div>
   </section>
 

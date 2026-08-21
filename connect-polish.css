@@ -153,3 +153,41 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Tablet range ------------------------------------------------------------
+   Between the 800px mobile breakpoint and the desktop layout, the three-column
+   choice grid could not shrink below its content and pushed 18px past the
+   viewport at iPad-portrait width. minmax(0,1fr) lets the columns actually
+   shrink; two columns keep the cards readable at this size. */
+@media(min-width:801px) and (max-width:980px){
+  .quick-grid,.chooser-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quick-card{grid-template-columns:52px minmax(0,1fr) 24px;padding:20px}
+  .quick-choices{padding-left:24px;padding-right:24px}
+  .chooser-content{padding-left:24px;padding-right:24px}
+  .form-grid{grid-template-columns:132px minmax(0,1fr);gap:26px}
+}
+
+/* A flexible grid column defaults to min-content, which long unbroken words
+   can force wider than the viewport. Scoped above the mobile breakpoint so it
+   cannot override the single-column phone layout declared earlier. */
+@media(min-width:981px){
+  .quick-grid,.chooser-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .field-grid,.option-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.quick-card p,.selection-card p,.category-aside p{overflow-wrap:anywhere}
+
+/* Legibility floors -------------------------------------------------------
+   The minified Connect base sets several labels at 7-9px, which is below what
+   anyone can comfortably read. */
+.form-tools button,.form-tools span,.back-link,.save-later{font-size:12px}
+.review-row span,.ref-box small{font-size:10px;letter-spacing:.1em}
+.review-row strong{font-size:13px}
+.consent label,.error,.option-error,.consent-error{font-size:12px}
+.about-label,.step-kicker{font-size:11px}
+.primary-button,.success-buttons button,.prev,.next,.modal-actions button,
+.resume-bar button{font-size:12px}
+.success-small{font-size:13px!important}
+.site-footer .footer-brand p{font-size:12px;line-height:1.7}
+.site-footer .footer-item span{font-size:10px}
+.site-footer .footer-item strong,.site-footer .footer-item a{font-size:13px}
+.site-footer .footer-bottom{font-size:11px}
