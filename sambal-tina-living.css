@@ -1,0 +1,43 @@
+/* Living-usage provenance for the Sambal Tina dictionary.
+   Identity colours remain defined only in tokens.css. */
+
+.badge-living{
+  background:var(--soft);
+  color:var(--blue);
+  border:1px solid var(--blue);
+}
+
+.is-living-usage{
+  position:relative;
+}
+
+.is-living-usage::before{
+  content:"";
+  position:absolute;
+  left:-14px;
+  top:22px;
+  bottom:22px;
+  width:3px;
+  border-radius:999px;
+  background:var(--blue-bright);
+  opacity:.5;
+}
+
+.entry-status-living{
+  color:var(--blue)!important;
+  font-weight:700;
+}
+
+.dict-layer-note{
+  width:var(--content);
+  margin:16px auto 0;
+  color:var(--text);
+  font-size:13px;
+  line-height:1.7;
+}
+
+.dict-layer-note strong{color:var(--navy)}
+
+@media(max-width:680px){
+  .is-living-usage::before{left:-8px}
+}

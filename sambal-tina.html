@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#061A46">
 <title>The Masinloc Sambal Tina Dictionary</title>
-<meta name="description" content="Sambal Tina written down: 5,222 words of the language of Masinloc, Zambales, free to search, with the archive page and an honest confidence rating on every entry. By the Mabayani Project by FMB.">
+<meta name="description" content="Search 5,222 archival Sambal Tina entries alongside separately labeled user-confirmed living usage from Masinloc, with provenance kept clear for every form.">
 <link rel="canonical" href="https://masinloc-zambales.com/sambal-tina.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="The Masinloc Sambal Tina Dictionary">
-<meta property="og:description" content="Our language, written down. 5,222 words of Sambal Tina, with the archive page and an honest rating on every entry.">
+<meta property="og:description" content="Our language, written down: 5,222 archival entries plus separately labeled user-confirmed living Sambal Tina usage.">
 <meta property="og:url" content="https://masinloc-zambales.com/sambal-tina.html">
 <meta property="og:image" content="https://masinloc-zambales.com/assets/editorial/a-closer-look.avif">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="site.css?v=20260820-1">
 <link rel="stylesheet" href="site-polish.css?v=20260820-1">
 <link rel="stylesheet" href="sambal-tina.css?v=20260821-3">
+<link rel="stylesheet" href="sambal-tina-living.css?v=20260822-1">
 <link rel="stylesheet" href="site-stability.css?v=20260821-1">
 </head>
 <body class="about-page">
@@ -41,32 +42,33 @@
     <p class="section-label">A Closer Look · Language</p>
     <h1>The Masinloc Sambal Tina Dictionary</h1>
     <p class="byline"><strong>Mabayani Project by FMB</strong><span>Compilation, transcription and source review</span></p>
-    <p class="lead">This is our language, written down. 5,222 words copied out of the archive by hand and checked one by one, so the next Masinloqueño who goes looking does not have to start from nothing. Every entry shows the archive page it came from and how sure we are of the reading.</p>
+    <p class="lead">This is our language, written down without pretending the archive and the language we still speak are the same kind of evidence. The archival layer contains 5,222 transcribed entries, each retaining its source status and archive page. Alongside it, a separate living layer carries Sambal Tina forms explicitly confirmed in current Masinloc project work. Living forms are labeled as user-confirmed and are never given invented archive citations.</p>
   </section>
 
-  <section class="dict-stats" aria-label="The dictionary at a glance">
+  <section class="dict-stats" aria-label="The archival dictionary at a glance">
     <dl class="stat-row">
-      <div class="stat"><dt>Entries</dt><dd data-count="5222">5,222</dd></div>
+      <div class="stat"><dt>Archive entries</dt><dd data-count="5222">5,222</dd></div>
       <div class="stat"><dt>Well supported</dt><dd data-count="3241">3,241</dd></div>
       <div class="stat"><dt>Readable</dt><dd data-count="1884">1,884</dd></div>
       <div class="stat"><dt>Still checking</dt><dd data-count="97">97</dd></div>
     </dl>
+    <p class="dict-layer-note"><strong>Living usage is a separate layer.</strong> User-confirmed forms appear in the same search for usefulness, but their provenance stays visibly different from the archive.</p>
   </section>
 
   <section class="dict-promise" aria-labelledby="promiseTitle">
     <h2 id="promiseTitle">How we made this</h2>
     <div class="promise-grid">
       <div>
-        <h3>We copied it faithfully</h3>
-        <p>The archive is the real thing and we have not tried to improve on it. Where our reading is shaky we tell you, and we give you the page so you can go and look for yourself.</p>
+        <h3>We copied the archive faithfully</h3>
+        <p>The archival record is preserved as its own layer. Where a historical reading is shaky we tell you, and we keep the page reference so the source can be checked directly.</p>
       </div>
       <div>
         <h3>When we are not sure, we say so</h3>
         <p>Some of the old text is damaged. Rather than guess at a spelling that looks about right, we flag it and leave it open. A neat invention would stick around forever in a language that has very little written down.</p>
       </div>
       <div>
-        <h3>There is still work to do</h3>
-        <p>97 entries are still unsettled and we have left them out in the open. If you speak Sambal Tina, you can settle some of these faster than any amount of squinting at the page.</p>
+        <h3>We keep living usage separate</h3>
+        <p>Masinloqueños still use forms that may differ from the archival transcription. When a form is explicitly confirmed in current project work, we publish it as <strong>User-confirmed</strong> instead of silently rewriting the archive. Forms such as <em>ayama</em> and <em>cabatwan</em> can therefore sit beside archival variants with both histories intact.</p>
       </div>
     </div>
   </section>
@@ -91,17 +93,17 @@
   <section class="dict" aria-labelledby="dictTitle">
     <div class="dict-head">
       <h2 id="dictTitle">Look up a word</h2>
-      <p class="dict-sub">Try it in Sambal Tina, English or Filipino. Tap <kbd>/</kbd> to jump straight to the box.</p>
+      <p class="dict-sub">Search Sambal Tina, English or Filipino across the archival dictionary and the user-confirmed living layer. Tap <kbd>/</kbd> to jump straight to the box.</p>
     </div>
 
     <div class="dict-controls">
       <div class="dict-search">
         <label class="visually-hidden" for="dictQuery">Search the dictionary</label>
         <input id="dictQuery" type="search" autocomplete="off" spellcheck="false"
-               placeholder="water, dagat, maabig&hellip;" enterkeyhint="search">
+               placeholder="lanom, water, dagat&hellip;" enterkeyhint="search">
         <button type="button" class="dict-clear" id="dictClear" aria-label="Clear search" hidden>&times;</button>
       </div>
-      <div class="dict-filters" role="group" aria-label="Filter by review status">
+      <div class="dict-filters" role="group" aria-label="Filter by archival review status">
         <button type="button" class="chip is-active" data-filter="all" aria-pressed="true">All <span class="chip-count"></span></button>
         <button type="button" class="chip" data-filter="supported" aria-pressed="false">Well supported <span class="chip-count"></span></button>
         <button type="button" class="chip" data-filter="check" aria-pressed="false">Needs another look <span class="chip-count"></span></button>
@@ -109,12 +111,12 @@
       <nav class="dict-alphabet" id="dictAlphabet" aria-label="Jump to letter"></nav>
     </div>
 
-    <p class="dict-status" id="dictStatus" role="status">Loading 5,222 entries&hellip;</p>
+    <p class="dict-status" id="dictStatus" role="status">Loading archive and living usage&hellip;</p>
     <ol class="dict-results" id="dictResults"></ol>
     <button type="button" class="button secondary dict-more" id="dictMore" hidden>Show more</button>
 
     <noscript>
-      <p class="dict-noscript">Search needs JavaScript to run. No problem &mdash; the whole dictionary, archive page references and all, is yours to download as a plain file: <a href="data/sambal-tina.json">sambal-tina.json</a>.</p>
+      <p class="dict-noscript">Search needs JavaScript to run. The data is still available directly: <a href="data/sambal-tina.json">download the 5,222-entry archival dictionary</a> or <a href="data/sambal-tina-living.json">download the separately labeled user-confirmed living usage layer</a>.</p>
     </noscript>
   </section>
 
@@ -123,13 +125,13 @@
     <div class="credits-grid">
       <div class="credits-main">
         <p class="credits-lead">This dictionary is the work of the <strong>Mabayani Project by FMB</strong>.</p>
-        <p>All of it done by hand: reading the archive across three separate layers, cross-checking the main body against the printed index, squinting at every doubtful letter, and giving each entry an honest rating. Those ratings, and the judgement calls behind them, are ours.</p>
-        <p>It keeps growing. Entries move up as readings get settled, and everyone who helps is named.</p>
+        <p>The archival layer was built by reading the source across three separate layers, cross-checking the main body against the printed index, reviewing doubtful letters, and assigning an honest source status to every entry.</p>
+        <p>The living layer records forms explicitly confirmed in current project work. It is deliberately kept separate so contemporary Masinloc usage can grow without erasing or falsely rewriting the historical record.</p>
       </div>
       <div class="credits-side">
         <h3>The fine print</h3>
         <p>Compilation, transcription, review and presentation &copy; 2026 Mabayani Project by FMB.</p>
-        <p class="credits-rights">Entries cite the archive page from which they were transcribed. The archive remains the authority for any disputed reading.</p>
+        <p class="credits-rights">Archival entries cite the archive page from which they were transcribed. User-confirmed living entries are labeled separately and do not receive an archive page unless the same exact form is independently supported by the archive.</p>
       </div>
     </div>
   </section>
@@ -137,17 +139,18 @@
   <section class="dict-legend" aria-labelledby="legendTitle">
     <h2 id="legendTitle">What the labels mean</h2>
     <dl>
-      <div><dt><span class="badge badge-strong">Well supported</span></dt><dd>We found it in more than one place, or matched it against the printed index. Safe to use. 3,241 entries.</dd></div>
-      <div><dt><span class="badge badge-ok">Readable</span></dt><dd>Clear enough to read in the main body, but we have not double-checked it elsewhere yet. 1,884 entries.</dd></div>
-      <div><dt><span class="badge badge-check">Needs another look</span></dt><dd>A letter in the old text is damaged or unclear, so treat the spelling as unsettled. 97 entries.</dd></div>
-      <div><dt><span class="badge badge-page">p. 117</span></dt><dd>The archive page we copied the entry from, in case you want to check it.</dd></div>
+      <div><dt><span class="badge badge-living">User-confirmed</span></dt><dd>A form explicitly confirmed in current Masinloc project work. It may also be archive-backed, or it may be living usage published separately from the archival transcription.</dd></div>
+      <div><dt><span class="badge badge-strong">Well supported</span></dt><dd>We found the archival form in more than one source layer, or matched it against the printed index. 3,241 archive entries.</dd></div>
+      <div><dt><span class="badge badge-ok">Readable</span></dt><dd>Clear enough to read in the archival main body, but not double-checked elsewhere yet. 1,884 archive entries.</dd></div>
+      <div><dt><span class="badge badge-check">Needs another look</span></dt><dd>A letter in the old text is damaged or unclear, so treat the archival spelling as unsettled. 97 entries.</dd></div>
+      <div><dt><span class="badge badge-page">p. 117</span></dt><dd>The archive page from which an archival entry was transcribed. Living-only forms intentionally do not show this badge.</dd></div>
     </dl>
   </section>
 
   <section class="about-commitment dict-help">
     <h2>Tulungan mo kaming tapusin.</h2>
-    <p>If Sambal Tina is the language you grew up with, or the printed record is sitting on your shelf, you can help settle the entries still marked for another look. Send corrections through Masinloc Connect. We check every one against the archive before anything changes here, and we name everyone who helps.</p>
-    <p class="dict-help-actions"><a class="button primary" href="connect.html">Send us a correction</a> <a class="button secondary" href="data/sambal-tina.json" download>Download the data</a></p>
+    <p>If Sambal Tina is the language you grew up with, or the printed record is sitting on your shelf, you can help settle archival readings and document living forms. Send corrections through Masinloc Connect. We keep the archive and living usage separate so every change has a clear source.</p>
+    <p class="dict-help-actions"><a class="button primary" href="connect.html">Send us a correction</a> <a class="button secondary" href="data/sambal-tina.json" download>Download archive data</a> <a class="button secondary" href="data/sambal-tina-living.json" download>Download living usage</a></p>
   </section>
 </main>
 
@@ -157,6 +160,7 @@
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>masinloc-zambales.com</span></div>
 </footer>
 <script src="site.js?v=20260820-2"></script>
+<script src="sambal-tina-living.js?v=20260822-1"></script>
 <script src="sambal-tina.js?v=20260821-3"></script>
 </body>
 </html>

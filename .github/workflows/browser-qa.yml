@@ -44,6 +44,9 @@ jobs:
       - name: Run Sambal Tina dictionary checks
         run: node scripts/dictionary-qa.mjs
 
+      - name: Run living Sambal Tina checks
+        run: node scripts/living-sambal-qa.mjs
+
       - name: Run Masinloc Connect privacy and mobile checks
         run: node scripts/connect-qa.mjs
 
