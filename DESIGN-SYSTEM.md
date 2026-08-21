@@ -75,13 +75,36 @@ and returned to; `/` reaches the search field; filter chips carry live counts;
 a headword can be copied in one action. All of it is enhancement — the page's
 purpose, method, legend and terms are complete in HTML without JavaScript.
 
-### Voice
+### Who we are writing for
 
-Warm, friendly and glad you came. Write the way a Masinloqueño would show a
-visitor around: say "you", use contractions, invite people in, let a little
-delight through. "Come and meet Masinloc", not "Masinloc: an overview".
+**The first readers are Masinloqueños.** Not tourists, not researchers, not a
+tourism board. People who already live here, or grew up here and moved away.
 
-Two things that warmth must never cost:
+This decides the voice completely, and it is the easiest thing on the site to
+get wrong. "Come and meet Masinloc", "Wait until you see Masinloc",
+"handy whether you are visiting" — all of it addresses the reader as a
+stranger being shown around their own town. Nobody who has swum at Bacala
+every summer needs to be introduced to it.
+
+Write as one Masinloqueño to another:
+
+- **Assume the knowledge.** "You know these eight already", not "discover
+  eight hidden gems". Recognition, not revelation.
+- **Say "our".** Our language, our past, our places. The reader is inside the
+  "we", never the audience for it.
+- **Use the details only locals hold.** Which road floods first, whose lola
+  tells the best stories. Specifics earn more trust than adjectives.
+- **A little Filipino where it lands naturally** — "Ikaw naman", "Wala pa kami
+  rito". Masinloc Connect already mixes languages; the rest of the site can
+  too. Never decorative, never more than the sentence needs.
+- **Warm, not promotional.** Friendly the way a neighbour is friendly. No
+  brochure adjectives, no "hidden paradise", no selling the place to the
+  people who live in it.
+
+Visitors will arrive later and will be perfectly well served by copy written
+honestly for locals. It does not work the other way round.
+
+Two things the warmth must never cost:
 
 - **Accuracy.** Verification labels stay exact. An entry that needs another
   look says so plainly; friendliness never softens a factual claim, and we do
