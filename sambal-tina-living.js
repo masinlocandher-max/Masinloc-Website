@@ -20,11 +20,15 @@
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '');
 
-  function noteFor(item) {
+  function noteFor(item, suppliedGlosses = []) {
+    const supplied = suppliedGlosses.length
+      ? `Living layer supplies the missing ${suppliedGlosses.join(' and ')} gloss for search/display; the archival source row remains unchanged.`
+      : '';
     return [
       LIVING_MARKER,
       item.verification ? item.verification + '.' : '',
       item.archive_relation || '',
+      supplied,
       item.note || ''
     ].filter(Boolean).join(' ');
   }
@@ -53,9 +57,19 @@
       const key = fold(item.tina).trim();
       if (!key) return;
       const existing = byHeadword.get(key);
-      const livingNote = noteFor(item);
 
       if (existing) {
+        const suppliedGlosses = [];
+        if (!String(existing[2] || '').trim() && item.en) {
+          existing[2] = item.en;
+          suppliedGlosses.push('English');
+        }
+        if (!String(existing[3] || '').trim() && item.fil) {
+          existing[3] = item.fil;
+          suppliedGlosses.push('Filipino');
+        }
+
+        const livingNote = noteFor(item, suppliedGlosses);
         const oldNote = String(existing[7] || '').trim();
         if (!oldNote.includes(LIVING_MARKER)) {
           existing[7] = [oldNote, livingNote].filter(Boolean).join(' ');
@@ -72,7 +86,7 @@
         '',
         livingStatusIndex,
         3,
-        livingNote
+        noteFor(item)
       ];
       archive.entries.push(entry);
       byHeadword.set(key, entry);
