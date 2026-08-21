@@ -85,8 +85,7 @@
   }
 
   function lockFixedFields() {
-    const values = fixedAddress;
-    Object.entries(values).forEach(([name, value]) => {
+    Object.entries(fixedAddress).forEach(([name, value]) => {
       const el = document.querySelector(`#formCard [name="${name}"]`);
       if (!el) return;
       el.value = value;
@@ -100,6 +99,8 @@
   function patchProfessionalAddress() {
     try {
       if (typeof configs === 'undefined' || typeof data === 'undefined' || !configs.professional?.steps?.[0]) return false;
+      /* The guided résumé flow has 7 steps. Do not patch the legacy 4-step form. */
+      if (configs.professional.steps.length !== 7) return false;
       if (configs.professional.__masinlocAddressLocked) return true;
 
       data.municipality = fixedAddress.municipality;
@@ -129,7 +130,7 @@
   let attempts = 0;
   const timer = setInterval(() => {
     attempts += 1;
-    if (patchProfessionalAddress() || attempts > 100) clearInterval(timer);
+    if (patchProfessionalAddress() || attempts > 200) clearInterval(timer);
   }, 50);
 
   document.addEventListener('input', event => {
