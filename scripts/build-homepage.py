@@ -269,6 +269,7 @@ def render() -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#03112F">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <title>Masinloc, Zambales | History, Sambal Tina &amp; Places</title>
 <meta name="description" content="Masinloc, Zambales through its places, the Sambal Tina language recorded in {n['total']:,} dictionary entries, and the archive behind both.">
 <link rel="canonical" href="https://masinloc-zambales.com/">
@@ -476,6 +477,7 @@ def render() -> str:
         <a href="verified-history.html">Verified History</a>
         <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
         <a href="connect.html">Masinloc Connect</a>
+        <a href="trust.html">Trust &amp; privacy</a>
         <a href="mailto:hello@masinloc-zambales.com">Contact</a>
       </nav>
     </div>
@@ -494,7 +496,8 @@ def render() -> str:
       "@type": "WebSite",
       "@id": "https://masinloc-zambales.com/#website",
       "url": "https://masinloc-zambales.com/",
-      "name": "Masinloc, Zambales",
+      "name": "Discover Masinloc",
+      "alternateName": "Masinloc, Zambales",
       "description": "An independent community record of Masinloc, Zambales: its places, the Sambal Tina language, and local history.",
       "inLanguage": "en-PH",
       "publisher": {{ "@id": "https://masinloc-zambales.com/#publisher" }}
@@ -513,7 +516,18 @@ def render() -> str:
       "url": "https://masinloc-zambales.com/",
       "name": "Masinloc, Zambales | History, Sambal Tina & Places",
       "isPartOf": {{ "@id": "https://masinloc-zambales.com/#website" }},
-      "about": {{ "@id": "https://masinloc-zambales.com/#place" }},
+      "inLanguage": "en-PH",
+      "about": [
+        {{ "@id": "https://masinloc-zambales.com/#place" }},
+        {{ "@type": "Thing", "name": "Sambal Tina language and culture" }},
+        {{ "@type": "Thing", "name": "Masinloc local history" }}
+      ],
+      "subjectOf": {{
+        "@type": "AboutPage",
+        "@id": "https://masinloc-zambales.com/trust.html#webpage",
+        "url": "https://masinloc-zambales.com/trust.html",
+        "name": "Discover Masinloc and Masinloc Connect Platform Trust Information"
+      }},
       "primaryImageOfPage": "https://masinloc-zambales.com/{hero}"
     }},
     {{
