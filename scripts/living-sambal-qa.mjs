@@ -33,24 +33,24 @@ async function search(word) {
   await page.waitForTimeout(180);
 }
 
-async function expectConfirmedMeaning(word, english, filipino, livingOnly = false) {
+async function expectConfirmedMeaning(word, english, filipino) {
   await search(word);
   const exact = page.locator(`.dict-entry[data-tina="${word}"]`);
   const count = await exact.count();
   if (count !== 1) {
-    fail(`${word}: expected one exact user-confirmed result, found ${count}`);
+    fail(`${word}: expected one exact community-confirmed result, found ${count}`);
     return;
   }
   if (await exact.locator('.badge-living').count() !== 1) {
-    fail(`${word}: missing User-confirmed badge`);
+    fail(`${word}: missing Community-confirmed badge`);
   }
-  if (livingOnly && await exact.locator('.badge-page').count() !== 0) {
-    fail(`${word}: living-only entry must not display an archive page`);
+  if (await exact.locator('.badge-page, .entry-status, .entry-note').count() !== 0) {
+    fail(`${word}: public result exposes internal source/provenance mechanics`);
   }
   const enLocator = exact.locator('.entry-en');
   const filLocator = exact.locator('.entry-fil');
   if (await enLocator.count() !== 1) {
-    fail(`${word}: user-confirmed English meaning is not rendered`);
+    fail(`${word}: confirmed English meaning is not rendered`);
   } else {
     const en = (await enLocator.textContent() || '').trim();
     if (!en.includes(english)) {
@@ -58,51 +58,40 @@ async function expectConfirmedMeaning(word, english, filipino, livingOnly = fals
     }
   }
   if (await filLocator.count() !== 1) {
-    fail(`${word}: user-confirmed Filipino meaning is not rendered`);
+    fail(`${word}: confirmed Filipino meaning is not rendered`);
   } else {
-    const fil = (await filLocator.textContent() || '').replace(/^Filipino\s*·\s*/i, '').trim();
+    const fil = (await filLocator.textContent() || '').trim();
     if (!fil.includes(filipino)) {
       fail(`${word}: Filipino meaning does not include ${JSON.stringify(filipino)}: ${fil}`);
     }
   }
 }
 
-await expectConfirmedMeaning('ayama', 'crab', 'alimasag', true);
-await expectConfirmedMeaning('cabatwan', 'river', 'ilog', true);
-await expectConfirmedMeaning('mabanglo', 'fragrant', 'mabango', true);
-/* matibya already has an archival headword; living usage supplies missing glosses. */
+await expectConfirmedMeaning('ayama', 'crab', 'alimasag');
+await expectConfirmedMeaning('cabatwan', 'river', 'ilog');
+await expectConfirmedMeaning('mabanglo', 'fragrant', 'mabango');
 await expectConfirmedMeaning('matibya', 'red', 'pula');
 
-/* Archive variants must remain present rather than being overwritten. */
+/* Historical variants remain searchable but are not falsely relabeled as community-confirmed. */
 await search('ayamd');
 const archiveCrab = page.locator('.dict-entry[data-tina="ayamd"]');
-if (await archiveCrab.count() !== 1) fail('ayamd: archival crab form disappeared');
+if (await archiveCrab.count() !== 1) fail('ayamd: historical variant disappeared');
 else {
-  if (await archiveCrab.locator('.badge-page').count() !== 1) fail('ayamd: archive page reference disappeared');
-  if (await archiveCrab.locator('.badge-living').count() !== 0) fail('ayamd: archival variant was incorrectly relabeled as living usage');
+  if (await archiveCrab.locator('.badge-living').count() !== 0) fail('ayamd: historical variant was incorrectly relabeled as community-confirmed');
+  if (await archiveCrab.locator('.badge-page, .entry-status, .entry-note').count() !== 0) fail('ayamd: public result exposes internal source mechanics');
 }
 
 await search('kabatwan');
 const archiveRiver = page.locator('.dict-entry[data-tina="kabatwan"]');
-if (await archiveRiver.count() !== 1) fail('kabatwan: archival river form disappeared');
-else if (await archiveRiver.locator('.badge-page').count() !== 1) fail('kabatwan: archive page reference disappeared');
-
-/* Exact overlaps remain one record: archive provenance + living confirmation. */
-await search('awlo');
-const awlo = page.locator('.dict-entry[data-tina="awlo"]');
-if (await awlo.count() !== 1) fail(`awlo: expected one exact result, found ${await awlo.count()}`);
+if (await archiveRiver.count() !== 1) fail('kabatwan: historical variant disappeared');
 else {
-  if (await awlo.locator('.badge-page').count() !== 1) fail('awlo: archive page reference disappeared');
-  if (await awlo.locator('.badge-living').count() !== 1) fail('awlo: living confirmation badge missing');
+  if (await archiveRiver.locator('.badge-living').count() !== 0) fail('kabatwan: historical variant was incorrectly relabeled as community-confirmed');
+  if (await archiveRiver.locator('.badge-page, .entry-status, .entry-note').count() !== 0) fail('kabatwan: public result exposes internal source mechanics');
 }
 
-await search('damolag');
-const damolag = page.locator('.dict-entry[data-tina="damolag"]');
-if (await damolag.count() !== 1) fail(`damolag: expected one exact result, found ${await damolag.count()}`);
-else {
-  if (await damolag.locator('.badge-page').count() !== 1) fail('damolag: archive page reference disappeared');
-  if (await damolag.locator('.badge-living').count() !== 1) fail('damolag: living confirmation badge missing');
-}
+/* Exact overlaps remain one searchable record and also show community confirmation. */
+await expectConfirmedMeaning('awlo', 'day', 'araw');
+await expectConfirmedMeaning('damolag', 'carabao', 'kalabaw');
 
 const overflow = await page.evaluate(() =>
   document.documentElement.scrollWidth - document.documentElement.clientWidth
@@ -120,5 +109,5 @@ if (failures.length) {
 }
 
 console.log('LIVING SAMBAL QA PASSED');
-console.log('User-confirmed forms are searchable, archival variants remain intact,');
-console.log('and living-only entries do not receive invented archive citations.');
+console.log('Community-confirmed forms and historical variants remain searchable and distinct,');
+console.log('while internal source/provenance mechanics stay out of the public interface.');

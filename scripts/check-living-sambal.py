@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Validate the user-confirmed living Sambal Tina publication layer.
+"""Validate the user-confirmed living Sambal Tina data layer.
 
-The archive and living language are different provenance classes. This check
-prevents the site from silently rewriting archival spellings, inventing archive
-page numbers for contemporary forms, or dropping words confirmed in project
-work after the archive transcription was built.
+The public dictionary intentionally keeps source mechanics out of the reader UI,
+but internal validation still protects the separate living-usage layer, known
+archive variants, meanings, and the rule against invented archive citations.
 """
 from __future__ import annotations
 
@@ -50,7 +49,7 @@ if not LIVING.is_file():
 else:
     payload = json.loads(LIVING.read_text(encoding="utf-8"))
     if payload.get("source_layer") != "User-confirmed living usage":
-        fail("living data must identify its source layer as User-confirmed living usage")
+        fail("living data must identify its internal source layer")
     rule = str(payload.get("editorial_rule") or "")
     if "separate from archival transcription" not in rule:
         fail("living data is missing the archive/living separation rule")
@@ -76,16 +75,16 @@ else:
         if item.get("fil") != filipino:
             fail(f"{word}: Filipino meaning changed: {item.get('fil')!r}")
         if "User-confirmed" not in str(item.get("verification") or ""):
-            fail(f"{word}: missing user-confirmed verification")
+            fail(f"{word}: missing internal user-confirmed verification")
         if not str(item.get("archive_relation") or "").strip():
-            fail(f"{word}: missing archive relationship/provenance note")
+            fail(f"{word}: missing internal archive relationship/provenance note")
         if "pages" in item and str(item.get("pages") or "").strip():
             fail(f"{word}: living usage must not invent an archive page citation")
 
     if "ayamd" not in str(by_word.get("ayama", {}).get("archive_relation", "")):
-        fail("ayama must preserve its relationship to archival ayamd")
+        fail("ayama must preserve its internal relationship to archival ayamd")
     if "kabatwan" not in str(by_word.get("cabatwan", {}).get("archive_relation", "")):
-        fail("cabatwan must preserve its relationship to archival kabatwan")
+        fail("cabatwan must preserve its internal relationship to archival kabatwan")
 
 if ARCHIVE.is_file():
     archive = json.loads(ARCHIVE.read_text(encoding="utf-8"))
@@ -104,12 +103,16 @@ if PAGE.is_file():
     for required in (
         "sambal-tina-living.css",
         "sambal-tina-living.js",
-        "data/sambal-tina-living.json",
-        "User-confirmed",
-        "5,222",
+        "Community-confirmed",
+        "matibya",
     ):
         if required not in page:
-            fail(f"sambal-tina.html is missing living-layer disclosure/reference: {required}")
+            fail(f"sambal-tina.html is missing the community living-layer hook: {required}")
+    forbidden_public = ("archive p.", "printed index", "source page reference")
+    lowered = page.lower()
+    for phrase in forbidden_public:
+        if phrase in lowered:
+            fail(f"public page exposes internal source mechanics: {phrase}")
 else:
     fail("missing sambal-tina.html")
 
@@ -120,5 +123,5 @@ if errors:
     sys.exit(1)
 
 print("LIVING SAMBAL CHECK PASSED")
-print(f"{len(EXPECTED)} user-confirmed living forms are present with separate provenance.")
-print("Archive-backed overlaps retain their archive records; living-only forms carry no fake page citations.")
+print(f"{len(EXPECTED)} user-confirmed living forms remain protected internally.")
+print("Archive variants and provenance are retained in data while the public UI stays clean.")
