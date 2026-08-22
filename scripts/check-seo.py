@@ -261,9 +261,10 @@ for page in pages:
 
     # --- contact routes through the form ---------------------------------
     # A mailto exposes the address to scrapers and leaves no record an admin
-    # can work from. Contact is a reviewed form; trust.html is the one place a
-    # published address of record belongs.
-    if name != "trust.html":
+    # can work from. Contact is a reviewed form. The exceptions are the pages
+    # where a published address of record is the point: the trust page, and the
+    # privacy notice, which must name a contact for data-rights requests.
+    if name not in {"trust.html", "privacy.html"}:
         for href in parser.links:
             if href.lower().startswith("mailto:"):
                 fail(f"{name}: Contact must route through contact.html, not a "
