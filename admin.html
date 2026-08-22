@@ -19,7 +19,7 @@
     <img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales" class="admin-logo">
     <p class="kicker">PRIVATE WORKSPACE</p>
     <h1>Masinloc Connect Admin</h1>
-    <p class="muted">Review submissions, manage listings, verify stories, handle resume requests, and review security events.</p>
+    <p class="muted">Review community submissions, Sambal Tina contributions, listings, resume requests, and security events.</p>
     <form id="passwordForm" class="stack">
       <label>Email<input id="email" type="email" autocomplete="email" required></label>
       <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
@@ -39,7 +39,7 @@
 
   <main class="dashboard">
     <section class="hero-row">
-      <div><p class="kicker">SUBMISSION CONTROL CENTER</p><h1>Community submissions</h1><p class="muted">Everything here is private until you decide otherwise.</p></div>
+      <div><p class="kicker">SUBMISSION CONTROL CENTER</p><h1>Community submissions</h1><p class="muted">Everything here stays private until it is reviewed and approved.</p></div>
       <button id="exportBtn" class="secondary">Export current view</button>
     </section>
 
@@ -50,6 +50,7 @@
         <div class="tabs" id="tabs">
           <button class="active" data-type="business">Business</button>
           <button data-type="story">Story / History</button>
+          <button data-type="dictionary">Sambal Tina</button>
           <button data-type="professional">Professionals</button>
           <button data-type="resume">Resume Support</button>
           <button data-type="security">Security</button>
@@ -77,6 +78,6 @@
     <div id="detailContent"></div>
   </div>
 </div>
-<script type="module" src="admin.js?v=20260821-1"></script>
+<script type="module" src="admin.js?v=20260822-2"></script>
 </body>
 </html>
