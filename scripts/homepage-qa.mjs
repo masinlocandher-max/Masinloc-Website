@@ -134,6 +134,43 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   await page.close();
 }
 
+/* --- the archive stage --------------------------------------------------- */
+{
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.locator('.archive').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500);
+
+  /* No archival photography exists in the project, so this stage is built from
+     type alone. Every specimen must still carry the apparatus that makes it
+     evidence rather than decoration: the page it came from, and how settled
+     the reading is. */
+  const slips = await page.$$eval('.slip', (els) => els.map((el) => ({
+    page: el.querySelector('.slip-page')?.textContent.trim() || '',
+    word: el.querySelector('.slip-word')?.textContent.trim() || '',
+    gloss: el.querySelector('.slip-gloss')?.textContent.trim() || '',
+    band: el.querySelector('.slip-band')?.textContent.trim() || '',
+    status: el.querySelector('.slip-status')?.textContent.trim() || '',
+  })));
+  if (slips.length < 3) fail(`the archive shows only ${slips.length} specimens`);
+  slips.forEach((slip, i) => {
+    if (!/p\.\s*\d/.test(slip.page)) fail(`archive specimen ${i + 1} cites no archive page`);
+    if (!slip.word) fail(`archive specimen ${i + 1} has no headword`);
+    if (!slip.gloss) fail(`archive specimen ${i + 1} has no gloss`);
+    if (!slip.band) fail(`archive specimen ${i + 1} carries no confidence rating`);
+    if (!slip.status) fail(`archive specimen ${i + 1} carries no source status`);
+  });
+
+  /* The unsettled reading is the point of the stage; it must survive. */
+  const unsettled = await page.$$eval('.slip-check', (els) => els.length);
+  if (unsettled < 1) fail('the archive no longer shows an unsettled reading');
+
+  /* No invented archival imagery, ever. */
+  const imgs = await page.$$eval('.archive img', (els) => els.map((el) => el.src));
+  if (imgs.length) fail(`the archive stage carries ${imgs.length} image(s); it is built from type only`);
+  await page.close();
+}
+
 /* --- the page without JavaScript ---------------------------------------- */
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, javaScriptEnabled: false });

@@ -186,6 +186,63 @@ def phone_list() -> str:
     return "\n".join(rows)
 
 
+# Real entries from the archive, chosen to show the whole confidence ladder
+# including a damaged reading. Nothing here is written by hand: the gloss, the
+# page reference and the status are all looked up in data/sambal-tina.json, so
+# a specimen cannot drift from the record it is quoting.
+SPECIMENS = [
+    ("lanoman",   "Resolved against a second source."),
+    ("abagat",    "Cross-checked between the main body and the printed index."),
+    ("aapo-apon", "Readable in the main body, not yet confirmed elsewhere."),
+    ("ab6h",      "A damaged glyph. The reading stays open rather than tidied."),
+]
+
+
+def specimens() -> list[dict]:
+    cols = DICT["columns"]
+    T, P, E, PG, S, CF = (cols.index(k) for k in ("tina", "pos", "en", "pages", "status", "conf"))
+    statuses = DICT["statuses"]
+    found = {}
+    for entry in DICT["entries"]:
+        key = str(entry[T]).lower()
+        if key not in found:
+            found[key] = entry
+    out = []
+    for word, why in SPECIMENS:
+        entry = found.get(word)
+        if entry is None:
+            # Never print a specimen the archive does not actually carry.
+            continue
+        conf = entry[CF]
+        out.append({
+            "tina": entry[T],
+            "pos": entry[P] or "",
+            "en": str(entry[E] or "").split(";")[0].split(",")[0].strip(),
+            "pages": entry[PG] or "",
+            "status": statuses[entry[S]] if entry[S] is not None else "",
+            "band": ("strong" if conf >= 4 else "ok" if conf == 3 else "check"),
+            "label": ("Well supported" if conf >= 4 else "Readable" if conf == 3
+                      else "Needs another look"),
+            "why": why,
+        })
+    return out
+
+
+def specimen_slips() -> str:
+    rows = []
+    for i, s in enumerate(specimens()):
+        rows.append(f"""          <li class="slip rise slip-{s['band']}" style="--delay:{i * 80}ms">
+            <p class="slip-page">Archive p.&nbsp;{esc(s['pages'])}</p>
+            <p class="slip-word">{esc(s['tina'])}</p>
+            <p class="slip-pos">{esc(s['pos'])}</p>
+            <p class="slip-gloss">{esc(s['en'])}</p>
+            <p class="slip-why">{esc(s['why'])}</p>
+            <p class="slip-band"><span class="dot"></span>{esc(s['label'])}</p>
+            <p class="slip-status">{esc(s['status'])}</p>
+          </li>""")
+    return "\n".join(rows)
+
+
 def counts() -> dict:
     entries = DICT["entries"]
     conf = DICT["columns"].index("conf")
@@ -285,7 +342,7 @@ def render() -> str:
     <div class="discover-inner">
       <div>
         <p class="stage-label">Place</p>
-        <h2 id="discoverTitle" class="market-heading" style="margin:0 0 18px;font:400 clamp(30px,4.2vw,58px)/1.04 var(--font-editorial);letter-spacing:-.02em">Eight places we grew up in.</h2>
+        <h2 id="discoverTitle" class="discover-title">Eight places we grew up in.</h2>
         <p class="stage-lead">Photographed properly, named properly, and close enough to reach on a weekend.</p>
         <ul class="place-list">
 {discover_rows()}
@@ -342,43 +399,33 @@ def render() -> str:
   </section>
 
   <!-- 05 ................................................................. -->
-  <section class="record" aria-labelledby="recordTitle">
-    <div class="record-inner">
-      <div class="record-head rise">
+  <section class="archive" aria-labelledby="archiveTitle">
+    <div class="archive-inner">
+      <div class="archive-head rise">
         <p class="stage-label">The record</p>
-        <h2 id="recordTitle">We would rather show the page than ask you to take our word.</h2>
+        <h2 id="archiveTitle">We would rather show you the page.</h2>
+        <p class="stage-lead">Masinloc&rsquo;s written history is mostly a language, and that language is mostly one damaged archive. Here is what we hold, and exactly how sure we are of it.</p>
       </div>
-      <dl class="record-grid">
-        <div class="record-fact rise"><dt>{n['total']:,}</dt><dd>Entries copied out of the archive by hand and checked one at a time.</dd></div>
-        <div class="record-fact rise" style="--delay:90ms"><dt>{n['strong']:,}</dt><dd>Well supported: found in more than one place, or matched against the printed index.</dd></div>
-        <div class="record-fact rise" style="--delay:180ms"><dt>{n['check']}</dt><dd>Still unsettled, and left in the open rather than quietly tidied up.</dd></div>
-      </dl>
-      <p class="record-note rise">Verified History is being built the same way, and it is deliberately empty until there is something with a source behind it. Oral accounts, local memory and anything still being checked stay clearly separated from what the records can carry. <a href="verified-history.html">See how we are gathering it</a>.</p>
+
+      <ol class="layers">
+        <li class="layer rise"><span class="layer-no">Layer 01</span><h3>The main body</h3><p>Read straight through, entry by entry, and transcribed as it stands. Nothing corrected on the way past.</p></li>
+        <li class="layer rise" style="--delay:80ms"><span class="layer-no">Layer 02</span><h3>The printed index</h3><p>Read separately, then matched against the body. Where the two agree, the reading is firm.</p></li>
+        <li class="layer rise" style="--delay:160ms"><span class="layer-no">Layer 03</span><h3>The doubtful letters</h3><p>Every unclear glyph revisited on its own and rated. Where it stays unclear, it is published unclear.</p></li>
+      </ol>
+
+      <p class="archive-kicker rise">Four entries, as they actually sit in the record</p>
+      <ul class="slips">
+{specimen_slips()}
+      </ul>
+
+      <div class="archive-close rise">
+        <p class="archive-count"><strong>{n['check']}</strong> entries still read like the last one. Every one is left in the open, because a tidy invention would outlive us in a language with very little written down.</p>
+        <p class="archive-note">Event history &mdash; dates, names, what happened when &mdash; is not here yet. Verified History stays deliberately empty until there is something with a source behind it, and oral accounts will always be marked as what they are. <a href="verified-history.html">See how we are gathering it</a>.</p>
+      </div>
     </div>
   </section>
 
   <!-- 06 ................................................................. -->
-  <section class="market" aria-labelledby="marketTitle">
-    <div class="market-inner">
-      <p class="stage-label rise">Trade</p>
-      <h2 id="marketTitle" class="rise">Made here.<br>Found here.</h2>
-      <div class="market-body">
-        <p class="stage-lead rise">Masinloc runs on small businesses: the ones on the highway, the ones at the market, the ones with no sign at all. The marketplace opens with real businesses or not at all, so it starts with yours.</p>
-        <div class="market-open rise" style="--delay:90ms">
-          <h3>List a Masinloc business</h3>
-          <p>Free, and reviewed by a person before anything is published.</p>
-          <ol class="market-steps">
-            <li><b>1</b><span>Send your business through Masinloc Connect.</span></li>
-            <li><b>2</b><span>We check the details and come back to you if anything is unclear.</span></li>
-            <li><b>3</b><span>Once it is confirmed, it goes on the map for everyone here.</span></li>
-          </ol>
-          <p style="margin-top:22px"><a class="btn btn-ink" href="connect.html">Add your business</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 07 ................................................................. -->
   <section class="community" aria-labelledby="communityTitle">
     <div class="community-inner">
       <div class="rise">
@@ -395,7 +442,7 @@ def render() -> str:
     </div>
   </section>
 
-  <!-- 08 ................................................................. -->
+  <!-- 07 ................................................................. -->
   <section class="close" aria-labelledby="closeTitle">
     <div class="close-inner">
       <h2 id="closeTitle" class="rise">What will you discover next?</h2>
