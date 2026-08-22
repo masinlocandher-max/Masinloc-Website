@@ -2,21 +2,14 @@
    This file intentionally overrides presentation only; submission logic stays untouched. */
 
 :root{
-  --blue:#0D3B9E;
-  --blue-bright:#1E63E9;
-  --red:#E61E25;
-  --yellow:#FFC700;
-  --navy:#061A46;
-  --ink:#111827;
-  --text:#3B465F;
-  --muted:#6E778C;
-  --line:#E6E9F0;
-  --soft:#F7F8FB;
+  /* Palette comes from tokens.css. Note that --ease here is a timing
+     function; the editorial layer uses the same name for a full transition
+     shorthand, so Masinloc Connect keeps its own definition. */
   --shadow:0 18px 55px rgba(3,17,47,.08);
   --shadow-hover:0 22px 65px rgba(3,17,47,.13);
   --radius:18px;
   --ease:cubic-bezier(.16,1,.3,1);
-  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Arial,sans-serif;
+  --sans:var(--font-ui);
 }
 
 body{font-family:var(--sans);color:var(--ink);background:#fff;text-rendering:optimizeLegibility}
@@ -101,7 +94,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .step-help{font-size:13px;line-height:1.62;color:var(--muted);margin-bottom:26px;max-width:680px}
 .field-grid{gap:18px}
 .field label{font-size:11px;letter-spacing:.02em;margin-bottom:7px;color:var(--ink)}
-.form-card input,.form-card textarea,.form-card select{min-height:48px;border:1px solid #D9DEE8;border-radius:11px;padding:13px 14px;font-size:14px;color:var(--ink);transition:border-color 180ms ease,box-shadow 180ms ease,background-color 180ms ease}
+.form-card input,.form-card textarea,.form-card select{min-height:48px;border:1px solid #D9DEE8;border-radius:11px;padding:13px 14px;font-size:var(--control-font);color:var(--ink);transition:border-color 180ms ease,box-shadow 180ms ease,background-color 180ms ease}
 .form-card textarea{min-height:130px;line-height:1.55}
 .form-card input:hover,.form-card textarea:hover,.form-card select:hover{border-color:#BFC8D8}
 .form-card input:focus,.form-card textarea:focus,.form-card select:focus{border-color:var(--blue-bright);box-shadow:0 0 0 4px rgba(30,99,233,.10)}
@@ -132,24 +125,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .success-view{background:var(--soft);padding:96px 22px}.success-panel{max-width:640px;border-radius:22px;box-shadow:var(--shadow);padding:54px}.success-mark{width:68px;height:68px;font-size:28px}.success-panel h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:42px;color:var(--navy)}.success-panel>p{font-size:14px}.ref-box{width:230px;border-radius:12px;padding:15px}.ref-box small{font-size:9px}.ref-box strong{font-size:17px}.success-small{font-size:12px!important;line-height:1.6}.success-buttons button{border-radius:999px;padding:12px 16px;font-size:10px}
 
 @media(max-width:800px){
-  .overlay-nav{height:108px;padding:10px 18px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px}
-  .overlay-nav img{width:142px}
-  .overlay-nav nav{width:100%;gap:18px;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;padding:0 0 3px;scrollbar-width:none}
-  .overlay-nav nav::-webkit-scrollbar,.form-header nav::-webkit-scrollbar{display:none}
-  .overlay-nav nav a{font-size:10px!important;flex:0 0 auto;padding:7px 0!important}
+  /* Mobile navigation for both headers belongs to connect-shell.css, which
+     loads after this file. Nothing about the header bar is set here. */
   .landing-view .hero{height:610px;min-height:610px}
   .landing-view .hero-fade{background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.83) 42%,rgba(255,255,255,.30) 70%,rgba(255,255,255,.04) 100%)}
-  .landing-view .hero-copy{left:22px;right:22px;top:142px;transform:none;max-width:none}
+  .landing-view .hero-copy{left:22px;right:22px;transform:none;max-width:none}
   .landing-view .hero-copy h1{font-size:clamp(52px,17vw,76px)}
   .landing-view .manifesto{font-size:15px}.landing-view .intro{font-size:12px;max-width:340px}
   .quick-choices{padding:50px 18px 74px}
   .quick-grid{grid-template-columns:1fr;gap:12px}
   .quick-card{min-height:0;padding:20px;grid-template-columns:54px 1fr 24px}
-  .chooser-view{padding-top:108px}.chooser-content{padding:42px 18px 64px}.chooser-grid{grid-template-columns:1fr;max-width:520px}.selection-card{min-height:0;padding:24px 22px}.selection-card p{max-width:340px}
-  .form-header{height:auto;min-height:108px;padding:11px 18px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:8px}
-  .form-header img{width:142px}
-  .form-header nav{width:100%;gap:18px;overflow-x:auto;overscroll-behavior-x:contain;white-space:nowrap;scrollbar-width:none;padding-bottom:2px}
-  .form-header nav a{font-size:10px!important;flex:0 0 auto}
+  .chooser-content{padding:42px 18px 64px}.chooser-grid{grid-template-columns:1fr;max-width:520px}.selection-card{min-height:0;padding:24px 22px}.selection-card p{max-width:340px}
   .form-grid{grid-template-columns:1fr;padding:0 16px 62px}.category-aside{display:grid;grid-template-columns:54px 1fr;gap:13px;align-items:center;padding:0}.side-icon{width:54px;height:54px;margin:0}.category-aside h3{margin:0 0 4px}.category-aside p{max-width:none}
   .progress-rail{margin:20px 14px 34px}.step-node strong{font-size:9px}
   .form-card{border-radius:18px;padding:24px 18px}.field-grid,.option-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
@@ -167,3 +153,41 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 }
+
+/* Tablet range ------------------------------------------------------------
+   Between the 800px mobile breakpoint and the desktop layout, the three-column
+   choice grid could not shrink below its content and pushed 18px past the
+   viewport at iPad-portrait width. minmax(0,1fr) lets the columns actually
+   shrink; two columns keep the cards readable at this size. */
+@media(min-width:801px) and (max-width:980px){
+  .quick-grid,.chooser-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quick-card{grid-template-columns:52px minmax(0,1fr) 24px;padding:20px}
+  .quick-choices{padding-left:24px;padding-right:24px}
+  .chooser-content{padding-left:24px;padding-right:24px}
+  .form-grid{grid-template-columns:132px minmax(0,1fr);gap:26px}
+}
+
+/* A flexible grid column defaults to min-content, which long unbroken words
+   can force wider than the viewport. Scoped above the mobile breakpoint so it
+   cannot override the single-column phone layout declared earlier. */
+@media(min-width:981px){
+  .quick-grid,.chooser-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .field-grid,.option-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.quick-card p,.selection-card p,.category-aside p{overflow-wrap:anywhere}
+
+/* Legibility floors -------------------------------------------------------
+   The minified Connect base sets several labels at 7-9px, which is below what
+   anyone can comfortably read. */
+.form-tools button,.form-tools span,.back-link,.save-later{font-size:12px}
+.review-row span,.ref-box small{font-size:10px;letter-spacing:.1em}
+.review-row strong{font-size:13px}
+.consent label,.error,.option-error,.consent-error{font-size:12px}
+.about-label,.step-kicker{font-size:11px}
+.primary-button,.success-buttons button,.prev,.next,.modal-actions button,
+.resume-bar button{font-size:12px}
+.success-small{font-size:13px!important}
+.site-footer .footer-brand p{font-size:12px;line-height:1.7}
+.site-footer .footer-item span{font-size:10px}
+.site-footer .footer-item strong,.site-footer .footer-item a{font-size:13px}
+.site-footer .footer-bottom{font-size:11px}

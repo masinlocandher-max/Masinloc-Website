@@ -1,17 +1,6 @@
 /* Responsive navigation and brand-consistency shell for Masinloc Connect.
    Presentation only: submission and data logic remain untouched. */
 
-:root{
-  --masinloc-blue:#0D3B9E;
-  --masinloc-blue-bright:#1E63E9;
-  --masinloc-red:#E61E25;
-  --masinloc-yellow:#FFC700;
-  --masinloc-navy:#061A46;
-  --masinloc-navy-deep:#03112F;
-  --masinloc-ink:#111827;
-  --masinloc-line:#E6E9F0;
-}
-
 .overlay-nav,
 .form-header{
   background:rgba(255,255,255,.94)!important;

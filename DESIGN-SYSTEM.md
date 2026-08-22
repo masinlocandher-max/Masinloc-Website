@@ -4,7 +4,15 @@ The website should feel like one Masinloc product across editorial pages, commun
 
 ## Locked identity
 
+All colours below are defined **once**, in `tokens.css`, which every surface
+links before any other stylesheet. No page stylesheet may restate a brand hex,
+and no script may hardcode one — an inline style beats every stylesheet, which
+is exactly how Masinloc Connect drifted onto a superseded palette. The
+`Design consistency` check fails on any identity colour found outside
+`tokens.css`.
+
 - Logo asset: `assets/masinloc-logo.webp`
+- Favicon: `assets/favicon.svg` (with `assets/apple-touch-icon.png`)
 - Primary blue: `#0D3B9E`
 - Bright blue: `#1E63E9`
 - Red: `#E61E25`
@@ -14,6 +22,8 @@ The website should feel like one Masinloc product across editorial pages, commun
 - Ink: `#111827`
 - Soft surface: `#F7F8FB`
 - Divider: `#E6E9F0`
+- Yellow ink: `#8A5A00` — stands in for yellow wherever the colour carries
+  text or sits behind white type, where `#FFC700` fails contrast.
 
 The blue-red-yellow rule is a restrained brand accent, not a decorative pattern to repeat everywhere.
 
@@ -45,11 +55,95 @@ Every public page shows the same destinations, labels, order, logo, mobile menu 
 
 Files: Home, A Closer Look, Verified History, Masinloc Bulletin.
 
-Use `site.css`, `site-polish.css`, and `site.js`. These pages use generous white space, editorial serif headlines, clean dividers, restrained blue-red-yellow accents, deep-navy footer treatment, and subtle motion.
+Use `tokens.css`, `site.css`, `site-polish.css`, and `site.js`. These pages use generous white space, editorial serif headlines, clean dividers, restrained blue-red-yellow accents, deep-navy footer treatment, and subtle motion.
+
+### Sambal Tina dictionary
+
+A sub-page of A Closer Look rather than a seventh primary destination, so the
+permanent six-item navigation does not grow each time a section gains a detail
+page. It keeps the editorial shell and adds `sambal-tina.css` for the search
+and entry layout. Sub-pages are declared in `scripts/check-design-consistency.py`,
+which validates their shell while expecting the parent to hold the
+current-page state.
+
+Provenance is part of the design here, not decoration: an entry shows its
+review status and archive page alongside the word.
+
+Interaction on this page is reference-grade, not decorative. Search state
+(term, status filter, letter) is written to the URL so a result can be linked
+and returned to; `/` reaches the search field; filter chips carry live counts;
+a headword can be copied in one action. All of it is enhancement — the page's
+purpose, method, legend and terms are complete in HTML without JavaScript.
+
+### Who we are writing for
+
+**The first readers are Masinloqueños.** Not tourists, not researchers, not a
+tourism board. People who already live here, or grew up here and moved away.
+
+This decides the voice completely, and it is the easiest thing on the site to
+get wrong. "Come and meet Masinloc", "Wait until you see Masinloc",
+"handy whether you are visiting" — all of it addresses the reader as a
+stranger being shown around their own town. Nobody who has swum at Bacala
+every summer needs to be introduced to it.
+
+Write as one Masinloqueño to another:
+
+- **Assume the knowledge.** "You know these eight already", not "discover
+  eight hidden gems". Recognition, not revelation.
+- **Say "our".** Our language, our past, our places. The reader is inside the
+  "we", never the audience for it.
+- **Use the details only locals hold.** Which road floods first, whose lola
+  tells the best stories. Specifics earn more trust than adjectives.
+- **A little Filipino where it lands naturally** — "Ikaw naman", "Wala pa kami
+  rito". Masinloc Connect already mixes languages; the rest of the site can
+  too. Never decorative, never more than the sentence needs.
+- **Warm, not promotional.** Friendly the way a neighbour is friendly. No
+  brochure adjectives, no "hidden paradise", no selling the place to the
+  people who live in it.
+
+Visitors will arrive later and will be perfectly well served by copy written
+honestly for locals. It does not work the other way round.
+
+Two things the warmth must never cost:
+
+- **Accuracy.** Verification labels stay exact. An entry that needs another
+  look says so plainly; friendliness never softens a factual claim, and we do
+  not describe an unresolved reading as anything but unresolved.
+- **Dignity.** Playful, never cutesy. No exclamation marks stacked up, no
+  jokes at the expense of the place or its people.
+
+### Responsive standard in practice
+
+`scripts/responsive-qa.mjs` checks every public page at 21 widths from 320px
+to 2560px, including both sides of each breakpoint. It fails on horizontal
+overflow and on visible text under 10px. Breakpoint edges matter: a layout can
+be correct on a phone and on a desktop and still break at 834px, which is
+exactly what happened to the Masinloc Connect choice grid.
+
+### Places in Masinloc
+
+A sub-page of A Closer Look. This is the one surface where the shared editorial
+restraint gives way to full-bleed photography: the picture is the page, and type
+sits on it rather than beside it in a card.
+
+- Each place fills the viewport: photograph behind, a scrim carrying it into
+  the deep navy, and the name in editorial serif at display size.
+- Locality sits under the name in small uppercase; the rhyme follows as the
+  emotional line. Nothing else competes.
+- Alternating sides give the sequence a rhythm; the scrim flips with it.
+- Motion is slow and small — a counter-drift of at most 38px and a settle on
+  the copy. It should feel alive, not seasick.
+- Mobile is art-directed, not compressed: the same full-bleed frame, a crop
+  weighted to the subject, a full-width action, and the index rail as a
+  horizontal scroller.
+
+The palette is unchanged — deep navy, white, and yellow for the index and
+numerals. Photography is never AI-recreated, re-cropped beyond framing, or
+substituted; the mapping in `data/locations.json` is fixed.
 
 ### Masinloc Connect
 
-Masinloc Connect is a functional submission product, so its forms and category interactions may use a more application-like layout. It must still use the same logo, palette, navigation order, typography hierarchy, footer family, motion restraint, and responsive standards. Its presentation layers are `styles.css`, `connect-polish.css`, and `connect-shell.css`.
+Masinloc Connect is a functional submission product, so its forms and category interactions may use a more application-like layout. It must still use the same logo, palette, navigation order, typography hierarchy, footer family, motion restraint, and responsive standards. Its presentation layers are `tokens.css`, `styles.css`, `connect-polish.css`, and `connect-shell.css`. Mobile navigation for both Connect headers belongs to `connect-shell.css` alone; `connect-polish.css` must not set the header bar, or the two layers fight and one silently wins.
 
 ### Admin workspace
 
@@ -81,6 +175,8 @@ The 404 page is a deliberate exception: a minimal deep-navy recovery screen usin
 - No horizontal overflow.
 - Navigation becomes a deliberate hamburger/dropdown system.
 - Touch targets should be at least approximately 44 px.
+- Form controls use `--control-font` (16 px minimum). Anything smaller makes
+  mobile Safari zoom the page on focus.
 - Important copy and calls to action must remain legible over imagery.
 
 ## Release gate
@@ -89,6 +185,6 @@ A stage is not ready until all three checks pass:
 
 - Site Integrity
 - Design Consistency
-- Browser QA
+- Browser QA (which includes Masinloc Connect and Sambal Tina dictionary checks)
 
 Browser QA must include desktop and phone-width rendering and screenshots. Visual review happens from those screenshots before production merge.

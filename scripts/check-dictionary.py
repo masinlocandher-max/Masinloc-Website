@@ -98,7 +98,11 @@ for group in phrasebook:
 PAGE = ROOT / "sambal-tina.html"
 if PAGE.is_file():
     page_text = PAGE.read_text(encoding="utf-8")
-    rendered = " ".join(re.sub(r"<[^>]+>", " ", page_text).split())
+    # Script and style bodies are not copy. JSON-LD in particular is machine
+    # metadata and is validated by scripts/check-seo.py instead; leaving it in
+    # here would judge structured data by rules written for prose.
+    readable = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", page_text)
+    rendered = " ".join(re.sub(r"<[^>]+>", " ", readable).split())
     rendered_lower = rendered.lower()
 
     if f"{len(entries):,}" not in rendered:

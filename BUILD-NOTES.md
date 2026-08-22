@@ -6,6 +6,7 @@ This repository is built deliberately by stages. Each stage must remain stable, 
 
 - Home
 - A Closer Look
+  - Sambal Tina Dictionary
 - Verified History
 - Masinloc Bulletin
 - Masinloc Connect
@@ -55,24 +56,187 @@ These are not code regressions and cannot be completed from repository code alon
 - Protect the GitHub `main` branch with required status checks when repository settings access is available. Until then, the merge workflow and written branch policy are operational guardrails rather than a GitHub-enforced rule.
 - Confirm that `masinloc-zambales.com` is attached to the intended production deployment and that the deployment source is this repository's `main` branch. Hosting/domain ownership is outside repository code and must be verified at the hosting account.
 
+## Sambal Tina dictionary
+
+**The Masinloc Sambal Tina Dictionary** is a record of the **Mabayani Project
+by FMB**, and is credited to the project on the page. The compilation work —
+reading the source archive across three layers, cross-linking the main body
+against the printed index, reviewing ambiguous glyphs, and assigning
+confidence and source status — is the project's own. The compiler name lives
+in `COMPILER` in `scripts/build-dictionary.py`; changing it there and
+rebuilding updates the data and the page together.
+
+It is published from `data/sambal-tina.json`: one ordinary JSON file, fetched
+normally, built by `scripts/build-dictionary.py` from the project's working
+master.
+
+Every entry carries the archive page it was transcribed from, a source
+status, a confidence rating of 1–5 and any open QA note. **All of that is
+carried through to the published data and shown on the page.** A reader can
+see how far to trust any entry and which page to check it against.
+
+### Rules for this data
+
+1. **Never silently repair a glyph.** Parts of the record survive only as
+   damaged text (`ab61`, `ab6h`, `abanlko`). Publish them under review; do not
+   invent a plausible spelling. A wrong guess enters the permanent record for
+   a language with few written sources.
+2. **Provenance is not optional.** Every entry must keep its confidence
+   rating and archive page reference. `scripts/check-dictionary.py` fails the
+   build if any entry loses either, if the page stops crediting the compiler,
+   if it stops explaining what the page numbers refer to, or if the counts
+   stated in the page copy drift from the data.
+3. **The visitor phrasebook stays at confidence 4 or better** and carries no
+   entry with an open QA note.
+4. **Data is served as data.** No gzip streams, no base64, no split
+   fragments, no runtime reconstruction — see guardrail 2 below. Vercel
+   compresses the file over the wire; 341 KB of JSON ships as about 112 KB.
+5. **Corrections come through review.** Changes are checked against the
+   archive before the published data moves.
+
+### Internal provenance record
+
+*This section is repository documentation. It is not published on the site.*
+
+The wordlist was transcribed from a printed source held by the project, by
+way of the "Sambal Tina Strong Collection" working master exported from the
+project's Drive. The public pages present the dictionary as the project's own
+compilation and refer to the underlying material as "the source archive"
+rather than naming or dating it; that presentation was a deliberate decision
+by the project owner.
+
+Two consequences worth keeping in view:
+
+- **Rights in the underlying wordlist have not been established.** The
+  compilation, transcription, review and presentation are the project's own
+  and are marked as such. The wordlist itself is a separate question.
+  Confirm the position — permission, public domain, or government issue —
+  before printing the dictionary, licensing the data onward, or promoting it
+  beyond this site.
+- **The page numbers only mean something against the archive they came
+  from.** Keep the archive intact and retrievable. If it is ever lost, the
+  citations become unverifiable and the confidence ratings lose their basis.
+
+## Photography
+
+**Google Drive is the source of truth for Masinloc photography.** The Drive
+folder `Masinloc Website Asset / Location` holds the originals; `assets/`
+holds only what the project supplied.
+
+`data/photography.json` lists every image the site may display, with its
+origin and what it shows. `scripts/check-photography.py` audits every page on
+every build and fails on:
+
+- an image from Unsplash, Pexels, Shutterstock, Getty, a placeholder service
+  or any other banned source
+- an image loaded from any external host
+- a local image not listed in the manifest
+- a file in `assets/locations/` whose slug is not one of the approved places
+- an unaccounted image sitting in `assets/`
+
+Never substitute AI-generated, stock or placeholder photography for a missing
+original. If a photograph cannot be confidently identified, do not label it as
+a specific place. Presentation may be improved through cropping, overlay,
+layout, typography, motion and colour treatment; the physical identity of a
+place must never be altered.
+
+Two icons — `assets/favicon.svg` and `assets/apple-touch-icon.png` — were
+drawn for this site from the locked palette rather than supplied by the
+project. They are marks, not photography, and the audit reports them for
+review on every run. Replace them whenever a project mark is available.
+
+## Masinloc locations
+
+`data/locations.json` is the source of truth for the eight places. The mapping
+of photograph to place is **fixed by the project**. Do not reassign a
+photograph, substitute stock or generated imagery, or add a place that is not
+listed. `scripts/check-locations.py` fails the build if a section stops using
+its own photograph, if an approved locality or alt text goes missing, or if
+the page references photography for a place that is not on the list.
+
+`destinations.html` is generated from that file by
+`scripts/build-destinations.py`. Every photograph, name, locality and rhyme is
+static HTML; `destinations.js` only adds parallax, index tracking and the
+full-screen viewer.
+
+### The two kinds of Drive asset
+
+The Drive folder holds two different things, and they are not
+interchangeable:
+
+- **`Regular Images`** holds the **raw photographs**. These are the website
+  photography, used full-bleed on `destinations.html`.
+- **`Location`** holds the finished **1:1 pubmats**. Each already carries the
+  logo, place name, description, things-to-do and tags baked in. They are used
+  **whole**, as the shareable card and social image, and never have type laid
+  over them.
+
+Putting a pubmat behind a page headline collides with the type already inside
+it, so never treat a `Location` file as raw photography.
+
+Each raw photograph was matched against the photograph embedded in the
+correspondingly labelled pubmat, so the place name comes from the project's
+own labelling rather than from reading the image. `IMG_9143.JPG` matches no
+pubmat, cannot be tied to a named place, and is recorded as unassigned in
+`data/photography.json`. It is not used and must not be labelled as a
+location.
+
+The things-to-do and tags on each destination are transcribed verbatim from
+that place's pubmat. Nothing there is invented.
+
+### Order on a destination
+
+**Rhyme, then things to do.** The rhyme is the line that lands; the things to
+do are the practical follow-up. `scripts/check-locations.py` fails if that
+order is reversed.
+
+The pubmat's prose description is kept in `data/locations.json` and printed on
+the downloadable card, but is not rendered on the page: it restates the rhyme
+("A refreshing riverside retreat with flowing clear waters" against "Where
+cool waters flow and green forests gleam"), and the rhyme is the better line.
+
+### Focal points
+
+Each place carries a `focus` — a CSS `object-position`. Four of the originals
+are portrait and lose their subject to a plain centre crop in a landscape
+frame: Coto Kidz Pool's turquoise water sits in the lower half, Sitio Buri's
+hills sit under a large sky. Cropping is presentation, so this is allowed; the
+physical identity of the place is untouched. A place without a focal point
+fails the check.
+
+### Rebuilding the photography
+
+    python3 scripts/build-locations.py <folder-with-originals>
+    python3 scripts/build-destinations.py
+
+The folder takes the raw photograph as `<slug>.jpg|png` (or its Drive
+filename) and the pubmat as `<slug>-card.jpg`. Photographs are built at
+480/768/1120/1536/2048px, cards at 600/1200px, in AVIF, WebP and JPEG.
+Originals run from 798px to 2048px and are **never upscaled**, so each place
+stops at the widest size its own original supports — which is why
+`scripts/build-destinations.py` writes `srcset` from the files that actually
+exist rather than from a fixed list.
+
 ## Non-negotiable guardrails
 
 1. **Real place photography stays real.** Approved destination/community photography must never be AI-recreated, generatively filled, geographically altered, or have structures invented/removed.
-2. **One asset, one job.** Public photography is a normal static asset. Do not split images into HTML tiles, base64 text chunks, runtime reconstruction code, or generated replacements.
+2. **One asset, one job.** Public photography is a normal static asset. Do not split images into HTML tiles, base64 text chunks, runtime reconstruction code, or generated replacements. **This applies to data as much as to images:** a dictionary, a timeline or any dataset ships as one ordinary file that the browser fetches. Compression is the server's job.
 3. **Essential content does not depend on JavaScript.** The hero, page identity, copy and navigation destinations must exist in HTML/CSS. JavaScript may enhance interaction, not unlock basic visibility.
 4. **Facts need provenance.** Do not identify a landmark, church, barangay, destination, person, historical detail or cultural claim more specifically than verified sources support.
 5. **Masinloc Connect is a stable boundary.** Do not refactor its submission flows, data contract, Supabase behavior or admin backend during unrelated public-site work. Backend changes require their own tested change set.
 6. **No fake population.** Empty editorial sections stay intentionally empty until real, reviewed material is ready. Do not add sample headlines, fake dates, placeholder articles, invented authors, or synthetic history just to make a page look populated.
 7. **No unfinished navigation.** Apart from the intentionally complete purpose pages above, do not add navigation, cards, links or promises for unfinished routes. A new stage becomes public only when its page, content, responsive behavior and QA land together.
-8. **Use the shared public design system.** `site.css`, `site-polish.css`, `site-stability.css`, and `site.js` are the shared shell for public editorial pages. Do not create another homepage/hero stylesheet to override them. Masinloc Connect keeps `styles.css`, `connect-polish.css`, and `connect-shell.css` for its functional submission experience, plus the shared stability layer for brand/mobile consistency. Presentation changes must not silently rewrite its data contract.
-9. **Route changes are migrations.** Public URL changes require redirects, canonical updates and sitemap review in the same release. Do not casually rename indexed pages.
-10. **Mobile is a first-class surface.** Every stage must be checked at desktop and phone widths before merge. No horizontal overflow, hidden essential content, or desktop-only navigation assumptions.
-11. **No dead architecture.** Remove superseded loaders, duplicate stylesheets, temporary repair workflows, reconstruction artifacts and abandoned assets after the replacement is verified.
-12. **Keep secrets out of the repository.** Local `.env` files stay ignored. Client-safe public keys do not replace server-side authorization or database policies.
-13. **The `Site integrity` check must pass before merge.** It validates public routes, local references, SEO essentials, the hero binary/dimensions, admin indexing protection, absence of obsolete hero mechanisms, and absence of unfinished future-stage routes.
-14. **No design iteration directly on `main`.** Active work happens on a fresh `agent/*` branch created from the latest `main`. Vercel previews remain disabled for `agent/*` branches unless the deployment policy is deliberately changed. Merge only when the work is ready for production.
-15. **One production merge per finished stage whenever practical.** Batch visual refinements, QA fixes, and editorial-shell changes on the stage branch before merging. Avoid chains of tiny production commits.
-16. **Do not claim a production deployment from a Git merge alone.** After a production merge, verify the hosting deployment and custom domain separately before saying the public site is updated.
+8. **One palette, defined once.** `tokens.css` is the only file that may define an identity colour, and it loads first on every surface. Do not restate a brand hex in a page stylesheet, and never hardcode one in JavaScript — inline styles beat every stylesheet, which is how Masinloc Connect drifted onto a superseded palette. `Design consistency` fails on any identity hex found outside `tokens.css`.
+
+9. **Use the shared public design system.** `site.css`, `site-polish.css`, `site-stability.css`, and `site.js` are the shared shell for public editorial pages. Do not create another homepage/hero stylesheet to override them. Masinloc Connect keeps `styles.css`, `connect-polish.css`, and `connect-shell.css` for its functional submission experience, plus the shared stability layer for brand/mobile consistency. Presentation changes must not silently rewrite its data contract.
+10. **Route changes are migrations.** Public URL changes require redirects, canonical updates and sitemap review in the same release. Do not casually rename indexed pages.
+11. **Mobile is a first-class surface.** Every stage must be checked at desktop and phone widths before merge. No horizontal overflow, hidden essential content, or desktop-only navigation assumptions.
+12. **No dead architecture.** Remove superseded loaders, duplicate stylesheets, temporary repair workflows, reconstruction artifacts and abandoned assets after the replacement is verified.
+13. **Keep secrets out of the repository.** Local `.env` files stay ignored. Client-safe public keys do not replace server-side authorization or database policies.
+14. **The `Site integrity` check must pass before merge.** It validates public routes, local references, SEO essentials, the hero binary/dimensions, admin indexing protection, absence of obsolete hero mechanisms, and absence of unfinished future-stage routes.
+15. **No design iteration directly on `main`.** Active work happens on a fresh `agent/*` branch created from the latest `main`. Vercel previews remain disabled for `agent/*` branches unless the deployment policy is deliberately changed. Merge only when the work is ready for production.
+16. **One production merge per finished stage whenever practical.** Batch visual refinements, QA fixes, and editorial-shell changes on the stage branch before merging. Avoid chains of tiny production commits.
+17. **Do not claim a production deployment from a Git merge alone.** After a production merge, verify the hosting deployment and custom domain separately before saying the public site is updated.
 
 ## Non-Vercel development workflow
 
@@ -97,6 +261,7 @@ These are not code regressions and cannot be completed from repository code alon
 
 - `/`
 - `/a-closer-look.html`
+- `/sambal-tina.html`
 - `/verified-history.html`
 - `/masinloc-bulletin.html`
 - `/connect.html`

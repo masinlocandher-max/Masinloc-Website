@@ -4,3 +4,7 @@ node_modules/
 .env
 .env.*
 !.env.example
+artifacts/
+package-lock.json
+# Supabase CLI scratch, written on any npx supabase invocation.
+supabase/.temp/

@@ -7,10 +7,20 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_PAGES = [
     "index.html",
     "a-closer-look.html",
+    "sambal-tina.html",
+    "destinations.html",
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
 ]
+# Pages that sit under a primary destination rather than being one. They carry
+# the same shared shell, but the current-page state belongs to their parent, so
+# the locked six-item navigation does not grow every time a section gains a
+# detail page.
+SUBPAGES = {
+    "sambal-tina.html": "a-closer-look.html",
+    "destinations.html": "a-closer-look.html",
+}
 EXPECTED_NAV = [
     ("index.html", "Home"),
     ("a-closer-look.html", "A Closer Look"),
@@ -21,6 +31,16 @@ EXPECTED_NAV = [
 ]
 EXPECTED_LOGO = "assets/masinloc-logo.webp"
 STABILITY_CSS = "site-stability.css"
+TOKENS_CSS = "tokens.css"
+FAVICON = "assets/favicon.svg"
+
+# The locked identity colours, plus the superseded palette they replaced.
+# Both belong in tokens.css and nowhere else: a second definition anywhere is
+# how the surfaces drifted apart in the first place.
+LOCKED_COLOURS = [
+    "#0D3B9E", "#1E63E9", "#E61E25", "#FFC700", "#061A46", "#03112F",
+    "#0a34b7", "#e20718", "#ffb90a", "#09236d", "#071d58", "#e3a400",
+]
 errors = []
 
 
@@ -86,12 +106,21 @@ for page_name in PUBLIC_PAGES:
         fail(f"{page_name}: header must use the shared Masinloc logo asset")
 
     current = [item for item in parser.nav_items if item["current"]]
-    expected_current = "index.html" if page_name == "index.html" else page_name
+    expected_current = SUBPAGES.get(page_name, page_name)
     if len(current) != 1 or current[0]["href"] != expected_current:
         fail(f"{page_name}: expected exactly one aria-current=page link for {expected_current}")
 
     if STABILITY_CSS not in parser.stylesheets:
         fail(f"{page_name}: missing shared mobile stability stylesheet {STABILITY_CSS}")
+
+    if TOKENS_CSS not in parser.stylesheets:
+        fail(f"{page_name}: missing shared design tokens {TOKENS_CSS}")
+    elif parser.stylesheets[0] != TOKENS_CSS:
+        fail(f"{page_name}: {TOKENS_CSS} must be the first stylesheet so later "
+             f"layers can build on it")
+
+    if FAVICON not in text:
+        fail(f"{page_name}: missing shared favicon {FAVICON}")
 
     if page_name == "connect.html":
         for required in ("styles.css", "connect-polish.css", "connect-shell.css"):
@@ -116,9 +145,32 @@ if EXPECTED_LOGO not in not_found:
 if STABILITY_CSS not in not_found:
     fail("404.html: missing shared mobile stability layer")
 
-for css in ("site.css", "site-polish.css", "site-stability.css", "connect-polish.css", "connect-shell.css", "admin-polish.css"):
+for css in ("tokens.css", "site.css", "site-polish.css", "site-stability.css",
+            "connect-polish.css", "connect-shell.css", "admin-polish.css",
+            "sambal-tina.css", "destinations.css"):
     if not (ROOT / css).is_file():
         fail(f"missing design-system surface: {css}")
+
+# The palette is defined once, in tokens.css.
+for stylesheet in sorted(ROOT.glob("*.css")):
+    if stylesheet.name == TOKENS_CSS:
+        continue
+    body = stylesheet.read_text(encoding="utf-8")
+    for colour in LOCKED_COLOURS:
+        if colour.lower() in body.lower():
+            fail(f"{stylesheet.name}: defines the identity colour {colour} directly; "
+                 f"reference the token from {TOKENS_CSS} instead")
+
+for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js",
+               "destinations.js"):
+    path = ROOT / script
+    if not path.is_file():
+        continue
+    body = path.read_text(encoding="utf-8")
+    for colour in LOCKED_COLOURS:
+        if colour.lower() in body.lower():
+            fail(f"{script}: hardcodes the identity colour {colour}; inline styles "
+                 f"beat every stylesheet, so use a token instead")
 
 if errors:
     print("DESIGN CONSISTENCY CHECK FAILED")

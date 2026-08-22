@@ -1,0 +1,184 @@
+{
+  "note": "Source of truth for the Masinloc locations experience. Every place carries two assets from the project's Drive: 'photo' is the raw photograph from Masinloc Website Asset / Regular Images, used as the full-bleed website photography; 'card' is the finished 1:1 pubmat from Masinloc Website Asset / Location, used as the social share image and offered as a download. The description, things-to-do and tags are transcribed verbatim from the pubmat. 'caption' is written for the site: what the place is, where it is, and why it matters, asserting nothing the photograph and the project's labelling do not carry. 'alt' describes the photograph and is never used to repeat keywords. Do not reassign a photograph to a different place, substitute stock or generated imagery, or add a place that is not listed here. scripts/check-locations.py enforces that destinations.html and the built assets agree with this file.",
+  "credit": "Mabayani Project by FMB",
+  "verification": "Each raw photograph was matched against the photograph embedded in the correspondingly labelled pubmat, so the place name comes from the project's own labelling rather than from reading the image.",
+  "locations": [
+    {
+      "slug": "hamat-river",
+      "name": "Hamat River",
+      "locality": "Sta. Rita, Masinloc",
+      "rhyme": "Where cool waters flow and green forests gleam, Hamat River feels like nature's quiet dream.",
+      "description": "A refreshing riverside retreat with flowing clear waters, lush trees, and a calm natural setting.",
+      "todo": [
+        "Relax by the river",
+        "Enjoy the scenery",
+        "Take nature photos"
+      ],
+      "tags": [
+        "River",
+        "Nature",
+        "Relax"
+      ],
+      "alt": "Suspension bridge over Hamat River in Sta. Rita, Masinloc, Zambales",
+      "photo": "BE5B5014-0F5A-4A81-93BA-08A9B690681A.png",
+      "card": "456EBF0C-43D9-4526-B815-9B56AE003EE6.jpg",
+      "focus": "50% 58%",
+      "caption": "A river crossed by a suspension bridge in Sta. Rita, and part of Masinloc's inland freshwater landscape."
+    },
+    {
+      "slug": "san-salvador-island",
+      "name": "San Salvador Island",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Where blue waters flow and island shores gleam, San Salvador feels like nature's tropical dream.",
+      "description": "An island destination with quiet shores, open sea views, and a laid-back coastal atmosphere.",
+      "todo": [
+        "Walk the beach",
+        "Explore the shoreline",
+        "Take seaside photos"
+      ],
+      "tags": [
+        "Island",
+        "Beach",
+        "Nature"
+      ],
+      "alt": "Shoreline of San Salvador Island, Masinloc, Zambales, with a fallen tree on the sand",
+      "photo": "IMG_9138.JPG",
+      "card": "F9BD1F30-806E-4D32-B709-D2A92810F8AD.jpg",
+      "focus": "50% 50%",
+      "caption": "An island on the Masinloc coast, and part of the town's marine and coastal environment."
+    },
+    {
+      "slug": "coto-kidz-pool",
+      "name": "Coto Kidz Pool",
+      "locality": "Taltal, Masinloc",
+      "rhyme": "Cool waters waiting beneath the green, Coto Kidz Pool is a refreshing Masinloc scene.",
+      "description": "A well-loved river escape in Taltal known for cool turquoise waters and a relaxing mountain setting.",
+      "todo": [
+        "Swim in clear water",
+        "Enjoy a picnic",
+        "Unwind by the river"
+      ],
+      "tags": [
+        "Swim",
+        "Nature",
+        "Relax"
+      ],
+      "alt": "Turquoise river pool and stone banks at Coto Kidz Pool in Taltal, Masinloc",
+      "photo": "841DD78B-2DB4-4184-9220-E92C746CA3FD.png",
+      "card": "CC917370-85F4-455D-B1CF-EDF82DF4782B.jpg",
+      "focus": "50% 66%",
+      "caption": "A river pool in Taltal used for swimming, in Masinloc's inland uplands."
+    },
+    {
+      "slug": "san-andres-church",
+      "name": "San Andres Church",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Through generations its walls still stay, San Andres welcomes those who come to pray.",
+      "description": "A historic church and heritage landmark that reflects Masinloc's enduring faith and architectural character.",
+      "todo": [
+        "Visit the church",
+        "Admire heritage details",
+        "Take cultural photos"
+      ],
+      "tags": [
+        "Heritage",
+        "Culture",
+        "Faith"
+      ],
+      "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset",
+      "photo": "940D71A1-14B0-467A-B847-3237973DED68.png",
+      "card": "B04AD6A0-1250-437C-A78A-442DBADF8C7C.jpg",
+      "note": "The raw photograph is the front elevation at sunset. The pubmat uses an aerial of the church complex, which is not in Regular Images.",
+      "focus": "50% 46%",
+      "caption": "A stone church in the Masinloc town centre, and the town's best known heritage landmark."
+    },
+    {
+      "slug": "bunga-cave",
+      "name": "Bunga Cave",
+      "locality": "Sta. Rita, Masinloc",
+      "rhyme": "Go beneath the surface, see what time can make, a hidden Masinloc adventure waits inside Bunga Cave.",
+      "description": "A fascinating cave destination featuring striking rock formations and an adventurous underground atmosphere.",
+      "todo": [
+        "Explore the cave",
+        "Admire rock formations",
+        "Take cave photos"
+      ],
+      "tags": [
+        "Adventure",
+        "Nature",
+        "Cave"
+      ],
+      "alt": "Rock formations inside Bunga Cave in Sta. Rita, Masinloc, Zambales",
+      "photo": "8EA195F1-E6EB-416B-B886-55104D2EB5F3.png",
+      "card": "4475E3A1-35E8-4274-A9E8-F50B21337B51.jpg",
+      "focus": "50% 50%",
+      "caption": "A cave with flowstone formations in Sta. Rita, in Masinloc's inland uplands."
+    },
+    {
+      "slug": "bacala-sandbar-guesthouse",
+      "name": "Bacala Sandbar and Guesthouse",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Where calm blue waters meet the sand, Bacala gives you paradise close at hand.",
+      "description": "A serene coastal stop where calm waters, a sandbar setting, and a guesthouse stay create an easy beach escape.",
+      "todo": [
+        "Walk the sandbar",
+        "Enjoy the sea breeze",
+        "Stay by the shore"
+      ],
+      "tags": [
+        "Coast",
+        "Stay",
+        "Views"
+      ],
+      "alt": "Stilt guesthouse standing over shallow water at Bacala Sandbar, Masinloc",
+      "photo": "159B6390-3E2E-4E23-9D23-B87D5E153155.png",
+      "card": "77ABD272-187D-420D-A135-A17F7962D504.jpg",
+      "focus": "50% 42%",
+      "caption": "A sandbar with a stilt guesthouse on the Masinloc coast, and a place to stay by the water."
+    },
+    {
+      "slug": "sitio-buri",
+      "name": "Sitio Buri",
+      "locality": "Inhobol, Masinloc",
+      "rhyme": "Green hills rising beneath the open sky, Sitio Buri is where the breeze wanders by.",
+      "description": "A peaceful hillside destination known for open grasslands, fresh air, and sweeping countryside views.",
+      "todo": [
+        "Enjoy the hill views",
+        "Take a nature walk",
+        "Capture scenic photos"
+      ],
+      "tags": [
+        "Nature",
+        "Views",
+        "Photo Spot"
+      ],
+      "alt": "Green hills under an open sky at Sitio Buri in Inhobol, Masinloc",
+      "photo": "D18D1651-5C13-4E26-90C3-863E3549FE2F.png",
+      "card": "7C0E040D-7009-4E42-9E0C-B5E4AF39C4B4.jpg",
+      "focus": "50% 60%",
+      "caption": "Open grass hills in Inhobol, and part of Masinloc's inland upland country."
+    },
+    {
+      "slug": "masinloc-baywalk",
+      "name": "Masinloc Baywalk",
+      "locality": "Masinloc, Zambales",
+      "rhyme": "Catch the breeze and watch the whole sky glow, at Masinloc Baywalk, sunset puts on the show.",
+      "description": "A bright seaside public space perfect for ocean views, easy strolls, and relaxed afternoons.",
+      "todo": [
+        "Stroll by the bay",
+        "Watch the sunset",
+        "Take waterfront photos"
+      ],
+      "tags": [
+        "Seaside",
+        "Sunset",
+        "Views"
+      ],
+      "alt": "MASINLOC letter sign on the seafront at Masinloc Baywalk, Zambales",
+      "photo": "32FB1D9E-23A6-4AF5-A730-49B843DDD671.png",
+      "card": "16967159-8517-4F18-9B9C-FA1338724144.jpg",
+      "focus": "50% 46%",
+      "caption": "A public seafront walk in the Masinloc town centre, and the site of the town's MASINLOC sign."
+    }
+  ]
+}

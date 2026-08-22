@@ -79,7 +79,10 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.1 });
+      /* threshold stays 0: a section taller than the viewport can never show a
+         given percentage of itself, so any fractional threshold would leave it
+         permanently hidden. */
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
 
     uniqueTargets.forEach((element) => observer.observe(element));
   }
