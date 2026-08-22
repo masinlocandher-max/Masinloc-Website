@@ -22,6 +22,8 @@ jobs:
         run: python3 scripts/check-living-sambal.py
       - name: Validate the backend contract the pages depend on
         run: python3 scripts/check-backend-contract.py
+      - name: Rebuild the Bulletin and verify its evidence trail
+        run: python3 scripts/build-bulletin.py
       - name: Validate search and crawler visibility
         run: python3 scripts/check-seo.py
       - name: Validate design consistency
@@ -31,6 +33,7 @@ jobs:
           node --check site.js
           node --check homepage.js
           node --check contact.js
+          node --check bulletin.js
           node --check security.js
           node --check connect-shell.js
           node --check app-base.js

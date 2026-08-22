@@ -265,8 +265,12 @@ for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glo
         if forbidden in text:
             fail(f"obsolete Stage 1 mechanism referenced in {path.name}: {forbidden}")
 
-# The empty publishing sections must remain purpose-only until real reviewed material exists.
-for rel in ("verified-history.html", "masinloc-bulletin.html"):
+# A publishing section stays purpose-only until it has real reviewed material.
+# The Bulletin has now passed that point: it publishes source-controlled articles
+# whose evidence is checked by scripts/build-bulletin.py, which fails the build
+# on an article that names no source or cites one that does not exist. Verified
+# History has not passed it, and is deliberately still empty of event history.
+for rel in ("verified-history.html",):
     path = ROOT / rel
     if path.is_file():
         text = path.read_text(encoding="utf-8").lower()

@@ -1,0 +1,232 @@
+/* Masinloc Bulletin — archive, article and sources directory.
+   Colour comes from tokens.css. Built on the shared editorial shell. */
+
+.crumbs{max-width:1180px;margin:0 auto;padding:104px clamp(20px,5vw,48px) 0}
+.crumbs ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;
+  font:500 11.5px/1.4 var(--font-ui);letter-spacing:.06em;text-transform:uppercase}
+.crumbs li{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.crumbs li+li::before{content:"/";color:var(--line)}
+.crumbs a{color:var(--blue);text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.crumbs [aria-current]{color:var(--ink)}
+
+.section-label{
+  margin:0 0 14px;font:600 11px/1 var(--font-ui);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+}
+
+/* --- archive ------------------------------------------------------------ */
+
+.bulletin-hero{max-width:1180px;margin:0 auto;padding:112px clamp(20px,5vw,48px) 0}
+.bulletin-hero h1{
+  margin:0;max-width:20ch;
+  font:400 clamp(32px,5vw,62px)/1.03 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--ink);
+}
+.bulletin-hero .lead{
+  margin:20px 0 0;max-width:60ch;
+  font:400 clamp(16px,1.35vw,18.5px)/1.65 var(--font-ui);color:var(--text);
+}
+.bulletin-hero .lead a{color:var(--blue)}
+
+.bulletin-lead{max-width:1180px;margin:0 auto;padding:clamp(34px,6vh,64px) clamp(20px,5vw,48px) 0}
+.lead-card{
+  display:block;text-decoration:none;color:inherit;
+  border:1px solid var(--line);border-left:3px solid var(--blue);
+  border-radius:12px;background:var(--soft);
+  padding:clamp(24px,3.4vw,44px);
+  transition:border-color 240ms var(--ease-standard),transform 240ms var(--ease-standard);
+}
+.lead-card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.lead-card h2{
+  margin:12px 0 0;max-width:22ch;
+  font:400 clamp(26px,3.4vw,44px)/1.08 var(--font-editorial);
+  letter-spacing:-.02em;color:var(--ink);
+}
+
+.story-cat{
+  margin:0;font:600 11px/1 var(--font-ui);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--blue);
+}
+.story-stand{margin:14px 0 0;max-width:62ch;font:400 16px/1.6 var(--font-ui);color:var(--text)}
+.story-meta{margin:16px 0 0;font:400 12.5px/1.5 var(--font-ui);color:var(--muted)}
+
+.bulletin-archive{max-width:1180px;margin:0 auto;padding:clamp(44px,7vh,84px) clamp(20px,5vw,48px) clamp(64px,10vh,120px)}
+.archive-head{
+  display:flex;flex-wrap:wrap;gap:18px;align-items:baseline;
+  justify-content:space-between;
+  padding-bottom:18px;border-bottom:1px solid var(--line);
+}
+.archive-head h2{
+  margin:0;font:400 clamp(22px,2.6vw,32px)/1.1 var(--font-editorial);
+  letter-spacing:-.015em;color:var(--ink);
+}
+.archive-filters{display:flex;flex-wrap:wrap;gap:8px}
+.archive-filters .chip{
+  border:1px solid var(--line);background:var(--white);color:var(--text);
+  border-radius:999px;padding:8px 14px;cursor:pointer;
+  font:500 12.5px/1 var(--font-ui);
+  transition:border-color 200ms var(--ease-standard),color 200ms var(--ease-standard),
+             background 200ms var(--ease-standard);
+}
+.archive-filters .chip span{color:var(--muted);margin-left:5px}
+.archive-filters .chip:hover{border-color:var(--blue);color:var(--blue)}
+.archive-filters .chip.is-active{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.archive-filters .chip.is-active span{color:rgba(255,255,255,.62)}
+
+.story-list{list-style:none;margin:0;padding:0}
+.story{border-bottom:1px solid var(--line)}
+.story a{
+  display:block;text-decoration:none;color:inherit;
+  padding:clamp(24px,3.4vh,38px) 0;
+  transition:padding-left 300ms var(--ease-standard);
+}
+.story a:hover{padding-left:12px}
+.story-title{
+  margin:12px 0 0;max-width:30ch;
+  font:400 clamp(21px,2.4vw,30px)/1.15 var(--font-editorial);
+  letter-spacing:-.015em;color:var(--ink);
+}
+.story a:hover .story-title{color:var(--blue)}
+.archive-empty{margin:28px 0 0;font:400 15px/1.6 var(--font-ui);color:var(--muted)}
+
+/* --- article ------------------------------------------------------------ */
+
+.article{max-width:760px;margin:0 auto;padding:clamp(28px,5vh,52px) clamp(20px,5vw,48px) clamp(64px,10vh,120px)}
+.article-head{padding-bottom:clamp(24px,4vh,40px);border-bottom:1px solid var(--line)}
+.article-cat{
+  margin:0 0 14px;font:600 11px/1 var(--font-ui);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--blue);
+}
+.article-head h1{
+  margin:0;font:400 clamp(30px,4.6vw,52px)/1.06 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--ink);
+}
+.article-stand{
+  margin:18px 0 0;font:400 clamp(17px,1.6vw,20px)/1.55 var(--font-editorial);
+  color:var(--text);font-style:italic;
+}
+.article-meta{
+  display:flex;flex-wrap:wrap;gap:6px 18px;margin:22px 0 0;
+  font:400 12.5px/1.5 var(--font-ui);color:var(--muted);
+}
+.article-meta span+span::before{content:"";}
+
+.article-body{padding-top:clamp(24px,4vh,40px)}
+.article-body p{
+  margin:0 0 1.15em;
+  font:400 clamp(16.5px,1.4vw,18.5px)/1.75 var(--font-ui);
+  color:var(--ink);
+}
+.article-body h2{
+  margin:clamp(34px,5vh,52px) 0 14px;
+  font:400 clamp(21px,2.3vw,28px)/1.2 var(--font-editorial);
+  letter-spacing:-.015em;color:var(--ink);
+}
+.article-list{margin:0 0 1.15em;padding-left:20px}
+.article-list li{margin-bottom:.5em;font:400 17px/1.7 var(--font-ui);color:var(--ink)}
+
+.pull{
+  margin:clamp(28px,4.5vh,44px) 0;padding:0 0 0 clamp(18px,2.6vw,28px);
+  border-left:3px solid var(--yellow);
+}
+.pull p{
+  margin:0;font:400 clamp(19px,2.1vw,26px)/1.35 var(--font-editorial);
+  letter-spacing:-.01em;color:var(--ink);
+}
+
+/* Where the evidence stands, and where it stops. Deliberately quiet: the
+   status is part of the reporting, not a warning label pasted over it. */
+.evidence{
+  margin:clamp(26px,4vh,40px) 0;padding:18px 20px;
+  background:var(--soft);border:1px solid var(--line);
+  border-left:3px solid var(--blue);border-radius:0 8px 8px 0;
+}
+.evidence-label{
+  margin:0 0 6px!important;
+  font:600 10.5px/1 var(--font-ui)!important;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue)!important;
+}
+.evidence p:last-child{margin:0!important;font-size:14.5px!important;line-height:1.6!important;color:var(--text)!important}
+
+.article-elsewhere{
+  margin:clamp(28px,4vh,40px) 0 0!important;padding-top:18px;
+  border-top:1px solid var(--line);
+  font-size:14.5px!important;color:var(--text)!important;
+}
+.article-elsewhere a{color:var(--blue)}
+
+.article-sources,.article-related{margin-top:clamp(38px,6vh,64px)}
+.article-sources h2,.article-related h2{
+  margin:0 0 14px;font:600 11px/1 var(--font-ui);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);
+}
+.article-sources p{margin:0 0 14px;font:400 14.5px/1.6 var(--font-ui);color:var(--text)}
+.article-sources a{color:var(--blue)}
+.article-sources ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.article-sources li{
+  padding:12px 14px;border:1px solid var(--line);border-radius:8px;
+  font:400 14.5px/1.5 var(--font-ui);
+}
+.article-sources li span{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+
+.article-related ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.article-related a{
+  display:block;text-decoration:none;padding:14px 16px;
+  border:1px solid var(--line);border-radius:8px;
+  transition:border-color 220ms var(--ease-standard);
+}
+.article-related a:hover{border-color:var(--blue)}
+.rel-cat{
+  display:block;font:600 10.5px/1 var(--font-ui);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:6px;
+}
+.rel-title{display:block;font:400 18px/1.3 var(--font-editorial);color:var(--ink)}
+
+/* --- sources directory --------------------------------------------------- */
+
+.sources-hero{max-width:900px;margin:0 auto;padding:clamp(28px,5vh,52px) clamp(20px,5vw,48px) 0}
+.sources-hero h1{
+  margin:0;font:400 clamp(30px,4.4vw,52px)/1.05 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--ink);
+}
+.sources-hero .lead p{
+  margin:18px 0 0;font:400 clamp(16px,1.35vw,18px)/1.65 var(--font-ui);color:var(--text);
+}
+.source-section{max-width:900px;margin:0 auto;padding:clamp(38px,6vh,68px) clamp(20px,5vw,48px) 0}
+.source-section:last-of-type{padding-bottom:clamp(64px,10vh,120px)}
+.source-section h2{
+  margin:0;font:400 clamp(22px,2.6vw,32px)/1.1 var(--font-editorial);
+  letter-spacing:-.015em;color:var(--ink);
+}
+.source-blurb{margin:8px 0 0;font:400 15px/1.6 var(--font-ui);color:var(--muted)}
+.source-list{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:16px}
+.source{
+  padding:20px 22px;border:1px solid var(--line);border-radius:10px;
+  background:var(--white);
+  /* The anchor is the evidence address an article links to; make sure a jump
+     does not land it under the fixed navigation. */
+  scroll-margin-top:110px;
+}
+.source:target{border-color:var(--blue);box-shadow:0 0 0 3px rgba(13,59,158,.12)}
+.source h3{margin:0;font:400 20px/1.3 var(--font-editorial);color:var(--ink)}
+.source-who{margin:6px 0 0;font:600 13.5px/1.4 var(--font-ui);color:var(--text)}
+.source-pub{margin:3px 0 0;font:400 13px/1.5 var(--font-ui);color:var(--muted)}
+.source-note{margin:12px 0 0;font:400 14.5px/1.65 var(--font-ui);color:var(--text)}
+.source-tags{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.source-tags li{
+  font:600 10.5px/1 var(--font-ui);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--blue);background:rgba(13,59,158,.08);
+  padding:6px 9px;border-radius:999px;
+}
+.source-link{margin:14px 0 0;font:600 14px/1 var(--font-ui)}
+.source-link a{color:var(--blue)}
+.source-pending{
+  margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--line);
+  font:400 13px/1.55 var(--font-ui);color:var(--muted);font-style:italic;
+}
+
+@media (max-width:640px){
+  .archive-head{flex-direction:column;align-items:flex-start}
+  .article-meta{gap:4px 14px}
+}

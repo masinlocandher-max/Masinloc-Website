@@ -132,13 +132,13 @@ def visible_text(markup: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body))
 
 
-pages = sorted(p for p in ROOT.glob("*.html"))
+pages = sorted(p for p in ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
 titles: dict[str, str] = {}
 descriptions: dict[str, str] = {}
-inbound: dict[str, set[str]] = {p.name: set() for p in pages}
+inbound: dict[str, set[str]] = {p.relative_to(ROOT).as_posix(): set() for p in pages}
 
 for page in pages:
-    name = page.name
+    name = page.relative_to(ROOT).as_posix()
     markup = page.read_text(encoding="utf-8")
     parser = PageParser()
     parser.feed(markup)
@@ -241,10 +241,14 @@ for page in pages:
     # --- internal linking -------------------------------------------------
     internal = [href for href in parser.links
                 if href.endswith(".html") and not href.startswith("http")]
+    here = Path(name).parent
     for href in internal:
         target = href.split("#")[0].split("?")[0]
-        if target in inbound:
-            inbound[target].add(name)
+        resolved = (here / target).as_posix().replace("./", "")
+        while resolved.startswith("../"):
+            resolved = resolved[3:]
+        if resolved in inbound:
+            inbound[resolved].add(name)
     if len(set(internal)) < 3:
         fail(f"{name}: only {len(set(internal))} internal links; a page should "
              f"say where to go next")
@@ -274,7 +278,7 @@ for page in pages:
 
 # Every public page should be reachable from somewhere else on the site.
 for name, sources in inbound.items():
-    if name in PRIVATE or name == "index.html" or name == "404.html":
+    if name in PRIVATE or name in {"index.html", "404.html"}:
         continue
     if not sources:
         notes.append(f"{name} is not linked from any other page")

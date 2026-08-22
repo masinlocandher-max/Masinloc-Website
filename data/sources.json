@@ -1,0 +1,119 @@
+{
+  "note": "The public evidence directory for Masinloc historical, heritage and linguistic articles. Every Bulletin article points at an anchor here rather than carrying its own bibliography. Anchors are permanent once published: articles link to them, so changing an id breaks the evidence trail.",
+  "rules": [
+    "Never list the MABAYANI manuscript, its filename, its page numbers or any internal research workspace as a public source. The manuscript identifies which evidence to look for; the evidence is what gets cited.",
+    "Never invent a URL. Where no verified public copy has been located, publish the accurate bibliographic entry and say the link is still being located.",
+    "Prefer the original publisher, archive or institution over any repost.",
+    "A link is only published here once it has been confirmed to resolve."
+  ],
+  "intro": {
+    "title": "How we source Masinloc history",
+    "body": [
+      "Discover Masinloc publishes local history from academic studies, official records, institutional archives, linguistic scholarship, heritage declarations, maps, and clearly identified community memory. The sources are listed here so anyone can inspect the basis for what we publish.",
+      "This directory is not complete, and it is not meant to look complete. Several questions about Masinloc's past remain open, and some documents named in the historical literature have not yet been located in a public copy. Where that is the case, the entry says so rather than pointing at a substitute."
+    ]
+  },
+  "sections": [
+    {
+      "id": "historical-studies",
+      "title": "Historical studies",
+      "blurb": "Scholarly work on Masinloc and the wider Zambales coast.",
+      "entries": [
+        {
+          "id": "romanillos-masinloc-recollect-mission",
+          "title": "Masinloc, Zambales: Augustinian Recollect Mission (1607–1902)",
+          "author": "Emmanuel Luis A. Romanillos",
+          "publication": "Philippine Social Science Journal, vol. 2, no. 2, 2019, pp. 151–171",
+          "note": "The principal historical study behind most of what this site publishes on the Spanish colonial period in Masinloc: the 1607 arrival of the Recollect mission, the first church of light materials, the 1649 defence of the coast, the construction tradition and restoration history of the stone church, the separation of San Vicente, and the 1901–1902 transition to municipal authority. Page references used on this site fall between 151 and 171.",
+          "tags": ["1607", "1649", "San Andres Church", "Church history"],
+          "link": null,
+          "linkStatus": "Public copy not yet confirmed. The journal is published in the Philippines; a verified link will be added here once located."
+        },
+        {
+          "id": "pascual-1891-account",
+          "title": "1891 Recollect account of the Masinloc church",
+          "author": "Vicente Pascual",
+          "publication": "Nineteenth-century Recollect account, quoted and discussed in Romanillos (2019)",
+          "note": "The source of the tradition that construction of the present stone church began in 1745, and of the finding that the widely repeated 1798 earthquake claim is unreliable. Pascual drew partly on an older book of notable events and partly on oral tradition collected from elders, and stated that the completion date was unknown. This site has not worked from an original copy: the account is used as quoted in Romanillos.",
+          "tags": ["1745", "San Andres Church", "Earthquakes"],
+          "link": null,
+          "linkStatus": "Original not located. Used only as quoted in Romanillos (2019)."
+        }
+      ]
+    },
+    {
+      "id": "heritage",
+      "title": "Heritage and cultural property",
+      "blurb": "Official recognition of Masinloc heritage structures.",
+      "entries": [
+        {
+          "id": "nmp-san-andres",
+          "title": "National Cultural Treasure declaration, San Andres Parish Church",
+          "author": "National Museum of the Philippines",
+          "publication": "NMP Declaration No. 2-2001",
+          "note": "The heritage basis for the National Cultural Treasure status of San Andres Church, declared in 2001 following earthquake damage in 1999 and subsequent restoration.",
+          "tags": ["Heritage", "San Andres Church", "2001"],
+          "link": null,
+          "linkStatus": "Declaration text not yet located in a public online copy. Cited by declaration number."
+        },
+        {
+          "id": "diocese-san-andres-shrine",
+          "title": "Elevation of the parish as the Diocesan Shrine of San Andres",
+          "author": "Diocese of Iba",
+          "publication": "Public church record, 2021",
+          "note": "The public record of the 2021 elevation of the Masinloc parish to a diocesan shrine.",
+          "tags": ["Church history", "2021"],
+          "link": null,
+          "linkStatus": "Diocesan announcement not yet linked to a confirmed public page."
+        }
+      ]
+    },
+    {
+      "id": "language",
+      "title": "Sambal and linguistic sources",
+      "blurb": "Scholarship on the Sambalic languages and the documentation of Masinloc speech.",
+      "entries": [
+        {
+          "id": "sil-tina-sambal-dictionary",
+          "title": "English–Tina Sambal–Pilipino Dictionary",
+          "author": "Sotera B. Elgincolin, Priscilla R. Elgincolin and Hella Goschnick",
+          "publication": "Summer Institute of Linguistics, 1988",
+          "note": "The principal modern lexicographic reference for the language spoken in Masinloc, and itself evidence of how researchers named the language in the late twentieth century. Its title is the reason the label Tina appears in older records.",
+          "tags": ["Sambal Tina", "Dictionary", "1988"],
+          "link": null,
+          "linkStatus": "A verified public copy has not yet been confirmed. Cited bibliographically."
+        },
+        {
+          "id": "stone-sambalic-languages",
+          "title": "The Sambalic Languages of Central Luzon",
+          "author": "Roger Stone",
+          "publication": "Comparative linguistic study",
+          "note": "Used for the Sambalic language-family frame and the history of language labels. Comparative material only: forms recorded for Botolan, Bolinao or Aeta languages are not treated as Masinloc Sambal.",
+          "tags": ["Sambal Tina", "Linguistics"],
+          "link": null,
+          "linkStatus": "Public copy not yet confirmed."
+        },
+        {
+          "id": "himes-central-luzon",
+          "title": "The Central Luzon Group of Languages",
+          "author": "Ronald S. Himes",
+          "publication": "Oceanic Linguistics, vol. 51, no. 2, 2012, pp. 490–537",
+          "note": "Used for the classification placing Sambal within the Central Luzon group alongside Kapampangan.",
+          "tags": ["Sambal Tina", "Linguistics"],
+          "link": null,
+          "linkStatus": "Journal is indexed academically; a verified public link will be added once confirmed."
+        },
+        {
+          "id": "san-miguel-zambal-grammar",
+          "title": "Writings on Zambal grammar and glossary",
+          "author": "Fray Rodrigo de San Miguel",
+          "publication": "Referenced in Romanillos (2019)",
+          "note": "An early missionary grammar and glossary of the Zambal language, named in the Recollect historical literature. The manuscripts have not been located. If recovered they would be the earliest known documentation of the language, and would need critical reading: missionary grammars were made for conversion and imposed foreign categories.",
+          "tags": ["Sambal Tina", "Research gap"],
+          "link": null,
+          "linkStatus": "Manuscripts not located. Listed here as an open research lead."
+        }
+      ]
+    }
+  ]
+}

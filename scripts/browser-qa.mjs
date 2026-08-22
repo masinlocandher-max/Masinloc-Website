@@ -222,9 +222,25 @@ for (const [viewportName, viewport] of viewports) {
         }
       }
 
-      if (pageName === 'verified-history' || pageName === 'bulletin') {
+      // Verified History stays purpose-only until sourced event history exists.
+      // The Bulletin has passed that point and is checked the other way round:
+      // it must actually list stories, and each must carry a date and route to
+      // the evidence directory.
+      if (pageName === 'verified-history') {
         const entryCount = await page.locator('time, .article-card, .article-list, .post-card, .story-card').count();
         if (entryCount !== 0) failures.push(`${viewportName}/${pageName}: purpose page is not empty`);
+      }
+
+      if (pageName === 'bulletin') {
+        const stories = await page.locator('.story, .lead-card').count();
+        if (stories < 2) {
+          failures.push(`${viewportName}/${pageName}: the archive lists ${stories} stories`);
+        }
+        const dated = await page.locator('time[datetime]').count();
+        if (dated < 1) failures.push(`${viewportName}/${pageName}: no story carries a date`);
+        if (!(await page.locator('a[href="sources.html"]').count())) {
+          failures.push(`${viewportName}/${pageName}: does not route to the evidence directory`);
+        }
       }
 
       await revealPage(page);
