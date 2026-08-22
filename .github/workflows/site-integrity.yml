@@ -32,7 +32,9 @@ jobs:
           node --check admin.js
           node --check sambal-tina.js
           node --check sambal-tina-living.js
+          node --check sambal-contribute.js
           node --check scripts/browser-qa.mjs
           node --check scripts/connect-qa.mjs
           node --check scripts/dictionary-qa.mjs
           node --check scripts/living-sambal-qa.mjs
+          node --check scripts/sambal-community-qa.mjs
