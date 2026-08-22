@@ -254,6 +254,17 @@ for page in pages:
         if re.search(rf">\s*{re.escape(lazy)}\s*<", markup, re.I):
             fail(f'{name}: uninformative anchor text: "{lazy}"')
 
+
+    # --- contact routes through the form ---------------------------------
+    # A mailto exposes the address to scrapers and leaves no record an admin
+    # can work from. Contact is a reviewed form; trust.html is the one place a
+    # published address of record belongs.
+    if name != "trust.html":
+        for href in parser.links:
+            if href.lower().startswith("mailto:"):
+                fail(f"{name}: Contact must route through contact.html, not a "
+                     f"mailto link ({href})")
+
     # --- structured data --------------------------------------------------
     for block in parser.jsonld:
         try:

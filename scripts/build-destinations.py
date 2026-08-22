@@ -65,7 +65,7 @@ HEAD = """<!doctype html>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
     <a class="connect-link" href="connect.html">Masinloc Connect</a>
-    <a href="mailto:hello@masinloc-zambales.com">Contact</a>
+    <a href="contact.html">Contact</a>
   </nav>
 </header>
 
@@ -110,7 +110,7 @@ FOOT = """</main>
 
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></div>
+  <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>
 {jsonld}

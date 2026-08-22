@@ -15,7 +15,7 @@ const WIDTHS = [320, 360, 390, 414, 480, 520, 600, 768, 800, 801, 834, 900,
 
 const PAGES = [
   'index.html', 'a-closer-look.html', 'sambal-tina.html', 'destinations.html',
-  'verified-history.html', 'masinloc-bulletin.html', 'connect.html', '404.html',
+  'verified-history.html', 'masinloc-bulletin.html', 'connect.html', 'contact.html', '404.html',
 ];
 
 /* Below this, body text stops being comfortably readable on a phone. */

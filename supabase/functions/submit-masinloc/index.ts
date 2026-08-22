@@ -9,6 +9,7 @@ const configs={
   business:{table:"business_submissions",bucket:"masinloc-business-assets",maxFiles:1,maxFileBytes:10*1024*1024,mime:["image/jpeg","image/png","image/webp"]},
   story:{table:"story_submissions",bucket:"masinloc-story-assets",maxFiles:5,maxFileBytes:25*1024*1024,mime:["image/jpeg","image/png","image/webp","application/pdf"]},
   dictionary:{table:"dictionary_submissions",bucket:null,maxFiles:0,maxFileBytes:0,mime:[]},
+  contact:{table:"contact_submissions",bucket:null,maxFiles:0,maxFileBytes:0,mime:[]},
   professional:{table:"professional_submissions",bucket:null,maxFiles:0,maxFileBytes:0,mime:[]},
   resume:{table:"resume_support_submissions",bucket:"masinloc-resume-assets",maxFiles:1,maxFileBytes:10*1024*1024,mime:["application/pdf"]},
 } as const;
@@ -99,6 +100,19 @@ function rowFor(category:Category,p:Record<string,any>,files:string[]){
       contributor_contact:text(p.contributorContact,240),
       credit_name:p.creditName?text(p.creditName,160):null,
       credit_consent:p.creditConsent===true||p.creditConsent==="yes"||p.creditConsent==="true",
+    };
+  }
+  if(category==="contact"){
+    required(p,["senderName","senderEmail","message"]);
+    const topics=["general","business","language","history","correction","media","other"];
+    const topic=topics.includes(String(p.topic))?String(p.topic):"general";
+    return{
+      sender_name:text(p.senderName,160),
+      sender_email:emailText(p.senderEmail),
+      sender_phone:p.senderPhone?text(p.senderPhone,100):null,
+      topic,
+      subject:p.subject?text(p.subject,200):null,
+      message:text(p.message,6000),
     };
   }
   if(category==="professional"){

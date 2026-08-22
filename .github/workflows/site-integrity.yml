@@ -30,6 +30,7 @@ jobs:
         run: |
           node --check site.js
           node --check homepage.js
+          node --check contact.js
           node --check security.js
           node --check connect-shell.js
           node --check app-base.js

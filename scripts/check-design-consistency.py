@@ -21,13 +21,16 @@ SUBPAGES = {
     "sambal-tina.html": "a-closer-look.html",
     "destinations.html": "a-closer-look.html",
 }
+# Pages that carry the shared shell but are not themselves a nav destination
+# with their own current-page state beyond the one they already mark.
+
 EXPECTED_NAV = [
     ("index.html", "Home"),
     ("a-closer-look.html", "A Closer Look"),
     ("verified-history.html", "Verified History"),
     ("masinloc-bulletin.html", "Masinloc Bulletin"),
     ("connect.html", "Masinloc Connect"),
-    ("mailto:hello@masinloc-zambales.com", "Contact"),
+    ("contact.html", "Contact"),
 ]
 EXPECTED_LOGO = "assets/masinloc-logo.webp"
 STABILITY_CSS = "site-stability.css"

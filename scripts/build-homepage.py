@@ -306,7 +306,7 @@ def render() -> str:
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
     <a href="connect.html">Masinloc Connect</a>
-    <a href="mailto:hello@masinloc-zambales.com">Contact</a>
+    <a href="contact.html">Contact</a>
   </nav>
 </header>
 
@@ -478,7 +478,7 @@ def render() -> str:
         <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
         <a href="connect.html">Masinloc Connect</a>
         <a href="trust.html">Trust &amp; privacy</a>
-        <a href="mailto:hello@masinloc-zambales.com">Contact</a>
+        <a href="contact.html">Contact</a>
       </nav>
     </div>
     <div class="foot-base">
