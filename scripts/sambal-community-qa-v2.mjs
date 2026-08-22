@@ -39,7 +39,9 @@ await page.route('**/functions/v1/submit-masinloc**', async (route) => {
 const response = await page.goto(`${baseURL}/sambal-tina.html`, { waitUntil: 'networkidle' });
 if (!response || response.status() >= 400) fail(`dictionary page returned HTTP ${response?.status() ?? 'no response'}`);
 
-const bodyText = await page.locator('body').innerText();
+/* textContent is used here intentionally: it verifies authored copy even when a
+   responsive/reveal treatment has not yet made a section measurable by innerText. */
+const bodyText = await page.locator('body').textContent() || '';
 for (const required of [
   'We gather it',
   'We verify it',
@@ -54,6 +56,12 @@ for (const required of [
   if (!bodyText.includes(required)) fail(`missing community copy: ${required}`);
 }
 if (/we copied|copied the archive faithfully/i.test(bodyText)) fail('old copy-the-archive framing is still visible');
+
+const correctionButton = page.locator('[data-contribution-type="correction"]').first();
+if (await correctionButton.count() !== 1) fail('Send a correction action is missing');
+else if ((await correctionButton.textContent() || '').trim() !== 'Send a correction') {
+  fail(`correction action has unexpected label: ${(await correctionButton.textContent() || '').trim()}`);
+}
 
 await page.locator('.dict-entry').first().waitFor({ state: 'visible', timeout: 15000 });
 await page.waitForFunction(() => document.querySelector('#daily') && !document.querySelector('#daily').hidden);
@@ -84,7 +92,7 @@ await form.locator('button[type="submit"]').click();
 await page.waitForFunction(() => document.querySelector('#dictionaryFormMessage')?.textContent?.includes('MC-DICT-QA-1'));
 
 await page.locator('[data-close-modal]').first().click();
-await page.locator('[data-contribution-type="correction"]').first().click();
+await correctionButton.click();
 await form.locator('[name="headword"]').fill('salita-test');
 await form.locator('[name="contributionDetails"]').fill('Please correct this spelling to salita-tama.');
 await form.locator('[name="contributorName"]').fill('QA Contributor');
