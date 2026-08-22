@@ -1,0 +1,5 @@
+Contact: mailto:hello@masinloc-zambales.com
+Expires: 2027-08-22T00:00:00Z
+Preferred-Languages: en, fil
+Canonical: https://masinloc-zambales.com/.well-known/security.txt
+Policy: https://masinloc-zambales.com/trust.html
