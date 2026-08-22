@@ -92,6 +92,19 @@ class Chrome(HTMLParser):
             self._buf.append(data.strip())
 
 
+def walk(node) -> list[dict]:
+    """Every dict anywhere in a JSON-LD document, at any nesting depth."""
+    found = []
+    if isinstance(node, dict):
+        found.append(node)
+        for value in node.values():
+            found += walk(value)
+    elif isinstance(node, list):
+        for value in node:
+            found += walk(value)
+    return found
+
+
 def pages() -> list[Path]:
     """Every built HTML page on the site, not only the Bulletin's."""
     found = sorted(ROOT.glob("*.html"))
@@ -131,13 +144,25 @@ def main() -> int:
             except json.JSONDecodeError as err:
                 problems.append(f"{rel}: structured data does not parse ({err})")
                 continue
-            nodes = graph.get("@graph", [graph]) if isinstance(graph, dict) else []
-            for node in nodes:
-                if not isinstance(node, dict):
+            # Walk the whole graph, not just its top level: a Person can sit
+            # nested inside an ItemList item and still be published.
+            #
+            # A Person node is only a problem in two cases. On a Bulletin page
+            # it means the stories have acquired a named author, which is the
+            # thing this guard exists to prevent. Anywhere on the site, a
+            # Person carrying the creator's name is the reveal happening early.
+            # Elsewhere Person is legitimate — the leadership record names
+            # public office holders, and that is the point of it.
+            for node in walk(graph):
+                if node.get("@type") != "Person" or rel == REVEAL_PAGE:
                     continue
-                if node.get("@type") == "Person" and rel != REVEAL_PAGE:
-                    problems.append(f"{rel}: structured data carries a Person node "
+                person = str(node.get("name", "")).lower()
+                if rel.startswith("bulletin/"):
+                    problems.append(f"{rel}: a Bulletin story carries a Person node "
                                     f"({node.get('name')})")
+                elif any(n in person for n in NEEDLES):
+                    problems.append(f"{rel}: structured data names the creator in a "
+                                    f"Person node")
 
         if rel.startswith("bulletin/") or rel == "masinloc-bulletin.html":
             chrome = Chrome()

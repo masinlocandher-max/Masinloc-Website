@@ -24,6 +24,10 @@ jobs:
         run: python3 scripts/check-backend-contract.py
       - name: Rebuild the Bulletin and verify its evidence trail
         run: python3 scripts/build-bulletin.py
+      - name: Verify the MABAYANI creator stays unnamed until the closing story
+        run: python3 scripts/check-mabayani-anonymity.py
+      - name: Verify every municipal leader is presented identically
+        run: python3 scripts/check-leadership.py
       - name: Validate search and crawler visibility
         run: python3 scripts/check-seo.py
       - name: Validate design consistency
@@ -52,6 +56,10 @@ jobs:
           node --check sambal-tina-community.js
           node --check scripts/living-sambal-qa.mjs
           node --check scripts/sambal-community-qa-v2.mjs
+          node --check bulletin.js
+          node --check scripts/mabayani-qa.mjs
+          node --check leadership.js
+          node --check scripts/leadership-qa.mjs
       - name: Validate locations mapping and photography
         run: python3 scripts/check-locations.py
       - name: Audit every photograph on the site

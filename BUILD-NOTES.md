@@ -7,6 +7,7 @@ This repository is built deliberately by stages. Each stage must remain stable, 
 - Home
 - A Closer Look
   - Sambal Tina Dictionary
+  - Municipal Leadership
 - Verified History
 - Masinloc Bulletin
 - Masinloc Connect
@@ -27,6 +28,45 @@ This repository is built deliberately by stages. Each stage must remain stable, 
 ### Verified History
 
 A source-led archive for the documented history of Masinloc. Material belongs here only when it can be supported by records, credible references, archival material, or properly attributed evidence. Documented history must remain clearly separated from oral accounts, local memory, interpretation, and claims still being checked.
+
+### Municipal Leadership
+
+A portrait record of the office of Municipal Mayor: `leadership.html`, built by
+`scripts/build-leadership.py` from `data/leadership.json`. It is a leadership
+archive, not a directory page and not a campaign page.
+
+Rules for this section, enforced by `scripts/check-leadership.py` and
+`scripts/leadership-qa.mjs`:
+
+- **Name and office only.** No terms, dates, number of terms, age, party,
+  election results, achievements, controversies, family relationships,
+  biography, endorsements, slogans or quotations. The guard checks each caption
+  reads as exactly the approved name plus the approved office.
+- **Identical treatment.** One card component, one crop ratio, one width
+  ladder, one encoder quality, for everyone. The build has no per-person
+  quality or size parameter, and the QA measures rendered card boxes, frames,
+  decoded pixels, type and padding across all leaders at three widths.
+- **The incumbent is first, and that is all.** Listing order carries the
+  information that she holds the office; a small `Current` word carries the
+  rest. Her card is never larger. She sits in the same two-track grid as the
+  former mayors precisely so that her card cannot drift wider as the viewport
+  narrows.
+- **Former mayors are not ranked.** They appear in the order supplied. No
+  chronology is inferred and no term dates are invented.
+- **Approved spelling is fixed**, initials and honorifics included.
+- **Portraits** come from the project's approved originals, which are not
+  committed. Rebuild derivatives with
+  `python3 scripts/build-leadership.py <folder-with-originals>`. No AI
+  portraits, no facial alteration, no per-person retouching.
+- **One factual claim**, exactly as approved: *Masinloc has been continuously
+  led by women since 2010*, presented as a continuity across three
+  administrations and naming all three women equally. It must not be inflated
+  into a "first", "longest" or national record claim; the guard fails on those
+  words inside that block. A stronger statement needs an authoritative source
+  first, and would then belong in `data/sources.json` like every other sourced
+  claim.
+
+This page is not an official municipal roster, and says so.
 
 ### Masinloc Bulletin
 

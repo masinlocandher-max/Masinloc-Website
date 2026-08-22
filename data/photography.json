@@ -70,5 +70,12 @@
     "origin": "Google Drive - Masinloc Website Asset / Ads",
     "note": "Approved campaign artwork. Each file is a finished design carrying its own logo, headline and copy, so it is shown whole and never cropped, retyped or regenerated. Mapping is fixed in data/campaigns.json; built by scripts/build-campaigns.py.",
     "mapping": "data/campaigns.json"
+  },
+  "leadership": {
+    "directory": "assets/leadership/",
+    "status": "built",
+    "origin": "Google Drive - Mayors",
+    "note": "Painted official portraits of the Municipal Mayor and former Municipal Mayors of Masinloc, supplied by the project. Every portrait is cropped to the same 4:5, resized through the same width ladder and encoded at the same quality by scripts/build-leadership.py — no per-person crop, size, sharpening or retouching. Faces are never altered. Mapping is fixed in data/leadership.json.",
+    "mapping": "data/leadership.json"
   }
 }

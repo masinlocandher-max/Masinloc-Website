@@ -14,7 +14,7 @@ const WIDTHS = [320, 360, 390, 414, 480, 520, 600, 768, 800, 801, 834, 900,
                 980, 981, 1024, 1180, 1280, 1440, 1680, 1920, 2560];
 
 const PAGES = [
-  'index.html', 'a-closer-look.html', 'sambal-tina.html', 'destinations.html',
+  'index.html', 'a-closer-look.html', 'sambal-tina.html', 'destinations.html', 'leadership.html',
   'verified-history.html', 'masinloc-bulletin.html', 'connect.html', 'contact.html', 'sources.html', 'bulletin/was-masinloc-founded-in-1572.html', '404.html',
 ];
 

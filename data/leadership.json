@@ -1,0 +1,88 @@
+{
+  "note": "The Masinloc municipal leadership record. Every profile carries a name and an office, and nothing else. Adding or changing a leader means editing this file and running scripts/build-leadership.py; leadership.html is generated and must never be hand-edited.",
+  "rules": [
+    "Name and office status only. No terms, dates, party, achievements, family relationships, biography or quotations.",
+    "Every portrait is rendered at the same aspect ratio, the same widths and the same quality. No leader is enlarged, sharpened, retouched or framed differently from another.",
+    "The incumbent is listed first because she holds the office. That is an information hierarchy, not a ranking, and it must not be expressed as a larger card or a louder treatment.",
+    "The former mayors are listed in the order supplied. No chronology is inferred and no term dates are invented.",
+    "Spelling of names is fixed. Do not add or remove middle names, initials or honorifics.",
+    "Portraits come from the project's approved originals. No AI portraits, no facial alteration, no per-person beautification."
+  ],
+  "page": {
+    "eyebrow": "Leadership",
+    "title": "The people who have carried the responsibility of leading Masinloc.",
+    "metaTitle": "Municipal Leadership | Masinloc, Zambales",
+    "description": "The Municipal Mayor of Masinloc, Zambales now in office and the mayors who held the office before her, presented as a portrait record of name and office.",
+    "lead": "A portrait record of the office of Municipal Mayor of Masinloc, Zambales. Each profile carries a name and an office, and nothing more: no terms, no dates, no political information.",
+    "provenance": "Discover Masinloc is an independent community platform and not an official municipal government website. For official records and public services, refer to the appropriate government offices."
+  },
+  "sections": {
+    "current": {
+      "heading": "Current Municipal Mayor",
+      "blurb": "The office as it stands now."
+    },
+    "former": {
+      "heading": "Former Municipal Mayors",
+      "blurb": "Different administrations. One continuing history of Masinloc."
+    }
+  },
+  "currentBadge": "Current",
+  "leaders": [
+    {
+      "slug": "hazel-jalata-lim",
+      "name": "Hazel Jalata Lim",
+      "office": "Municipal Mayor",
+      "status": "current",
+      "source": "Hazel Jalata Lim.jpg",
+      "focusY": 0.5,
+      "alt": "Portrait of Hazel Jalata Lim, Municipal Mayor of Masinloc"
+    },
+    {
+      "slug": "arsenia-jalata-lim",
+      "name": "Arsenia Jalata Lim",
+      "office": "Former Municipal Mayor",
+      "status": "former",
+      "source": "Arsenia Jalata Lim.jpg",
+      "focusY": 0.35,
+      "alt": "Portrait of Arsenia Jalata Lim, former Municipal Mayor of Masinloc"
+    },
+    {
+      "slug": "desiree-s-edora",
+      "name": "Desiree S. Edora",
+      "office": "Former Municipal Mayor",
+      "status": "former",
+      "source": "Desiree Edora.jpg",
+      "focusY": 0.5,
+      "alt": "Portrait of Desiree S. Edora, former Municipal Mayor of Masinloc"
+    },
+    {
+      "slug": "jessu-estella-edora",
+      "name": "Engr. Jessu Estella Edora",
+      "office": "Former Municipal Mayor",
+      "status": "former",
+      "source": "Jessu Edora.jpg",
+      "focusY": 0.5,
+      "alt": "Portrait of Engr. Jessu Estella Edora, former Municipal Mayor of Masinloc"
+    },
+    {
+      "slug": "roberto-d-eamilao",
+      "name": "Roberto D. Eamilao",
+      "office": "Former Municipal Mayor",
+      "status": "former",
+      "source": "Roberto Eamilao.jpg",
+      "focusY": 0.5,
+      "alt": "Portrait of Roberto D. Eamilao, former Municipal Mayor of Masinloc"
+    }
+  ],
+  "womenInLeadership": {
+    "heading": "Women in Leadership",
+    "fact": "Masinloc has been continuously led by women since 2010.",
+    "note": "This is a continuity across three administrations, not the achievement of any one of them.",
+    "recognises": [
+      "Desiree S. Edora",
+      "Arsenia Jalata Lim",
+      "Hazel Jalata Lim"
+    ],
+    "claimRule": "Only the sentence above is approved. Do not upgrade it to a national claim — no 'first', no 'longest in the Philippines', no 'record'. Any stronger statement needs an authoritative source first, and would then belong in data/sources.json like every other sourced claim."
+  }
+}

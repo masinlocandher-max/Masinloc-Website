@@ -9,6 +9,7 @@ PUBLIC_PAGES = [
     "a-closer-look.html",
     "sambal-tina.html",
     "destinations.html",
+    "leadership.html",
     "verified-history.html",
     "masinloc-bulletin.html",
     "connect.html",
@@ -20,6 +21,7 @@ PUBLIC_PAGES = [
 SUBPAGES = {
     "sambal-tina.html": "a-closer-look.html",
     "destinations.html": "a-closer-look.html",
+    "leadership.html": "a-closer-look.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.

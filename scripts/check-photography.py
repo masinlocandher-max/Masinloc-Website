@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data" / "photography.json"
 LOCATIONS = ROOT / "data" / "locations.json"
 CAMPAIGNS = ROOT / "data" / "campaigns.json"
+LEADERSHIP = ROOT / "data" / "leadership.json"
 
 IMAGE_SUFFIXES = {".avif", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
 
@@ -71,12 +72,16 @@ manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 approved = {entry["path"]: entry for entry in manifest["approved"]}
 pending_dir = manifest["pending"]["directory"]
 campaign_dir = manifest["campaigns"]["directory"]
+leadership_dir = manifest["leadership"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
 
 campaigns = json.loads(CAMPAIGNS.read_text(encoding="utf-8"))["campaigns"]
 campaign_slugs = {campaign["slug"] for campaign in campaigns}
+
+leaders = json.loads(LEADERSHIP.read_text(encoding="utf-8"))["leaders"]
+leader_slugs = {leader["slug"] for leader in leaders}
 
 pages = sorted(ROOT.glob("*.html"))
 seen: dict[str, list[str]] = {}
@@ -119,6 +124,17 @@ for page in pages:
                      f"listed in data/campaigns.json")
             continue
 
+        # A built leadership portrait: assets/leadership/<slug>-<width>.<ext>.
+        # The width has to be a real ladder step for that person, so a
+        # hand-added file at some other size cannot slip onto the page.
+        if path.startswith(leadership_dir):
+            name = Path(path).stem
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)-(?P<width>\d+)", name)
+            if not match or match.group("slug") not in leader_slugs:
+                fail(f"{page.name}: {path} is not one of the approved portraits "
+                     f"listed in data/leadership.json")
+            continue
+
         # A built location photograph: assets/locations/<slug>-<width>.<ext>
         if path.startswith(pending_dir):
             name = Path(path).stem
@@ -142,7 +158,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
         continue
     relative = path.relative_to(ROOT).as_posix()
     if (relative in approved or relative.startswith(pending_dir)
-            or relative.startswith(campaign_dir)):
+            or relative.startswith(campaign_dir)
+            or relative.startswith(leadership_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

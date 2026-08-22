@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Playwright
         run: |
-          npm install --no-save playwright@1.55.0
+          npm install --no-save playwright@1.55.0 @playwright/test@1.55.0
           npx playwright install --with-deps chromium
 
       - name: Start static server
@@ -61,6 +61,12 @@ jobs:
 
       - name: Run Masinloc locations checks
         run: node scripts/destinations-qa.mjs
+
+      - name: Run MABAYANI flagship checks
+        run: node scripts/mabayani-qa.mjs
+
+      - name: Run municipal leadership checks
+        run: node scripts/leadership-qa.mjs
 
       - name: Run responsive checks across screen sizes
         run: node scripts/responsive-qa.mjs
