@@ -1,5 +1,6 @@
 /* Living-usage provenance for the Sambal Tina dictionary.
    Identity colours remain defined only in tokens.css. */
+@import url('sambal-tina-community.css?v=20260822-1');
 
 .badge-living{
   background:var(--soft);
