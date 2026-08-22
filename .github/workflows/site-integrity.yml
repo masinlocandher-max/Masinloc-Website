@@ -27,6 +27,7 @@ jobs:
       - name: Validate JavaScript syntax
         run: |
           node --check site.js
+          node --check homepage.js
           node --check security.js
           node --check connect-shell.js
           node --check app-base.js
@@ -39,6 +40,7 @@ jobs:
           node --check scripts/dictionary-qa.mjs
           node --check scripts/destinations-qa.mjs
           node --check scripts/responsive-qa.mjs
+          node --check scripts/homepage-qa.mjs
           node --check sambal-tina-living.js
           node --check sambal-tina-community.js
           node --check scripts/living-sambal-qa.mjs

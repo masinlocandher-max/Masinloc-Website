@@ -21,6 +21,7 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data" / "photography.json"
 LOCATIONS = ROOT / "data" / "locations.json"
+CAMPAIGNS = ROOT / "data" / "campaigns.json"
 
 IMAGE_SUFFIXES = {".avif", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
 
@@ -69,9 +70,13 @@ class ImageParser(HTMLParser):
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 approved = {entry["path"]: entry for entry in manifest["approved"]}
 pending_dir = manifest["pending"]["directory"]
+campaign_dir = manifest["campaigns"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
+
+campaigns = json.loads(CAMPAIGNS.read_text(encoding="utf-8"))["campaigns"]
+campaign_slugs = {campaign["slug"] for campaign in campaigns}
 
 pages = sorted(ROOT.glob("*.html"))
 seen: dict[str, list[str]] = {}
@@ -103,6 +108,17 @@ for page in pages:
         if path in approved:
             continue
 
+        # Approved campaign artwork: assets/campaigns/<slug>-<width>.<ext>,
+        # or the derived ambient backdrop for that same campaign.
+        if path.startswith(campaign_dir):
+            name = Path(path).stem
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)(?:-mobile)?"
+                                 r"(?:-(?P<width>\d+)|-ambient)", name)
+            if not match or match.group("slug") not in campaign_slugs:
+                fail(f"{page.name}: {path} is not one of the approved campaigns "
+                     f"listed in data/campaigns.json")
+            continue
+
         # A built location photograph: assets/locations/<slug>-<width>.<ext>
         if path.startswith(pending_dir):
             name = Path(path).stem
@@ -125,7 +141,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
     if not path.is_file() or path.suffix.lower() not in IMAGE_SUFFIXES:
         continue
     relative = path.relative_to(ROOT).as_posix()
-    if relative in approved or relative.startswith(pending_dir):
+    if (relative in approved or relative.startswith(pending_dir)
+            or relative.startswith(campaign_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

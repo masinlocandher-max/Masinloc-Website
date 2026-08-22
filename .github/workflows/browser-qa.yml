@@ -41,6 +41,9 @@ jobs:
       - name: Run desktop and mobile browser checks
         run: node scripts/browser-qa.mjs
 
+      - name: Run homepage checks
+        run: node scripts/homepage-qa.mjs
+
       - name: Run Sambal Tina dictionary checks
         run: node scripts/dictionary-qa.mjs
 

@@ -1,0 +1,42 @@
+{
+  "note": "Approved campaign artwork for the homepage campaign stage. Source of truth: Google Drive / Masinloc Website Asset / Ads. The artwork is finished design: it already carries its own logo, headline, copy and layout, so it is never cropped hard, never has type laid over it, and is never regenerated. scripts/build-campaigns.py derives the responsive sizes; scripts/check-photography.py refuses to serve any campaign not listed here.",
+  "rules": [
+    "Never invent a campaign when approved artwork exists.",
+    "Never redesign approved artwork, and never alter embedded logos, copy, typography or branding.",
+    "Never crop away embedded copy. The whole artwork stays visible at every width.",
+    "A mobile source is used only when the project supplies one. No portrait variant is ever fabricated."
+  ],
+  "label": "Featured",
+  "campaigns": [
+    {
+      "slug": "masinloc-connect",
+      "source": "1A26A13C-2B6C-46DC-A186-3B001C7DBE57.png",
+      "mobileSource": null,
+      "headline": "Connecting Masinloqueno to the world.",
+      "alt": "Masinloc Connect campaign: a hand holding a phone showing the Masinloc Connect app, with the headline Connecting Masinloqueno to the world, the address masinloc-zambales.com, and Google Play and App Store badges.",
+      "href": "connect.html",
+      "cta": "Open Masinloc Connect",
+      "tone": "dark"
+    },
+    {
+      "slug": "sambal-tina-language",
+      "source": "4B9D0B25-255F-419E-92D4-65D580D667AB.png",
+      "mobileSource": null,
+      "headline": "You don't have to lose a language to realize it matters.",
+      "alt": "Sambal Tina Dictionary campaign: a phone showing the dictionary with the featured word Hampano, surrounded by floating entry cards for Lanom, Ayama, Talacaca, Masistas, Cabatwan and Oybon.",
+      "href": "sambal-tina.html",
+      "cta": "Open the dictionary",
+      "tone": "dark"
+    },
+    {
+      "slug": "sambal-tina-dictionary",
+      "source": "BC5F30FE-DC8C-4F9C-A1EA-AF193BEE4142.png",
+      "mobileSource": null,
+      "headline": "Our words. Our people. Our future.",
+      "alt": "Sambal Tina Dictionary campaign: a phone showing the dictionary interface with word of the day Hampano, surrounded by entry cards carrying pronunciation and example sentences.",
+      "href": "sambal-tina.html",
+      "cta": "Open the dictionary",
+      "tone": "light"
+    }
+  ]
+}

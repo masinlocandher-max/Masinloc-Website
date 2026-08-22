@@ -63,5 +63,12 @@
       "folder": "Masinloc Website Asset / Regular Images",
       "decision": "Not used. Cannot be tied to a named place, so it is never labelled as a location."
     }
-  ]
+  ],
+  "campaigns": {
+    "directory": "assets/campaigns/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / Ads",
+    "note": "Approved campaign artwork. Each file is a finished design carrying its own logo, headline and copy, so it is shown whole and never cropped, retyped or regenerated. Mapping is fixed in data/campaigns.json; built by scripts/build-campaigns.py.",
+    "mapping": "data/campaigns.json"
+  }
 }
