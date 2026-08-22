@@ -348,6 +348,12 @@ if sitemap.is_file():
     for rel in ("a-closer-look.html", "verified-history.html", "masinloc-bulletin.html", "connect.html"):
         if rel not in sitemap_text:
             fail(f"sitemap.xml missing current public route: {rel}")
+    # Every built Bulletin story must be listed. scripts/build-bulletin.py keeps
+    # this block in sync; the check is here so a story published some other way
+    # cannot go live unindexed and unnoticed.
+    for story in sorted((ROOT / "bulletin").glob("*.html")):
+        if f"/bulletin/{story.name}" not in sitemap_text:
+            fail(f"sitemap.xml missing published story: bulletin/{story.name}")
 
 vercel = ROOT / "vercel.json"
 if vercel.is_file():

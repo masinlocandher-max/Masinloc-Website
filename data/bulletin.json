@@ -6,11 +6,6 @@
     "Cite the underlying source. The internal research manuscript identifies what to investigate; it is never itself a public citation.",
     "Do not invent dates, names, quotations, Sambal Tina words or translations."
   ],
-  "author": {
-    "name": "Francine Marie Bautista",
-    "note": "Based on the MABAYANI historical research project.",
-    "id": "https://masinloc-zambales.com/#author"
-  },
   "categories": [
     {
       "id": "history",
@@ -35,13 +30,16 @@
     {
       "id": "research-note",
       "label": "Research Note"
+    },
+    {
+      "id": "reflection",
+      "label": "Reflection"
     }
   ],
   "articles": [
     {
       "slug": "was-masinloc-founded-in-1572",
       "status": "published",
-      "featured": true,
       "category": "myth-vs-record",
       "title": "Was Masinloc founded in 1572? What the record actually supports",
       "metaTitle": "Was Masinloc Founded in 1572? | Masinloc History",
@@ -69,11 +67,11 @@
       "body": [
         {
           "type": "p",
-          "text": "Search for Masinloc and a founding year appears quickly: 1572. It sits on websites, in captions, in slide decks, and in speeches. It has been copied often enough that it now reads as settled."
+          "text": "I went looking for the year Masinloc was founded. The answer arrived in seconds and it was everywhere: 1572. It sits on websites, in captions, in slide decks, and in speeches. It has been copied often enough that it now reads as settled."
         },
         {
           "type": "p",
-          "text": "It is not. The year belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is real context, and it is useful for placing the western coast within the early movement of Spanish expeditions through Luzon. But an expedition passing through a region is not the founding of a town."
+          "text": "It is not settled, and I could not make it hold. The year belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is real context, and it is useful for placing the western coast within the early movement of Spanish expeditions through Luzon. But an expedition passing through a region is not the founding of a town."
         },
         {
           "type": "h2",
@@ -110,7 +108,7 @@
         },
         {
           "type": "p",
-          "text": "Correcting a date can feel like losing something. It is worth seeing it the other way. The town is not less old because we decline to use an unsupported year, and it is not less important because its earliest centuries were never written down by anyone who kept records."
+          "text": "Correcting a date felt, at first, like losing something. It is worth seeing it the other way. The town is not less old because we decline to use an unsupported year, and it is not less important because its earliest centuries were never written down by anyone who kept records."
         },
         {
           "type": "h2",
@@ -129,12 +127,16 @@
           "label": "Still open",
           "text": "A final account should cite the best available primary or provincial source for Salcedo's 1572 movement through Zambales, while keeping the correction that it is not a founding date."
         }
-      ]
+      ],
+      "pathway": "before-the-record",
+      "nextQuestion": "If 1572 is not where Masinloc begins, what does 1607 actually change?",
+      "order": 0,
+      "next": "1607-and-the-first-mission-church",
+      "revealsCreator": false
     },
     {
       "slug": "1607-and-the-first-mission-church",
       "status": "published",
-      "featured": false,
       "category": "history",
       "title": "1607: the year Masinloc enters a stronger written record",
       "metaTitle": "1607 and the First Mission Church | Masinloc History",
@@ -163,11 +165,11 @@
       "body": [
         {
           "type": "p",
-          "text": "In 1607, Masinloc entered a stronger written record. The Recollect historical account describes Fray Andres del Espiritu Santo travelling north by sea and reaching Masinloc with Fray Jeronimo de Cristo. Andres is treated as the founder of the mission town and the builder of the first house of God in the new pueblo. The two missionaries lived for months on root crops and vegetables."
+          "text": "The first year I found that will take any weight is 1607. The Recollect historical account describes Fray Andres del Espiritu Santo travelling north by sea and reaching Masinloc with Fray Jeronimo de Cristo. Andres is treated as the founder of the mission town and the builder of the first house of God in the new pueblo. The two missionaries lived for months on root crops and vegetables."
         },
         {
           "type": "p",
-          "text": "The details are small and they matter. The mission did not begin with the coral-stone church people photograph today. It began with sea travel, scarcity, temporary materials, and a place that already had people living in it."
+          "text": "The details are small and I kept coming back to them. The mission did not begin with the coral-stone church people photograph today. It began with sea travel, scarcity, temporary materials, and a place that already had people living in it."
         },
         {
           "type": "h2",
@@ -192,7 +194,7 @@
         },
         {
           "type": "p",
-          "text": "Told from Masinloc rather than from the mission, the obvious questions are the ones the source answers least well. Who helped build the first structure? Who supplied the food those two missionaries lived on? Who translated? Who accepted the teaching, who resisted, who moved, who stayed? The surviving account names the missionaries far more easily than it names the local labour and decisions that made a mission possible at all."
+          "text": "Read from Masinloc rather than from the mission, the questions I most wanted answered are the ones the source answers least well. Who helped build the first structure? Who supplied the food those two missionaries lived on? Who translated? Who accepted the teaching, who resisted, who moved, who stayed? The surviving account names the missionaries far more easily than it names the local labour and decisions that made a mission possible at all."
         },
         {
           "type": "h2",
@@ -218,12 +220,16 @@
           "type": "p",
           "text": "The most useful image of 1607 is not a grand facade. It is a modest structure made of materials that could rot. The church did not last. The story did."
         }
-      ]
+      ],
+      "pathway": "faith-conflict-power",
+      "nextQuestion": "If the record starts getting stronger in 1607, what was here before it?",
+      "order": 1,
+      "next": "before-the-written-record",
+      "revealsCreator": false
     },
     {
       "slug": "the-first-church-was-not-todays-church",
       "status": "published",
-      "featured": true,
       "category": "heritage",
       "title": "The first church was not the church we see today",
       "metaTitle": "San Andres Church: The First Church Was Not Today's | Masinloc",
@@ -252,7 +258,7 @@
       "body": [
         {
           "type": "p",
-          "text": "San Andres Church is the strongest single image of Masinloc, and it is easy to treat it as one object with one birthday. The evidence describes something more layered."
+          "text": "San Andres Church is the strongest single image of Masinloc, and I had been treating it the way most people do: as one object with one birthday. The evidence describes something more layered."
         },
         {
           "type": "p",
@@ -277,7 +283,7 @@
         },
         {
           "type": "p",
-          "text": "The gap is not a minor inconvenience. A baptismal book covering 1726 to 1784 was no longer available, leaving a fifty-eight-year documentary silence across exactly the period when the stone church was going up. Termites, insects, weather, earthquakes, poor paper and ordinary age could all have contributed."
+          "text": "The gap is where I stopped being able to answer anything at all. A baptismal book covering 1726 to 1784 was no longer available, leaving a fifty-eight-year documentary silence across exactly the period when the stone church was going up. Termites, insects, weather, earthquakes, poor paper and ordinary age could all have contributed."
         },
         {
           "type": "p",
@@ -293,7 +299,7 @@
         },
         {
           "type": "p",
-          "text": "It would be easy to publish the clean version: started 1745, completed 1798, destroyed the same year. The clean version is dramatic and it is wrong. The careful version is that construction began in 1745 according to a tradition recorded in 1891, completion is unknown, the 1798 claim is unreliable, and damage may relate to 1754 or 1766 without the exact event being fixable."
+          "text": "It would be easy to publish the clean version: started 1745, completed 1798, destroyed the same year. I wanted to. The clean version is dramatic and it is wrong. The careful version is that construction began in 1745 according to a tradition recorded in 1891, completion is unknown, the 1798 claim is unreliable, and damage may relate to 1754 or 1766 without the exact event being fixable."
         },
         {
           "type": "pull",
@@ -316,12 +322,16 @@
           "label": "Still open",
           "text": "The 1616 phase, the late nineteenth-century roof and bell-tower changes, and the twentieth-century facade work still need confirmation against the original Recollect archive, parish records, National Museum files and dated photographs."
         }
-      ]
+      ],
+      "pathway": "faith-conflict-power",
+      "nextQuestion": "If the stone church was never finished on paper, how did it survive at all?",
+      "order": 3,
+      "next": "san-andres-church-across-the-centuries",
+      "revealsCreator": false
     },
     {
       "slug": "san-andres-church-across-the-centuries",
       "status": "published",
-      "featured": false,
       "category": "heritage",
       "title": "A church built, damaged, and rebuilt: San Andres across the centuries",
       "metaTitle": "How San Andres Church Changed Across Centuries | Masinloc",
@@ -351,7 +361,7 @@
       "body": [
         {
           "type": "p",
-          "text": "San Andres Church has passed through earthquakes, damaged masonry, changing roofs, political upheaval, neglect and modern restoration. Every repair changed the building. What stands now is not a frozen eighteenth-century object; it carries decisions from many periods."
+          "text": "Once I stopped looking for a single date, the building started to make sense. San Andres Church has passed through earthquakes, damaged masonry, changing roofs, political upheaval, neglect and modern restoration. Every repair changed it. What stands now is not a frozen eighteenth-century object; it carries decisions from many periods."
         },
         {
           "type": "h2",
@@ -392,7 +402,7 @@
         },
         {
           "type": "p",
-          "text": "A convincing image can still be wrong. A scene set in 1607 needs a light chapel. A nineteenth or early twentieth-century scene needs the older facade. Only the present can show the modern tower and cupola. Each image should declare its period, because a modern feature does not become ancient by being attached to an old church."
+          "text": "This is where I became careful about pictures. A convincing image can still be wrong. A scene set in 1607 needs a light chapel. A nineteenth or early twentieth-century scene needs the older facade. Only the present can show the modern tower and cupola. Each image should declare its period, because a modern feature does not become ancient by being attached to an old church."
         },
         {
           "type": "p",
@@ -402,12 +412,16 @@
           "type": "p",
           "text": "Masinloqueños at home and abroad contributed to restoration. Parish communities protected records. Clergy documented some changes and failed to document others. Earthquakes exposed weak points. The strongest thing about San Andres is not that it never changed. It is that the community continued through the changes."
         }
-      ]
+      ],
+      "pathway": "faith-conflict-power",
+      "nextQuestion": "The church survived earthquakes. What did the town survive?",
+      "order": 4,
+      "next": "1649-when-six-caracoas-came",
+      "revealsCreator": false
     },
     {
       "slug": "1649-when-six-caracoas-came",
       "status": "published",
-      "featured": true,
       "category": "history",
       "title": "1649: when six caracoas came to Masinloc",
       "metaTitle": "1649: The Defence of the Masinloc Coast | Masinloc History",
@@ -435,7 +449,7 @@
       "body": [
         {
           "type": "p",
-          "text": "In 1649, according to the Recollect history, six caracoas landed on the shore of Masinloc. The account identifies the raiding forces as Moros from Jolo and Borneo, and says more than six hundred fighters began to disembark."
+          "text": "The most vivid thing I found anywhere in the record happens in 1649. According to the Recollect history, six caracoas landed on the shore of Masinloc. The account identifies the raiding forces as Moros from Jolo and Borneo, and says more than six hundred fighters began to disembark."
         },
         {
           "type": "p",
@@ -464,11 +478,11 @@
         },
         {
           "type": "p",
-          "text": "This is the strongest documented episode of collective bravery in the Masinloc story. It is also a story written through a Recollect lens. The friar is named. The local fighters are praised as Zambaleños, but not one of them is named individually."
+          "text": "This is the strongest documented episode of collective bravery in the Masinloc story, and it is also where the record failed me most completely. It is written through a Recollect lens. The friar is named. The local fighters are praised as Zambaleños, but not one of them is named individually."
         },
         {
           "type": "p",
-          "text": "The most useful questions are the ones the source answers least. How many of the defenders were local Sambal Christians? Were there people from nearby settlements? What did they fight with? Who carried information? Who protected the elderly and the children? Were women involved in supplies, warning and care? The account does not say."
+          "text": "The questions I most wanted to answer are the ones the source answers least. How many of the defenders were local Sambal Christians? Were there people from nearby settlements? What did they fight with? Who carried information? Who protected the elderly and the children? Were women involved in supplies, warning and care? The account does not say."
         },
         {
           "type": "pull",
@@ -499,12 +513,16 @@
           "label": "Still open",
           "text": "Recollect chronicles, parish papers, Spanish military reports and family traditions may yet recover the names of the defenders."
         }
-      ]
+      ],
+      "pathway": "faith-conflict-power",
+      "nextQuestion": "Masinloc remembers a battle every year. Is it this one?",
+      "order": 5,
+      "next": "what-binabayani-remembers",
+      "revealsCreator": false
     },
     {
       "slug": "what-binabayani-remembers",
       "status": "published",
-      "featured": false,
       "category": "oral-history",
       "title": "What Binabayani remembers, and what the record can confirm",
       "metaTitle": "What Binabayani Remembers | Masinloc Oral History",
@@ -544,7 +562,7 @@
         },
         {
           "type": "p",
-          "text": "Many modern accounts repeat the year 1621. Some attribute an early telling to Capt. Florentino Elicano and connect it to Municipal Judge Gerardo Elicano. Research on this project flags the date as a likely chronological error, possibly connected to a 1921 reference rather than 1621. No authenticated seventeenth-century manuscript proving the date, the first teller or the exact sequence has been located."
+          "text": "Many modern accounts repeat the year 1621, and I could not find the document underneath it. Some attribute an early telling to Capt. Florentino Elicano and connect it to Municipal Judge Gerardo Elicano. The research behind this project flags the date as a likely chronological error, possibly connected to a 1921 reference rather than 1621. No authenticated seventeenth-century manuscript proving the date, the first teller or the exact sequence has been located."
         },
         {
           "type": "p",
@@ -561,7 +579,7 @@
         },
         {
           "type": "p",
-          "text": "Some readers will feel that removing the date takes something away. The opposite is closer to the truth. When oral tradition is called oral tradition, it is protected — valued for what it actually does in the life of the community: carrying identity, teaching memory, dramatising conflict, expressing devotion, and gathering generations into one public act."
+          "text": "Some readers will feel that removing the date takes something away. I felt it too. The opposite is closer to the truth. When oral tradition is called oral tradition, it is protected — valued for what it actually does in the life of the community: carrying identity, teaching memory, dramatising conflict, expressing devotion, and gathering generations into one public act."
         },
         {
           "type": "pull",
@@ -573,7 +591,7 @@
         },
         {
           "type": "p",
-          "text": "This is the most sensitive part. Missionary records describe violence between new Christian settlements and upland Aeta groups across parts of Zambales and Pangasinan. Those records show conflict existed, but they come from the missionary side and often use prejudiced language."
+          "text": "This is the part I have rewritten most often. Missionary records describe violence between new Christian settlements and upland Aeta groups across parts of Zambales and Pangasinan. Those records show conflict existed, but they come from the missionary side and often use prejudiced language."
         },
         {
           "type": "p",
@@ -592,12 +610,16 @@
           "label": "Still open",
           "text": "The earliest surviving programme, newspaper report, parish reference, Elicano document, photograph and oral testimony have yet to be traced, along with how the costume and explanation changed across the twentieth century."
         }
-      ]
+      ],
+      "pathway": "what-masinloc-remembers",
+      "nextQuestion": "Memory kept the dance. What kept the language?",
+      "order": 6,
+      "next": "what-is-sambal-tina",
+      "revealsCreator": false
     },
     {
       "slug": "what-is-sambal-tina",
       "status": "published",
-      "featured": false,
       "category": "language",
       "title": "What is Sambal Tina?",
       "metaTitle": "What Is Sambal Tina? | The Language of Masinloc",
@@ -628,7 +650,7 @@
       "body": [
         {
           "type": "p",
-          "text": "Language is one of the oldest archives a community carries in the body. A baptismal book can disappear, a photograph can be lost, but a word survives as long as someone still uses it and someone else still understands."
+          "text": "By the time I reached the language I had stopped expecting documents to rescue anything. Language is one of the oldest archives a community carries in the body. A baptismal book can disappear, a photograph can be lost, but a word survives as long as someone still uses it and someone else still understands."
         },
         {
           "type": "p",
@@ -681,14 +703,18 @@
         },
         {
           "type": "p",
-          "text": "That is also the most useful thing a reader can do with this article. Ask an elder: what word did you use that we no longer use? How did you say morning? Which words changed spelling? Which came from Spanish? Which belong specifically to Masinloc? The answers belong in a review system rather than becoming official entries straight away — community memory is essential, and it also varies by family, barangay and age group."
+          "text": "That is also the most useful thing a reader can do with this article, and it is more than I can do alone. Ask an elder: what word did you use that we no longer use? How did you say morning? Which words changed spelling? Which came from Spanish? Which belong specifically to Masinloc? The answers belong in a review system rather than becoming official entries straight away — community memory is essential, and it also varies by family, barangay and age group."
         }
-      ]
+      ],
+      "pathway": "the-language-that-stayed",
+      "nextQuestion": "The dictionary that recorded it used a name some speakers reject. Why?",
+      "order": 7,
+      "next": "why-older-sources-say-tina",
+      "revealsCreator": false
     },
     {
       "slug": "why-older-sources-say-tina",
       "status": "published",
-      "featured": false,
       "category": "language",
       "title": "Why older sources call the language \"Tina\"",
       "metaTitle": "Why Older Records Say Tina | Sambal Tina, Masinloc",
@@ -716,7 +742,7 @@
       "body": [
         {
           "type": "p",
-          "text": "The word Tina is one of the most sensitive things in the documentation of this language, and one of the least settled."
+          "text": "The word Tina is the thing in this whole investigation I am least willing to settle, and the thing I get asked about most."
         },
         {
           "type": "p",
@@ -745,7 +771,7 @@
         },
         {
           "type": "p",
-          "text": "We are not publishing one explanation as final. The local meaning cannot be dismissed because an outside database summarises it differently, and the familiar local explanation cannot be declared correct simply because it is familiar. The next step is to place the explanations beside each other and let fluent speakers, elders, linguists and documentary sources test them."
+          "text": "I am not publishing one explanation as final. The local meaning cannot be dismissed because an outside database summarises it differently, and the familiar local explanation cannot be declared correct simply because it is familiar. The next step is to place the explanations beside each other and let fluent speakers, elders, linguists and documentary sources test them."
         },
         {
           "type": "pull",
@@ -764,12 +790,16 @@
           "label": "Still open",
           "text": "A final explanation requires review by fluent speakers across age groups and barangays, together with a historical linguist."
         }
-      ]
+      ],
+      "pathway": "the-language-that-stayed",
+      "nextQuestion": "So what is all of this for?",
+      "order": 8,
+      "next": "why-mabayani-exists",
+      "revealsCreator": false
     },
     {
       "slug": "before-the-written-record",
       "status": "published",
-      "featured": false,
       "category": "research-note",
       "title": "Before the written record: what we can and cannot say",
       "metaTitle": "Masinloc Before the Written Record | Masinloc History",
@@ -799,7 +829,7 @@
       "body": [
         {
           "type": "p",
-          "text": "Masinloc's written history begins when outsiders began writing. Its actual history does not."
+          "text": "Masinloc's written history begins when outsiders began writing. Its actual history does not, and holding those two apart is the hardest thing in this work to do honestly."
         },
         {
           "type": "p",
@@ -820,7 +850,7 @@
         },
         {
           "type": "p",
-          "text": "The second is to compensate by inventing. A detailed precolonial narrative with named chiefs and dated settlements would be more satisfying to read and would not be history. Absence of surviving documentation is not evidence of absence; it is also not a licence."
+          "text": "The second is to compensate by inventing, and it is the one I have had to talk myself out of. A detailed precolonial narrative with named chiefs and dated settlements would be more satisfying to read and would not be history. Absence of surviving documentation is not evidence of absence; it is also not a licence."
         },
         {
           "type": "pull",
@@ -842,7 +872,188 @@
           "type": "p",
           "text": "So the honest position is a connected landscape rather than a fixed map of separate peoples, and a firm statement that the people came first — with the specifics left open until archaeology, language research and community knowledge can fill them properly."
         }
-      ]
+      ],
+      "pathway": "before-the-record",
+      "nextQuestion": "The written record picks up with a church. Was it the church standing today?",
+      "order": 2,
+      "next": "the-first-church-was-not-todays-church",
+      "revealsCreator": false
+    },
+    {
+      "slug": "why-mabayani-exists",
+      "status": "published",
+      "category": "reflection",
+      "title": "Why MABAYANI exists",
+      "metaTitle": "Why MABAYANI Exists | Masinloc Bulletin",
+      "description": "The closing piece in the MABAYANI sequence: why this research was done the way it was done, what bravery has to do with a footnote, and who has been writing.",
+      "standfirst": "Eight stories, one argument, and the last thing left to say — including the part I have been keeping back.",
+      "published": "2026-08-22",
+      "modified": "2026-08-22",
+      "readingMinutes": 6,
+      "hero": {
+        "kind": "none"
+      },
+      "sources": [
+        "romanillos-masinloc-recollect-mission",
+        "sil-tina-sambal-dictionary"
+      ],
+      "related": [
+        "was-masinloc-founded-in-1572",
+        "what-binabayani-remembers"
+      ],
+      "internalLinks": [
+        {
+          "href": "../verified-history.html",
+          "text": "the standard every claim here is held to"
+        },
+        {
+          "href": "../sources.html",
+          "text": "the evidence directory behind all of it"
+        }
+      ],
+      "body": [
+        {
+          "type": "p",
+          "text": "I started this the way most people start: by trying to confirm something I already believed. I wanted the founding date. I wanted the year that would let me say Masinloc is this old, here is the proof, put it on the seal."
+        },
+        {
+          "type": "p",
+          "text": "I did not find it. What I found instead was a date being repeated because it had been repeated, a church that turned out to be several churches, a battle whose heroes are anonymous in the only account that records them, and a language whose name is an argument."
+        },
+        {
+          "type": "p",
+          "text": "Every one of those was a loss before it was a finding. I want to be honest about that, because the pressure to write the other version never really goes away."
+        },
+        {
+          "type": "h2",
+          "text": "What the work kept asking me to do"
+        },
+        {
+          "type": "p",
+          "text": "There is a version of this project that would have performed much better. It fills the gap before 1607 with named chiefs. It gives Binabayani a clean origin year. It lets the 1798 earthquake stand because the story is tidier with it. It says 1572 and moves on, because that is what people expect to read and nobody checks."
+        },
+        {
+          "type": "p",
+          "text": "I understand the appeal. An invented date makes a festival look older. An invented chief makes a chapter feel complete. A dramatic scene makes people share the work. Each of those choices is available at every stage, and each one is easier than the alternative."
+        },
+        {
+          "type": "pull",
+          "text": "The brave choice is sometimes to leave a space empty and write: we have not verified this yet."
+        },
+        {
+          "type": "p",
+          "text": "So the rule I set was narrow and unglamorous. Say what the evidence carries. Say plainly where it stops. Label oral tradition as oral tradition and treat that as a description, not a demotion. Never upgrade an uncertain claim because the uncertain version reads badly."
+        },
+        {
+          "type": "note",
+          "label": "What this piece is",
+          "text": "Reflection, not reporting. The historical claims it refers back to are documented in the eight articles before it; this one explains the method, not new evidence."
+        },
+        {
+          "type": "h2",
+          "text": "Where the name comes from"
+        },
+        {
+          "type": "p",
+          "text": "MABAYANI is a chosen name and an interpretive frame. It is not offered as a dictionary entry, and nothing here should be read as a claim about the meaning of a Sambal word."
+        },
+        {
+          "type": "p",
+          "text": "I chose it because bravery is the thread that kept reappearing in the material, and because the kind of bravery I kept finding was not the kind that ends up on a banner. In 1649 many residents ran for the mountains and others organised a defence, and both of those were survival. A chapel made of light materials disappeared and a stone church went up in its place and earthquakes damaged that and people rebuilt it, across generations, without any of them being named in what survives."
+        },
+        {
+          "type": "p",
+          "text": "Binabayani is danced every year, and the courage in it is not only the staged fight. It takes something to say out loud that 1621 is not yet proven. It takes something to look again at a costume that has been familiar for decades. It takes something to notice that the Christian faction in the dance is not the same as Spanish authority, and that flattening the two changes what the whole performance is saying."
+        },
+        {
+          "type": "p",
+          "text": "A language goes quiet in the same undramatic way. One child answers in Tagalog. One family stops using one word. One spelling becomes uncertain and nobody is sure enough to correct it. Keeping Sambal means speaking it imperfectly in public and accepting correction, which is its own small act of nerve."
+        },
+        {
+          "type": "h2",
+          "text": "The sentence this is all built around"
+        },
+        {
+          "type": "p",
+          "text": "If a reader takes one line away from these stories, I would like it to be this: our history is already powerful. We do not need to invent it."
+        },
+        {
+          "type": "p",
+          "text": "That sentence is doing specific work. It protects pride from turning into insecurity. A community that trusts what actually happened to it does not need false proof of greatness, and does not lose anything when a bad date is withdrawn. Masinloc is not younger because 1572 will not hold. It is not smaller because the defenders of 1649 are unnamed. Those are gaps in the paperwork, not gaps in the town."
+        },
+        {
+          "type": "p",
+          "text": "What I hope this becomes is not a finished account. It is a better argument. A classroom where students read the 1649 story and immediately ask who the defenders were. A festival workshop that separates local Christian lowlanders from colonial authority. Elders explaining Tina in their own words while a linguist lays out the history of the label beside them. Parish photographs in date order, so that nobody puts the modern tower into a seventeenth-century scene again."
+        },
+        {
+          "type": "pull",
+          "text": "It should not finish the conversation. It should make the conversation better."
+        },
+        {
+          "type": "h2",
+          "text": "The part I have been keeping back"
+        },
+        {
+          "type": "p",
+          "text": "You will have noticed that none of the previous eight stories carried a name. That was deliberate, and this is the point where it ends."
+        },
+        {
+          "type": "p",
+          "text": "I kept the byline off because I did not want the research read as one person's opinion about Masinloc while it was still being tested. A date either holds or it does not, regardless of who is checking it. I wanted the evidence to be argued with on its own terms first."
+        },
+        {
+          "type": "p",
+          "text": "MABAYANI was created and written by Francine Marie Bautista, as part of the Mabayani Project for Masinloc, Zambales. Everything published here has been read against the sources listed in the evidence directory, and everything still unresolved has been left marked as unresolved."
+        },
+        {
+          "type": "p",
+          "text": "It is my reflection. I would like it to become our responsibility. If you can correct something on this site, correct it — a documented objection is worth more to this work than agreement is."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "The names of the 1649 defenders, the earliest surviving reference to Binabayani, a community-approved account of the language name, dated photographs of the church facade before 1970, and a certified roster of municipal leadership all remain unrecovered."
+        }
+      ],
+      "pathway": "closing",
+      "nextQuestion": null,
+      "order": 9,
+      "next": null,
+      "revealsCreator": true
     }
-  ]
+  ],
+  "publication": {
+    "name": "MABAYANI",
+    "kicker": "A continuing investigation",
+    "blurb": "A sequence of stories about how Masinloc's history has been told, and what the evidence actually supports. It starts with a date almost everyone repeats, and it does not end where you expect.",
+    "parent": "Discover Masinloc",
+    "id": "https://masinloc-zambales.com/#mabayani",
+    "creator": {
+      "name": "Francine Marie Bautista"
+    },
+    "note": "The narrator of these stories is deliberately unidentified until the closing reflection. Until then the work is attributed to the project, never to a person: no byline, no Person schema, no author metadata. The reveal happens once, in the final piece. 'creator' is read only by the article whose revealsCreator is true; scripts/check-mabayani-anonymity.py fails the build if the name reaches any other page."
+  },
+  "pathways": [
+    {
+      "id": "before-the-record",
+      "label": "Before the Written Record"
+    },
+    {
+      "id": "faith-conflict-power",
+      "label": "Faith, Conflict & Power"
+    },
+    {
+      "id": "what-masinloc-remembers",
+      "label": "What Masinloc Remembers"
+    },
+    {
+      "id": "the-language-that-stayed",
+      "label": "The Language That Stayed"
+    },
+    {
+      "id": "closing",
+      "label": "Closing"
+    }
+  ],
+  "entryStory": "was-masinloc-founded-in-1572"
 }

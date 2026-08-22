@@ -3,16 +3,21 @@
 
 Adding an article means adding an object to data/bulletin.json and running this
 script. Nothing is hand-maintained: the archive page, every article page, the
-category counts and the sources directory are all rendered from the data, so a
-headline or a date exists in exactly one place.
+pathway sequence, the category groups and the sources directory are all
+rendered from the data, so a headline or a date exists in exactly one place.
 
-Two rules are enforced here rather than left to discipline:
+Three rules are enforced here rather than left to discipline:
 
   - An article's evidence must resolve to a real entry in data/sources.json.
     A dangling source id fails the build.
   - The internal research manuscript is never a public citation. Articles cite
     the underlying study, record or archive; the manuscript only identified
     what to look for.
+  - The person who wrote MABAYANI is not named anywhere until the closing
+    reflection. Exactly one article may carry "revealsCreator": true, and it
+    is the only page that gets a byline, an author name in metadata, or a
+    Person node in structured data. Everywhere else the work is attributed to
+    the project. scripts/check-mabayani-anonymity.py checks the built HTML.
 
 Usage
 -----
@@ -22,7 +27,6 @@ from __future__ import annotations
 
 import html
 import json
-import re
 import sys
 from pathlib import Path
 
@@ -33,14 +37,40 @@ SITE = "https://masinloc-zambales.com"
 BULLETIN = json.loads((ROOT / "data" / "bulletin.json").read_text(encoding="utf-8"))
 SOURCES = json.loads((ROOT / "data" / "sources.json").read_text(encoding="utf-8"))
 
-AUTHOR = BULLETIN["author"]
+PUBLICATION = BULLETIN["publication"]
 CATEGORIES = {c["id"]: c["label"] for c in BULLETIN["categories"]}
+PATHWAYS = {p["id"]: p["label"] for p in BULLETIN["pathways"]}
+ENTRY_STORY = BULLETIN["entryStory"]
+
+# The archive groups categories under plain reader-facing headings. A category
+# missing from here would silently vanish from the page, so verify() checks it.
+GROUPS = [
+    ("History & Heritage", "The documented town: dates, churches, the record and its holes.",
+     ["myth-vs-record", "history", "heritage"]),
+    ("Language & Memory", "What Masinloc kept without writing it down.",
+     ["language", "oral-history"]),
+    ("From the record", "Method, limits, and why any of this is done the way it is done.",
+     ["research-note", "reflection"]),
+]
 
 # Naming the internal manuscript on a public page would create a citation loop:
 # the site citing its own working document as proof of its own article.
 FORBIDDEN_PUBLIC = [
     "adviser review manuscript", "mabayani manuscript", "manuscript v0",
     "claim register", "according to the mabayani", "mabayani research says",
+]
+
+# Serialised storytelling borrowed from streaming platforms is the one register
+# this must not adopt. The sequence is a reading path, not a season.
+#
+# Only unambiguous streaming phrases are banned in prose: "episode" has an
+# ordinary historical sense ("the strongest documented episode of the raid")
+# and banning the bare word here would push honest writing around a UI rule.
+# The interface is the place that must never borrow the register, and it is
+# checked as built HTML by scripts/check-mabayani-anonymity.py.
+BANNED_REGISTER = [
+    "series premiere", "season finale", "binge", "next episode",
+    "now streaming", "watch now", "play now", "new episode",
 ]
 
 
@@ -61,8 +91,16 @@ SOURCE_BY_ID = source_index()
 
 def published() -> list[dict]:
     """Only published articles are built. Drafts never reach the site."""
-    live = [a for a in BULLETIN["articles"] if a.get("status") == "published"]
-    return sorted(live, key=lambda a: (a["published"], a["slug"]), reverse=True)
+    return [a for a in BULLETIN["articles"] if a.get("status") == "published"]
+
+
+def in_order(articles: list[dict]) -> list[dict]:
+    """The reading sequence: the order a first-time reader is walked through."""
+    return sorted(articles, key=lambda a: (a["order"], a["slug"]))
+
+
+def by_date(articles: list[dict]) -> list[dict]:
+    return sorted(articles, key=lambda a: (a["published"], a["slug"]), reverse=True)
 
 
 # --- shared shell -------------------------------------------------------------
@@ -98,7 +136,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 <link rel="stylesheet" href="{up}site.css?v=20260820-1">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260821-1">
-<link rel="stylesheet" href="{up}bulletin.css?v=20260822-1">
+<link rel="stylesheet" href="{up}bulletin.css?v=20260822-2">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -117,7 +155,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 """
 
 
-def shell_foot(depth: int, jsonld: str = "") -> str:
+def shell_foot(depth: int, jsonld: str = "", scripts: str = "") -> str:
     up = "../" if depth else ""
     return f"""
 <footer class="home-footer">
@@ -126,7 +164,7 @@ def shell_foot(depth: int, jsonld: str = "") -> str:
   <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>masinloc-zambales.com</span></div>
 </footer>
 {jsonld}<script src="{up}site.js?v=20260820-2"></script>
-</body>
+{scripts}</body>
 </html>
 """
 
@@ -157,10 +195,41 @@ def human_date(value: str) -> str:
     return date(y, m, d).strftime("%d %B %Y").lstrip("0")
 
 
+def continue_block(article: dict, by_slug: dict, total: int) -> str:
+    """The pull to the next story. A question first, then the door.
+
+    This is the whole of the serialisation: a reader who wants one article gets
+    one article, and a reader who wants the sequence is always shown where it
+    goes next. No countdowns, no autoplay, nothing that behaves like a queue.
+    """
+    nxt = article.get("next")
+    if not nxt or nxt not in by_slug:
+        return ("""      <nav class="continue continue-end" aria-label="Where to go next">
+        <p class="continue-q">That is the end of the sequence.</p>
+        <a href="../masinloc-bulletin.html">
+          <span class="continue-label">Back to the Bulletin</span>
+          <span class="continue-title">Every story, and the questions still open</span>
+        </a>
+      </nav>""")
+    target = by_slug[nxt]
+    return f"""      <nav class="continue" aria-label="Continue the story">
+        <p class="continue-q">{esc(article['nextQuestion'])}</p>
+        <a href="{esc(target['slug'])}.html" data-continue>
+          <span class="continue-label">Continue the story</span>
+          <span class="continue-title">{esc(target['title'])}</span>
+          <span class="continue-meta">{esc(PATHWAYS[target['pathway']])} &middot; {target['readingMinutes']} min read</span>
+        </a>
+      </nav>"""
+
+
 def article_page(article: dict, everything: list[dict]) -> str:
     slug = article["slug"]
     url = f"{SITE}/bulletin/{slug}.html"
     category = CATEGORIES[article["category"]]
+    reveals = bool(article.get("revealsCreator"))
+    creator = PUBLICATION["creator"]
+    total = len(everything)
+    position = article["order"] + 1
 
     body = "\n".join(render_block(b) for b in article["body"])
 
@@ -180,8 +249,8 @@ def article_page(article: dict, everything: list[dict]) -> str:
         f'        <ul>{"".join(cited)}</ul>\n'
         '      </section>')
 
-    related = ""
     by_slug = {a["slug"]: a for a in everything}
+    related = ""
     picks = [by_slug[s] for s in article.get("related", []) if s in by_slug]
     if picks:
         cards = "".join(
@@ -199,6 +268,25 @@ def article_page(article: dict, everything: list[dict]) -> str:
             f'<a href="{esc(l["href"])}">{esc(l["text"])}</a>'
             for l in article["internalLinks"])
         elsewhere = f'      <p class="article-elsewhere">See also: {links}.</p>'
+
+    # Authorship. Until the closing reflection the work belongs to the project,
+    # not to a person — in the visible byline, in the metadata and in the graph.
+    if reveals:
+        author_ref = {"@id": f"{url}#creator"}
+        author_node = [{
+            "@type": "Person",
+            "@id": f"{url}#creator",
+            "name": creator["name"],
+            "affiliation": {"@id": f"{SITE}/#publisher"},
+        }]
+        author_meta = (f'<meta property="article:author" '
+                       f'content="{esc(creator["name"])}">\n')
+        byline = f'<span>By {esc(creator["name"])}</span>'
+    else:
+        author_ref = {"@id": f"{SITE}/#publisher"}
+        author_node = []
+        author_meta = ""
+        byline = f'<span>{esc(PUBLICATION["name"])}</span>'
 
     graph = {
         "@context": "https://schema.org",
@@ -222,16 +310,20 @@ def article_page(article: dict, everything: list[dict]) -> str:
                 "dateModified": article["modified"],
                 "inLanguage": "en-PH",
                 "articleSection": category,
-                "author": {"@id": AUTHOR["id"]},
+                "author": author_ref,
                 "publisher": {"@id": f"{SITE}/#publisher"},
-                "isPartOf": {"@id": f"{SITE}/#website"},
+                "isPartOf": {"@id": PUBLICATION["id"]},
                 "mainEntityOfPage": url,
             },
             {
-                "@type": "Person",
-                "@id": AUTHOR["id"],
-                "name": AUTHOR["name"],
+                "@type": "Blog",
+                "@id": PUBLICATION["id"],
+                "name": PUBLICATION["name"],
+                "url": f"{SITE}/masinloc-bulletin.html",
+                "inLanguage": "en-PH",
+                "publisher": {"@id": f"{SITE}/#publisher"},
             },
+            *author_node,
         ],
     }
     jsonld = ('<script type="application/ld+json">\n'
@@ -241,11 +333,11 @@ def article_page(article: dict, everything: list[dict]) -> str:
                       og_type="article",
                       extra=f'<meta property="article:published_time" content="{article["published"]}">\n'
                             f'<meta property="article:modified_time" content="{article["modified"]}">\n'
-                            f'<meta property="article:author" content="{esc(AUTHOR["name"])}">\n'
+                            + author_meta +
                             f'<meta property="article:section" content="{esc(category)}">\n')
 
     return head + f"""
-<main id="main">
+<main id="main" data-story="{esc(slug)}" data-story-total="{total}">
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="../index.html">Masinloc, Zambales</a></li>
@@ -260,9 +352,10 @@ def article_page(article: dict, everything: list[dict]) -> str:
       <h1>{esc(article['title'])}</h1>
       <p class="article-stand">{esc(article['standfirst'])}</p>
       <p class="article-meta">
-        <span>By {esc(AUTHOR['name'])}</span>
+        {byline}
         <span><time datetime="{article['published']}">{human_date(article['published'])}</time></span>
         <span>{article['readingMinutes']} min read</span>
+        <span class="article-place">{esc(PATHWAYS[article['pathway']])} &middot; part {position} of {total}</span>
       </p>
     </header>
 
@@ -271,36 +364,81 @@ def article_page(article: dict, everything: list[dict]) -> str:
 {elsewhere}
     </div>
 
+{continue_block(article, by_slug, total)}
 {evidence}
 {related}
   </article>
 </main>
-""" + shell_foot(1, jsonld)
+""" + shell_foot(1, jsonld,
+                 '<script src="../bulletin.js?v=20260822-2"></script>\n')
 
 
 # --- archive ------------------------------------------------------------------
 
+def open_questions(articles: list[dict]) -> list[tuple[dict, str]]:
+    """Every 'Still open' note in the library, gathered in one place.
+
+    These are written once, inside the article that earned them. Repeating them
+    by hand at the bottom of the archive would let the two drift apart.
+    """
+    found = []
+    for a in in_order(articles):
+        for block in a["body"]:
+            if block["type"] == "note" and block["label"].lower().startswith("still open"):
+                found.append((a, block["text"]))
+    return found
+
+
 def archive_page(articles: list[dict]) -> str:
     url = f"{SITE}/masinloc-bulletin.html"
-    lead = next((a for a in articles if a.get("featured")), articles[0])
-    rest = [a for a in articles if a["slug"] != lead["slug"]]
-
-    used = [c for c in BULLETIN["categories"]
-            if any(a["category"] == c["id"] for a in articles)]
-    chips = "".join(
-        f'<button type="button" class="chip" data-filter="{esc(c["id"])}">'
-        f'{esc(c["label"])} <span>{sum(1 for a in articles if a["category"] == c["id"])}</span>'
-        "</button>" for c in used)
+    sequence = in_order(articles)
+    by_slug = {a["slug"]: a for a in articles}
+    entry = by_slug[ENTRY_STORY]
+    total = len(articles)
 
     def card(a: dict) -> str:
-        return f"""        <li class="story" data-category="{esc(a['category'])}">
-          <a href="bulletin/{esc(a['slug'])}.html">
-            <p class="story-cat">{esc(CATEGORIES[a['category']])}</p>
-            <h3 class="story-title">{esc(a['title'])}</h3>
-            <p class="story-stand">{esc(a['standfirst'])}</p>
-            <p class="story-meta"><time datetime="{a['published']}">{human_date(a['published'])}</time> &middot; {a['readingMinutes']} min read</p>
-          </a>
-        </li>"""
+        return f"""          <li class="story" data-category="{esc(a['category'])}" data-slug="{esc(a['slug'])}">
+            <a href="bulletin/{esc(a['slug'])}.html">
+              <p class="story-cat">{esc(CATEGORIES[a['category']])}</p>
+              <h4 class="story-title">{esc(a['title'])}</h4>
+              <p class="story-stand">{esc(a['standfirst'])}</p>
+              <p class="story-meta"><time datetime="{a['published']}">{human_date(a['published'])}</time> &middot; {a['readingMinutes']} min read</p>
+            </a>
+          </li>"""
+
+    # The pathway rail: the whole sequence, in order, in one glance.
+    rail = "".join(
+        f'<li class="path-step" data-slug="{esc(a["slug"])}">'
+        f'<a href="bulletin/{esc(a["slug"])}.html">'
+        f'<span class="path-n">{a["order"] + 1}</span>'
+        f'<span class="path-way">{esc(PATHWAYS[a["pathway"]])}</span>'
+        f'<span class="path-title">{esc(a["title"])}</span>'
+        f'</a></li>'
+        for a in sequence)
+
+    recent = by_date(articles)[:3]
+    recent_cards = "\n".join(card(a) for a in recent)
+
+    groups = []
+    for heading, blurb, cats in GROUPS:
+        members = [a for a in sequence if a["category"] in cats]
+        if not members:
+            continue
+        anchor = heading.lower().replace(" & ", "-").replace(" ", "-")
+        groups.append(f"""    <section class="archive-group" id="{esc(anchor)}" aria-labelledby="{esc(anchor)}-title">
+      <div class="group-head">
+        <h3 id="{esc(anchor)}-title">{esc(heading)}</h3>
+        <p>{esc(blurb)}</p>
+      </div>
+      <ol class="story-list">
+{chr(10).join(card(a) for a in members)}
+      </ol>
+    </section>""")
+
+    questions = "".join(
+        f'<li><p class="q-text">{esc(text)}</p>'
+        f'<a href="bulletin/{esc(a["slug"])}.html">{esc(a["title"])}</a></li>'
+        for a, text in open_questions(articles))
 
     graph = {
         "@context": "https://schema.org",
@@ -315,11 +453,22 @@ def archive_page(articles: list[dict]) -> str:
                 "inLanguage": "en-PH",
             },
             {
+                "@type": "Blog",
+                "@id": PUBLICATION["id"],
+                "name": PUBLICATION["name"],
+                "url": url,
+                "description": PUBLICATION["blurb"],
+                "inLanguage": "en-PH",
+                "publisher": {"@id": f"{SITE}/#publisher"},
+            },
+            {
                 "@type": "ItemList",
+                "name": "MABAYANI, in reading order",
+                "itemListOrder": "https://schema.org/ItemListOrderAscending",
                 "itemListElement": [
-                    {"@type": "ListItem", "position": i + 1,
+                    {"@type": "ListItem", "position": a["order"] + 1,
                      "url": f"{SITE}/bulletin/{a['slug']}.html", "name": a["title"]}
-                    for i, a in enumerate(articles)
+                    for a in sequence
                 ],
             },
         ],
@@ -331,39 +480,74 @@ def archive_page(articles: list[dict]) -> str:
         "Masinloc Bulletin | History, Heritage & Language",
         "Researched reporting on Masinloc, Zambales: its documented history, its heritage church, the Sambal Tina language, and the questions still open.",
         url, depth=0) + f"""
-<main id="main">
+<main id="main" data-story-total="{total}">
   <section class="bulletin-hero">
     <p class="section-label">Masinloc Bulletin</p>
     <h1>What we know about Masinloc, and how we know it.</h1>
     <p class="lead">Historical, heritage and language reporting for Masinloc, Zambales. Every article names the evidence it rests on, and says plainly where the evidence stops. Sources are collected in our <a href="sources.html">Sources &amp; References</a> directory.</p>
   </section>
 
-  <section class="bulletin-lead" aria-labelledby="leadTitle">
-    <a class="lead-card" href="bulletin/{esc(lead['slug'])}.html">
-      <p class="story-cat">{esc(CATEGORIES[lead['category']])}</p>
-      <h2 id="leadTitle">{esc(lead['title'])}</h2>
-      <p class="story-stand">{esc(lead['standfirst'])}</p>
-      <p class="story-meta">By {esc(AUTHOR['name'])} &middot; <time datetime="{lead['published']}">{human_date(lead['published'])}</time> &middot; {lead['readingMinutes']} min read</p>
+  <section class="mabayani" aria-labelledby="mabTitle">
+    <div class="mab-mark">
+      <p class="mab-kicker">{esc(PUBLICATION['kicker'])}</p>
+      <h2 id="mabTitle">{esc(PUBLICATION['name'])}</h2>
+      <p class="mab-lead">{esc(PUBLICATION['blurb'])}</p>
+    </div>
+
+    <a class="mab-entry" href="bulletin/{esc(entry['slug'])}.html">
+      <p class="mab-entry-label">Start here</p>
+      <h3>{esc(entry['title'])}</h3>
+      <p class="mab-entry-stand">{esc(entry['standfirst'])}</p>
+      <p class="mab-entry-go"><span>Read the first story</span> <span aria-hidden="true">→</span></p>
     </a>
+
+    <div class="mab-path-wrap">
+      <div class="mab-path-head">
+        <h3 class="mab-path-title">Continue the story</h3>
+        <p class="mab-progress" id="mabProgress" hidden></p>
+      </div>
+      <ol class="mab-path" id="mabPath">
+{rail}
+      </ol>
+      <p class="mab-path-note">Each story stands on its own. Read in order and they build one argument about how Masinloc's history has been told.</p>
+    </div>
   </section>
 
   <section class="bulletin-archive" aria-labelledby="archiveTitle">
     <div class="archive-head">
       <h2 id="archiveTitle">All stories</h2>
       <div class="archive-filters" role="group" aria-label="Filter by category">
-        <button type="button" class="chip is-active" data-filter="all">All <span>{len(articles)}</span></button>
-        {chips}
+        <button type="button" class="chip is-active" data-filter="all">All <span>{total}</span></button>
+        {"".join(
+            f'<button type="button" class="chip" data-filter="{esc(c["id"])}">'
+            f'{esc(c["label"])} <span>{sum(1 for a in articles if a["category"] == c["id"])}</span>'
+            "</button>"
+            for c in BULLETIN["categories"]
+            if any(a["category"] == c["id"] for a in articles))}
       </div>
     </div>
-    <ol class="story-list" id="storyList">
-{chr(10).join(card(a) for a in rest)}
-    </ol>
+
+    <section class="archive-group" id="recent" aria-labelledby="recent-title">
+      <div class="group-head">
+        <h3 id="recent-title">Recently added</h3>
+        <p>The newest work in the library.</p>
+      </div>
+      <ol class="story-list">
+{recent_cards}
+      </ol>
+    </section>
+
+{chr(10).join(groups)}
     <p class="archive-empty" id="archiveEmpty" hidden>No stories in this category yet.</p>
   </section>
+
+  <section class="open-questions" aria-labelledby="openTitle">
+    <h2 id="openTitle">Questions still open</h2>
+    <p class="open-lead">Research that has not been finished. Each one is stated in the article it belongs to, and each one is an invitation: if you can close one, <a href="contact.html">tell us</a>.</p>
+    <ul class="q-list">{questions}</ul>
+  </section>
 </main>
-""" + shell_foot(0, jsonld).replace('<script src="site.js?v=20260820-2"></script>',
-                                    '<script src="site.js?v=20260820-2"></script>\n'
-                                    '<script src="bulletin.js?v=20260822-1"></script>')
+""" + shell_foot(0, jsonld, '<script src="bulletin.js?v=20260822-2"></script>\n')
 
 
 # --- sources ------------------------------------------------------------------
@@ -385,6 +569,7 @@ def sources_page() -> str:
                 # located the entry says so and stays citable.
                 link = (f'<p class="source-pending">{esc(entry["linkStatus"])}</p>')
             rows.append(f"""        <li class="source" id="{esc(entry['id'])}">
+          <p class="source-type">{esc(entry['type'])}</p>
           <h3>{esc(entry['title'])}</h3>
           <p class="source-who">{esc(entry.get('author', ''))}</p>
           <p class="source-pub">{esc(entry.get('publication', ''))}</p>
@@ -443,6 +628,20 @@ def sources_page() -> str:
 def verify(articles: list[dict]) -> None:
     problems = []
     slugs = {a["slug"] for a in articles}
+    grouped = {c for _, _, cats in GROUPS for c in cats}
+    creator = PUBLICATION["creator"]["name"].lower()
+    surname = creator.split()[-1]
+    reveals = [a for a in articles if a.get("revealsCreator")]
+
+    if len(reveals) != 1:
+        problems.append(f"exactly one article may reveal the creator; {len(reveals)} do")
+    elif reveals[0]["order"] != max(a["order"] for a in articles):
+        problems.append(f"the reveal ({reveals[0]['slug']}) is not the last story in the sequence")
+
+    orders = sorted(a["order"] for a in articles)
+    if orders != list(range(len(articles))):
+        problems.append(f"reading order is not a complete run from 0: {orders}")
+
     for a in articles:
         for sid in a["sources"]:
             if sid not in SOURCE_BY_ID:
@@ -454,16 +653,77 @@ def verify(articles: list[dict]) -> None:
                 problems.append(f"{a['slug']}: related article '{rel}' is not published")
         if a["category"] not in CATEGORIES:
             problems.append(f"{a['slug']}: unknown category '{a['category']}'")
+        if a["category"] not in grouped:
+            problems.append(f"{a['slug']}: category '{a['category']}' is in no archive group, "
+                            f"so the story would not appear on the Bulletin")
+        if a["pathway"] not in PATHWAYS:
+            problems.append(f"{a['slug']}: unknown pathway '{a['pathway']}'")
+        if a.get("next"):
+            if a["next"] not in slugs:
+                problems.append(f"{a['slug']}: continues to '{a['next']}', which is not published")
+            if not a.get("nextQuestion"):
+                problems.append(f"{a['slug']}: has a next story but no question to carry the reader there")
+
         text = " ".join(b.get("text", "") for b in a["body"]).lower()
+        haystack = f"{a['title']} {a['standfirst']} {a['description']} {text}".lower()
         for phrase in FORBIDDEN_PUBLIC:
             if phrase in text:
                 problems.append(f"{a['slug']}: cites the internal manuscript publicly "
                                 f"('{phrase}')")
+        for word in BANNED_REGISTER:
+            if word in haystack:
+                problems.append(f"{a['slug']}: uses streaming-serial language ('{word}')")
+        # The anonymity rule, checked at the source as well as in the built HTML.
+        if not a.get("revealsCreator") and (creator in haystack or surname in haystack):
+            problems.append(f"{a['slug']}: names the creator before the closing reflection")
+
     if problems:
         print("BULLETIN BUILD FAILED")
         for p in problems:
             print(f"- {p}")
         sys.exit(1)
+
+
+def sync_sitemap(articles: list[dict]) -> int:
+    """Rewrite the Bulletin's slice of sitemap.xml from the article data.
+
+    The rest of the sitemap is hand-maintained and left untouched; only the
+    bulletin/ entries are owned here. Publishing a story and forgetting to
+    list it is otherwise silent — the page is live and nothing says it is
+    missing from the index.
+    """
+    path = ROOT / "sitemap.xml"
+    text = path.read_text(encoding="utf-8")
+
+    kept, block, dropping = [], [], False
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if stripped == "<url>":
+            block, dropping = [line], False
+        elif block:
+            block.append(line)
+            if "/bulletin/" in stripped:
+                dropping = True
+            if stripped == "</url>":
+                if not dropping:
+                    kept.extend(block)
+                block = []
+        else:
+            kept.append(line)
+
+    entries = []
+    for a in in_order(articles):
+        entries += [
+            "  <url>",
+            f"    <loc>{SITE}/bulletin/{a['slug']}.html</loc>",
+            f"    <lastmod>{a['modified']}</lastmod>",
+            "  </url>",
+        ]
+
+    close = kept.index("</urlset>")
+    kept[close:close] = entries
+    path.write_text("\n".join(kept), encoding="utf-8")
+    return len(articles)
 
 
 def main() -> int:
@@ -486,16 +746,21 @@ def main() -> int:
 
     (ROOT / "masinloc-bulletin.html").write_text(archive_page(articles), encoding="utf-8")
     (ROOT / "sources.html").write_text(sources_page(), encoding="utf-8")
+    listed = sync_sitemap(articles)
 
     words = sum(len(" ".join(b.get("text", "") for b in a["body"]).split())
                 for a in articles)
-    print(f"built {len(articles)} articles ({words:,} words), the archive and "
+    print(f"built {len(articles)} stories ({words:,} words), the Bulletin and "
           f"the sources directory")
-    for a in articles:
-        print(f"  bulletin/{a['slug']}.html  [{CATEGORIES[a['category']]}]")
+    for a in in_order(articles):
+        mark = "  reveal" if a.get("revealsCreator") else ""
+        print(f"  {a['order'] + 1:>2}. bulletin/{a['slug']}.html  "
+              f"[{PATHWAYS[a['pathway']]}]{mark}")
     linked = sum(1 for e in SOURCE_BY_ID.values() if e.get("link"))
     print(f"{len(SOURCE_BY_ID)} sources; {linked} with a verified public link, "
           f"{len(SOURCE_BY_ID) - linked} awaiting one")
+    print(f"{len(open_questions(articles))} open research questions listed")
+    print(f"sitemap.xml carries all {listed} story URLs")
     return 0
 
 
