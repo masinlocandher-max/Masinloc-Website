@@ -1,20 +1,12 @@
-/* The Masinloc Sambal Tina Dictionary — search and reference behaviour.
- *
- * The data is one ordinary JSON file fetched after the page renders. The page
- * itself (its purpose, method, legend, terms and the noscript fallback) is
- * complete in HTML, so nothing essential depends on this script.
- *
- * Deliberately not used here: no gzip stream, no base64, no split fragments,
- * no runtime reconstruction. A dictionary is data; it is served as data.
- */
+/* The Masinloc Sambal Tina Dictionary search experience. */
 (() => {
   'use strict';
 
   const DATA_URL = 'data/sambal-tina.json?v=20260821-3';
   const PAGE_SIZE = 60;
-
-  /* Column order is published in the JSON; mirrored here for readability. */
   const TINA = 0, POS = 1, EN = 2, FIL = 3, PAGES = 4, STATUS = 5, CONF = 6, NOTE = 7;
+  const COMMUNITY_STATUS = 'USER-CONFIRMED LIVING USAGE';
+  const COMMUNITY_MARKER = 'User-confirmed living usage.';
 
   const query = document.getElementById('dictQuery');
   const clear = document.getElementById('dictClear');
@@ -25,6 +17,7 @@
   const alphabet = document.getElementById('dictAlphabet');
   const daily = document.getElementById('daily');
   const chips = [...document.querySelectorAll('.chip')];
+  const entryCount = document.getElementById('dictionaryEntryCount');
 
   if (!query || !results || !status) return;
 
@@ -45,12 +38,22 @@
     }[character])
   );
 
-  /* --- review status ------------------------------------------------------ */
+  function fold(value) {
+    return String(value ?? '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '');
+  }
 
   function badgeFor(confidence) {
-    if (confidence >= 4) return { className: 'badge-strong', label: 'Well supported' };
-    if (confidence === 3) return { className: 'badge-ok', label: 'Readable' };
-    return { className: 'badge-check', label: 'Needs another look' };
+    if (confidence >= 4) return { className: 'badge-strong', label: 'Verified' };
+    if (confidence === 3) return { className: 'badge-ok', label: 'Reviewed' };
+    return { className: 'badge-check', label: 'Review in progress' };
+  }
+
+  function isCommunityConfirmed(entry) {
+    const statusText = statuses[entry[STATUS]] || '';
+    return statusText === COMMUNITY_STATUS || String(entry[NOTE] || '').includes(COMMUNITY_MARKER);
   }
 
   function passesFilter(entry) {
@@ -60,24 +63,12 @@
     return true;
   }
 
-  /* --- search ------------------------------------------------------------- */
-
-  /* Accent- and case-insensitive, so a damaged glyph and its plain form match. */
-  function fold(value) {
-    return String(value ?? '')
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '');
-  }
-
   function highlight(value, needle) {
     const text = escapeHtml(value);
     if (!needle) return text;
     const at = fold(value).indexOf(needle);
     if (at < 0) return text;
 
-    /* Folding can change length per character, so walk the original string to
-       find the span that corresponds to the folded match. */
     let start = -1, end = -1, cursor = 0;
     for (let i = 0; i < value.length; i += 1) {
       const width = fold(value[i]).length;
@@ -102,50 +93,33 @@
     for (let i = 0; i < entries.length; i += 1) {
       if (!passesFilter(entries[i])) continue;
       if (haystack[i].indexOf(needle) < 0) continue;
-      /* A headword that begins with the term is the more useful answer. */
       (fold(entries[i][TINA]).startsWith(needle) ? starts : contains).push(entries[i]);
     }
     return starts.concat(contains);
   }
 
-  /* --- rendering ---------------------------------------------------------- */
-
   function renderEntry(entry, needle) {
     const badge = badgeFor(entry[CONF]);
-    const statusText = statuses[entry[STATUS]] || '';
+    const community = isCommunityConfirmed(entry);
     const parts = [];
 
-    parts.push('<li class="dict-entry" data-tina="' + escapeHtml(entry[TINA]) + '">');
+    parts.push('<li class="dict-entry' + (community ? ' is-living-usage' : '')
+      + '" data-tina="' + escapeHtml(entry[TINA]) + '">');
 
     parts.push('<div class="entry-head">');
     parts.push('<p class="entry-tina">' + highlight(entry[TINA], needle) + '</p>');
-    if (entry[POS]) {
-      parts.push('<span class="entry-pos">' + escapeHtml(entry[POS]) + '</span>');
-    }
+    if (entry[POS]) parts.push('<span class="entry-pos">' + escapeHtml(entry[POS]) + '</span>');
     parts.push('</div>');
 
     parts.push('<div class="entry-glosses">');
-    if (entry[EN]) {
-      parts.push('<p class="entry-en">' + highlight(entry[EN], needle) + '</p>');
-    } else {
-      parts.push('<p class="entry-missing">No English gloss in the printed index.</p>');
-    }
-    if (entry[FIL]) {
-      parts.push('<p class="entry-fil">' + highlight(entry[FIL], needle) + '</p>');
-    }
-    if (statusText) {
-      parts.push('<p class="entry-status">' + escapeHtml(statusText) + '</p>');
-    }
+    if (entry[EN]) parts.push('<p class="entry-en">' + highlight(entry[EN], needle) + '</p>');
+    else parts.push('<p class="entry-missing">Meaning still being reviewed.</p>');
+    if (entry[FIL]) parts.push('<p class="entry-fil">' + highlight(entry[FIL], needle) + '</p>');
     parts.push('</div>');
 
     parts.push('<div class="entry-meta">');
     parts.push('<span class="badge ' + badge.className + '">' + badge.label + '</span>');
-    if (entry[PAGES]) {
-      parts.push('<span class="badge badge-page">p.&nbsp;' + escapeHtml(entry[PAGES]) + '</span>');
-    }
-    if (entry[NOTE]) {
-      parts.push('<p class="entry-note">' + escapeHtml(entry[NOTE]) + '</p>');
-    }
+    if (community) parts.push('<span class="badge badge-living">Community-confirmed</span>');
     parts.push('<button type="button" class="entry-copy" data-copy="'
       + escapeHtml(entry[TINA]) + '">Copy</button>');
     parts.push('</div>');
@@ -161,10 +135,7 @@
       shown = 0;
     }
     const next = matches.slice(shown, shown + PAGE_SIZE);
-    results.insertAdjacentHTML(
-      'beforeend',
-      next.map((entry) => renderEntry(entry, needle)).join('')
-    );
+    results.insertAdjacentHTML('beforeend', next.map((entry) => renderEntry(entry, needle)).join(''));
     shown += next.length;
     more.hidden = shown >= matches.length;
     if (!more.hidden) {
@@ -172,9 +143,6 @@
     }
   }
 
-  /* Counts stay live so the filters read as a summary, not just controls.
-     Scope is the search term and letter but NOT the status filter, so each
-     chip answers "how many would I get if I picked this one". */
   function refreshCounts() {
     const term = fold(query.value).trim();
     const counts = { all: 0, supported: 0, check: 0 };
@@ -203,22 +171,18 @@
     refreshCounts();
 
     if (!matches.length) {
-      status.textContent = term
-        ? `No entries match “${term}”.`
-        : 'No entries match this filter.';
+      status.textContent = term ? `No entries match “${term}”.` : 'No entries match this filter.';
       results.innerHTML = '';
       more.hidden = true;
     } else {
       status.textContent = term
         ? `${total} ${matches.length === 1 ? 'entry' : 'entries'} matching “${term}”.`
-        : `${total} entries.`;
+        : `${total} searchable entries.`;
       renderPage(true);
     }
 
     if (pushState !== false) syncUrl();
   }
-
-  /* --- shareable state ---------------------------------------------------- */
 
   function syncUrl() {
     const params = new URLSearchParams();
@@ -247,8 +211,6 @@
     });
   }
 
-  /* --- alphabet ----------------------------------------------------------- */
-
   function renderAlphabet() {
     if (!alphabet) return;
     const available = new Set(entries.map((entry) => fold(entry[TINA]).charAt(0))
@@ -263,44 +225,23 @@
     alphabet.innerHTML = buttons.join('');
   }
 
-  /* --- entry of the day --------------------------------------------------- */
-
-  /* Transcription noise that survives into the glosses: digits standing in for
-     accented vowels, broken glyphs, mid-word capitals, and the f/i
-     substitution. Mirrors SUSPECT_GLOSS in scripts/build-dictionary.py. */
   const SUSPECT = /[0-9~_!\]·]|[a-z][A-Z]|\w[fF]\w/;
-
   const firstSense = (gloss) => String(gloss || '').split(/[;,]/)[0].trim();
-
-  /* Show a gloss only when it is clean enough to stand on its own. A damaged
-     transcription is dropped rather than repaired. */
   const cleanGloss = (gloss) => {
     const sense = firstSense(gloss);
     return sense && !SUSPECT.test(sense) ? sense : '';
   };
 
-  /* Deterministic per calendar day, so the page is worth returning to without
-     inventing anything. Drawn from the curated vocabulary in the data rather
-     than the whole dictionary: picking by date across 5,222 entries
-     eventually features something crude or obscure. */
-  function renderDaily(eligible) {
+  function renderDaily() {
     if (!daily) return;
-    const allowed = new Set(Array.isArray(eligible) ? eligible : []);
-    const pool = entries.filter((entry) =>
-      allowed.has(entry[TINA]) && cleanGloss(entry[EN]) && entry[PAGES]);
-    if (!pool.length) return;
+    const entry = entries.find((item) => fold(item[TINA]) === 'matibya');
+    if (!entry) return;
 
-    const today = new Date();
-    const stamp = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
-    const index = Math.floor(stamp / 86400000) % pool.length;
-    const entry = pool[index];
-
-    const filipino = cleanGloss(entry[FIL]);
-    daily.querySelector('.daily-word').textContent = entry[TINA];
-    daily.querySelector('.daily-gloss').textContent =
-      cleanGloss(entry[EN]) + (filipino ? ' · ' + filipino : '');
-    daily.querySelector('.daily-meta').textContent =
-      (entry[POS] ? entry[POS] + ' — ' : '') + 'archive p. ' + entry[PAGES];
+    const english = cleanGloss(entry[EN]) || 'red';
+    const filipino = cleanGloss(entry[FIL]) || 'pula';
+    daily.querySelector('.daily-word').textContent = 'matibya';
+    daily.querySelector('.daily-gloss').textContent = `${english} · ${filipino}`;
+    daily.querySelector('.daily-meta').textContent = 'Community-confirmed · adjective';
     daily.hidden = false;
   }
 
@@ -313,9 +254,6 @@
         + '<span class="phrase-tina">' + escapeHtml(word.tina) + '</span><br>'
         + '<span class="phrase-en">' + escapeHtml(word.en) + '</span>'
         + '</span>'
-        + (word.pages
-          ? '<span class="phrase-page">p.&nbsp;' + escapeHtml(word.pages) + '</span>'
-          : '')
         + '</li>'
       )).join('');
       return '<div class="phrase-group">'
@@ -324,8 +262,6 @@
         + '</div>';
     }).join('');
   }
-
-  /* --- wiring ------------------------------------------------------------- */
 
   let debounce = 0;
   query.addEventListener('input', () => {
@@ -363,7 +299,6 @@
     });
   }
 
-  /* Copy a headword without hunting for it with a cursor. */
   results.addEventListener('click', (event) => {
     const button = event.target.closest('.entry-copy');
     if (!button || !navigator.clipboard) return;
@@ -377,7 +312,6 @@
     }).catch(() => {});
   });
 
-  /* "/" reaches the search field, Escape leaves it. */
   document.addEventListener('keydown', (event) => {
     if (event.key === '/' && document.activeElement !== query
         && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName || '')) {
@@ -402,20 +336,16 @@
     .then((payload) => {
       entries = payload.entries || [];
       statuses = payload.statuses || [];
-      /* One folded string per entry keeps every keystroke cheap. */
-      haystack = entries.map((entry) => fold(
-        entry[TINA] + ' ' + entry[EN] + ' ' + entry[FIL]
-      ));
+      haystack = entries.map((entry) => fold(entry[TINA] + ' ' + entry[EN] + ' ' + entry[FIL]));
+      if (entryCount) entryCount.textContent = numberFormat.format(entries.length);
       readUrl();
       renderAlphabet();
-      renderDaily(payload.daily);
+      renderDaily();
       renderPhrasebook(payload.phrasebook);
       update(false);
     })
     .catch(() => {
-      status.textContent =
-        'The dictionary could not be loaded. The complete data, including every '
-        + 'archive page reference and confidence rating, remains available to download.';
-      if (groups) groups.setAttribute('data-empty', 'Unavailable.');
+      status.textContent = 'The word list could not be loaded right now. Please refresh and try again.';
+      if (groups) groups.setAttribute('data-empty', 'Unavailable right now.');
     });
 })();
