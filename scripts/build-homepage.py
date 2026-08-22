@@ -269,15 +269,21 @@ def render() -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#03112F">
-<title>Masinloc, Zambales</title>
-<meta name="description" content="Masinloc, Zambales: eight places worth the trip, the Sambal Tina language written down in {n['total']:,} entries, and the record behind both. By the Mabayani Project by FMB.">
+<title>Masinloc, Zambales | History, Sambal Tina &amp; Places</title>
+<meta name="description" content="Masinloc, Zambales through its places, the Sambal Tina language recorded in {n['total']:,} dictionary entries, and the archive behind both.">
 <link rel="canonical" href="https://masinloc-zambales.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Masinloc, Zambales">
-<meta property="og:description" content="Eight places, one language, and the record behind both.">
+<meta property="og:site_name" content="Masinloc, Zambales">
+<meta property="og:locale" content="en_PH">
+<meta property="og:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
+<meta property="og:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
 <meta property="og:url" content="https://masinloc-zambales.com/">
 <meta property="og:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
+<meta property="og:image:alt" content="The Masinloc Connect app shown on a phone">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
+<meta name="twitter:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
+<meta name="twitter:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preload" as="image" href="{hero}" type="image/avif" fetchpriority="high">
@@ -343,7 +349,7 @@ def render() -> str:
       <div>
         <p class="stage-label">Place</p>
         <h2 id="discoverTitle" class="discover-title">Eight places we grew up in.</h2>
-        <p class="stage-lead">Photographed properly, named properly, and close enough to reach on a weekend.</p>
+        <p class="stage-lead">Each one photographed where it actually is, and named with the barangay it belongs to.</p>
         <ul class="place-list">
 {discover_rows()}
         </ul>
@@ -480,6 +486,50 @@ def render() -> str:
   </div>
 </footer>
 
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@graph": [
+    {{
+      "@type": "WebSite",
+      "@id": "https://masinloc-zambales.com/#website",
+      "url": "https://masinloc-zambales.com/",
+      "name": "Masinloc, Zambales",
+      "description": "An independent community record of Masinloc, Zambales: its places, the Sambal Tina language, and local history.",
+      "inLanguage": "en-PH",
+      "publisher": {{ "@id": "https://masinloc-zambales.com/#publisher" }}
+    }},
+    {{
+      "@type": "Organization",
+      "@id": "https://masinloc-zambales.com/#publisher",
+      "name": "Mabayani Project by FMB",
+      "url": "https://masinloc-zambales.com/",
+      "logo": "https://masinloc-zambales.com/assets/masinloc-logo.webp",
+      "email": "hello@masinloc-zambales.com"
+    }},
+    {{
+      "@type": "WebPage",
+      "@id": "https://masinloc-zambales.com/#webpage",
+      "url": "https://masinloc-zambales.com/",
+      "name": "Masinloc, Zambales | History, Sambal Tina & Places",
+      "isPartOf": {{ "@id": "https://masinloc-zambales.com/#website" }},
+      "about": {{ "@id": "https://masinloc-zambales.com/#place" }},
+      "primaryImageOfPage": "https://masinloc-zambales.com/{hero}"
+    }},
+    {{
+      "@type": "Place",
+      "@id": "https://masinloc-zambales.com/#place",
+      "name": "Masinloc",
+      "address": {{
+        "@type": "PostalAddress",
+        "addressLocality": "Masinloc",
+        "addressRegion": "Zambales",
+        "addressCountry": "PH"
+      }}
+    }}
+  ]
+}}
+</script>
 <script src="site.js?v=20260820-2"></script>
 <script src="homepage.js?v=20260822-1" defer></script>
 </body>

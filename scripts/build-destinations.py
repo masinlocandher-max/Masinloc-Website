@@ -31,15 +31,21 @@ HEAD = """<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#03112F">
-<title>The places we grew up in</title>
-<meta name="description" content="Eight places in Masinloc, Zambales — Hamat River, San Salvador Island, Coto Kidz Pool, San Andres Church, Bunga Cave, Bacala Sandbar, Sitio Buri and the Baywalk — photographed and written down by Masinloqueños.">
+<title>Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage</title>
+<meta name="description" content="Eight places in Masinloc, Zambales: Hamat River, San Salvador Island, Coto Kidz Pool, San Andres Church, Bunga Cave, Bacala Sandbar, Sitio Buri and the Baywalk.">
 <link rel="canonical" href="https://masinloc-zambales.com/destinations.html">
 <meta property="og:type" content="website">
-<meta property="og:title" content="The places we grew up in">
-<meta property="og:description" content="The river, the island, the cave, the church, the sandbar and the baywalk. Masinloc, Zambales, as we know it.">
+<meta property="og:site_name" content="Masinloc, Zambales">
+<meta property="og:locale" content="en_PH">
+<meta property="og:title" content="Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage">
+<meta property="og:description" content="Eight documented places in Masinloc, Zambales: the river, the island, the cave, the church, the sandbar and the baywalk.">
 <meta property="og:url" content="https://masinloc-zambales.com/destinations.html">
 <meta property="og:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
+<meta property="og:image:alt" content="Masinloc, Zambales from the air">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage">
+<meta name="twitter:description" content="Eight documented places in Masinloc, Zambales: the river, the island, the cave, the church, the sandbar and the baywalk.">
+<meta name="twitter:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="tokens.css?v=20260821-4">
@@ -64,10 +70,18 @@ HEAD = """<!doctype html>
 </header>
 
 <main id="main">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="index.html">Masinloc, Zambales</a></li>
+      <li><a href="a-closer-look.html">A Closer Look</a></li>
+      <li><span aria-current="page">Places</span></li>
+    </ol>
+  </nav>
+
   <section class="places-hero">
     <p class="section-label">A Closer Look · Places</p>
     <h1>The places we<br>grew up in.</h1>
-    <p class="lead">You know these {count} already. Some you swam in every summer, some you pass on the way to work, one you were probably baptised in. Nobody had ever photographed them properly and put them in one place. So we did.</p>
+    <p class="lead">{count_word} places in Masinloc, Zambales, each photographed where it actually is and written down with the barangay it belongs to. Most of us grew up in them; nobody had put them in one place before.</p>
     <a class="places-scroll" href="#{first}">Start at {first_name}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M7 13l5 5 5-5"/></svg></a>
   </section>
 
@@ -99,6 +113,7 @@ FOOT = """</main>
   <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="mailto:hello@masinloc-zambales.com">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>
+{jsonld}
 <script src="site.js?v=20260820-2"></script>
 <script src="destinations.js?v=20260821-4"></script>
 </body>
@@ -159,6 +174,7 @@ def section(location: dict, position: int, total: int) -> str:
       <h2 class="place-name" id="{slug}-name">{esc['name']}</h2>
       <p class="place-locality">{esc['locality']}</p>
       <p class="place-rhyme">{esc['rhyme']}</p>
+      <p class="place-caption">{esc['caption']}</p>
       <div class="place-detail">
         <div class="place-todo">
           <h3>Things to do</h3>
@@ -174,6 +190,62 @@ def section(location: dict, position: int, total: int) -> str:
   </section>
 
 """
+
+
+
+def structured_data(locations: list[dict]) -> str:
+    """BreadcrumbList plus a Place for each documented location."""
+    site = "https://masinloc-zambales.com"
+    places = []
+    for loc in locations:
+        slug = loc["slug"]
+        places.append({
+            "@type": "Place",
+            "@id": f"{site}/destinations.html#{slug}",
+            "name": loc["name"],
+            "description": loc["caption"],
+            "image": f"{site}/assets/locations/{slug}-{largest(slug, 'jpg')}.jpg",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Masinloc",
+                "addressRegion": "Zambales",
+                "addressCountry": "PH",
+            },
+            "containedInPlace": {"@id": f"{site}/#place"},
+        })
+    graph = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Masinloc, Zambales",
+                     "item": f"{site}/"},
+                    {"@type": "ListItem", "position": 2, "name": "A Closer Look",
+                     "item": f"{site}/a-closer-look.html"},
+                    {"@type": "ListItem", "position": 3, "name": "Places",
+                     "item": f"{site}/destinations.html"},
+                ],
+            },
+            {
+                "@type": "CollectionPage",
+                "@id": f"{site}/destinations.html#webpage",
+                "url": f"{site}/destinations.html",
+                "name": "Places in Masinloc, Zambales",
+                "isPartOf": {"@id": f"{site}/#website"},
+                "inLanguage": "en-PH",
+                "hasPart": [{"@id": place["@id"]} for place in places],
+            },
+            *places,
+        ],
+    }
+    return ('<script type="application/ld+json">\n'
+            + json.dumps(graph, indent=2, ensure_ascii=False)
+            + "\n</script>")
+
+
+COUNT_WORDS = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five",
+               6: "Six", 7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten"}
 
 
 def main() -> int:
@@ -196,10 +268,11 @@ def main() -> int:
 
     page = HEAD.format(
         count=total,
+        count_word=COUNT_WORDS.get(total, str(total)),
         first=locations[0]["slug"],
         first_name=html.escape(locations[0]["name"]),
         index=index,
-    ) + body + FOOT
+    ) + body + FOOT.format(jsonld=structured_data(locations))
 
     PAGE.write_text(page, encoding="utf-8")
     print(f"wrote {PAGE.relative_to(ROOT)} — {total} places")
