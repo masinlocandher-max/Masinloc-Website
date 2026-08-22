@@ -98,6 +98,78 @@
     return starts.concat(contains);
   }
 
+
+  /* --- the editable layer ------------------------------------------------ */
+
+  /* The archive is a static file and stays that way: it records what the
+     source says. Anything an editor adds or corrects lives in the database and
+     is merged in here, so a correction is visibly a correction rather than a
+     silent rewrite of the record.
+
+     Read directly over REST rather than through the client library, because
+     the page needs one small GET and not a bundle. The key is the publishable
+     one; row-level security and column grants are what actually protect the
+     table, and only published rows with public columns are reachable. */
+  const EDITS_URL = 'https://uwcqvsitjtknxsaypjxj.supabase.co/rest/v1/dictionary_entries'
+    + '?select=tina,pos,en,fil,example,example_en,note,layer,credit_name'
+    + '&status=eq.published&order=tina.asc';
+  const EDITS_KEY = 'sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';
+
+  const LAYER_LABEL = {
+    living: 'Confirmed by speakers',
+    correction: 'Corrected reading',
+    new: 'Added by the community',
+  };
+
+  /* Editor rows are folded into the same shape the archive uses, so search,
+     filtering and rendering need no special case. */
+  function asEntry(row) {
+    const entry = [];
+    entry[TINA] = row.tina || '';
+    entry[POS] = row.pos || '';
+    entry[EN] = row.en || '';
+    entry[FIL] = row.fil || '';
+    entry[PAGES] = '';
+    entry[STATUS] = null;
+    /* Editor-maintained readings are settled by definition: someone decided
+       them on purpose rather than reading them off a damaged page. */
+    entry[CONF] = 5;
+    entry[NOTE] = row.note || '';
+    entry.edited = {
+      layer: row.layer || 'living',
+      credit: row.credit_name || '',
+      example: row.example || '',
+      exampleEn: row.example_en || '',
+    };
+    return entry;
+  }
+
+  function loadEdits() {
+    return fetch(EDITS_URL, { headers: { apikey: EDITS_KEY }, cache: 'no-store' })
+      .then((response) => (response.ok ? response.json() : []))
+      .then((rows) => (Array.isArray(rows) ? rows.map(asEntry) : []))
+      /* The archive alone is a complete dictionary. If this layer cannot be
+         reached the page carries on rather than failing. */
+      .catch(() => []);
+  }
+
+  function mergeEdits(edited) {
+    if (!edited.length) return;
+    const at = new Map();
+    entries.forEach((entry, i) => at.set(fold(entry[TINA]), i));
+    edited.forEach((entry) => {
+      const key = fold(entry[TINA]);
+      const found = at.get(key);
+      /* A correction replaces the archive reading in the search results; a new
+         word joins the list. Either way the entry carries its own label. */
+      if (found !== undefined && entry.edited.layer === 'correction') entries[found] = entry;
+      else if (found === undefined) entries.push(entry);
+      else entries[found] = entry;
+    });
+    entries.sort((a, b) => fold(a[TINA]).localeCompare(fold(b[TINA])));
+    haystack = entries.map((entry) => fold(entry[TINA] + ' ' + entry[EN] + ' ' + entry[FIL]));
+  }
+
   function renderEntry(entry, needle) {
     const badge = badgeFor(entry[CONF]);
     const community = isCommunityConfirmed(entry);
@@ -115,9 +187,23 @@
     if (entry[EN]) parts.push('<p class="entry-en">' + highlight(entry[EN], needle) + '</p>');
     else parts.push('<p class="entry-missing">Meaning still being reviewed.</p>');
     if (entry[FIL]) parts.push('<p class="entry-fil">' + highlight(entry[FIL], needle) + '</p>');
+    if (entry.edited && entry.edited.example) {
+      parts.push('<p class="entry-example">' + escapeHtml(entry.edited.example)
+        + (entry.edited.exampleEn
+          ? ' <span>' + escapeHtml(entry.edited.exampleEn) + '</span>'
+          : '') + '</p>');
+    }
     parts.push('</div>');
 
     parts.push('<div class="entry-meta">');
+    if (entry.edited) {
+      parts.push('<span class="badge badge-edited">'
+        + escapeHtml(LAYER_LABEL[entry.edited.layer] || 'Confirmed by speakers') + '</span>');
+      if (entry.edited.credit) {
+        parts.push('<span class="entry-credit">Added by '
+          + escapeHtml(entry.edited.credit) + '</span>');
+      }
+    }
     parts.push('<span class="badge ' + badge.className + '">' + badge.label + '</span>');
     if (community) parts.push('<span class="badge badge-living">Community-confirmed</span>');
     parts.push('<button type="button" class="entry-copy" data-copy="'
@@ -337,11 +423,15 @@
       entries = payload.entries || [];
       statuses = payload.statuses || [];
       haystack = entries.map((entry) => fold(entry[TINA] + ' ' + entry[EN] + ' ' + entry[FIL]));
+      renderPhrasebook(payload.phrasebook);
+      return loadEdits();
+    })
+    .then((edited) => {
+      mergeEdits(edited || []);
       if (entryCount) entryCount.textContent = numberFormat.format(entries.length);
       readUrl();
       renderAlphabet();
       renderDaily();
-      renderPhrasebook(payload.phrasebook);
       update(false);
     })
     .catch(() => {

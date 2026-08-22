@@ -648,3 +648,17 @@ mark{background:rgba(255,199,0,.34);color:inherit;border-radius:2px;padding:0 1p
 .crumbs a:hover{text-decoration:underline}
 .crumbs [aria-current]{color:var(--ink)}
 .living-static{border-top:1px solid var(--line)}
+
+/* Entries maintained by an editor, layered over the archive. The label is
+   part of the entry, not decoration: a reader should be able to tell a
+   corrected reading from what the source actually said. */
+.badge-edited{background:rgba(13,59,158,.1);color:var(--blue)}
+.entry-credit{
+  font:400 11px/1.4 var(--font-ui);color:var(--muted);
+  align-self:center;
+}
+.entry-example{
+  margin:8px 0 0;font:400 13.5px/1.55 var(--font-ui);
+  color:var(--text);font-style:italic;
+}
+.entry-example span{font-style:normal;color:var(--muted)}

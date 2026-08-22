@@ -137,6 +137,9 @@ if admin.is_file():
         # cols:[['Label','column'], ...] plus r.column accessors
         read = set(re.findall(r"""\[\s*['"][^'"]+['"]\s*,\s*['"](\w+)['"]\s*\]""", config))
         read |= set(re.findall(r"\br\.(\w+)", config))
+        # Fields the console offers as editable must exist, or a save fails
+        # with a database error the editor cannot act on.
+        read |= set(re.findall(r"\{\s*k\s*:\s*['\"](\w+)['\"]", config))
         for column in sorted(read - columns):
             fail(f"admin.js reads {table}.{column}, which the migration does "
                  f"not define")

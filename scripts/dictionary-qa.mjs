@@ -9,6 +9,12 @@ const browser = await chromium.launch({ headless: true });
 
 async function run(label, viewport) {
   const context = await browser.newContext({ viewport });
+  /* The editable dictionary layer is a third-party host. These checks are
+     about the page, not about whether Supabase is reachable, so it is
+     served empty here. scripts/dictionary-entries-qa.mjs covers the layer
+     itself, including what happens when it cannot be reached. */
+  await context.route('**/rest/v1/dictionary_entries*', (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: '[]' }));
   const page = await context.newPage();
   const errors = [];
 

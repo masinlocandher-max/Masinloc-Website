@@ -44,6 +44,7 @@ jobs:
           node --check scripts/destinations-qa.mjs
           node --check scripts/responsive-qa.mjs
           node --check scripts/homepage-qa.mjs
+          node --check scripts/dictionary-entries-qa.mjs
           node --check sambal-tina-living.js
           node --check sambal-tina-community.js
           node --check scripts/living-sambal-qa.mjs

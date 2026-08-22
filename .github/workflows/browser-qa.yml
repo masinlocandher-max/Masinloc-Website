@@ -47,6 +47,9 @@ jobs:
       - name: Run Sambal Tina dictionary checks
         run: node scripts/dictionary-qa.mjs
 
+      - name: Run editable dictionary layer checks
+        run: node scripts/dictionary-entries-qa.mjs
+
       - name: Run living Sambal Tina checks
         run: node scripts/living-sambal-qa.mjs
 
