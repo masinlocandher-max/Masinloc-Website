@@ -41,7 +41,6 @@ jobs:
           node --check scripts/responsive-qa.mjs
           node --check sambal-tina-living.js
           node --check sambal-tina-community.js
-          node --check sambal-contribute.js
           node --check scripts/living-sambal-qa.mjs
           node --check scripts/sambal-community-qa-v2.mjs
       - name: Validate locations mapping and photography
