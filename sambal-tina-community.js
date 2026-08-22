@@ -29,7 +29,7 @@
     lastFocus?.focus?.();
   }
 
-  function setKind(kind) {
+  function setKind(kind, { clearMessage = true } = {}) {
     const correction = kind === 'correction';
     submissionType.value = correction ? 'correction' : 'new_entry';
     form.querySelectorAll('[data-kind]').forEach((button) => {
@@ -46,7 +46,7 @@
     }
     const title = document.getElementById('contributionTitle');
     if (title) title.textContent = correction ? 'Help us correct an entry.' : 'Share a word you know.';
-    message.textContent = '';
+    if (clearMessage) message.textContent = '';
   }
 
   document.querySelectorAll('[data-contribution-type]').forEach((button) => {
@@ -172,10 +172,13 @@
       const result = await response.json().catch(() => ({}));
       if (!response.ok || !result.ok) throw new Error(result.error || 'Submission failed.');
 
-      message.classList.add('is-success');
-      message.textContent = `Salamat! We received it. Reference ${result.reference_code}. We will check whether it already exists, review the details, and verify it before approval.`;
+      const reference = result.reference_code || result.reference || '';
       form.reset();
-      setKind('new_entry');
+      setKind('new_entry', { clearMessage: false });
+      message.className = 'dict-form-message is-success';
+      message.textContent = reference
+        ? `Salamat! We received it. Reference ${reference}. We will check whether it already exists, review the details, and verify it before approval.`
+        : 'Salamat! We received it. We will check whether it already exists, review the details, and verify it before approval.';
       contributorsLoaded = false;
     } catch (error) {
       message.classList.add('is-error');
