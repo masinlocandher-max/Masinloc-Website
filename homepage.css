@@ -201,45 +201,25 @@ html{scroll-padding-top:96px}
 #discoverTitle{scroll-margin-top:104px}
 
 /* ------------------------------------------------- 02 · entry points ----- */
-/* Four doors directly under the hero, backing the claim up before anything
-   else asks for attention.
-   They are glass over wallpaper, the way the system sheets on a phone are:
-   the photograph behind them stays sharp and each panel blurs only what falls
-   within its own rectangle. Scoping the blur to the cards rather than to a
-   full-viewport layer is both how iOS actually does it and far cheaper — a
-   viewport-sized blur is one of the most expensive things a phone can be
-   asked to composite. The photograph is the hero's own file, already
-   preloaded and decoded, shown at a different part of the frame. */
+/* Four doors under the hero, and the place the palette actually lives on this
+   page. White ground, and four translucent tinted sheets on it — white,
+   yellow, blue, red. Light glass rather than solid blocks: each card is a wash
+   the ground shows through, which is how the tinted sheets on a phone behave
+   in light mode, and it keeps the identity colours present without turning
+   the row into four flat slabs.
+   No photograph here. The hero already spends the largest image on the site
+   two hundred pixels above this, and repeating it was the section's weakest
+   idea. White carries the colour better than a picture would. */
 
 .entries{
-  position:relative;isolation:isolate;overflow:clip;
+  position:relative;
   padding-block:clamp(54px,8vh,104px);
-  background:var(--navy-deep);
+  background:var(--white);
 }
-.entries-bed{position:absolute;inset:0;z-index:0}
-.entries-bed img{width:100%;height:100%;object-fit:cover;object-position:50% 84%}
-/* The panels are translucent, so their legibility is the wallpaper's job:
-   white type has to survive being seen partly through the card. */
-.entries-bed::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(3,17,47,.97),rgba(3,17,47,.66) 42%,rgba(3,17,47,.94));
-}
-/* Same lesson as the hero: the phone crop of this photograph is brighter than
-   the desktop one, and the type here is sitting on translucent glass on top of
-   it. Measured on the phone the 14px line fell to 4.06:1, so the wallpaper is
-   taken down further at that width rather than the glass being made solid. */
-@media (max-width:760px){
-  .entries-bed::after{
-    background:linear-gradient(180deg,rgba(3,17,47,.97),rgba(3,17,47,.86) 42%,rgba(3,17,47,.97));
-  }
-}
-.entries-inner{
-  position:relative;z-index:1;
-  max-width:1560px;margin-inline:auto;padding-inline:var(--gutter);
-}
+.entries-inner{max-width:1560px;margin-inline:auto;padding-inline:var(--gutter)}
 .entries-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
-.entries-head .stage-label{color:var(--yellow);margin:0}
-.entries-head p{margin:0;font:400 13.5px/1.5 var(--font-ui);color:rgba(255,255,255,.62)}
+.entries-head .stage-label{margin:0;color:var(--blue)}
+.entries-head p{margin:0;font:400 13.5px/1.5 var(--font-ui);color:var(--muted)}
 
 .door-grid{
   list-style:none;margin:clamp(22px,3.4vh,34px) 0 0;padding:0;
@@ -249,37 +229,44 @@ html{scroll-padding-top:96px}
 @media (min-width:640px){.door-grid{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1100px){.door-grid{grid-template-columns:repeat(4,1fr)}}
 
+/* One card, four tints. --wash is the translucent field, --edge its hairline,
+   --chip the solid colour the icon sits on, --glyph what is drawn on it. */
 .door a{
   display:flex;flex-direction:column;height:100%;gap:13px;
   padding:clamp(20px,2vw,26px);
-  border-radius:22px;text-decoration:none;color:var(--white);
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.18);
-  /* The inset hairline along the top edge is what makes a translucent panel
-     read as a physical sheet rather than a flat tint. */
-  box-shadow:0 26px 50px -26px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.24);
-  backdrop-filter:blur(24px) saturate(150%);
-  -webkit-backdrop-filter:blur(24px) saturate(150%);
-  transition:transform 320ms var(--ease-standard),background 320ms var(--ease-standard),
+  border-radius:22px;text-decoration:none;color:var(--ink);
+  background:var(--wash);
+  border:1px solid var(--edge);
+  /* The inset hairline of light along the top edge is what makes a
+     translucent panel read as a sheet rather than a flat fill. */
+  box-shadow:0 18px 34px -22px rgba(6,26,70,.42),inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:transform 320ms var(--ease-standard),box-shadow 320ms var(--ease-standard),
              border-color 320ms var(--ease-standard);
-}
-/* Where the blur is unavailable the panel is only a tint, so it has to carry
-   the contrast by itself. */
-@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
-  .door a{background:rgba(6,26,70,.78)}
 }
 .door a:hover,.door a:focus-visible{
   transform:translateY(-4px);
-  background:rgba(255,255,255,.17);
-  border-color:rgba(255,255,255,.36);
+  border-color:var(--chip);
+  box-shadow:0 26px 44px -22px rgba(6,26,70,.34),inset 0 1px 0 rgba(255,255,255,.8);
 }
+
+.door-blue{--wash:rgba(13,59,158,.09);--edge:rgba(13,59,158,.22);
+  --chip:var(--blue);--glyph:var(--white)}
+.door-yellow{--wash:rgba(255,199,0,.16);--edge:rgba(255,199,0,.42);
+  --chip:var(--yellow);--glyph:var(--navy-deep)}
+.door-red{--wash:rgba(230,30,37,.08);--edge:rgba(230,30,37,.22);
+  --chip:var(--red);--glyph:var(--white)}
+/* The white of the palette. On a white ground it needs its edge and its
+   shadow to exist at all, so it carries the line colour rather than a tint. */
+.door-white{--wash:rgba(255,255,255,.72);--edge:var(--line);
+  --chip:var(--navy);--glyph:var(--white)}
 
 .d-icon{
   display:inline-flex;align-items:center;justify-content:center;
   width:46px;height:46px;border-radius:14px;
-  background:var(--accent);
-  color:var(--on-accent,var(--white));
-  box-shadow:0 12px 24px -12px var(--accent);
+  background:var(--chip);color:var(--glyph);
+  box-shadow:0 12px 22px -12px var(--chip);
 }
 .d-icon svg{
   width:23px;height:23px;fill:none;stroke:currentColor;
@@ -287,18 +274,20 @@ html{scroll-padding-top:96px}
 }
 .d-name{
   font:400 clamp(20px,1.8vw,25px)/1.15 var(--font-editorial);
-  letter-spacing:-.015em;color:var(--white);
+  letter-spacing:-.015em;color:var(--ink);
 }
-.d-what{font:400 14px/1.55 var(--font-ui);color:rgba(255,255,255,.82)}
+.d-what{font:400 14px/1.55 var(--font-ui);color:var(--text)}
 .d-go{
-  margin-top:auto;padding-top:8px;display:inline-flex;color:rgba(255,255,255,.6);
-  transition:transform 320ms var(--ease-standard),color 320ms var(--ease-standard);
+  margin-top:auto;padding-top:8px;display:inline-flex;color:var(--chip);
+  transition:transform 320ms var(--ease-standard);
 }
-.door a:hover .d-go{transform:translateX(5px);color:var(--white)}
+.door a:hover .d-go{transform:translateX(5px)}
 .d-go svg{
   width:20px;height:20px;fill:none;stroke:currentColor;
-  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
 }
+/* The white card's arrow would vanish into its own chip colour at this size. */
+.door-white .d-go{color:var(--blue)}
 
 @media (prefers-reduced-motion:reduce){
   .door a,.door a:hover{transform:none}

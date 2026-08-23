@@ -183,11 +183,11 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   }
 }
 
-/* --- the entry cards are translucent glass over that same photograph ------ */
-/* Which makes their type doubly exposed: it is partly transparent, sitting on
-   a partly transparent panel, over a picture. The effective colour of the text
-   has to be composited against what is actually behind it before the contrast
-   means anything. */
+/* --- the entry cards are translucent tints -------------------------------- */
+/* Their type sits on a wash the ground shows through, so the contrast depends
+   on what the card is over as much as on the card. The check reads each
+   element's real colour and alpha and composites it against the pixels
+   actually behind it, rather than assuming anything about either. */
 {
   for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844]]) {
     const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
@@ -208,12 +208,14 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
           const el = card.querySelector(selector);
           if (!el) continue;
           const style = getComputedStyle(el);
-          const alpha = Number((style.color.match(/[\d.]+\)$/) || ['1)'])[0].slice(0, -1)) || 1;
+          const parts = style.color.match(/[\d.]+/g).map(Number);
+          const rgb = parts.slice(0, 3);
+          const alpha = parts.length > 3 ? parts[3] : 1;
           const range = document.createRange();
           range.selectNodeContents(el);
           for (const r of range.getClientRects()) {
             if (r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= window.innerHeight) {
-              out.push({ selector, alpha, size: parseFloat(style.fontSize),
+              out.push({ selector, rgb, alpha, size: parseFloat(style.fontSize),
                 x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) });
             }
           }
@@ -231,7 +233,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
         x: Math.max(0, run.x), y: Math.max(0, run.y),
         width: Math.max(4, Math.min(run.w, width - Math.max(0, run.x))),
         height: Math.max(4, run.h) } });
-      const ratio = await page.evaluate(async ({ dataUrl, alpha }) => {
+      const ratio = await page.evaluate(async ({ dataUrl, rgb, alpha }) => {
         const image = new Image();
         image.src = dataUrl;
         await image.decode();
@@ -249,13 +251,14 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
         let lowest = 99;
         for (let i = 0; i < px.length; i += 4) {
           const bg = [px[i], px[i + 1], px[i + 2]];
-          const fg = bg.map(ch => 255 * alpha + ch * (1 - alpha));
+          const fg = bg.map((ch, c) => rgb[c] * alpha + ch * (1 - alpha));
           const a = lum(...fg);
           const b = lum(...bg);
           lowest = Math.min(lowest, (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05));
         }
         return lowest;
-      }, { dataUrl: `data:image/png;base64,${shot.toString('base64')}`, alpha: run.alpha });
+      }, { dataUrl: `data:image/png;base64,${shot.toString('base64')}`,
+           rgb: run.rgb, alpha: run.alpha });
 
       const seen = worst.get(run.selector);
       if (!seen || ratio < seen.ratio) worst.set(run.selector, { ratio, size: run.size });
@@ -411,7 +414,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   /* Copy that establishes the page must exist in the HTML, not appear later. */
   const text = (await page.textContent('main')) || '';
   for (const needed of ['The world finds us here', 'Discover Masinloc', 'Sambal Tina',
-    'Hamat River', 'Local Businesses']) {
+    'Hamat River', 'History &amp; Stories'.replace('&amp;','&')]) {
     if (!text.includes(needed)) fail(`with JavaScript off, "${needed}" is missing from the page`);
   }
   const slides = await page.$$eval('.slide-art', (els) => els.length);
