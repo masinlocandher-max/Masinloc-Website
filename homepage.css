@@ -125,8 +125,13 @@ html{scroll-padding-top:96px}
      strongest at the lower left where the type sits. */
   content:"";position:absolute;inset:0;
   background:
-    linear-gradient(100deg,var(--navy-deep) 0%,rgba(3,17,47,.94) 18%,rgba(3,17,47,.74) 38%,
-      rgba(3,17,47,.42) 58%,rgba(3,17,47,.12) 78%,transparent 94%),
+    /* The 38-58% band is where the headline's second line reaches. Measured
+       against the photograph behind the actual glyphs, white there was 4.03:1
+       — clear of the 3:1 the type's size requires, but the thinnest margin in
+       the hero, and on the one line everybody reads. Two stops carry a little
+       further right; the frame keeps its fall of light. */
+    linear-gradient(100deg,var(--navy-deep) 0%,rgba(3,17,47,.94) 18%,rgba(3,17,47,.80) 38%,
+      rgba(3,17,47,.54) 58%,rgba(3,17,47,.16) 78%,transparent 94%),
     linear-gradient(to top,rgba(3,17,47,.78),transparent 42%);
 }
 .hero-media img{
@@ -713,8 +718,23 @@ html{scroll-padding-top:96px}
   .hero{align-items:end;min-height:100svh}
   .hero-media{width:100%}
   .hero-media::after{
-    background:linear-gradient(to top,var(--navy-deep) 12%,rgba(3,17,47,.55) 46%,rgba(3,17,47,.15));
+    /* Two scrims, because the phone crop is a different photograph from the
+       desktop one. The desktop gradient is left-weighted for type sitting in
+       negative space; at 390px the image is full-bleed and the crop brings
+       pale rooftops up behind the logo and open sky up behind the menu
+       button — white bars on a 255-luminance sky. The top scrim gives the
+       fixed navigation a ground to sit on, and the lower one is carried
+       further up so the mark and the headline keep a dark field under them.
+       Both stay gradients: this is still light falling across the frame,
+       not a flat wash over the photograph. */
+    background:
+      linear-gradient(to bottom,rgba(3,17,47,.74),rgba(3,17,47,.30) 11%,transparent 21%),
+      linear-gradient(to top,var(--navy-deep) 15%,rgba(3,17,47,.82) 45%,
+        rgba(3,17,47,.38) 70%,rgba(3,17,47,.12));
   }
+  /* Four terms across a 350px column broke 3 + 1, leaving "Place" alone on
+     its own line. */
+  .hero-sub{text-wrap:balance}
   .hero h1{max-width:100%}
   .hero-note{position:relative;right:auto;bottom:auto;text-align:left;
     border-right:0;border-left:2px solid var(--yellow);padding:0 0 0 12px;

@@ -94,6 +94,94 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   await page.close();
 }
 
+/* --- the hero is white type on a photograph ------------------------------ */
+/* Which means its legibility depends on a scrim, and a scrim tuned for one
+   viewport is not tuned for another: the phone crop is effectively a different
+   photograph. At 390px the crop put open sky behind the menu button — white
+   bars at 6:1 against nothing — and pale rooftops behind the logo.
+   Measured against the photograph as rendered, with the foreground hidden and
+   only the actual glyph runs sampled: a wide element box over a bright frame
+   reports its worst pixel where no letter is. */
+{
+  const LARGE_TEXT_PX = 24;   // WCAG: large text may sit at 3:1, smaller needs 4.5:1
+  for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844]]) {
+    const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
+    await page.goto(URL, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(400);
+
+    const runs = await page.evaluate(() => {
+      const out = [];
+      for (const selector of ['.hero-mark', '.hero h1', '.hero-sub', '.hero-note', '#menuToggle']) {
+        const el = document.querySelector(selector);
+        if (!el || !el.getClientRects().length) continue;
+        const size = parseFloat(getComputedStyle(el).fontSize);
+        let rects;
+        if (el.tagName === 'IMG' || !el.textContent.trim()) {
+          rects = [el.getBoundingClientRect()];
+        } else {
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          rects = [...range.getClientRects()];
+        }
+        for (const r of rects) {
+          if (r.width > 2 && r.height > 2) {
+            out.push({ selector, size, x: Math.round(r.x), y: Math.round(r.y),
+              w: Math.round(r.width), h: Math.round(r.height) });
+          }
+        }
+      }
+      return out;
+    });
+
+    // Hide everything in front of the photograph, so only the scrim is sampled.
+    await page.addStyleTag({ content: '.hero-inner,header{visibility:hidden !important}' });
+    await page.waitForTimeout(150);
+
+    const worst = new Map();
+    for (const run of runs) {
+      const clip = {
+        x: Math.max(0, run.x), y: Math.max(0, run.y),
+        width: Math.max(4, Math.min(run.w, width - Math.max(0, run.x))),
+        height: Math.max(4, run.h),
+      };
+      const shot = await page.screenshot({ clip });
+      const ratio = await page.evaluate(async (dataUrl) => {
+        const image = new Image();
+        image.src = dataUrl;
+        await image.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+        const px = context.getImageData(0, 0, image.width, image.height).data;
+        const linear = (channel) => {
+          const c = channel / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        };
+        let brightest = -1;
+        for (let i = 0; i < px.length; i += 4) {
+          brightest = Math.max(brightest,
+            0.2126 * linear(px[i]) + 0.7152 * linear(px[i + 1]) + 0.0722 * linear(px[i + 2]));
+        }
+        return 1.05 / (brightest + 0.05);   // contrast of white against it
+      }, `data:image/png;base64,${shot.toString('base64')}`);
+
+      const seen = worst.get(run.selector);
+      if (!seen || ratio < seen.ratio) worst.set(run.selector, { ratio, size: run.size });
+    }
+
+    for (const [selector, { ratio, size }] of worst) {
+      const floor = size >= LARGE_TEXT_PX ? 3 : 4.5;
+      if (ratio < floor) {
+        fail(`${label}: ${selector} sits on the photograph at ${ratio.toFixed(2)}:1, `
+          + `below the ${floor}:1 its ${Math.round(size)}px needs`);
+      }
+    }
+    await page.close();
+  }
+}
+
 /* --- reveals and the destination story ---------------------------------- */
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });

@@ -331,7 +331,7 @@ def render() -> str:
     <div class="hero-inner">
       <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
       <h1 id="heroTitle"><span class="mask"><span>Discover</span></span><span class="mask"><span><em>Masinloc.</em></span></span></h1>
-      <p class="hero-sub">History &middot; Language &middot; People &middot; Place</p>
+      <p class="hero-sub">History&nbsp;&middot; Language&nbsp;&middot; People&nbsp;&middot; Place</p>
       <p class="hero-note rise" style="--delay:520ms">A town on the Zambales coast, and the record of it kept by the people who live here.</p>
     </div>
     <p class="hero-cue"><i></i>Scroll</p>
