@@ -202,51 +202,108 @@ html{scroll-padding-top:96px}
 
 /* ------------------------------------------------- 02 · entry points ----- */
 /* Four doors directly under the hero, backing the claim up before anything
-   else asks for attention. Type-led on purpose: the hero has just spent the
-   largest photograph on the site, and a row of thumbnails beneath it would
-   compete with that rather than follow it. */
+   else asks for attention.
+   They are glass over wallpaper, the way the system sheets on a phone are:
+   the photograph behind them stays sharp and each panel blurs only what falls
+   within its own rectangle. Scoping the blur to the cards rather than to a
+   full-viewport layer is both how iOS actually does it and far cheaper — a
+   viewport-sized blur is one of the most expensive things a phone can be
+   asked to composite. The photograph is the hero's own file, already
+   preloaded and decoded, shown at a different part of the frame. */
 
-.entries{background:var(--white);padding-block:clamp(48px,7vh,86px)}
-.entries-inner{max-width:1560px;margin-inline:auto;padding-inline:var(--gutter)}
+.entries{
+  position:relative;isolation:isolate;overflow:clip;
+  padding-block:clamp(54px,8vh,104px);
+  background:var(--navy-deep);
+}
+.entries-bed{position:absolute;inset:0;z-index:0}
+.entries-bed img{width:100%;height:100%;object-fit:cover;object-position:50% 84%}
+/* The panels are translucent, so their legibility is the wallpaper's job:
+   white type has to survive being seen partly through the card. */
+.entries-bed::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(3,17,47,.97),rgba(3,17,47,.66) 42%,rgba(3,17,47,.94));
+}
+/* Same lesson as the hero: the phone crop of this photograph is brighter than
+   the desktop one, and the type here is sitting on translucent glass on top of
+   it. Measured on the phone the 14px line fell to 4.06:1, so the wallpaper is
+   taken down further at that width rather than the glass being made solid. */
+@media (max-width:760px){
+  .entries-bed::after{
+    background:linear-gradient(180deg,rgba(3,17,47,.97),rgba(3,17,47,.86) 42%,rgba(3,17,47,.97));
+  }
+}
+.entries-inner{
+  position:relative;z-index:1;
+  max-width:1560px;margin-inline:auto;padding-inline:var(--gutter);
+}
+.entries-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+.entries-head .stage-label{color:var(--yellow);margin:0}
+.entries-head p{margin:0;font:400 13.5px/1.5 var(--font-ui);color:rgba(255,255,255,.62)}
+
 .door-grid{
   list-style:none;margin:clamp(22px,3.4vh,34px) 0 0;padding:0;
-  display:grid;gap:1px;background:var(--line);
-  border-block:1px solid var(--line);
+  display:grid;gap:clamp(12px,1.4vw,18px);
   grid-template-columns:1fr;
 }
-@media (min-width:760px){.door-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:640px){.door-grid{grid-template-columns:repeat(2,1fr)}}
 @media (min-width:1100px){.door-grid{grid-template-columns:repeat(4,1fr)}}
+
 .door a{
-  display:flex;flex-direction:column;gap:10px;height:100%;
-  background:var(--white);padding:clamp(24px,2.4vw,34px) clamp(20px,2vw,28px);
-  text-decoration:none;color:var(--ink);
-  transition:background 260ms var(--ease-standard);
+  display:flex;flex-direction:column;height:100%;gap:13px;
+  padding:clamp(20px,2vw,26px);
+  border-radius:22px;text-decoration:none;color:var(--white);
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  /* The inset hairline along the top edge is what makes a translucent panel
+     read as a physical sheet rather than a flat tint. */
+  box-shadow:0 26px 50px -26px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.24);
+  backdrop-filter:blur(24px) saturate(150%);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+  transition:transform 320ms var(--ease-standard),background 320ms var(--ease-standard),
+             border-color 320ms var(--ease-standard);
 }
-.door a:hover,.door a:focus-visible{background:var(--soft)}
-.e-num{
-  font:500 11px/1 var(--font-ui);letter-spacing:.2em;color:var(--blue);
-  font-variant-numeric:tabular-nums;
+/* Where the blur is unavailable the panel is only a tint, so it has to carry
+   the contrast by itself. */
+@supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
+  .door a{background:rgba(6,26,70,.78)}
 }
-.e-name{
-  font:400 clamp(21px,2vw,27px)/1.15 var(--font-editorial);
-  letter-spacing:-.015em;color:var(--ink);
+.door a:hover,.door a:focus-visible{
+  transform:translateY(-4px);
+  background:rgba(255,255,255,.17);
+  border-color:rgba(255,255,255,.36);
 }
-.door a:hover .e-name{color:var(--blue)}
-.e-what{
-  margin-top:auto;padding-top:12px;
-  font:400 14px/1.55 var(--font-ui);color:var(--muted);
+
+.d-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:46px;height:46px;border-radius:14px;
+  background:var(--accent);
+  color:var(--on-accent,var(--white));
+  box-shadow:0 12px 24px -12px var(--accent);
 }
-.hero-cue{
-  position:absolute;right:var(--gutter);bottom:clamp(20px,4vh,34px);z-index:3;
-  display:flex;align-items:center;gap:12px;writing-mode:vertical-rl;
-  color:rgba(255,255,255,.62);
-  font:500 10.5px/1 var(--font-ui);letter-spacing:.2em;text-transform:uppercase;
-  opacity:0;transition:opacity 600ms var(--ease-out) 1150ms;
+.d-icon svg{
+  width:23px;height:23px;fill:none;stroke:currentColor;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
 }
-.hero.is-ready .hero-cue{opacity:1}
-.hero-cue i{display:block;width:1px;height:44px;background:linear-gradient(var(--yellow),transparent);
-  animation:cue 2.4s var(--ease-standard) infinite}
-@keyframes cue{0%,100%{transform:scaleY(.35);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+.d-name{
+  font:400 clamp(20px,1.8vw,25px)/1.15 var(--font-editorial);
+  letter-spacing:-.015em;color:var(--white);
+}
+.d-what{font:400 14px/1.55 var(--font-ui);color:rgba(255,255,255,.82)}
+.d-go{
+  margin-top:auto;padding-top:8px;display:inline-flex;color:rgba(255,255,255,.6);
+  transition:transform 320ms var(--ease-standard),color 320ms var(--ease-standard);
+}
+.door a:hover .d-go{transform:translateX(5px);color:var(--white)}
+.d-go svg{
+  width:20px;height:20px;fill:none;stroke:currentColor;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .door a,.door a:hover{transform:none}
+  .door a:hover .d-go{transform:none}
+}
 
 /* ------------------------------------------------- 02 · campaign stage --- */
 

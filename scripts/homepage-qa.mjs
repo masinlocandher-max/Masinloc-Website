@@ -183,6 +183,95 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   }
 }
 
+/* --- the entry cards are translucent glass over that same photograph ------ */
+/* Which makes their type doubly exposed: it is partly transparent, sitting on
+   a partly transparent panel, over a picture. The effective colour of the text
+   has to be composited against what is actually behind it before the contrast
+   means anything. */
+{
+  for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844]]) {
+    const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
+    await page.goto(URL, { waitUntil: 'networkidle' });
+    await page.evaluate(async () => {
+      for (let y = 0; y < 3200; y += 400) {
+        window.scrollTo(0, y);
+        await new Promise(r => setTimeout(r, 70));
+      }
+    });
+    await page.evaluate(() => document.querySelector('.entries').scrollIntoView({ block: 'center' }));
+    await page.waitForTimeout(400);
+
+    const runs = await page.evaluate(() => {
+      const out = [];
+      document.querySelectorAll('.door').forEach((card) => {
+        for (const selector of ['.d-name', '.d-what']) {
+          const el = card.querySelector(selector);
+          if (!el) continue;
+          const style = getComputedStyle(el);
+          const alpha = Number((style.color.match(/[\d.]+\)$/) || ['1)'])[0].slice(0, -1)) || 1;
+          const range = document.createRange();
+          range.selectNodeContents(el);
+          for (const r of range.getClientRects()) {
+            if (r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= window.innerHeight) {
+              out.push({ selector, alpha, size: parseFloat(style.fontSize),
+                x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) });
+            }
+          }
+        }
+      });
+      return out;
+    });
+
+    await page.addStyleTag({ content: '.d-name,.d-what,.d-go,.d-icon{visibility:hidden !important}' });
+    await page.waitForTimeout(150);
+
+    const worst = new Map();
+    for (const run of runs) {
+      const shot = await page.screenshot({ clip: {
+        x: Math.max(0, run.x), y: Math.max(0, run.y),
+        width: Math.max(4, Math.min(run.w, width - Math.max(0, run.x))),
+        height: Math.max(4, run.h) } });
+      const ratio = await page.evaluate(async ({ dataUrl, alpha }) => {
+        const image = new Image();
+        image.src = dataUrl;
+        await image.decode();
+        const canvas = document.createElement('canvas');
+        canvas.width = image.width;
+        canvas.height = image.height;
+        const context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+        const px = context.getImageData(0, 0, image.width, image.height).data;
+        const linear = (channel) => {
+          const c = channel / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        };
+        const lum = (r, g, b) => 0.2126 * linear(r) + 0.7152 * linear(g) + 0.0722 * linear(b);
+        let lowest = 99;
+        for (let i = 0; i < px.length; i += 4) {
+          const bg = [px[i], px[i + 1], px[i + 2]];
+          const fg = bg.map(ch => 255 * alpha + ch * (1 - alpha));
+          const a = lum(...fg);
+          const b = lum(...bg);
+          lowest = Math.min(lowest, (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05));
+        }
+        return lowest;
+      }, { dataUrl: `data:image/png;base64,${shot.toString('base64')}`, alpha: run.alpha });
+
+      const seen = worst.get(run.selector);
+      if (!seen || ratio < seen.ratio) worst.set(run.selector, { ratio, size: run.size });
+    }
+
+    for (const [selector, { ratio, size }] of worst) {
+      const floor = size >= 24 ? 3 : 4.5;
+      if (ratio < floor) {
+        fail(`${label}: ${selector} on the glass cards reaches only ${ratio.toFixed(2)}:1, `
+          + `below the ${floor}:1 its ${Math.round(size)}px needs`);
+      }
+    }
+    await page.close();
+  }
+}
+
 /* --- reveals and the destination story ---------------------------------- */
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
