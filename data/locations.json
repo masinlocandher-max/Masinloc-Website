@@ -45,7 +45,11 @@
       "photo": "IMG_9138.JPG",
       "card": "F9BD1F30-806E-4D32-B709-D2A92810F8AD.jpg",
       "focus": "50% 50%",
-      "caption": "An island on the Masinloc coast, and part of the town's marine and coastal environment."
+      "caption": "An island on the Masinloc coast, and part of the town's marine and coastal environment.",
+      "reads": {
+        "href": "bulletin/1649-when-six-caracoas-came.html",
+        "label": "The islet in the 1649 record"
+      }
     },
     {
       "slug": "coto-kidz-pool",
@@ -90,7 +94,11 @@
       "card": "B04AD6A0-1250-437C-A78A-442DBADF8C7C.jpg",
       "note": "The raw photograph is the front elevation at sunset. The pubmat uses an aerial of the church complex, which is not in Regular Images.",
       "focus": "50% 46%",
-      "caption": "A stone church in the Masinloc town centre, and the town's best known heritage landmark."
+      "caption": "A stone church in the Masinloc town centre, and the town's best known heritage landmark.",
+      "reads": {
+        "href": "bulletin/san-andres-church-across-the-centuries.html",
+        "label": "How this building actually reached us"
+      }
     },
     {
       "slug": "bunga-cave",

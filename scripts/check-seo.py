@@ -284,6 +284,51 @@ for name, sources in inbound.items():
     if not sources:
         notes.append(f"{name} is not linked from any other page")
 
+# FAQ markup has to be backed by text a reader can see. Declaring questions and
+# answers that appear nowhere on the page is hidden crawler content: it asks
+# search engines and answer engines to quote something no visitor is shown, and
+# it is against Google's own structured-data rules for FAQPage.
+#
+# Found live: trust.html declared "How does Masinloc Connect protect personal
+# information?", which the page never asked. The page said the same thing under
+# a statement heading, so the markup was corrected to the four questions the
+# page really does ask rather than by adding text to justify the markup.
+for page in pages:
+    raw = page.read_text(encoding="utf-8")
+    if '"FAQPage"' not in raw:
+        continue
+    visible = re.sub(r"<script.*?</script>", " ", raw, flags=re.S)
+    visible = re.sub(r"<[^>]+>", " ", visible)
+    visible = re.sub(r"\s+", " ", visible).lower()
+    for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>',
+                            raw, re.S):
+        try:
+            graph = json.loads(block)
+        except json.JSONDecodeError:
+            continue
+
+        def questions(node):
+            found = []
+            if isinstance(node, dict):
+                if node.get("@type") == "Question":
+                    found.append(node)
+                for value in node.values():
+                    found += questions(value)
+            elif isinstance(node, list):
+                for value in node:
+                    found += questions(value)
+            return found
+
+        for question in questions(graph):
+            name = str(question.get("name", "")).strip().rstrip("?")
+            answer = str(question.get("acceptedAnswer", {}).get("text", "")).strip()
+            if name and name.lower() not in visible:
+                errors.append(f"{page.name}: FAQ markup asks \"{name}?\" but the "
+                              f"page never does — hidden crawler content")
+            if answer and answer[:70].lower() not in visible:
+                errors.append(f"{page.name}: the FAQ answer to \"{name}?\" is not "
+                              f"visible on the page")
+
 if errors:
     print("SEO CHECK FAILED")
     for error in errors:

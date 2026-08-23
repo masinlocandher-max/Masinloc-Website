@@ -1,9 +1,28 @@
+# Masinloc, Zambales — https://masinloc-zambales.com
+#
+# Search discovery and model training are two different permissions, and this
+# file grants them separately. Being findable and citable is the point of
+# publishing this research; being training data is a separate decision that has
+# not been made.
+
 User-agent: *
 Allow: /
 Disallow: /admin.html
 
+# Search discovery — allowed.
+# OAI-SearchBot is how ChatGPT Search finds and cites public pages. It is
+# listed explicitly so that a future edit to the wildcard block above cannot
+# quietly take it away.
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /admin.html
+
+# Model training — not allowed.
+# GPTBot collects pages for training, which is not the same thing as making
+# them discoverable. Disallowing it here has no effect on OAI-SearchBot above:
+# they are separate user agents with separate rules, and search discovery is
+# unaffected.
+User-agent: GPTBot
+Disallow: /
 
 Sitemap: https://masinloc-zambales.com/sitemap.xml

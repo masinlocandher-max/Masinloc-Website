@@ -499,3 +499,22 @@ body.viewer-open{overflow:hidden}
   .crumbs{padding-top:84px}
   .place-caption{font-size:14px}
 }
+
+/* Research attached to a place ---------------------------------------------
+   Only two entries carry this, because only two have been researched. It sits
+   with the caption rather than in a block of links at the foot of the page:
+   somebody reading about the church is exactly the person who wants its
+   history, and a link is worth more there than in a list nobody scrolls to. */
+.place-reads{
+  margin:10px 0 0;
+  font:400 13.5px/1.5 var(--font-ui);
+}
+.place-reads a{
+  color:var(--white);
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.42);
+  padding-bottom:2px;
+  transition:border-color 200ms var(--ease-standard);
+}
+.place-reads a::after{content:" →";opacity:.75}
+.place-reads a:hover,.place-reads a:focus-visible{border-bottom-color:var(--white)}

@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import html
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -685,46 +686,27 @@ def verify(articles: list[dict]) -> None:
 
 
 def sync_sitemap(articles: list[dict]) -> int:
-    """Rewrite the Bulletin's slice of sitemap.xml from the article data.
+    """Hand the sitemap to the one script that owns it.
 
-    The rest of the sitemap is hand-maintained and left untouched; only the
-    bulletin/ entries are owned here. Publishing a story and forgetting to
-    list it is otherwise silent — the page is live and nothing says it is
-    missing from the index.
+    This used to rewrite the bulletin/ slice in place and leave the rest of the
+    file to be maintained by hand. Two writers is how a page goes missing, and
+    the hand-maintained half had drifted: most URLs carried no <lastmod> and
+    every one that did was stamped with a deployment date rather than the day
+    anything was written.
+
+    scripts/build-sitemap.py now derives the whole file from the pages that
+    exist, their own canonical links, and the last commit that touched each
+    one. Nothing about the Bulletin is special enough to need its own copy of
+    that logic.
     """
-    path = ROOT / "sitemap.xml"
-    text = path.read_text(encoding="utf-8")
-
-    kept, block, dropping = [], [], False
-    for line in text.split("\n"):
-        stripped = line.strip()
-        if stripped == "<url>":
-            block, dropping = [line], False
-        elif block:
-            block.append(line)
-            if "/bulletin/" in stripped:
-                dropping = True
-            if stripped == "</url>":
-                if not dropping:
-                    kept.extend(block)
-                block = []
-        else:
-            kept.append(line)
-
-    entries = []
-    for a in in_order(articles):
-        entries += [
-            "  <url>",
-            f"    <loc>{SITE}/bulletin/{a['slug']}.html</loc>",
-            f"    <lastmod>{a['modified']}</lastmod>",
-            "  </url>",
-        ]
-
-    close = kept.index("</urlset>")
-    kept[close:close] = entries
-    path.write_text("\n".join(kept), encoding="utf-8")
-    return len(articles)
-
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "build-sitemap.py")],
+        cwd=ROOT, capture_output=True, text=True, check=False)
+    if result.returncode:
+        sys.stderr.write(result.stdout + result.stderr)
+        sys.exit("sitemap build failed")
+    listed = (ROOT / "sitemap.xml").read_text(encoding="utf-8").count("<loc>")
+    return listed
 
 def main() -> int:
     articles = published()
@@ -760,7 +742,7 @@ def main() -> int:
     print(f"{len(SOURCE_BY_ID)} sources; {linked} with a verified public link, "
           f"{len(SOURCE_BY_ID) - linked} awaiting one")
     print(f"{len(open_questions(articles))} open research questions listed")
-    print(f"sitemap.xml carries all {listed} story URLs")
+    print(f"sitemap.xml rebuilt by scripts/build-sitemap.py: {listed} URLs")
     return 0
 
 

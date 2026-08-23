@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import struct
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -371,6 +372,77 @@ if admin.is_file():
     admin_text = admin.read_text(encoding="utf-8").lower()
     if "noindex" not in admin_text or "nofollow" not in admin_text:
         fail("admin.html must remain noindex,nofollow")
+
+# robots.txt: search discovery and model training are separate permissions and
+# have to stay that way. This is checked rather than trusted because the failure
+# is silent in both directions — a wildcard edit can quietly withdraw ChatGPT
+# Search, and a tidy-up can quietly reopen training.
+# IndexNow: the key file is what proves to the endpoint that this repository
+# owns the domain. It must exist, be named for its own contents, and be exactly
+# one file — a stale second key silently invalidates submissions, and the
+# failure is invisible from the site itself.
+_keys = [p for p in ROOT.glob("*.txt") if re.fullmatch(r"[0-9a-f]{8,128}", p.stem)]
+if len(_keys) > 1:
+    fail(f"more than one IndexNow key file at the root: "
+         f"{sorted(k.name for k in _keys)}; the endpoint cannot tell which is current")
+elif len(_keys) == 1:
+    _key = _keys[0]
+    if _key.read_text(encoding="utf-8").strip() != _key.stem:
+        fail(f"{_key.name}: an IndexNow key file must contain exactly its own name")
+    if not (ROOT / ".github/workflows/indexnow.yml").is_file():
+        fail("an IndexNow key is published but nothing submits to IndexNow")
+
+robots = ROOT / "robots.txt"
+if not robots.is_file():
+    fail("robots.txt is missing")
+else:
+    robots_text = robots.read_text(encoding="utf-8")
+    groups = {}
+    current = None
+    for line in robots_text.splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        key, _, value = line.partition(":")
+        key, value = key.strip().lower(), value.strip()
+        if key == "user-agent":
+            current = value
+            groups.setdefault(current, [])
+        elif current is not None and key in ("allow", "disallow"):
+            groups[current].append((key, value))
+
+    if "OAI-SearchBot" not in groups:
+        fail("robots.txt: OAI-SearchBot needs its own group so public pages stay "
+             "discoverable for ChatGPT Search independently of the wildcard rule")
+    else:
+        rules = groups["OAI-SearchBot"]
+        if ("disallow", "/") in rules:
+            fail("robots.txt: OAI-SearchBot is blocked from the whole site; search "
+                 "discovery is not training access and should stay open")
+        if ("allow", "/") not in rules:
+            fail("robots.txt: OAI-SearchBot has no Allow: / rule")
+        if ("disallow", "/admin.html") not in rules:
+            fail("robots.txt: OAI-SearchBot may reach /admin.html")
+
+    if groups.get("GPTBot") != [("disallow", "/")]:
+        fail("robots.txt: GPTBot should be disallowed from the whole site. "
+             "Training access is a separate permission from search discovery, "
+             "and blocking it here does not affect OAI-SearchBot.")
+
+    for agent, rules in groups.items():
+        if agent == "*" and ("disallow", "/") in rules:
+            fail("robots.txt: the wildcard group disallows the whole site")
+    if "Sitemap: https://masinloc-zambales.com/sitemap.xml" not in robots_text:
+        fail("robots.txt does not point at the sitemap")
+
+# The sitemap is generated. If it is stale, the deploy would publish dates and
+# URLs that do not match the pages actually being shipped.
+_sitemap_check = subprocess.run(
+    [sys.executable, str(ROOT / "scripts" / "build-sitemap.py"), "--check"],
+    cwd=ROOT, capture_output=True, text=True, check=False)
+if _sitemap_check.returncode:
+    fail("sitemap.xml is out of date — run python3 scripts/build-sitemap.py\n"
+         + "    " + _sitemap_check.stdout.strip().replace("\n", "\n    "))
 
 sitemap = ROOT / "sitemap.xml"
 if sitemap.is_file():

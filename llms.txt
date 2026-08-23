@@ -6,7 +6,7 @@ Language context: English, Filipino, Sambal Tina
 
 ## Platform identity
 
-Discover Masinloc is an independent public digital discovery platform for Masinloc, Zambales. It publishes and organizes information about Masinloc history, Sambal Tina language and culture, community information, local businesses, products, services, places, and stories.
+Discover Masinloc is an independent public digital discovery platform for Masinloc, Zambales. It publishes and organizes research into Masinloc history, the Sambal Tina language, the municipal record, places along this coast, and the stories attached to them. Where a claim is uncertain the site says so rather than resolving it.
 
 Masinloc Connect is an independent service-oriented platform within the same digital ecosystem. It is designed for reviewed local submissions, professional profiles, participating employers, and community opportunities.
 
@@ -23,6 +23,15 @@ The project has reached out to the Municipal Government of Masinloc regarding po
 - Verified History: https://masinloc-zambales.com/verified-history.html
 - Masinloc Bulletin: https://masinloc-zambales.com/masinloc-bulletin.html
 - A Closer Look at Masinloc: https://masinloc-zambales.com/a-closer-look.html
+- Places in Masinloc: https://masinloc-zambales.com/destinations.html
+- Municipal leadership record: https://masinloc-zambales.com/leadership.html
+- Source register for published claims: https://masinloc-zambales.com/sources.html
+- Contact: https://masinloc-zambales.com/contact.html
+- Privacy notice: https://masinloc-zambales.com/privacy.html
+
+This file is discovery metadata and nothing more. Nothing on the site depends
+on it, no ranking is claimed for it, and sitemap.xml plus robots.txt remain the
+authoritative statement of what exists and what may be crawled.
 
 ## Trust and information standards
 
@@ -49,4 +58,4 @@ Public cultural, historical, informational, and approved business content may be
 Official contact: hello@masinloc-zambales.com
 Official domain: masinloc-zambales.com
 
-Last reviewed: 2026-08-22
+Last reviewed: 2026-08-23

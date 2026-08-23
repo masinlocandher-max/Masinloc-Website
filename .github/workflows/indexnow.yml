@@ -1,0 +1,45 @@
+name: IndexNow
+
+# Tells participating search engines which pages changed, as soon as main moves.
+#
+# This is deliberately the smallest thing that works: a key file served from the
+# site root, and one POST from CI. No runtime service, no serverless function,
+# nothing the site needs in order to render. If this workflow were deleted
+# tomorrow the site would be unaffected.
+#
+# It never fails a deploy. Submission is a courtesy to search engines, not part
+# of publishing, so every failure path inside the script exits 0 and the job
+# carries continue-on-error as a second line of defence.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        # Two commits is all the diff needs, and it keeps the checkout cheap.
+        # A force-push or a first commit can leave `before` unusable; the step
+        # below falls back to the previous commit rather than guessing.
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Submit changed URLs
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          base="$BEFORE"
+          if ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            echo "indexnow: $base is not in this checkout; comparing against HEAD~1"
+            base="$(git rev-parse HEAD~1 2>/dev/null || echo "$AFTER")"
+          fi
+          python3 scripts/indexnow-submit.py --base "$base" --head "$AFTER"

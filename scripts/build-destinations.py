@@ -152,6 +152,17 @@ def section(location: dict, position: int, total: int) -> str:
     esc = {key: html.escape(str(value)) for key, value in location.items()
            if isinstance(value, str)}
     todo = "".join(f"<li>{html.escape(item)}</li>" for item in location["todo"])
+    # Where the Bulletin has actually researched this place, say so here rather
+    # than in a block of links at the foot of the page. It reads as part of the
+    # entry because it is: somebody looking at the church is exactly the person
+    # who wants its history. Places without research get nothing — an empty
+    # "related reading" heading is worse than none.
+    reads = ""
+    if location.get("reads"):
+        link = location["reads"]
+        reads = (f'      <p class="place-reads">'
+                 f'<a href="{html.escape(link["href"])}">'
+                 f'{html.escape(link["label"])}</a></p>\n')
     tags = "".join(f"<li>{html.escape(tag)}</li>" for tag in location["tags"])
     # The first photograph is the page's largest paint; it loads eagerly and at
     # high priority. The rest wait until they are near the viewport.
@@ -175,6 +186,7 @@ def section(location: dict, position: int, total: int) -> str:
       <p class="place-locality">{esc['locality']}</p>
       <p class="place-rhyme">{esc['rhyme']}</p>
       <p class="place-caption">{esc['caption']}</p>
+{reads}
       <div class="place-detail">
         <div class="place-todo">
           <h3>Things to do</h3>
