@@ -22,6 +22,8 @@ jobs:
         run: python3 scripts/check-living-sambal.py
       - name: Validate the backend contract the pages depend on
         run: python3 scripts/check-backend-contract.py
+      - name: Validate security invariants
+        run: python3 scripts/check-security.py
       - name: Rebuild the Bulletin and verify its evidence trail
         run: python3 scripts/build-bulletin.py
       - name: Verify the MABAYANI creator stays unnamed until the closing story
