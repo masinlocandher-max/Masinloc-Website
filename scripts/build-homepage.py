@@ -474,6 +474,7 @@ def render() -> str:
         <a href="destinations.html">Places</a>
         <a href="sambal-tina.html">Sambal Tina</a>
         <a href="a-closer-look.html">A Closer Look</a>
+        <a href="leadership.html">Municipal Leadership</a>
         <a href="verified-history.html">Verified History</a>
         <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
         <a href="connect.html">Masinloc Connect</a>

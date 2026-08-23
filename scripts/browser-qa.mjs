@@ -122,6 +122,47 @@ async function assertSharedNavigation(page, pageName, viewportName) {
   }
 }
 
+/* theme-color tints the browser's own chrome on a phone, so a page that
+   declares navy while painting white gets a dark band above a light page.
+   It can only be checked against what the page actually renders, which is why
+   this lives here and not in the Python guards: several pages were declaring
+   #061A46 above a plain white masthead.
+
+   The tolerance is deliberately wide. The bug worth catching is a light page
+   declaring a dark chrome or the reverse, which is a difference of ~200 per
+   channel. A page whose masthead is a photograph — the homepage — cannot match
+   exactly and should not have to: its top pixel is a different part of the
+   image at every width, and the declared navy is an approximation of a photo,
+   not a mistake. */
+async function assertThemeColour(page, pageName, viewportName) {
+  const declared = await page.locator('meta[name="theme-color"]').getAttribute('content');
+  if (!declared) {
+    failures.push(`${viewportName}/${pageName}: no theme-color declared`);
+    return;
+  }
+  const shot = await page.screenshot({ clip: { x: 8, y: 0, width: 8, height: 8 } });
+  const painted = await page.evaluate(async (dataUrl) => {
+    const image = new Image();
+    image.src = dataUrl;
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = 8;
+    canvas.height = 8;
+    const context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    const [r, g, b] = context.getImageData(2, 2, 1, 1).data;
+    return [r, g, b];
+  }, `data:image/png;base64,${shot.toString('base64')}`);
+
+  const want = [1, 3, 5].map(i => parseInt(declared.slice(i, i + 2), 16));
+  const distance = Math.max(...want.map((v, i) => Math.abs(v - painted[i])));
+  if (distance > 90) {
+    const hex = painted.map(v => v.toString(16).padStart(2, '0')).join('');
+    failures.push(`${viewportName}/${pageName}: declares theme-color ${declared} but `
+      + `paints #${hex} at the top of the page`);
+  }
+}
+
 async function assertAdminSurface(page, viewportName) {
   const login = page.locator('#loginView');
   if (!(await login.isVisible())) failures.push(`${viewportName}/admin: login surface is not visible`);
@@ -170,6 +211,8 @@ for (const [viewportName, viewport] of viewports) {
       }
 
       if (pageName === 'admin') await assertAdminSurface(page, viewportName);
+
+      if (pageName !== 'admin') await assertThemeColour(page, pageName, viewportName);
 
       if (pageName === 'home') {
         await assertVerifiedImage(page, '.hero-media img', `${viewportName}/home hero`);

@@ -245,7 +245,7 @@ def page() -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#061A46">
+<meta name="theme-color" content="#ffffff">
 <title>{esc(PAGE['metaTitle'])}</title>
 <meta name="description" content="{esc(PAGE['description'])}">
 <meta name="robots" content="index,follow,max-image-preview:large">

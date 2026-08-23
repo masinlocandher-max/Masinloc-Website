@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from html.parser import HTMLParser
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -176,6 +177,28 @@ for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js",
         if colour.lower() in body.lower():
             fail(f"{script}: hardcodes the identity colour {colour}; inline styles "
                  f"beat every stylesheet, so use a token instead")
+
+# Every page wearing the shared shell needs the palette that shell is written
+# against, and this is discovered from the filesystem rather than from a list.
+# The lists above are curated, and trust.html was never added to one: it shipped
+# carrying site.css without tokens.css, so every var(--blue) resolved to nothing
+# and its navigation rendered black with the Masinloc Connect button flattened.
+# A page either wears the shell or it does not, and the page itself says which.
+SHELL_MARKER = 'class="site-nav"'
+for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
+    text = path.read_text(encoding="utf-8")
+    if SHELL_MARKER not in text:
+        continue
+    rel = path.relative_to(ROOT).as_posix()
+    sheets = re.findall(r'<link[^>]+rel="stylesheet"[^>]+href="([^"?]+)', text)
+    sheets = [Path(href).name for href in sheets]
+    if TOKENS_CSS not in sheets:
+        fail(f"{rel}: wears the shared shell but never loads {TOKENS_CSS}, so every "
+             f"colour token on the page resolves to nothing")
+    elif sheets[0] != TOKENS_CSS:
+        fail(f"{rel}: {TOKENS_CSS} must be the first stylesheet")
+    if f'rel="icon"' not in text:
+        fail(f"{rel}: wears the shared shell but declares no favicon")
 
 if errors:
     print("DESIGN CONSISTENCY CHECK FAILED")
