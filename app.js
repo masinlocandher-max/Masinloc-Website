@@ -92,11 +92,68 @@
   const base=document.createElement('script');
   base.src='app-base.js';
   base.onload=()=>{
+    configs.business.steps=[
+      {
+        label:'Brand',
+        title:'Tell us about your business.',
+        help:'Start with the name and a short description customers will understand.',
+        fields:[
+          {name:'brandName',label:'Brand name',type:'text',placeholder:'Your business or brand name',required:true},
+          {name:'shortDescription',label:'Short description',type:'textarea',placeholder:'Briefly tell people what your business offers.',required:true,full:true},
+          {name:'brandLogo',label:'Brand logo',type:'file',required:false,full:true,accept:'image/jpeg,image/png,image/webp',multiple:false}
+        ]
+      },
+      {
+        label:'Public contact',
+        title:'How can customers find and contact your business?',
+        help:'These are the details that may appear on your business listing after review.',
+        fields:[
+          {name:'storeLocations',label:'Store location/s',type:'textarea',placeholder:'Barangay, address, landmark, or multiple branches. Leave blank if you do not have a physical store.',required:false,full:true},
+          {name:'contactNumber',label:'Public business contact number',type:'text',placeholder:'Number customers may use',required:true},
+          {name:'facebookPage',label:'Facebook Page URL',type:'url',placeholder:'https://facebook.com/yourpage',required:true,full:true}
+        ]
+      },
+      {
+        label:'Owner',
+        title:'Who should we contact about this listing?',
+        help:'Owner details are kept private and used for verification, listing management, and future Business Dashboard access.',
+        fields:[
+          {name:'ownerName',label:'Owner / authorized representative',type:'text',placeholder:'Full name',required:true},
+          {name:'ownerEmail',label:'Private owner email',type:'email',placeholder:'name@example.com',required:true},
+          {name:'ownerPhone',label:'Private owner contact number',type:'tel',placeholder:'Contact number for verification',required:true,full:true}
+        ]
+      },
+      {
+        label:'Review',
+        title:'Review your business submission.',
+        help:'Check the public listing details and the private owner information before sending.',
+        review:true,
+        consent:'I confirm that I am authorized to submit this business information, that the details are accurate to the best of my knowledge, and that the private owner contact details may be used to verify and manage this listing.'
+      }
+    ];
+
+    const baseRenderFields=renderFields;
+    renderFields=function(fields){
+      return `<div class="field-grid">${fields.map(f=>{
+        const v=data[f.name]||'';
+        let control='';
+        if(f.type==='textarea') control=`<textarea name="${f.name}" placeholder="${f.placeholder||''}">${esc(v)}</textarea>`;
+        else if(f.type==='select') control=`<select name="${f.name}"><option value="">Choose one</option>${f.options.map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}</select>`;
+        else if(f.type==='file'){
+          const accept=f.accept||'image/*,.pdf,.doc,.docx';
+          const multiple=f.multiple===false?'':' multiple';
+          control=`<div class="file-box"><input name="${f.name}" type="file"${multiple} accept="${accept}"></div>`;
+        }else control=`<input name="${f.name}" type="${f.type}" value="${esc(v)}" placeholder="${f.placeholder||''}">`;
+        return `<div class="field ${f.full?'full':''}" data-field="${f.name}"><label>${f.label}${f.required?' *':''}</label>${control}<div class="error">Please complete this field.</div></div>`;
+      }).join('')}</div>`;
+    };
+
+    configs.story.steps[2].fields[0]={...configs.story.steps[2].fields[0],accept:'image/jpeg,image/png,image/webp,application/pdf',multiple:true};
     configs.resume.steps[3]={
       label:'Review',
       title:'Review your resume information.',
       help:'Check the details below. If you already have a resume, you may attach one PDF up to 10 MB.',
-      fields:[{name:'existingResume',label:'Existing resume PDF, if any',type:'file',required:false,full:true}],
+      fields:[{name:'existingResume',label:'Existing resume PDF, if any',type:'file',required:false,full:true,accept:'application/pdf',multiple:false}],
       review:true,
       consent:'I confirm that the information I submitted may be used to prepare my resume and support future job applications.'
     };
