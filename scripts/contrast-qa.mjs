@@ -71,6 +71,15 @@ for (const [label, viewport] of VIEWPORTS) {
           const style = getComputedStyle(el);
           if (style.visibility === 'hidden' || style.display === 'none') return;
           if (Number(style.opacity) === 0) return;
+          /* Screen-reader-only text. The .visually-hidden pattern clips an
+             element to a 1px box with overflow hidden, so nothing of it is
+             painted — but a Range over its contents still reports the full
+             unclipped text rects, and measuring those means measuring the
+             background against itself. Judge by the element's own box: if
+             that has been collapsed to nothing, no reader can see the text
+             and its contrast is not a thing that exists. */
+          const box = el.getBoundingClientRect();
+          if (box.width <= 4 || box.height <= 4) return;
           const parts = (style.color.match(/[\d.]+/g) || []).map(Number);
           if (parts.length < 3) return;
           const range = document.createRange();
