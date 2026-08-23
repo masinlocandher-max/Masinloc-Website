@@ -66,8 +66,12 @@ async function testMobileConnect() {
     if (trapState.tabIndex !== -1) fail('mobile/connect: honeypot is keyboard-focusable');
   }
 
-  const storedDraft = await page.evaluate(() => localStorage.getItem('masinlocConnectDraft'));
-  if (storedDraft !== null) fail('mobile/connect: expired draft was not removed');
+  const staleStorage = await page.evaluate(() => ({
+    local: localStorage.getItem('masinlocConnectDraft'),
+    session: sessionStorage.getItem('masinlocConnectDraft'),
+  }));
+  if (staleStorage.local !== null) fail('mobile/connect: persistent localStorage draft was not removed');
+  if (staleStorage.session !== null) fail('mobile/connect: expired draft survived in sessionStorage');
   if (!(await page.locator('#resumeBar').isHidden())) fail('mobile/connect: expired draft banner is visible');
 
   await page.locator('.quick-card.business').click();
@@ -84,7 +88,13 @@ async function testMobileConnect() {
   }
 
   const statusText = (await page.locator('#saveStatus').innerText()).trim();
-  if (!statusText.includes('7 days')) fail(`mobile/connect: draft retention notice is unclear: ${statusText}`);
+  if (!statusText.toLowerCase().includes('browser session')) fail(`mobile/connect: session-only draft notice is unclear: ${statusText}`);
+  const activeStorage = await page.evaluate(() => ({
+    local: localStorage.getItem('masinlocConnectDraft'),
+    session: sessionStorage.getItem('masinlocConnectDraft'),
+  }));
+  if (activeStorage.local !== null) fail('mobile/connect: private draft was persisted in localStorage');
+  if (activeStorage.session === null) fail('mobile/connect: active draft was not saved in sessionStorage');
 
   await page.goto(`${baseURL}/connect.html`, { waitUntil: 'networkidle' });
   await waitForConnectRuntime(page);
@@ -144,4 +154,4 @@ if (failures.length) {
 }
 
 console.log('CONNECT QA PASSED');
-console.log('Mobile copy, logo sizing, draft expiry, honeypot presence, upload controls and shared desktop branding are healthy.');
+console.log('Mobile copy, logo sizing, session-only draft privacy, honeypot presence, upload controls and shared desktop branding are healthy.');
