@@ -30,7 +30,13 @@ supabase login                                   # opens a browser
 supabase link --project-ref uwcqvsitjtknxsaypjxj # asks for the db password
 supabase db push                                 # applies supabase/migrations/
 supabase functions deploy submit-masinloc --no-verify-jwt
+supabase functions deploy business-dashboard-interest --no-verify-jwt
 ```
+
+There are **two** functions. `submit-masinloc` carries every form on the site;
+`business-dashboard-interest` records a business owner asking to be told when
+the dashboard exists. Deploying one and not the other leaves the other's
+button failing, so deploy both.
 
 `--no-verify-jwt` is not optional and is not a loosening of security. The
 endpoint is called by anonymous visitors filling in a form; nobody signs in to
@@ -66,6 +72,23 @@ Four other tables — `business_submissions`, `professional_submissions`,
 before this repository existed and have no migration here. `db push` will not
 touch them. `scripts/check-backend-contract.py` lists them every run so they
 stay visible rather than forgotten.
+
+### One thing to check on `business_submissions`
+
+`business-dashboard-interest` writes two columns that no migration here can
+guarantee exist, because the table itself lives only in the dashboard:
+`dashboard_interest` and `dashboard_interest_at`. If they are missing the
+function returns 500 and the owner sees "We could not save your interest right
+now." In the dashboard's SQL editor:
+
+```sql
+alter table public.business_submissions
+  add column if not exists dashboard_interest boolean not null default false,
+  add column if not exists dashboard_interest_at timestamptz;
+```
+
+Safe to run whether or not they are already there — it does nothing if they
+are.
 
 ### Optional: Turnstile
 
