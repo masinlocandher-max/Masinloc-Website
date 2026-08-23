@@ -9,7 +9,6 @@ ROOT = Path(__file__).resolve().parents[1]
 errors = []
 
 TEXT_EXTS = {".js", ".ts", ".html", ".json", ".yml", ".yaml", ".md"}
-SKIP_PARTS = {".git", "node_modules", "assets/vendor"}
 
 
 def fail(message: str) -> None:
@@ -25,6 +24,15 @@ def text_files():
             continue
         yield path, rel
 
+
+required_edge_functions = {
+    "supabase/functions/submit-masinloc/index.ts",
+    "supabase/functions/submit-professional-profile/index.ts",
+    "supabase/functions/business-dashboard-interest/index.ts",
+}
+for rel in sorted(required_edge_functions):
+    if not (ROOT / rel).is_file():
+        fail(f"production Edge Function is not version-controlled: {rel}")
 
 secret_patterns = [
     re.compile(r"sb_secret_[A-Za-z0-9_-]{16,}"),
@@ -44,9 +52,19 @@ for path, rel in text_files():
             fail(f"wildcard CORS in {rel}")
         if 'endsWith(".vercel.app")' in content or "endsWith('.vercel.app')" in content:
             fail(f"broad Vercel preview-origin trust in {rel}; production must use an exact allowlist")
+        if "SUPABASE_SERVICE_ROLE_KEY" not in content:
+            fail(f"server-side Supabase credential source is missing in {rel}")
     if rel.endswith(".js") and not rel.startswith("scripts/"):
         if re.search(r"\beval\s*\(", content) or re.search(r"\bnew\s+Function\s*\(", content):
             fail(f"dynamic code execution found in {rel}")
+
+app_path = ROOT / "app.js"
+if app_path.is_file():
+    app = app_path.read_text(encoding="utf-8", errors="ignore")
+    if "storeSet('masinlocConnectDraft'" in app or 'localStorage.setItem("masinlocConnectDraft"' in app:
+        fail("Masinloc Connect private draft data must not be persisted in localStorage")
+    if "sessionStorage" not in app:
+        fail("Masinloc Connect drafts must use session-scoped storage")
 
 vercel_path = ROOT / "vercel.json"
 try:
