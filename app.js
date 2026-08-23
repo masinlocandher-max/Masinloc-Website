@@ -6,9 +6,8 @@
 
   const style=document.createElement('style');
   style.textContent=`
-    .form-header{display:none!important}
-    .overlay-nav.inner-nav{position:relative!important;background:#fff!important;border-bottom:1px solid #eff0f4!important}
-    .backend-error{margin:12px 0 0;padding:10px 12px;border-radius:6px;background:#fff1f2;color:#b4232d;font-size:11px;line-height:1.45}
+    .overlay-nav.inner-nav{position:relative!important;background:var(--white)!important;border-bottom:1px solid var(--line)!important}
+    .backend-error{margin:12px 0 0;padding:11px 13px;border-radius:10px;background:rgba(230,30,37,.07);border:1px solid rgba(230,30,37,.22);color:var(--red-ink);font-size:12px;line-height:1.5}
     .next[disabled]{opacity:.62;cursor:wait}
   `;
   document.head.appendChild(style);

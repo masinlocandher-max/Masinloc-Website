@@ -19,6 +19,11 @@
   /* Readable stand-in for --yellow wherever the colour carries text or sits
      behind white type. #FFC700 fails contrast in both roles. */
   --yellow-ink:#8A5A00;
+  /* Same idea for red. #E61E25 clears 4.5:1 on pure white by a hair and fails
+     the moment the ground is tinted at all — measured at 4.05:1 as a 12px
+     label on Masinloc Connect's own red card wash. Use --red for marks, rules
+     and icon chips; use this wherever red carries small text. */
+  --red-ink:#C2141A;
   --navy:#061A46;
   --navy-deep:#03112F;
 

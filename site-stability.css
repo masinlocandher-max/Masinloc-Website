@@ -63,3 +63,16 @@ img[src="assets/masinloc-logo.webp"]{
   .site-footer .footer-brand img{width:128px!important;max-width:128px!important}
   .footer-bottom{gap:10px;flex-wrap:wrap}
 }
+
+/* Screen-reader-only text ---------------------------------------------------
+   This utility was defined in contact.css and sambal-tina.css but nowhere
+   that Masinloc Connect loads, so connect.html's <span class="visually-hidden">
+   Connect</span> — there to complete the accessible heading "MASINLOC
+   Connect" — was rendering at full size. The hero read "MASINLOC / Connect /
+   CONNECT", the last two being the same word twice.
+
+   It lives here because every page that uses the class loads this file. */
+.visually-hidden{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}

@@ -1,5 +1,10 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const views={landing:$('#landingView'),chooser:$('#chooserView'),form:$('#formView'),about:$('#aboutView'),success:$('#successView')};
+/* Only the views the page actually carries. connect.html no longer ships the
+   separate chooser screen (a choice on the landing page opens the form
+   directly) or the standalone about screen (its mission and vision now sit on
+   the landing page, where somebody can find them). Both were unreachable.
+   Filtering here means show() cannot iterate over a null. */
+const views=Object.fromEntries(Object.entries({landing:$('#landingView'),chooser:$('#chooserView'),form:$('#formView'),about:$('#aboutView'),success:$('#successView')}).filter(([,el])=>el));
 let type=null,step=0,data={},lastSubmission=null,aboutOrigin='landing';
 const memoryStore={};
 function storeSet(k,v){try{localStorage.setItem(k,v)}catch{memoryStore[k]=v}}
@@ -32,11 +37,14 @@ resume:{label:'RESUME SUPPORT',icon:'●',color:'var(--blue)',ink:'var(--blue)',
 {label:'Review',title:'Review your resume information.',help:'You may also attach an existing resume if you already have one.',fields:[{name:'existingResume',label:'Existing resume, if any',type:'file',required:false,full:true}],review:true,consent:'I confirm that the information I submitted may be used to help prepare my resume and support future job applications.'}
 ]}};
 
-function show(name){Object.entries(views).forEach(([k,v])=>{const active=k===name;v.hidden=!active;v.classList.toggle('active',active)});$('#overlayNav').style.display=(name==='landing'||name==='chooser')?'flex':'none';window.scrollTo({top:0,behavior:'auto'});}
+/* Asking for a view this page does not carry falls back to the landing view.
+   Without that, a stale call would hide every section and leave a blank page
+   behind the navigation. */
+function show(name){if(!views[name])name='landing';Object.entries(views).forEach(([k,v])=>{const active=k===name;v.hidden=!active;v.classList.toggle('active',active)});$('#overlayNav').style.display=(name==='landing'||name==='chooser')?'flex':'none';window.scrollTo({top:0,behavior:'auto'});}
 function openCategory(t,restore=false){type=t;if(!restore){step=0;data={}};renderForm();show('form');saveDraft()}
 document.addEventListener('click',e=>{const chooser=e.target.closest('[data-choose]');if(chooser){e.preventDefault();show('chooser');return}const opener=e.target.closest('[data-open]');if(opener){e.preventDefault();openCategory(opener.dataset.open);return}if(e.target.closest('[data-about]')){e.preventDefault();aboutOrigin=Object.entries(views).find(([k,v])=>v.classList.contains('active'))?.[0]||'landing';show('about');return}if(e.target.closest('[data-home]')){e.preventDefault();show(aboutOrigin||'landing');return}});
 $('#homeLogo').addEventListener('click',e=>{e.preventDefault();show('landing')});
-$('#chooserBack').addEventListener('click',()=>show('landing'));
+$('#chooserBack')?.addEventListener('click',()=>show('landing'));
 $('#changeCategory').addEventListener('click',()=>show('chooser'));
 
 function renderForm(){const cfg=configs[type],s=cfg.steps[step];$('#progressRail').innerHTML=cfg.steps.map((item,i)=>`<div class="step-node ${i===step?'active':''}"><span style="${i===step?`background:${cfg.color}`:''}">${i+1}</span><strong>${item.label}</strong></div>`).join('');$('#categoryAside').innerHTML=`<div class="side-icon" style="background:${cfg.color}">${cfg.icon}</div><h3 style="color:${cfg.ink}">${cfg.label}</h3><p>${cfg.aside}</p>`;let h=`<div class="step-kicker" style="color:${cfg.ink}">STEP ${step+1} OF 4</div><h2>${s.title}</h2><p class="step-help">${s.help}</p>`;if(s.visibility){h+=`<div class="option-grid"><button type="button" class="option-card ${data.publicProfile==='yes'?'selected':''}" data-public="yes" style="color:${cfg.ink}"><small>○</small><strong>Yes, post my profile</strong><p>My professional profile may be listed publicly on Masinloc Connect after review.</p></button><button type="button" class="option-card ${data.publicProfile==='no'?'selected':''}" data-public="no"><small>○</small><strong>No, keep it private</strong><p>Do not post my professional profile publicly.</p></button></div><div class="option-error" id="visibilityError">Please choose one option.</div>`}if(s.fields)h+=renderFields(s.fields);if(s.review){h+=renderReview()+`<div class="consent"><input type="checkbox" id="consent" ${data.consent?'checked':''}><label for="consent">${s.consent}</label></div><div class="consent-error" id="consentError">Please confirm before submitting.</div>`}h+=`<div class="form-actions">${step?'<button type="button" class="prev" id="prevBtn">BACK</button>':'<span></span>'}<button type="button" class="next" id="nextBtn" style="background:${cfg.ink}">${step===3?'SUBMIT FOR REVIEW':'CONTINUE'} <span>→</span></button></div><button type="button" class="save-later" id="saveLater">Save and continue later</button>`;$('#formCard').innerHTML=h;bindStep();}

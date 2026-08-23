@@ -12,7 +12,7 @@
   --sans:var(--font-ui);
 }
 
-body{font-family:var(--sans);color:var(--ink);background:#fff;text-rendering:optimizeLegibility}
+body{font-family:var(--sans);color:var(--ink);background:var(--white);text-rendering:optimizeLegibility}
 button,input,textarea,select{font-family:var(--sans)}
 button,a{-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid rgba(30,99,233,.24);outline-offset:3px}
@@ -38,47 +38,151 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .landing-view .manifesto{font-size:clamp(15px,1.25vw,19px);line-height:1.45;color:var(--ink);margin-bottom:9px}
 .landing-view .intro{font-size:13px;line-height:1.72;color:var(--text);max-width:490px}
 
-/* Choice area */
-.quick-choices{padding:clamp(54px,6vw,88px) clamp(22px,5vw,72px) clamp(68px,7vw,100px);max-width:1320px;margin:0 auto}
-.quick-choices h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(30px,3.2vw,48px);line-height:1.12;color:var(--navy);margin:0 auto 34px;max-width:730px}
-.quick-grid{gap:18px}
-.quick-card{border:1px solid var(--line);border-radius:var(--radius);box-shadow:none;grid-template-columns:58px 1fr 28px;gap:16px;padding:24px;min-height:178px;transition:transform 300ms var(--ease),box-shadow 300ms var(--ease),border-color 240ms ease,background-color 240ms ease}
-.quick-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:rgba(30,99,233,.18)}
-.quick-card:active{transform:translateY(-1px) scale(.992)}
-.icon-circle{width:54px;height:54px;font-size:22px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.28)}
-.quick-card strong,.selection-card strong{font-size:12px;letter-spacing:.07em}
-.quick-card p{font-size:13px;line-height:1.62;margin-top:9px;color:var(--text)}
-.quick-card>b{font-size:25px;align-self:center;transition:transform 280ms var(--ease)}
+/* Choice area -------------------------------------------------------------
+   Three cards, and they are the whole point of the page: everything above
+   them is introduction. They use the same material as the homepage's four
+   doors — a translucent tinted sheet over the page, a solid chip for the
+   icon, a hairline of light along the top edge — so somebody arriving here
+   from the homepage recognises what they are looking at.
+
+   The palette carries the meaning. Business is blue, story is red,
+   professional is yellow; those pairings already existed in styles.css and
+   are kept. What changes is that the colour now tints the whole card rather
+   than only a small circle, so the three are told apart before any label is
+   read. */
+.quick-choices{padding:clamp(54px,6vw,88px) clamp(22px,5vw,72px) clamp(56px,6vw,84px);max-width:1320px;margin:0 auto}
+.quick-choices h2{font-family:var(--font-editorial);font-weight:400;font-size:clamp(30px,3.2vw,48px);line-height:1.12;color:var(--navy);margin:0 auto 10px;max-width:730px}
+.quick-intro{font-size:14px;line-height:1.6;color:var(--muted);max-width:640px;margin:0 auto 34px}
+.quick-grid{gap:clamp(12px,1.4vw,18px)}
+
+.quick-card{
+  grid-template-columns:56px 1fr 24px;gap:16px;padding:clamp(20px,2vw,26px);min-height:178px;
+  border-radius:22px;
+  background:var(--wash);
+  border:1px solid var(--edge);
+  /* The inset hairline is what makes a translucent panel read as a sheet
+     laid on the page rather than a flat block of pale colour. */
+  box-shadow:0 18px 34px -22px rgba(6,26,70,.42),inset 0 1px 0 rgba(255,255,255,.7);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  transition:transform 320ms var(--ease),box-shadow 320ms var(--ease),border-color 320ms var(--ease);
+}
+.quick-card:hover,.quick-card:focus-visible{
+  transform:translateY(-4px);
+  border-color:var(--chip);
+  box-shadow:0 26px 44px -22px rgba(6,26,70,.34),inset 0 1px 0 rgba(255,255,255,.8);
+}
+.quick-card:active{transform:translateY(-1px) scale(.994)}
+
+/* --wash is the translucent field, --edge its hairline, --chip the solid
+   colour under the icon, --glyph what is drawn on it, --title the heading.
+   Titles take the -ink variants rather than the identity colours: brand
+   yellow fails contrast both as small text and behind white type, and brand
+   red fails the moment it sits on a tinted ground rather than pure white.
+   tokens.css carries both stand-ins and the measurements behind them. */
+.quick-card.business{--wash:rgba(13,59,158,.09);--edge:rgba(13,59,158,.22);
+  --chip:var(--blue);--glyph:var(--white);--title:var(--blue)}
+.quick-card.story{--wash:rgba(230,30,37,.08);--edge:rgba(230,30,37,.22);
+  --chip:var(--red);--glyph:var(--white);--title:var(--red-ink)}
+.quick-card.professional{--wash:rgba(255,199,0,.16);--edge:rgba(255,199,0,.42);
+  --chip:var(--yellow);--glyph:var(--navy-deep);--title:var(--yellow-ink)}
+
+.quick-card .icon-circle{
+  width:52px;height:52px;border-radius:15px;
+  background:var(--chip);color:var(--glyph);
+  box-shadow:0 12px 22px -12px var(--chip);
+}
+.quick-card .icon-circle svg{
+  width:25px;height:25px;fill:none;stroke:currentColor;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+}
+.quick-card strong{font-size:12px;letter-spacing:.07em;color:var(--title)}
+.quick-card p{font-size:13.5px;line-height:1.62;margin-top:9px;color:var(--text)}
+.quick-card>b{
+  align-self:center;display:inline-flex;color:var(--chip);
+  transition:transform 300ms var(--ease);
+}
+.quick-card.story>b{color:var(--red-ink)}
+.quick-card.professional>b{color:var(--yellow-ink)}
+.quick-card>b svg{
+  width:21px;height:21px;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
 .quick-card:hover>b{transform:translateX(5px)}
+
+/* What happens after you choose, said once and before the choice rather than
+   discovered on the last step. */
+.quick-assure{
+  margin:clamp(24px,3vw,34px) auto 0;max-width:620px;
+  font-size:12.5px;line-height:1.6;color:var(--muted);
+}
 
 /* In-app page transitions. */
 .view.active{animation:connect-view-in 380ms var(--ease) both}
 @keyframes connect-view-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 @keyframes connect-hero-in{from{opacity:.55;transform:scale(1.045)}to{opacity:1;transform:scale(1.015)}}
 
-/* Chooser */
-.chooser-view{padding-top:82px;min-height:720px;background:#fff}
-.chooser-content{padding:48px 34px 74px}
-.chooser-content h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:clamp(38px,4vw,58px);line-height:1.05;color:var(--navy);margin-bottom:16px}
-.chooser-content>p{font-size:13px;line-height:1.65;color:var(--text);margin-bottom:34px}
-.chooser-grid{max-width:920px;gap:18px}
-.selection-card{border:1px solid var(--line);border-radius:var(--radius);box-shadow:none;min-height:330px;padding:30px 24px 24px;transition:transform 300ms var(--ease),box-shadow 300ms var(--ease),border-color 220ms ease}
-.selection-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:rgba(30,99,233,.18)}
-.selection-card .icon-circle{width:64px;height:64px;margin-bottom:20px}
-.selection-card strong{font-size:13px}
-.selection-card p{font-size:13px;line-height:1.62;max-width:220px;margin-top:12px;color:var(--text)}
-.selection-card>b{font-size:30px;transition:transform 280ms var(--ease)}
-.selection-card:hover>b{transform:translateX(5px)}
-.back-link{font-size:12px;margin-top:25px;color:var(--muted)}
+/* Mission and vision -------------------------------------------------------
+   This copy used to sit on a separate screen that nothing on the page linked
+   to, so nobody ever read it. It now closes the landing page, which is where
+   somebody deciding whether to submit anything would look for it.
+
+   The band is a pale navy field rather than another white one: it ends the
+   page instead of letting it trail off into the footer, and it lets the two
+   panels use the same translucent material as the cards above without
+   competing with them. */
+.connect-purpose{
+  padding:clamp(56px,6.5vw,92px) clamp(22px,5vw,72px) clamp(64px,7vw,100px);
+  background:
+    radial-gradient(120% 90% at 12% 0%,rgba(13,59,158,.09) 0%,rgba(13,59,158,0) 62%),
+    radial-gradient(90% 80% at 100% 100%,rgba(255,199,0,.13) 0%,rgba(255,199,0,0) 60%),
+    var(--soft);
+  border-top:1px solid var(--line);
+  text-align:center;
+}
+.purpose-label{font-size:11px;letter-spacing:.16em;color:var(--blue);margin:0 0 10px}
+.connect-purpose h2{
+  font-family:var(--font-editorial);font-weight:400;
+  font-size:clamp(32px,3.6vw,52px);line-height:1.06;letter-spacing:-.02em;
+  color:var(--navy);margin:0 0 clamp(28px,3.4vw,40px);
+}
+.purpose-grid{
+  display:grid;gap:clamp(12px,1.4vw,18px);
+  max-width:940px;margin:0 auto;text-align:left;
+  grid-template-columns:1fr;
+}
+@media (min-width:760px){.purpose-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.purpose-card{
+  padding:clamp(24px,2.4vw,32px);border-radius:22px;
+  background:var(--wash);border:1px solid var(--edge);
+  box-shadow:0 18px 34px -22px rgba(6,26,70,.42),inset 0 1px 0 rgba(255,255,255,.75);
+  backdrop-filter:blur(18px) saturate(150%);
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+}
+.purpose-blue{--wash:rgba(255,255,255,.78);--edge:rgba(13,59,158,.20);--tag:var(--blue)}
+.purpose-yellow{--wash:rgba(255,255,255,.78);--edge:rgba(255,199,0,.46);--tag:var(--yellow-ink)}
+.purpose-tag{display:block;font-size:11px;letter-spacing:.14em;color:var(--tag);margin-bottom:12px}
+.purpose-card h3{
+  font-family:var(--font-editorial);font-weight:400;
+  font-size:clamp(19px,1.7vw,23px);line-height:1.24;letter-spacing:-.012em;
+  color:var(--navy);margin:0 0 12px;
+}
+.purpose-card p{font-size:13.5px;line-height:1.68;color:var(--text);margin:0}
+.purpose-closing{
+  font-family:var(--font-editorial);font-size:clamp(15px,1.5vw,19px);line-height:1.5;
+  color:var(--navy);margin:clamp(30px,3.4vw,42px) auto clamp(20px,2vw,26px);max-width:560px;
+}
+.connect-purpose .primary-button{display:inline-flex}
 
 /* Form shell */
 .form-view{background:linear-gradient(180deg,#fff 0,#fff 64px,var(--soft) 64px,var(--soft) 100%);min-height:100svh}
-.form-header{height:78px;padding:0 clamp(20px,4vw,52px);background:rgba(255,255,255,.96);position:sticky;top:0;z-index:30;backdrop-filter:saturate(145%) blur(16px);border-bottom:1px solid var(--line)}
-.form-header img{width:168px}
-.form-header nav{gap:26px}
-.form-header a,.form-header button{font-size:11px!important;color:var(--ink)!important}
 .form-tools{max-width:980px;margin:20px auto 0;padding:0 24px}
 .form-tools button,.form-tools span{font-size:11px}
+/* Was an inline style on the element, carrying a hex that existed nowhere
+   else in the palette. */
+.form-privacy{max-width:1100px;margin:0 auto 18px;padding:0 24px;font-size:12.5px;line-height:1.6;color:var(--muted)}
+.form-privacy a{color:var(--blue);font-weight:700;text-underline-offset:3px}
+
 .progress-rail{max-width:680px;margin:22px auto 42px}
 .progress-rail:before{top:16px}
 .step-node span{width:33px;height:33px;font-size:11px;box-shadow:0 0 0 5px var(--soft)}
@@ -135,7 +239,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .quick-choices{padding:50px 18px 74px}
   .quick-grid{grid-template-columns:1fr;gap:12px}
   .quick-card{min-height:0;padding:20px;grid-template-columns:54px 1fr 24px}
-  .chooser-content{padding:42px 18px 64px}.chooser-grid{grid-template-columns:1fr;max-width:520px}.selection-card{min-height:0;padding:24px 22px}.selection-card p{max-width:340px}
   .form-grid{grid-template-columns:1fr;padding:0 16px 62px}.category-aside{display:grid;grid-template-columns:54px 1fr;gap:13px;align-items:center;padding:0}.side-icon{width:54px;height:54px;margin:0}.category-aside h3{margin:0 0 4px}.category-aside p{max-width:none}
   .progress-rail{margin:20px 14px 34px}.step-node strong{font-size:9px}
   .form-card{border-radius:18px;padding:24px 18px}.field-grid,.option-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
@@ -160,10 +263,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    viewport at iPad-portrait width. minmax(0,1fr) lets the columns actually
    shrink; two columns keep the cards readable at this size. */
 @media(min-width:801px) and (max-width:980px){
-  .quick-grid,.chooser-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .quick-card{grid-template-columns:52px minmax(0,1fr) 24px;padding:20px}
   .quick-choices{padding-left:24px;padding-right:24px}
-  .chooser-content{padding-left:24px;padding-right:24px}
   .form-grid{grid-template-columns:132px minmax(0,1fr);gap:26px}
 }
 
@@ -171,19 +273,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
    can force wider than the viewport. Scoped above the mobile breakpoint so it
    cannot override the single-column phone layout declared earlier. */
 @media(min-width:981px){
-  .quick-grid,.chooser-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .quick-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .field-grid,.option-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-.quick-card p,.selection-card p,.category-aside p{overflow-wrap:anywhere}
+.quick-card p,.purpose-card p,.category-aside p{overflow-wrap:anywhere}
 
 /* Legibility floors -------------------------------------------------------
    The minified Connect base sets several labels at 7-9px, which is below what
    anyone can comfortably read. */
-.form-tools button,.form-tools span,.back-link,.save-later{font-size:12px}
+.form-tools button,.form-tools span,.save-later{font-size:12px}
 .review-row span,.ref-box small{font-size:10px;letter-spacing:.1em}
 .review-row strong{font-size:13px}
 .consent label,.error,.option-error,.consent-error{font-size:12px}
-.about-label,.step-kicker{font-size:11px}
+.purpose-label,.step-kicker{font-size:11px}
 .primary-button,.success-buttons button,.prev,.next,.modal-actions button,
 .resume-bar button{font-size:12px}
 .success-small{font-size:13px!important}
