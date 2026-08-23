@@ -48,79 +48,20 @@ async function dictionaryContributors(){
     .limit(2000);
   if(error){console.error("contributors_db_error",error.message);throw new Error("DB")}
   const seen=new Set<string>();const names:string[]=[];
-  for(const row of data??[]){
-    const name=String(row.credit_name||row.contributor_name||"").trim().slice(0,160);
-    if(!name)continue;
-    const key=name.toLowerCase();
-    if(seen.has(key))continue;
-    seen.add(key);names.push(name);
-  }
+  for(const row of data??[]){const name=String(row.credit_name||row.contributor_name||"").trim().slice(0,160);if(!name)continue;const key=name.toLowerCase();if(seen.has(key))continue;seen.add(key);names.push(name)}
   return names;
 }
 
 function rowFor(category:Category,p:Record<string,any>,files:string[]){
   if(category==="business"){
     required(p,["brandName","ownerName","ownerEmail","ownerPhone","contactNumber","facebookPage","shortDescription"]);
-    return{
-      brand_name:text(p.brandName,120),
-      brand_logo_path:files[0]||null,
-      store_locations:p.storeLocations?text(p.storeLocations,1500):null,
-      owner_name:text(p.ownerName,160),
-      owner_email:emailText(p.ownerEmail),
-      owner_phone:text(p.ownerPhone,100),
-      contact_number:text(p.contactNumber,80),
-      facebook_page:facebookLink(p.facebookPage),
-      short_description:text(p.shortDescription,1200),
-    };
+    return{brand_name:text(p.brandName,120),brand_logo_path:files[0]||null,store_locations:p.storeLocations?text(p.storeLocations,1500):null,owner_name:text(p.ownerName,160),owner_email:emailText(p.ownerEmail),owner_phone:text(p.ownerPhone,100),contact_number:text(p.contactNumber,80),facebook_page:facebookLink(p.facebookPage),short_description:text(p.shortDescription,1200)};
   }
-  if(category==="story"){
-    required(p,["title","about","story","contributorName","contributorContact"]);
-    return{title:text(p.title,180),about:text(p.about,300),story:text(p.story,12000),location:p.location?text(p.location,300):null,contributor_name:text(p.contributorName,160),contributor_contact:text(p.contributorContact,200),attachment_paths:files};
-  }
-  if(category==="dictionary"){
-    required(p,["headword","contributorName","contributorContact"]);
-    const submissionType=p.submissionType==="correction"?"correction":"new_entry";
-    const filipino=p.filipinoMeaning?text(p.filipinoMeaning,1000):null;
-    const english=p.englishMeaning?text(p.englishMeaning,1000):null;
-    const details=p.contributionDetails?text(p.contributionDetails,5000):null;
-    /* A headword with no meaning and no note cannot be reviewed against the
-       archive, and a correction that does not say what is wrong is not a
-       correction. Reject both here as well as in the browser. */
-    if(!filipino&&!english&&!details)throw new Error("VALIDATION");
-    if(submissionType==="correction"&&!details)throw new Error("VALIDATION");
-    return{
-      submission_type:submissionType,
-      headword:text(p.headword,180),
-      filipino_meaning:filipino,
-      english_meaning:english,
-      contribution_details:details,
-      example_usage:p.exampleUsage?text(p.exampleUsage,3000):null,
-      contributor_name:text(p.contributorName,160),
-      contributor_contact:text(p.contributorContact,240),
-      credit_name:p.creditName?text(p.creditName,160):null,
-      credit_consent:p.creditConsent===true||p.creditConsent==="yes"||p.creditConsent==="true",
-    };
-  }
-  if(category==="contact"){
-    required(p,["senderName","senderEmail","message"]);
-    const topics=["general","business","language","history","correction","media","other"];
-    const topic=topics.includes(String(p.topic))?String(p.topic):"general";
-    return{
-      sender_name:text(p.senderName,160),
-      sender_email:emailText(p.senderEmail),
-      sender_phone:p.senderPhone?text(p.senderPhone,100):null,
-      topic,
-      subject:p.subject?text(p.subject,200):null,
-      message:text(p.message,6000),
-    };
-  }
-  if(category==="professional"){
-    required(p,["fullName","profession","skills","currentLocation","contactNumber","professionalDescription","publicProfile"]);
-    const publicProfile=p.publicProfile===true||p.publicProfile==="yes"||p.publicProfile==="true";
-    return{full_name:text(p.fullName,160),profession:text(p.profession,200),skills:text(p.skills,2500),current_location:text(p.currentLocation,300),contact_number:text(p.contactNumber,100),professional_link:p.professionalLink?text(p.professionalLink,500):null,professional_description:text(p.professionalDescription,1800),public_profile:publicProfile,status:publicProfile?"pending":"private"};
-  }
-  required(p,["targetJob","education","school","workExperience"]);
-  return{professional_submission_id:p.professionalSubmissionId||null,full_name:p.fullName?text(p.fullName,160):null,profession:p.profession?text(p.profession,200):null,skills:p.skills?text(p.skills,2500):null,contact_number:p.contactNumber?text(p.contactNumber,100):null,target_job:text(p.targetJob,220),preferred_location:p.preferredLocation?text(p.preferredLocation,300):null,remote_work:p.remoteWork?text(p.remoteWork,80):null,education:text(p.education,500),school:text(p.school,500),training:p.training?text(p.training,5000):null,work_experience:text(p.workExperience,10000),achievements:p.achievements?text(p.achievements,5000):null,languages:p.languages?text(p.languages,1000):null,existing_resume_path:files[0]||null};
+  if(category==="story"){required(p,["title","about","story","contributorName","contributorContact"]);return{title:text(p.title,180),about:text(p.about,300),story:text(p.story,12000),location:p.location?text(p.location,300):null,contributor_name:text(p.contributorName,160),contributor_contact:text(p.contributorContact,200),attachment_paths:files}}
+  if(category==="dictionary"){required(p,["headword","contributorName","contributorContact"]);const submissionType=p.submissionType==="correction"?"correction":"new_entry";const filipino=p.filipinoMeaning?text(p.filipinoMeaning,1000):null;const english=p.englishMeaning?text(p.englishMeaning,1000):null;const details=p.contributionDetails?text(p.contributionDetails,5000):null;if(!filipino&&!english&&!details)throw new Error("VALIDATION");if(submissionType==="correction"&&!details)throw new Error("VALIDATION");return{submission_type:submissionType,headword:text(p.headword,180),filipino_meaning:filipino,english_meaning:english,contribution_details:details,example_usage:p.exampleUsage?text(p.exampleUsage,3000):null,contributor_name:text(p.contributorName,160),contributor_contact:text(p.contributorContact,240),credit_name:p.creditName?text(p.creditName,160):null,credit_consent:p.creditConsent===true||p.creditConsent==="yes"||p.creditConsent==="true"}}
+  if(category==="contact"){required(p,["senderName","senderEmail","message"]);const topics=["general","business","language","history","correction","media","other"];const topic=topics.includes(String(p.topic))?String(p.topic):"general";return{sender_name:text(p.senderName,160),sender_email:emailText(p.senderEmail),sender_phone:p.senderPhone?text(p.senderPhone,100):null,topic,subject:p.subject?text(p.subject,200):null,message:text(p.message,6000)}}
+  if(category==="professional"){required(p,["fullName","profession","skills","currentLocation","contactNumber","professionalDescription","publicProfile"]);const publicProfile=p.publicProfile===true||p.publicProfile==="yes"||p.publicProfile==="true";return{full_name:text(p.fullName,160),profession:text(p.profession,200),skills:text(p.skills,2500),current_location:text(p.currentLocation,300),contact_number:text(p.contactNumber,100),professional_link:p.professionalLink?text(p.professionalLink,500):null,professional_description:text(p.professionalDescription,1800),public_profile:publicProfile,status:publicProfile?"pending":"private"}}
+  required(p,["targetJob","education","school","workExperience"]);return{professional_submission_id:p.professionalSubmissionId||null,full_name:p.fullName?text(p.fullName,160):null,profession:p.profession?text(p.profession,200):null,skills:p.skills?text(p.skills,2500):null,contact_number:p.contactNumber?text(p.contactNumber,100):null,target_job:text(p.targetJob,220),preferred_location:p.preferredLocation?text(p.preferredLocation,300):null,remote_work:p.remoteWork?text(p.remoteWork,80):null,education:text(p.education,500),school:text(p.school,500),training:p.training?text(p.training,5000):null,work_experience:text(p.workExperience,10000),achievements:p.achievements?text(p.achievements,5000):null,languages:p.languages?text(p.languages,1000):null,existing_resume_path:files[0]||null}
 }
 
 Deno.serve(async(req)=>{const headers=corsHeaders(req);if(Math.random()<0.02)cleanupSecurityLogs().catch(()=>{});if(req.method==="OPTIONS")return new Response("",{status:204,headers});const origin=req.headers.get("origin")||"";if(!originAllowed(origin)){await logSecurityEvent(req,"blocked_origin","high",null,{origin:origin.slice(0,500)});return new Response(JSON.stringify({ok:false,error:"Origin not allowed"}),{status:403,headers})}
