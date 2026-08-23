@@ -86,6 +86,26 @@ migration_source = "\n".join(
     path.read_text(encoding="utf-8") for path in sorted(MIGRATIONS.glob("*.sql"))
 ) if MIGRATIONS.is_dir() else ""
 
+# Security logging must be able to record every submission category the edge
+# function accepts. A stale CHECK constraint previously allowed only the four
+# original Connect categories, so Contact and Dictionary rejections could fail
+# to enter security_events without affecting the visitor-facing request.
+security_category_constraint = re.search(
+    r"add\s+constraint\s+security_events_category_check\s+check\s*\((.*?)\);",
+    migration_source,
+    re.I | re.S,
+)
+if security_category_constraint:
+    allowed_security_categories = set(
+        re.findall(r"'([^']+)'", security_category_constraint.group(1))
+    )
+    missing_security_categories = set(implemented) - allowed_security_categories
+    if missing_security_categories:
+        fail(
+            "security_events.category rejects edge-function categories: "
+            + ", ".join(sorted(missing_security_categories))
+        )
+
 
 def table_columns(table: str) -> set[str] | None:
     """Column names in a table's CREATE TABLE, or None if it is not defined here."""
