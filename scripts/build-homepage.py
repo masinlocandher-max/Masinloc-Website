@@ -330,15 +330,46 @@ def render() -> str:
     </div>
     <div class="hero-inner">
       <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
-      <h1 id="heroTitle"><span class="mask"><span>Masinloc,</span></span> <span class="mask"><span><em>in our words.</em></span></span></h1>
-      <p class="hero-note rise" style="--delay:520ms">A town on the Zambales coast, and the record of it kept by the people who live here.</p>
-      <p class="hero-sub rise" style="--delay:600ms">History&nbsp;&middot; Language&nbsp;&middot; People&nbsp;&middot; Place</p>
-      <a class="hero-enter rise" style="--delay:680ms" href="#discoverTitle">Start with the places <i aria-hidden="true">&darr;</i></a>
+      <h1 id="heroTitle"><span class="mask"><span>The world</span></span> <span class="mask"><span><em>finds us here.</em></span></span></h1>
+      <p class="hero-note rise" style="--delay:520ms">Discover Masinloc through its people, culture, places, businesses, and ideas.</p>
+      <div class="hero-cta rise" style="--delay:640ms">
+        <a class="cta-primary" href="a-closer-look.html">Discover Masinloc</a>
+        <a class="cta-secondary" href="connect.html">Explore Masinloc Connect</a>
+      </div>
     </div>
     <p class="hero-cue"><i></i>Scroll</p>
   </section>
 
   <!-- 02 ................................................................. -->
+  <section class="entries" aria-labelledby="entriesTitle">
+    <div class="entries-inner">
+      <h2 id="entriesTitle" class="stage-label">Start here</h2>
+      <ul class="door-grid">
+        <li class="door rise"><a href="destinations.html">
+          <span class="e-num">01</span>
+          <span class="e-name">Places</span>
+          <span class="e-what">Eight places on this coast, photographed where they actually are.</span>
+        </a></li>
+        <li class="door rise" style="--delay:80ms"><a href="sambal-tina.html">
+          <span class="e-num">02</span>
+          <span class="e-name">Culture &amp; Sambal&nbsp;Tina</span>
+          <span class="e-what">{n['total']:,} dictionary entries, and the language Masinloc still speaks.</span>
+        </a></li>
+        <li class="door rise" style="--delay:160ms"><a href="connect.html">
+          <span class="e-num">03</span>
+          <span class="e-name">Local Businesses</span>
+          <span class="e-what">Masinloqueño trade, added to the record by the people who run it.</span>
+        </a></li>
+        <li class="door rise" style="--delay:240ms"><a href="connect.html">
+          <span class="e-num">04</span>
+          <span class="e-name">Masinloc Connect</span>
+          <span class="e-what">Opportunities, services and community updates in one platform.</span>
+        </a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 03 ................................................................. -->
   <section class="campaign" aria-labelledby="campaignTitle">
     <div class="campaign-head">
       <h2 class="stage-label" id="campaignTitle">{esc(CAMPAIGNS['label'])}</h2>
