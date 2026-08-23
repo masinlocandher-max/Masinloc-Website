@@ -327,13 +327,17 @@ def article_page(article: dict) -> str:
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph},
                     indent=2, ensure_ascii=False)
 
+    # An article may name a hero whose artwork has not been delivered yet. It
+    # opens on type rather than on an empty frame, and picks the image up the
+    # moment the asset is built — no edit to the article required.
     hero_markup = ""
     if article.get("hero"):
         img = picture(article["hero"], eager=True)
-        caption = article["hero"].get("caption")
-        hero_markup = (f'  <figure class="d-hero">{img}'
-                       + (f"<figcaption>{esc(caption)}</figcaption>" if caption else "")
-                       + "</figure>\n")
+        if img:
+            caption = article["hero"].get("caption")
+            hero_markup = (f'  <figure class="d-hero">{img}'
+                           + (f"<figcaption>{esc(caption)}</figcaption>" if caption else "")
+                           + "</figure>\n")
 
     extra = (f'<meta property="article:published_time" content="{article["published"]}">\n'
              f'<meta property="article:modified_time" content="{article["updated"]}">\n')
@@ -412,8 +416,9 @@ def hub_page() -> str:
         for article in members:
             thumb = ""
             if article.get("hero"):
-                thumb = (f'<span class="d-card-media">'
-                         f'{picture(article["hero"], eager=False, classes="d-card-img")}</span>')
+                built = picture(article["hero"], eager=False, classes="d-card-img")
+                if built:
+                    thumb = f'<span class="d-card-media">{built}</span>'
             cards.append(
                 f'<li class="d-card{" d-card-text" if not thumb else ""}">'
                 f'<a href="{article["slug"]}.html">{thumb}'

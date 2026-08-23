@@ -7,11 +7,31 @@
     "note": "Discover is the outward-facing half of this project. Where a claim is uncertain it is marked uncertain, and where a story is still being checked it stays a story being checked."
   },
   "themes": [
-    { "id": "start", "name": "Start here", "blurb": "If you have five minutes and no particular question." },
-    { "id": "places", "name": "Places", "blurb": "Eight of them, photographed where they actually are." },
-    { "id": "history", "name": "History and culture", "blurb": "Including the parts that are not settled." },
-    { "id": "sea", "name": "The sea", "blurb": "Protected water, and the argument about a shoal." },
-    { "id": "economy", "name": "How the town makes a living", "blurb": "Power, fruit, fish, and the people who leave." }
+    {
+      "id": "start",
+      "name": "Start here",
+      "blurb": "If you have five minutes and no particular question."
+    },
+    {
+      "id": "places",
+      "name": "Places",
+      "blurb": "Eight of them, photographed where they actually are."
+    },
+    {
+      "id": "history",
+      "name": "History and culture",
+      "blurb": "Including the parts that are not settled."
+    },
+    {
+      "id": "sea",
+      "name": "The sea",
+      "blurb": "Protected water, and the argument about a shoal."
+    },
+    {
+      "id": "economy",
+      "name": "How the town makes a living",
+      "blurb": "Power, fruit, fish, and the people who leave."
+    }
   ],
   "articles": [
     {
@@ -21,32 +41,94 @@
       "deck": "A town of about fifty-six thousand people on the Zambales coast, sitting on a protected bay, next to a shoal that turns up in international news, under a power plant that lights a good part of Luzon. Start here.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "stage1", "name": "masinloc-hero", "alt": "Aerial view of the church and surrounding town of Masinloc, Zambales", "caption": "Masinloc from above, the church at the centre of the old town." },
+      "hero": {
+        "family": "stage1",
+        "name": "masinloc-hero",
+        "alt": "Aerial view of the church and surrounding town of Masinloc, Zambales",
+        "caption": "Masinloc from above, the church at the centre of the old town."
+      },
       "body": [
-        { "type": "p", "text": "Most people meet Masinloc at about eighty kilometres an hour. It is a name on the highway between Iba and Santa Cruz, a stretch of coastal road with the South China Sea on one side and the Zambales mountains on the other, and it goes past in under ten minutes if nothing slows you down. That is a reasonable way to meet a town. It is not a good way to know one." },
-        { "type": "p", "text": "The plain facts first, because they are easy to get wrong and easy to check. Masinloc is a first-class municipality on the western coast of Zambales, in Central Luzon. The 2024 Census of Population counted 56,579 people living in its thirteen barangays. Its postal code is 2211. It is roughly two hundred and fifty kilometres from Manila by road, which in practice means a morning if the traffic is kind and most of a day if it is not." },
-        { "type": "h2", "text": "Four things that make it specific" },
-        { "type": "p", "text": "The bay in front of the town is not ordinary water. Masinloc and Oyon Bay were set aside as a marine reserve by presidential proclamation in 1993, and the protected area that grew out of that now covers more than seven and a half thousand hectares across Masinloc and neighbouring Palauig. It is the only legislated marine protected area in the region. Fishermen work inside a legal instrument, whether or not they think about it that way on any given morning." },
-        { "type": "p", "text": "About twelve kilometres off the coast lies a shoal that carries the town's name in one of its several names — Bajo de Masinloc, also called Scarborough Shoal, also called Panatag. A triangle of reef and rock that most Masinloqueños have never stood on has put the word Masinloc into diplomatic cables, court filings and news bulletins in a dozen languages." },
-        { "type": "p", "text": "In Barangay Bani there is a coal-fired power station with three units and a combined capacity above a thousand megawatts, which feeds the Luzon grid. It is the largest single structure in the municipality and the largest single employer of a certain kind of skilled worker, and its presence is one of the facts that separates Masinloc from the postcard version of a Zambales coastal town." },
-        { "type": "p", "text": "And the mangoes. Zambales mangoes have a reputation that reaches further than the province does, and the story of how they got it involves a Guinness citation from 1995, a variety called Sweet Elena, and a good deal of confusion about which town can claim what. That confusion is worth an article of its own, and it has one." },
-        { "type": "h2", "text": "The language" },
-        { "type": "p", "text": "People here speak Sambal, and specifically the variety this project records as Sambal Tina. It is not a dialect of Tagalog and it is not Ilocano, though both are spoken in Masinloc and both have left marks. It is its own language with its own history, and a good deal of it lives in the mouths of people old enough to remember when it was the default rather than the choice. The dictionary attached to this site holds several thousand entries and is open for correction, because a language record that nobody can correct is a monument rather than a dictionary." },
-        { "type": "p", "text": "None of this makes Masinloc unusual in the way tourism copy means unusual. It makes it a real town with a specific set of problems, resources and arguments, which is a more interesting thing to be." },
-        { "type": "links", "items": [
-          { "label": "The thirteen barangays and the current officials", "href": "masinloc-right-now.html" },
-          { "label": "Eight places worth turning off the highway for", "href": "eight-reasons-to-turn-off-the-highway.html" },
-          { "label": "The Sambal Tina dictionary", "href": "../sambal-tina.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "Most people meet Masinloc at about eighty kilometres an hour. It is a name on the highway between Iba and Santa Cruz, a stretch of coastal road with the South China Sea on one side and the Zambales mountains on the other, and it goes past in under ten minutes if nothing slows you down. That is a reasonable way to meet a town. It is not a good way to know one."
+        },
+        {
+          "type": "p",
+          "text": "The plain facts first, because they are easy to get wrong and easy to check. Masinloc is a first-class municipality on the western coast of Zambales, in Central Luzon. The 2024 Census of Population counted 56,579 people living in its thirteen barangays. Its postal code is 2211. It is roughly two hundred and fifty kilometres from Manila by road, which in practice means a morning if the traffic is kind and most of a day if it is not."
+        },
+        {
+          "type": "h2",
+          "text": "Four things that make it specific"
+        },
+        {
+          "type": "p",
+          "text": "The bay in front of the town is not ordinary water. Masinloc and Oyon Bay were set aside as a marine reserve by presidential proclamation in 1993, and the protected area that grew out of that now covers more than seven and a half thousand hectares across Masinloc and neighbouring Palauig. It is the only legislated marine protected area in the region. Fishermen work inside a legal instrument, whether or not they think about it that way on any given morning."
+        },
+        {
+          "type": "p",
+          "text": "About twelve kilometres off the coast lies a shoal that carries the town's name in one of its several names — Bajo de Masinloc, also called Scarborough Shoal, also called Panatag. A triangle of reef and rock that most Masinloqueños have never stood on has put the word Masinloc into diplomatic cables, court filings and news bulletins in a dozen languages."
+        },
+        {
+          "type": "p",
+          "text": "In Barangay Bani there is a coal-fired power station with three units and a combined capacity above a thousand megawatts, which feeds the Luzon grid. It is the largest single structure in the municipality and the largest single employer of a certain kind of skilled worker, and its presence is one of the facts that separates Masinloc from the postcard version of a Zambales coastal town."
+        },
+        {
+          "type": "p",
+          "text": "And the mangoes. Zambales mangoes have a reputation that reaches further than the province does, and the story of how they got it involves a Guinness citation from 1995, a variety called Sweet Elena, and a good deal of confusion about which town can claim what. That confusion is worth an article of its own, and it has one."
+        },
+        {
+          "type": "h2",
+          "text": "The language"
+        },
+        {
+          "type": "p",
+          "text": "People here speak Sambal, and specifically the variety this project records as Sambal Tina. It is not a dialect of Tagalog and it is not Ilocano, though both are spoken in Masinloc and both have left marks. It is its own language with its own history, and a good deal of it lives in the mouths of people old enough to remember when it was the default rather than the choice. The dictionary attached to this site holds several thousand entries and is open for correction, because a language record that nobody can correct is a monument rather than a dictionary."
+        },
+        {
+          "type": "p",
+          "text": "None of this makes Masinloc unusual in the way tourism copy means unusual. It makes it a real town with a specific set of problems, resources and arguments, which is a more interesting thing to be."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The thirteen barangays and the current officials",
+              "href": "masinloc-right-now.html"
+            },
+            {
+              "label": "Eight places worth turning off the highway for",
+              "href": "eight-reasons-to-turn-off-the-highway.html"
+            },
+            {
+              "label": "The Sambal Tina dictionary",
+              "href": "../sambal-tina.html"
+            }
+          ]
+        }
       ],
       "sources": [
-        { "label": "2024 Census of Population, population counts declared official", "publisher": "Philippine Statistics Authority", "href": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president" },
-        { "label": "Proclamation No. 231, s. 1993 — Masinloc and Oyon Bay Marine Reserve", "publisher": "Official Gazette of the Republic of the Philippines", "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/" },
-        { "label": "Masinloc Power Plant, plant profile and capacity", "publisher": "SMC Global Power Holdings Corp.", "href": "https://www.smcglobalpower.com.ph/our-business-power-generation?slug=masinloc-power-plant&p=4" }
+        {
+          "label": "2024 Census of Population, population counts declared official",
+          "publisher": "Philippine Statistics Authority",
+          "href": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president"
+        },
+        {
+          "label": "Proclamation No. 231, s. 1993 — Masinloc and Oyon Bay Marine Reserve",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/"
+        },
+        {
+          "label": "Masinloc Power Plant, plant profile and capacity",
+          "publisher": "SMC Global Power Holdings Corp.",
+          "href": "https://www.smcglobalpower.com.ph/our-business-power-generation?slug=masinloc-power-plant&p=4"
+        }
       ],
-      "related": ["masinloc-right-now", "the-sea-in-front-of-masinloc", "the-sweetest-mango-came-from-where-exactly"]
+      "related": [
+        "masinloc-right-now",
+        "the-sea-in-front-of-masinloc",
+        "the-sweetest-mango-came-from-where-exactly"
+      ]
     },
-
     {
       "slug": "masinloc-right-now",
       "theme": "start",
@@ -57,20 +139,48 @@
       "hero": null,
       "currentFacts": true,
       "body": [
-        { "type": "p", "text": "Every other article on this site tries to be true for a long time. This one cannot be. Populations are recounted, officials are elected, and a page that quietly keeps displaying last term's mayor is worse than a page that never existed, because it looks maintained." },
-        { "type": "p", "text": "So the time-sensitive facts live in one place, each with the source it came from and the date somebody last checked it against that source. When a figure below is out of date, it is a small correction to one file rather than a hunt through a dozen paragraphs." },
-        { "type": "h2", "text": "How to read the dates" },
-        { "type": "p", "text": "\"Last verified\" means a person opened the source and confirmed the value. It does not mean the value changed on that date, and it does not move because the website was redeployed. If a figure below is stale, the honest fix is to check it and change the date, not to change the date." },
-        { "type": "p", "text": "The population figure comes from the 2024 Census of Population, whose counts were declared official by presidential proclamation. Census figures are revised rarely and deliberately; the year attached to the number matters more than the number's age." },
-        { "type": "p", "text": "The officials are those elected in the national and local elections of 12 May 2025, for terms running to 2028. Masinloc has been continuously led by women since 2010, a fact this project states plainly and without embellishment, because the record supports the sentence and does not support the larger claims that are sometimes built on top of it." }
+        {
+          "type": "p",
+          "text": "Every other article on this site tries to be true for a long time. This one cannot be. Populations are recounted, officials are elected, and a page that quietly keeps displaying last term's mayor is worse than a page that never existed, because it looks maintained."
+        },
+        {
+          "type": "p",
+          "text": "So the time-sensitive facts live in one place, each with the source it came from and the date somebody last checked it against that source. When a figure below is out of date, it is a small correction to one file rather than a hunt through a dozen paragraphs."
+        },
+        {
+          "type": "h2",
+          "text": "How to read the dates"
+        },
+        {
+          "type": "p",
+          "text": "\"Last verified\" means a person opened the source and confirmed the value. It does not mean the value changed on that date, and it does not move because the website was redeployed. If a figure below is stale, the honest fix is to check it and change the date, not to change the date."
+        },
+        {
+          "type": "p",
+          "text": "The population figure comes from the 2024 Census of Population, whose counts were declared official by presidential proclamation. Census figures are revised rarely and deliberately; the year attached to the number matters more than the number's age."
+        },
+        {
+          "type": "p",
+          "text": "The officials are those elected in the national and local elections of 12 May 2025, for terms running to 2028. Masinloc has been continuously led by women since 2010, a fact this project states plainly and without embellishment, because the record supports the sentence and does not support the larger claims that are sometimes built on top of it."
+        }
       ],
       "sources": [
-        { "label": "2024 Census of Population, population counts declared official", "publisher": "Philippine Statistics Authority", "href": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president" },
-        { "label": "Re-electionists dominate Zambales polls, 13 May 2025", "publisher": "Philstar", "href": "https://www.philstar.com/nation/2025/05/13/2442855/re-electionists-dominate-zambales-polls" }
+        {
+          "label": "2024 Census of Population, population counts declared official",
+          "publisher": "Philippine Statistics Authority",
+          "href": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president"
+        },
+        {
+          "label": "Re-electionists dominate Zambales polls, 13 May 2025",
+          "publisher": "Philstar",
+          "href": "https://www.philstar.com/nation/2025/05/13/2442855/re-electionists-dominate-zambales-polls"
+        }
       ],
-      "related": ["masinloc-actually", "not-the-lgu-website"]
+      "related": [
+        "masinloc-actually",
+        "not-the-lgu-website"
+      ]
     },
-
     {
       "slug": "the-sea-in-front-of-masinloc",
       "theme": "sea",
@@ -78,30 +188,86 @@
       "deck": "It is a legally protected area with a proclamation number, a management board and an enforcement problem. Here is what the law actually says about the water people fish in.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "locations", "name": "san-salvador-island", "alt": "San Salvador Island off the coast of Masinloc, Zambales", "caption": "San Salvador Island sits inside the protected area." },
+      "hero": {
+        "family": "locations",
+        "name": "san-salvador-island",
+        "alt": "San Salvador Island off the coast of Masinloc, Zambales",
+        "caption": "San Salvador Island sits inside the protected area."
+      },
       "body": [
-        { "type": "p", "text": "From the Baywalk the water in front of Masinloc looks like any other stretch of the West Philippine Sea: blue, busy in the early morning, empty by the middle of the afternoon. It is not legally ordinary, and it has not been since 1993." },
-        { "type": "p", "text": "On 18 August 1993, Proclamation No. 231 set aside the coastal area and islands within Masinloc and Oyon Bay as a marine reserve, on the recommendation of the Secretary of Environment and Natural Resources, under the National Integrated Protected Areas System Act of 1992. The stated purpose was to protect the ecological, scenic, scientific and educational features of the area while allowing the social and economic needs of local communities to be met without damaging it. That second clause is the whole difficulty of a protected area with people living in it, written into the founding document." },
-        { "type": "h2", "text": "What it covers now" },
-        { "type": "p", "text": "The reserve has since been reconstituted as the Masinloc and Oyon Bay Protected Landscape and Seascape, usually shortened to MOBPLS. It covers more than seven and a half thousand hectares and reaches across two municipalities, Masinloc and Palauig, and it is the only legislated marine protected area in the region under the Expanded National Integrated Protected Areas System Act of 2018. Legislated matters: it means the area's status rests on a law rather than on an executive instrument that a later administration can quietly revise." },
-        { "type": "pull", "text": "A protected area with people living in it is not a nature reserve. It is a negotiation with a legal deadline attached." },
-        { "type": "p", "text": "San Salvador Island sits inside this area, and the community-based marine management work done there from the late 1980s onward is among the better documented examples of its kind in the Philippines. That work predates the proclamation. It is one of the cases where a national designation arrived to formalise something local people had already started rather than to impose something new." },
-        { "type": "h2", "text": "What protection does not mean" },
-        { "type": "p", "text": "A designation is not a fence. Enforcement across seven and a half thousand hectares of open water requires boats, fuel, personnel and a reason for a fisherman a long way from shore to believe he will be seen. The Department of Environment and Natural Resources has run enforcement capacity work for the area in recent years, which is a reasonable indication both that the problem is real and that somebody is treating it as real." },
-        { "type": "p", "text": "The useful thing to understand, if you are reading this from somewhere else, is that the boundary of Masinloc does not stop at the beach. A meaningful part of the municipality's territory, economy and legal identity is underwater." },
-        { "type": "links", "items": [
-          { "label": "Why there is a shoal named after this town", "href": "why-is-there-a-shoal-named-after-masinloc.html" },
-          { "label": "San Salvador Island, and the 1649 record that names it", "href": "../bulletin/1649-when-six-caracoas-came.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "From the Baywalk the water in front of Masinloc looks like any other stretch of the West Philippine Sea: blue, busy in the early morning, empty by the middle of the afternoon. It is not legally ordinary, and it has not been since 1993."
+        },
+        {
+          "type": "p",
+          "text": "On 18 August 1993, Proclamation No. 231 set aside the coastal area and islands within Masinloc and Oyon Bay as a marine reserve, on the recommendation of the Secretary of Environment and Natural Resources, under the National Integrated Protected Areas System Act of 1992. The stated purpose was to protect the ecological, scenic, scientific and educational features of the area while allowing the social and economic needs of local communities to be met without damaging it. That second clause is the whole difficulty of a protected area with people living in it, written into the founding document."
+        },
+        {
+          "type": "h2",
+          "text": "What it covers now"
+        },
+        {
+          "type": "p",
+          "text": "The reserve has since been reconstituted as the Masinloc and Oyon Bay Protected Landscape and Seascape, usually shortened to MOBPLS. It covers more than seven and a half thousand hectares and reaches across two municipalities, Masinloc and Palauig, and it is the only legislated marine protected area in the region under the Expanded National Integrated Protected Areas System Act of 2018. Legislated matters: it means the area's status rests on a law rather than on an executive instrument that a later administration can quietly revise."
+        },
+        {
+          "type": "pull",
+          "text": "A protected area with people living in it is not a nature reserve. It is a negotiation with a legal deadline attached."
+        },
+        {
+          "type": "p",
+          "text": "San Salvador Island sits inside this area, and the community-based marine management work done there from the late 1980s onward is among the better documented examples of its kind in the Philippines. That work predates the proclamation. It is one of the cases where a national designation arrived to formalise something local people had already started rather than to impose something new."
+        },
+        {
+          "type": "h2",
+          "text": "What protection does not mean"
+        },
+        {
+          "type": "p",
+          "text": "A designation is not a fence. Enforcement across seven and a half thousand hectares of open water requires boats, fuel, personnel and a reason for a fisherman a long way from shore to believe he will be seen. The Department of Environment and Natural Resources has run enforcement capacity work for the area in recent years, which is a reasonable indication both that the problem is real and that somebody is treating it as real."
+        },
+        {
+          "type": "p",
+          "text": "The useful thing to understand, if you are reading this from somewhere else, is that the boundary of Masinloc does not stop at the beach. A meaningful part of the municipality's territory, economy and legal identity is underwater."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "Why there is a shoal named after this town",
+              "href": "why-is-there-a-shoal-named-after-masinloc.html"
+            },
+            {
+              "label": "San Salvador Island, and the 1649 record that names it",
+              "href": "../bulletin/1649-when-six-caracoas-came.html"
+            }
+          ]
+        }
       ],
       "sources": [
-        { "label": "Proclamation No. 231, s. 1993", "publisher": "Official Gazette of the Republic of the Philippines", "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/" },
-        { "label": "Marine protected area in Zambales earns national recognition", "publisher": "Philippine Information Agency", "href": "https://pia.gov.ph/news/marine-protected-area-in-zambales-earns-national-recognition/" },
-        { "label": "DENR strengthens enforcement capacity for marine protected area in Zambales", "publisher": "Philippine Information Agency", "href": "https://pia.gov.ph/news/denr-strengthens-enforcement-capacity-for-marine-protected-area-in-zambales/" }
+        {
+          "label": "Proclamation No. 231, s. 1993",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/"
+        },
+        {
+          "label": "Marine protected area in Zambales earns national recognition",
+          "publisher": "Philippine Information Agency",
+          "href": "https://pia.gov.ph/news/marine-protected-area-in-zambales-earns-national-recognition/"
+        },
+        {
+          "label": "DENR strengthens enforcement capacity for marine protected area in Zambales",
+          "publisher": "Philippine Information Agency",
+          "href": "https://pia.gov.ph/news/denr-strengthens-enforcement-capacity-for-marine-protected-area-in-zambales/"
+        }
       ],
-      "related": ["why-is-there-a-shoal-named-after-masinloc", "the-giant-in-bani", "masinloc-actually"]
+      "related": [
+        "why-is-there-a-shoal-named-after-masinloc",
+        "the-giant-in-bani",
+        "masinloc-actually"
+      ]
     },
-
     {
       "slug": "why-is-there-a-shoal-named-after-masinloc",
       "theme": "sea",
@@ -111,23 +277,60 @@
       "updated": "2026-08-23",
       "hero": null,
       "body": [
-        { "type": "p", "text": "About a hundred and twenty-four nautical miles west of Zambales there is a triangle of reef enclosing a lagoon, with a few rocks breaking the surface at high tide. It has at least three names in current use. English-language charts call it Scarborough Shoal, after a British East India Company ship wrecked there in the eighteenth century. Filipino official usage calls it Panatag Shoal. And Spanish colonial cartography called it Bajo de Masinloc — the shoal of Masinloc — which is where this article starts, because that name is the reason a small municipality's name turns up in international law." },
-        { "type": "p", "text": "The naming is not incidental. A bajo is a shallow, a hazard to shipping, and hazards get named for the nearest place a pilot would recognise from the coast. That the shoal was named for Masinloc rather than for Iba or Santa Cruz tells you something modest but real about which stretch of that coastline mariners were navigating from." },
-        { "type": "h2", "text": "What a map can prove" },
-        { "type": "p", "text": "Historical cartography is genuine evidence and should be treated as such. A shoal drawn, named and positioned on official charts across a long period establishes that it was known, that it was known by that name, and that it was understood in relation to a particular coast. Those are facts about the historical record, and they are not small." },
-        { "type": "p", "text": "What a map cannot do on its own is settle a modern legal question. Contemporary maritime entitlement is decided under a body of law — principally the United Nations Convention on the Law of the Sea — that turns on questions old charts were never drawn to answer: baselines, the legal status of individual features, exclusive economic zones, and the conduct of states over time. A chart is admissible material within that argument. It is not a substitute for it." },
-        { "type": "pull", "text": "The old name is real evidence about the past. It is not, by itself, an answer to a present-day legal question — and pretending otherwise weakens rather than strengthens the case." },
-        { "type": "p", "text": "This distinction is worth holding onto for a reason that has nothing to do with diplomacy. Overstating what a source proves is the fastest way to lose the argument in front of anyone who checks. The strongest version of the historical case is the accurate one." },
-        { "type": "h2", "text": "The local scale of it" },
-        { "type": "p", "text": "For most people in Masinloc the shoal is not an abstraction and not a headline. It is a long way out, it is where certain boats used to go, and its name is their town's name. That is a strange thing to live with: a place you may never see carrying your address into rooms you will never enter." },
-        { "type": "note", "label": "Still open", "text": "This account deliberately stops short of the contemporary legal dispute, which is outside what this project can responsibly document. If you hold reproductions of specific Spanish-era charts showing Bajo de Masinloc with clear dating and provenance, that is exactly the material this article should be built out from." }
+        {
+          "type": "p",
+          "text": "About a hundred and twenty-four nautical miles west of Zambales there is a triangle of reef enclosing a lagoon, with a few rocks breaking the surface at high tide. It has at least three names in current use. English-language charts call it Scarborough Shoal, after a British East India Company ship wrecked there in the eighteenth century. Filipino official usage calls it Panatag Shoal. And Spanish colonial cartography called it Bajo de Masinloc — the shoal of Masinloc — which is where this article starts, because that name is the reason a small municipality's name turns up in international law."
+        },
+        {
+          "type": "p",
+          "text": "The naming is not incidental. A bajo is a shallow, a hazard to shipping, and hazards get named for the nearest place a pilot would recognise from the coast. That the shoal was named for Masinloc rather than for Iba or Santa Cruz tells you something modest but real about which stretch of that coastline mariners were navigating from."
+        },
+        {
+          "type": "h2",
+          "text": "What a map can prove"
+        },
+        {
+          "type": "p",
+          "text": "Historical cartography is genuine evidence and should be treated as such. A shoal drawn, named and positioned on official charts across a long period establishes that it was known, that it was known by that name, and that it was understood in relation to a particular coast. Those are facts about the historical record, and they are not small."
+        },
+        {
+          "type": "p",
+          "text": "What a map cannot do on its own is settle a modern legal question. Contemporary maritime entitlement is decided under a body of law — principally the United Nations Convention on the Law of the Sea — that turns on questions old charts were never drawn to answer: baselines, the legal status of individual features, exclusive economic zones, and the conduct of states over time. A chart is admissible material within that argument. It is not a substitute for it."
+        },
+        {
+          "type": "pull",
+          "text": "The old name is real evidence about the past. It is not, by itself, an answer to a present-day legal question — and pretending otherwise weakens rather than strengthens the case."
+        },
+        {
+          "type": "p",
+          "text": "This distinction is worth holding onto for a reason that has nothing to do with diplomacy. Overstating what a source proves is the fastest way to lose the argument in front of anyone who checks. The strongest version of the historical case is the accurate one."
+        },
+        {
+          "type": "h2",
+          "text": "The local scale of it"
+        },
+        {
+          "type": "p",
+          "text": "For most people in Masinloc the shoal is not an abstraction and not a headline. It is a long way out, it is where certain boats used to go, and its name is their town's name. That is a strange thing to live with: a place you may never see carrying your address into rooms you will never enter."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "This account deliberately stops short of the contemporary legal dispute, which is outside what this project can responsibly document. If you hold reproductions of specific Spanish-era charts showing Bajo de Masinloc with clear dating and provenance, that is exactly the material this article should be built out from."
+        }
       ],
       "sources": [
-        { "label": "Proclamation No. 231, s. 1993, for the adjacent protected area", "publisher": "Official Gazette of the Republic of the Philippines", "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/" }
+        {
+          "label": "Proclamation No. 231, s. 1993, for the adjacent protected area",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/"
+        }
       ],
-      "related": ["the-sea-in-front-of-masinloc", "masinloc-actually"]
+      "related": [
+        "the-sea-in-front-of-masinloc",
+        "masinloc-actually"
+      ]
     },
-
     {
       "slug": "the-giant-in-bani",
       "theme": "economy",
@@ -137,22 +340,57 @@
       "updated": "2026-08-23",
       "hero": null,
       "body": [
-        { "type": "p", "text": "You can see it from the highway. In Barangay Bani, on the coast, there is a coal-fired power station that is by a wide margin the largest built structure in the municipality, and one of the larger ones on this side of Luzon. People who grew up in Masinloc measure distances against it without noticing they are doing it." },
-        { "type": "p", "text": "The specifics, from the operator's own published plant profile rather than from local estimate: Units 1 and 2 are rated at 344 megawatts each and began operating in 1998, originally developed under the National Power Corporation. Unit 3, rated at 335 megawatts, entered commercial operation in September 2020. Together the three units come to a nameplate capacity of 1,023 megawatts, feeding the Luzon grid. The plant changed hands in March 2018, when SMC Global Power acquired it from AES Philippines." },
-        { "type": "h2", "text": "Why the numbers are worth getting right" },
-        { "type": "p", "text": "Large infrastructure attracts approximate description. It becomes \"the power plant\", a single undifferentiated thing that is either a source of jobs or a source of grievance depending on who is talking. The units were built at different times, under different owners, to different specifications, and that history is the difference between a plant that arrived in 1998 and one that has been expanded within living memory." },
-        { "type": "p", "text": "It matters locally in ordinary ways. A facility of this size is an employer, a ratepayer, a procurement channel and a permanent item on the municipal agenda. It also puts Masinloc into national conversations about energy supply and coal that the town did not ask to be in and cannot easily leave." },
-        { "type": "pull", "text": "A thousand megawatts is not a local fact. It is a national one that happens to have a barangay address." },
-        { "type": "p", "text": "This article does not take a position on coal. It records what is there, at what scale, since when, and under whose ownership, because those are the facts every other conversation about the plant depends on and they are surprisingly hard to find stated plainly in one place." },
-        { "type": "note", "label": "Still open", "text": "Current employment figures, the local tax and host-community benefit arrangements, and independently published environmental monitoring for the facility are not yet documented here. Those would materially improve this article and none of them should be estimated." }
+        {
+          "type": "p",
+          "text": "You can see it from the highway. In Barangay Bani, on the coast, there is a coal-fired power station that is by a wide margin the largest built structure in the municipality, and one of the larger ones on this side of Luzon. People who grew up in Masinloc measure distances against it without noticing they are doing it."
+        },
+        {
+          "type": "p",
+          "text": "The specifics, from the operator's own published plant profile rather than from local estimate: Units 1 and 2 are rated at 344 megawatts each and began operating in 1998, originally developed under the National Power Corporation. Unit 3, rated at 335 megawatts, entered commercial operation in September 2020. Together the three units come to a nameplate capacity of 1,023 megawatts, feeding the Luzon grid. The plant changed hands in March 2018, when SMC Global Power acquired it from AES Philippines."
+        },
+        {
+          "type": "h2",
+          "text": "Why the numbers are worth getting right"
+        },
+        {
+          "type": "p",
+          "text": "Large infrastructure attracts approximate description. It becomes \"the power plant\", a single undifferentiated thing that is either a source of jobs or a source of grievance depending on who is talking. The units were built at different times, under different owners, to different specifications, and that history is the difference between a plant that arrived in 1998 and one that has been expanded within living memory."
+        },
+        {
+          "type": "p",
+          "text": "It matters locally in ordinary ways. A facility of this size is an employer, a ratepayer, a procurement channel and a permanent item on the municipal agenda. It also puts Masinloc into national conversations about energy supply and coal that the town did not ask to be in and cannot easily leave."
+        },
+        {
+          "type": "pull",
+          "text": "A thousand megawatts is not a local fact. It is a national one that happens to have a barangay address."
+        },
+        {
+          "type": "p",
+          "text": "This article does not take a position on coal. It records what is there, at what scale, since when, and under whose ownership, because those are the facts every other conversation about the plant depends on and they are surprisingly hard to find stated plainly in one place."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "Current employment figures, the local tax and host-community benefit arrangements, and independently published environmental monitoring for the facility are not yet documented here. Those would materially improve this article and none of them should be estimated."
+        }
       ],
       "sources": [
-        { "label": "Masinloc Power Plant — plant profile, units and capacity", "publisher": "SMC Global Power Holdings Corp.", "href": "https://www.smcglobalpower.com.ph/our-business-power-generation?slug=masinloc-power-plant&p=4" },
-        { "label": "SMC unit buys out Masinloc power plant", "publisher": "Philippine News Agency", "href": "https://www.pna.gov.ph/articles/1019231" }
+        {
+          "label": "Masinloc Power Plant — plant profile, units and capacity",
+          "publisher": "SMC Global Power Holdings Corp.",
+          "href": "https://www.smcglobalpower.com.ph/our-business-power-generation?slug=masinloc-power-plant&p=4"
+        },
+        {
+          "label": "SMC unit buys out Masinloc power plant",
+          "publisher": "Philippine News Agency",
+          "href": "https://www.pna.gov.ph/articles/1019231"
+        }
       ],
-      "related": ["masinloc-actually", "the-sea-in-front-of-masinloc"]
+      "related": [
+        "masinloc-actually",
+        "the-sea-in-front-of-masinloc"
+      ]
     },
-
     {
       "slug": "the-sweetest-mango-came-from-where-exactly",
       "theme": "economy",
@@ -160,32 +398,97 @@
       "deck": "Zambales holds a Guinness citation for the world's sweetest mango. Which town inside Zambales gets to say so is a genuinely open question, and the confident answers you will find online do not survive checking.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "discover", "name": "mangoes-masinloc", "alt": "Ripe mangoes packed in crates, photographed in Masinloc, Zambales", "caption": "Ripe mangoes in crates. Masinloc, Zambales. This photograph shows local fruit; it is not a photograph of any record-holding specimen." },
+      "hero": {
+        "family": "discover",
+        "name": "mangoes-masinloc",
+        "alt": "Ripe mangoes packed in crates, photographed in Masinloc, Zambales",
+        "caption": "Ripe mangoes in crates. Masinloc, Zambales. This photograph shows local fruit; it is not a photograph of any record-holding specimen."
+      },
       "body": [
-        { "type": "p", "text": "Ask around Zambales about the sweetest mango in the world and you will get an answer immediately, delivered with total confidence, and the answer will depend on which town you are standing in. This is not a case of one town being right and the others lying. It is a case of a real record, a real variety, and a chain of retelling that has worn the details smooth." },
-        { "type": "h2", "text": "What is documented" },
-        { "type": "p", "text": "The variety is Sweet Elena, a carabao mango grown in Zambales, and it was cited in the Guinness Book of World Records in 1995 as the world's sweetest. That much appears in Philippine government reporting on the province's mango industry and is the solid ground everything else stands on. Zambales, the province, has a Guinness association for mango sweetness dating to 1995." },
-        { "type": "p", "text": "The same government reporting connects Sweet Elena with Santa Cruz, a municipality at the northern end of the province. That is the strongest town-level attribution currently available from a source of that standing." },
-        { "type": "h2", "text": "What is claimed but not established" },
-        { "type": "p", "text": "In Masinloc, and specifically around San Salvador Island, you will hear that the record fruit came from here. This is not a fringe claim and it is not obviously false. Masinloc has a genuine mango-growing history, San Salvador has its own trees and its own reputation, and the retelling is old enough and consistent enough to be worth taking seriously as oral tradition." },
-        { "type": "p", "text": "What does not currently exist, so far as this project has been able to establish, is documentation tying the 1995 Guinness citation specifically to San Salvador or to Masinloc. Not a Department of Agriculture record, not a Guinness entry naming the barangay, not a contemporaneous news report. Absence of documentation is not proof the claim is wrong. It is a reason not to print it as settled." },
-        { "type": "pull", "text": "Two things can be true at once: Masinloc grows exceptional mangoes, and the specific Guinness claim has not been documented for Masinloc." },
-        { "type": "image", "family": "discover", "name": "dinamulag-mango", "alt": "Ripe dinamulag mangoes in a woven basket", "caption": "Dinamulag is the local name for the carabao mango. These are ordinary fruit, photographed as supplied to this project; no claim about a record is made by this image." },
-        { "type": "h2", "text": "Why leave it unresolved" },
-        { "type": "p", "text": "Because the alternative is to pick the flattering version and publish it, which is how the confusion started. A town that documents its food history carefully ends up with something more valuable than a claim: a record that other people can cite. A town that repeats an attractive story until it hardens into fact ends up with something that collapses the first time a researcher checks." },
-        { "type": "p", "text": "So the position of this article is precise. Zambales holds a 1995 Guinness citation for mango sweetness. Sweet Elena is the variety, and the strongest current government attribution points to Santa Cruz. Masinloc and San Salvador have a real mango-growing history and an oral tradition connecting them to the record. The specific link between San Salvador and the Guinness citation remains unverified." },
-        { "type": "note", "label": "Still open", "text": "The evidence that would settle this: a Guinness World Records entry or certificate naming the location, a Department of Agriculture or provincial agriculture office record from the period, or contemporaneous 1995 news coverage identifying the grower and the town. If you hold any of it, or know who does, this article should change." },
-        { "type": "links", "items": [
-          { "label": "What else the town grows, catches and eats", "href": "come-hungry.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "Ask around Zambales about the sweetest mango in the world and you will get an answer immediately, delivered with total confidence, and the answer will depend on which town you are standing in. This is not a case of one town being right and the others lying. It is a case of a real record, a real variety, and a chain of retelling that has worn the details smooth."
+        },
+        {
+          "type": "h2",
+          "text": "What is documented"
+        },
+        {
+          "type": "p",
+          "text": "The variety is Sweet Elena, a carabao mango grown in Zambales, and it was cited in the Guinness Book of World Records in 1995 as the world's sweetest. That much appears in Philippine government reporting on the province's mango industry and is the solid ground everything else stands on. Zambales, the province, has a Guinness association for mango sweetness dating to 1995."
+        },
+        {
+          "type": "p",
+          "text": "The same government reporting connects Sweet Elena with Santa Cruz, a municipality at the northern end of the province. That is the strongest town-level attribution currently available from a source of that standing."
+        },
+        {
+          "type": "h2",
+          "text": "What is claimed but not established"
+        },
+        {
+          "type": "p",
+          "text": "In Masinloc, and specifically around San Salvador Island, you will hear that the record fruit came from here. This is not a fringe claim and it is not obviously false. Masinloc has a genuine mango-growing history, San Salvador has its own trees and its own reputation, and the retelling is old enough and consistent enough to be worth taking seriously as oral tradition."
+        },
+        {
+          "type": "p",
+          "text": "What does not currently exist, so far as this project has been able to establish, is documentation tying the 1995 Guinness citation specifically to San Salvador or to Masinloc. Not a Department of Agriculture record, not a Guinness entry naming the barangay, not a contemporaneous news report. Absence of documentation is not proof the claim is wrong. It is a reason not to print it as settled."
+        },
+        {
+          "type": "pull",
+          "text": "Two things can be true at once: Masinloc grows exceptional mangoes, and the specific Guinness claim has not been documented for Masinloc."
+        },
+        {
+          "type": "image",
+          "family": "discover",
+          "name": "dinamulag-mango",
+          "alt": "Ripe dinamulag mangoes in a woven basket",
+          "caption": "Dinamulag is the local name for the carabao mango. These are ordinary fruit, photographed as supplied to this project; no claim about a record is made by this image."
+        },
+        {
+          "type": "h2",
+          "text": "Why leave it unresolved"
+        },
+        {
+          "type": "p",
+          "text": "Because the alternative is to pick the flattering version and publish it, which is how the confusion started. A town that documents its food history carefully ends up with something more valuable than a claim: a record that other people can cite. A town that repeats an attractive story until it hardens into fact ends up with something that collapses the first time a researcher checks."
+        },
+        {
+          "type": "p",
+          "text": "So the position of this article is precise. Zambales holds a 1995 Guinness citation for mango sweetness. Sweet Elena is the variety, and the strongest current government attribution points to Santa Cruz. Masinloc and San Salvador have a real mango-growing history and an oral tradition connecting them to the record. The specific link between San Salvador and the Guinness citation remains unverified."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "The evidence that would settle this: a Guinness World Records entry or certificate naming the location, a Department of Agriculture or provincial agriculture office record from the period, or contemporaneous 1995 news coverage identifying the grower and the town. If you hold any of it, or know who does, this article should change."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "What else the town grows, catches and eats",
+              "href": "come-hungry.html"
+            }
+          ]
+        }
       ],
       "sources": [
-        { "label": "Zambales celebrates thriving mango industry", "publisher": "Philippine News Agency", "href": "https://www.pna.gov.ph/articles/1066123" },
-        { "label": "Sta. Cruz municipal profile", "publisher": "Zambales Provincial Tourism", "href": "https://www.tourism.zambales.gov.ph/index.php/resort-directory/zambales-resorts/sta-cruz" }
+        {
+          "label": "Zambales celebrates thriving mango industry",
+          "publisher": "Philippine News Agency",
+          "href": "https://www.pna.gov.ph/articles/1066123"
+        },
+        {
+          "label": "Sta. Cruz municipal profile",
+          "publisher": "Zambales Provincial Tourism",
+          "href": "https://www.tourism.zambales.gov.ph/index.php/resort-directory/zambales-resorts/sta-cruz"
+        }
       ],
-      "related": ["come-hungry", "masinloc-actually", "the-giant-in-bani"]
+      "related": [
+        "come-hungry",
+        "masinloc-actually",
+        "the-giant-in-bani"
+      ]
     },
-
     {
       "slug": "come-hungry",
       "theme": "places",
@@ -193,26 +496,71 @@
       "deck": "What Masinloc actually eats, starting with a shellfish most visitors have never heard of and locals do not think is remarkable at all.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "discover", "name": "pamislat", "alt": "A hand holding a single pamislat shell above a basin of freshly gathered pamislat", "caption": "Pamislat, freshly gathered. Masinloc, Zambales." },
+      "hero": {
+        "family": "discover",
+        "name": "pamislat",
+        "alt": "A hand holding a single pamislat shell above a basin of freshly gathered pamislat",
+        "caption": "Pamislat, freshly gathered. Masinloc, Zambales."
+      },
       "body": [
-        { "type": "p", "text": "The most Masinloc thing you can be handed is a basin of pamislat, still wet, and the expectation that you already know what to do with it. Nobody explains it, because from the inside there is nothing to explain." },
-        { "type": "p", "text": "Pamislat is a bivalve gathered from the shallows along this coast. The shells are smooth, elongated and glossy, ranging from pale cream to a deep brown-black, and they come out of the water in quantity when the season and the tide agree. They are cooked simply — most often boiled or made into soup, sometimes with ginger, sometimes with whatever souring agent is in the kitchen — because a shellfish this fresh does not benefit from being complicated." },
-        { "type": "h2", "text": "Why it does not travel" },
-        { "type": "p", "text": "You will not find pamislat on many restaurant menus outside the province, and the reason is unglamorous: shellfish of this kind is a local, seasonal, tide-dependent food that is best within hours of being gathered. That is also the reason it is worth planning a visit around rather than expecting to encounter by accident." },
-        { "type": "pull", "text": "Food that cannot travel is the most honest kind of local food. You have to come to it." },
-        { "type": "p", "text": "The wider table is what you would expect of a coastal town on a protected bay, and better than you would expect in the ordinary way: fish landed the same morning, rice from the inland barangays, and in season the mangoes that have given the whole province its reputation. What Masinloc does not have is a manufactured food identity. There is no signature dish invented for visitors, and no restaurant strip built to serve them." },
-        { "type": "h2", "text": "A word about names" },
-        { "type": "p", "text": "Local names for shellfish, fish and vegetables are among the most durable parts of Sambal Tina, partly because they get used daily by people who otherwise switch to Tagalog or Ilocano. If you are interested in the language, the kitchen is one of the places it has held on best. The dictionary attached to this site records what has been gathered so far, and is open to correction from anyone who grew up with these words." },
-        { "type": "note", "label": "Still open", "text": "This article deliberately names no restaurants. Businesses open and close, and a list frozen into an article goes stale within a year while continuing to look current. When the Marketplace launches, current food businesses will be listed there, where they can be kept accurate." },
-        { "type": "links", "items": [
-          { "label": "The Sambal Tina dictionary", "href": "../sambal-tina.html" },
-          { "label": "The mango question, and why it is not settled", "href": "the-sweetest-mango-came-from-where-exactly.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "The most Masinloc thing you can be handed is a basin of pamislat, still wet, and the expectation that you already know what to do with it. Nobody explains it, because from the inside there is nothing to explain."
+        },
+        {
+          "type": "p",
+          "text": "Pamislat is a bivalve gathered from the shallows along this coast. The shells are smooth, elongated and glossy, ranging from pale cream to a deep brown-black, and they come out of the water in quantity when the season and the tide agree. They are cooked simply — most often boiled or made into soup, sometimes with ginger, sometimes with whatever souring agent is in the kitchen — because a shellfish this fresh does not benefit from being complicated."
+        },
+        {
+          "type": "h2",
+          "text": "Why it does not travel"
+        },
+        {
+          "type": "p",
+          "text": "You will not find pamislat on many restaurant menus outside the province, and the reason is unglamorous: shellfish of this kind is a local, seasonal, tide-dependent food that is best within hours of being gathered. That is also the reason it is worth planning a visit around rather than expecting to encounter by accident."
+        },
+        {
+          "type": "pull",
+          "text": "Food that cannot travel is the most honest kind of local food. You have to come to it."
+        },
+        {
+          "type": "p",
+          "text": "The wider table is what you would expect of a coastal town on a protected bay, and better than you would expect in the ordinary way: fish landed the same morning, rice from the inland barangays, and in season the mangoes that have given the whole province its reputation. What Masinloc does not have is a manufactured food identity. There is no signature dish invented for visitors, and no restaurant strip built to serve them."
+        },
+        {
+          "type": "h2",
+          "text": "A word about names"
+        },
+        {
+          "type": "p",
+          "text": "Local names for shellfish, fish and vegetables are among the most durable parts of Sambal Tina, partly because they get used daily by people who otherwise switch to Tagalog or Ilocano. If you are interested in the language, the kitchen is one of the places it has held on best. The dictionary attached to this site records what has been gathered so far, and is open to correction from anyone who grew up with these words."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "This article deliberately names no restaurants. Businesses open and close, and a list frozen into an article goes stale within a year while continuing to look current. When the Marketplace launches, current food businesses will be listed there, where they can be kept accurate."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The Sambal Tina dictionary",
+              "href": "../sambal-tina.html"
+            },
+            {
+              "label": "The mango question, and why it is not settled",
+              "href": "the-sweetest-mango-came-from-where-exactly.html"
+            }
+          ]
+        }
       ],
       "sources": [],
-      "related": ["the-sweetest-mango-came-from-where-exactly", "eight-reasons-to-turn-off-the-highway", "the-sambal-words-we-refuse-to-lose"]
+      "related": [
+        "the-sweetest-mango-came-from-where-exactly",
+        "eight-reasons-to-turn-off-the-highway",
+        "the-sambal-words-we-refuse-to-lose"
+      ]
     },
-
     {
       "slug": "eight-reasons-to-turn-off-the-highway",
       "theme": "places",
@@ -220,25 +568,66 @@
       "deck": "A river, an island, a cave, a sandbar, a church, a pool, a sitio and a baywalk. All eight photographed where they actually are, with no borrowed scenery.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "locations", "name": "hamat-river", "alt": "Hamat River in Masinloc, Zambales", "caption": "Hamat River, inland from the coast road." },
+      "hero": {
+        "family": "locations",
+        "name": "hamat-river",
+        "alt": "Hamat River in Masinloc, Zambales",
+        "caption": "Hamat River, inland from the coast road."
+      },
       "body": [
-        { "type": "p", "text": "The coastal highway does its job well, which is the problem. It moves you past Masinloc efficiently enough that the town reads as a stretch of road with a church on it. Everything below requires a deliberate turn, and most of the turns are not signposted in any way a stranger would notice." },
-        { "type": "p", "text": "There are eight places documented on this site with their own photographs, taken where they are, of what they are. That last part sounds like a low bar. It is not: a great deal of Philippine destination imagery online is borrowed from somewhere more photogenic, and a visitor who arrives expecting the borrowed version leaves disappointed in the real one." },
-        { "type": "h2", "text": "Inland and along the water" },
-        { "type": "p", "text": "Hamat River and Bunga Cave are the inland pair, reached by turning away from the sea rather than towards it. Coto Kidz Pool is what its name says. Bacala Sandbar appears and disappears with the tide, which is either the appeal or the frustration depending on your timing. Sitio Buri and the Masinloc Baywalk are where the town meets its own coastline, the Baywalk in particular being the place the town goes rather than the place it sends visitors." },
-        { "type": "p", "text": "San Salvador Island is the one with the deepest documented history — it sits inside the protected marine area, and it turns up by name in a Spanish account of a raid in 1649. San Andres Church is the one everybody sees and few people look at properly, which is why it has an article of its own." },
-        { "type": "pull", "text": "None of these places were built for visitors. That is the reason to go, and the reason to behave well when you do." },
-        { "type": "h2", "text": "Practical honesty" },
-        { "type": "p", "text": "This site does not publish transport schedules, opening hours or entrance fees, because those change without notice and a stale schedule is worse than none. What it publishes is where the places are, what they look like, and what is documented about them. Ask locally for the current details, which is in any case how you find out anything useful in a town this size." },
-        { "type": "links", "items": [
-          { "label": "All eight places, with photographs", "href": "../destinations.html" },
-          { "label": "The church, and what it has actually survived", "href": "the-church-masinloquenos-walk-past.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "The coastal highway does its job well, which is the problem. It moves you past Masinloc efficiently enough that the town reads as a stretch of road with a church on it. Everything below requires a deliberate turn, and most of the turns are not signposted in any way a stranger would notice."
+        },
+        {
+          "type": "p",
+          "text": "There are eight places documented on this site with their own photographs, taken where they are, of what they are. That last part sounds like a low bar. It is not: a great deal of Philippine destination imagery online is borrowed from somewhere more photogenic, and a visitor who arrives expecting the borrowed version leaves disappointed in the real one."
+        },
+        {
+          "type": "h2",
+          "text": "Inland and along the water"
+        },
+        {
+          "type": "p",
+          "text": "Hamat River and Bunga Cave are the inland pair, reached by turning away from the sea rather than towards it. Coto Kidz Pool is what its name says. Bacala Sandbar appears and disappears with the tide, which is either the appeal or the frustration depending on your timing. Sitio Buri and the Masinloc Baywalk are where the town meets its own coastline, the Baywalk in particular being the place the town goes rather than the place it sends visitors."
+        },
+        {
+          "type": "p",
+          "text": "San Salvador Island is the one with the deepest documented history — it sits inside the protected marine area, and it turns up by name in a Spanish account of a raid in 1649. San Andres Church is the one everybody sees and few people look at properly, which is why it has an article of its own."
+        },
+        {
+          "type": "pull",
+          "text": "None of these places were built for visitors. That is the reason to go, and the reason to behave well when you do."
+        },
+        {
+          "type": "h2",
+          "text": "Practical honesty"
+        },
+        {
+          "type": "p",
+          "text": "This site does not publish transport schedules, opening hours or entrance fees, because those change without notice and a stale schedule is worse than none. What it publishes is where the places are, what they look like, and what is documented about them. Ask locally for the current details, which is in any case how you find out anything useful in a town this size."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "All eight places, with photographs",
+              "href": "../destinations.html"
+            },
+            {
+              "label": "The church, and what it has actually survived",
+              "href": "the-church-masinloquenos-walk-past.html"
+            }
+          ]
+        }
       ],
       "sources": [],
-      "related": ["come-hungry", "the-church-masinloquenos-walk-past", "the-sea-in-front-of-masinloc"]
+      "related": [
+        "come-hungry",
+        "the-church-masinloquenos-walk-past",
+        "the-sea-in-front-of-masinloc"
+      ]
     },
-
     {
       "slug": "masinloc-history-has-more-than-one-starting-date",
       "theme": "history",
@@ -246,28 +635,76 @@
       "deck": "1572 is everywhere. 1607 is better documented. Neither is a founding certificate, and people were living here before both.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "locations", "name": "san-andres-church", "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset", "caption": "The church stands where the mission town was established, though not in its first form." },
+      "hero": {
+        "family": "locations",
+        "name": "san-andres-church",
+        "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset",
+        "caption": "The church stands where the mission town was established, though not in its first form."
+      },
       "body": [
-        { "type": "p", "text": "Search for the founding date of Masinloc and you will get 1572, quickly and from many places. It is on websites, in captions, in presentations and in speeches, and it has been repeated often enough to sound settled. It is not settled, and the reason is worth understanding because the same pattern affects the founding dates of a great many Philippine towns." },
-        { "type": "p", "text": "The year 1572 belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is genuine historical context and it usefully places this coastline within the early movement of Spanish expeditions through Luzon. What it is not is a record of the establishment of a town called Masinloc. An expedition passing along a coast is not a founding." },
-        { "type": "h2", "text": "The date that holds more weight" },
-        { "type": "p", "text": "The stronger documented beginning of Masinloc as a mission town is 1607, the year Recollect historical literature places Fray Andres del Espiritu Santo and Fray Jeronimo de Cristo in Masinloc, with Andres treated as founder of the mission town and builder of its first church. It is also the date used in current DILG Zambales historical material. That gives a sequence rather than a certificate: people living here long before either year, 1572 as exploration context, 1607 as the anchor for the mission and the first church." },
-        { "type": "pull", "text": "We are not making Masinloc younger. We are making its history more precise." },
-        { "type": "p", "text": "There is a second problem with founding dates, and it is the more serious one. Treating either 1572 or 1607 as the beginning of Masinloc makes colonial attention look like the birth of the community. It quietly says the town began when outsiders started writing about it. The Sambal communities on this coast did not begin in the seventeenth century; they began being written down in the seventeenth century, which is an entirely different claim." },
-        { "type": "h2", "text": "The line worth teaching" },
-        { "type": "p", "text": "For classroom use the safest formulation is short: 1572 is Spanish exploration context for Zambales, not the proven founding of Masinloc; the 1607 Recollect mission is the stronger documented town and church anchor; and native life came before both. That sentence will never fit on a commemorative seal. It is still the better history." },
-        { "type": "links", "items": [
-          { "label": "The full research behind the 1572 correction", "href": "../bulletin/was-masinloc-founded-in-1572.html" },
-          { "label": "1607 and the first mission church", "href": "../bulletin/1607-and-the-first-mission-church.html" },
-          { "label": "Before the written record", "href": "../bulletin/before-the-written-record.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "Search for the founding date of Masinloc and you will get 1572, quickly and from many places. It is on websites, in captions, in presentations and in speeches, and it has been repeated often enough to sound settled. It is not settled, and the reason is worth understanding because the same pattern affects the founding dates of a great many Philippine towns."
+        },
+        {
+          "type": "p",
+          "text": "The year 1572 belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is genuine historical context and it usefully places this coastline within the early movement of Spanish expeditions through Luzon. What it is not is a record of the establishment of a town called Masinloc. An expedition passing along a coast is not a founding."
+        },
+        {
+          "type": "h2",
+          "text": "The date that holds more weight"
+        },
+        {
+          "type": "p",
+          "text": "The stronger documented beginning of Masinloc as a mission town is 1607, the year Recollect historical literature places Fray Andres del Espiritu Santo and Fray Jeronimo de Cristo in Masinloc, with Andres treated as founder of the mission town and builder of its first church. It is also the date used in current DILG Zambales historical material. That gives a sequence rather than a certificate: people living here long before either year, 1572 as exploration context, 1607 as the anchor for the mission and the first church."
+        },
+        {
+          "type": "pull",
+          "text": "We are not making Masinloc younger. We are making its history more precise."
+        },
+        {
+          "type": "p",
+          "text": "There is a second problem with founding dates, and it is the more serious one. Treating either 1572 or 1607 as the beginning of Masinloc makes colonial attention look like the birth of the community. It quietly says the town began when outsiders started writing about it. The Sambal communities on this coast did not begin in the seventeenth century; they began being written down in the seventeenth century, which is an entirely different claim."
+        },
+        {
+          "type": "h2",
+          "text": "The line worth teaching"
+        },
+        {
+          "type": "p",
+          "text": "For classroom use the safest formulation is short: 1572 is Spanish exploration context for Zambales, not the proven founding of Masinloc; the 1607 Recollect mission is the stronger documented town and church anchor; and native life came before both. That sentence will never fit on a commemorative seal. It is still the better history."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The full research behind the 1572 correction",
+              "href": "../bulletin/was-masinloc-founded-in-1572.html"
+            },
+            {
+              "label": "1607 and the first mission church",
+              "href": "../bulletin/1607-and-the-first-mission-church.html"
+            },
+            {
+              "label": "Before the written record",
+              "href": "../bulletin/before-the-written-record.html"
+            }
+          ]
+        }
       ],
       "sources": [
-        { "label": "Masinloc, Zambales: Augustinian Recollect Mission (1607–1902)", "publisher": "Emmanuel Luis A. Romanillos", "href": null }
+        {
+          "label": "Masinloc, Zambales: Augustinian Recollect Mission (1607–1902)",
+          "publisher": "Emmanuel Luis A. Romanillos",
+          "href": null
+        }
       ],
-      "related": ["the-church-masinloquenos-walk-past", "masinloc-actually", "the-sambal-words-we-refuse-to-lose"]
+      "related": [
+        "the-church-masinloquenos-walk-past",
+        "masinloc-actually",
+        "the-sambal-words-we-refuse-to-lose"
+      ]
     },
-
     {
       "slug": "the-church-masinloquenos-walk-past",
       "theme": "history",
@@ -275,29 +712,81 @@
       "deck": "San Andres is a National Cultural Treasure, declared on 31 July 2001. It is also not the building the first missionaries put up, and the difference is the interesting part.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": { "family": "locations", "name": "san-andres-church", "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset", "caption": "San Andres Church, Masinloc." },
+      "hero": {
+        "family": "locations",
+        "name": "san-andres-church",
+        "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset",
+        "caption": "San Andres Church, Masinloc."
+      },
       "body": [
-        { "type": "p", "text": "If you grew up in Masinloc you have walked past this building several thousand times without looking at it, which is the normal relationship between people and their own landmarks. It repays looking at, and it carries a formal status that most people who pass it daily could not name." },
-        { "type": "p", "text": "San Andres Church was declared a National Cultural Treasure on 31 July 2001. That is the highest category of protection the Philippine state gives to a built heritage structure, and it places the building in a small national group rather than a long provincial list." },
-        { "type": "h2", "text": "Not the first church" },
-        { "type": "p", "text": "The mission was established in 1607, but the structure standing today is not the one built then. The Recollect account states plainly that the first church was ordinarily made of light materials and did not last long. That single line corrects the most persistent error in local storytelling: a scene set in 1607 should not show the present stone church, its coral-stone walls or its facade. What the missionaries built was modest, temporary, and gone." },
-        { "type": "p", "text": "What stands now is the result of a long sequence of building, damage and repair, including an 1825 restoration, earthquake damage in 1970 and again in December 1999, and the repair work that followed each. In 2021 the parish was publicly elevated as the Diocesan Shrine of San Andres." },
-        { "type": "pull", "text": "A building can disappear while a date remains. A later building can inherit the identity of an earlier one." },
-        { "type": "h2", "text": "Why the dates get confused" },
-        { "type": "p", "text": "Heritage declarations generate more than one date. There is the declaration itself, and there is often a later ceremony at which a marker is unveiled at the site. These are separate events and they are easy to merge into a single remembered year. This account carries the declaration date, 31 July 2001, because that is the one that can be checked against the national record." },
-        { "type": "note", "label": "Still open", "text": "A marker unveiling in November 2012 has been mentioned to this project, and no National Museum, Philippine Information Agency, Philippine News Agency or Official Gazette record for it has been located. If you hold a photograph of the marker, a programme, or a parish or municipal record of the unveiling, that is the missing piece." },
-        { "type": "links", "items": [
-          { "label": "How the building actually reached us", "href": "../bulletin/san-andres-church-across-the-centuries.html" },
-          { "label": "The first church was not today's church", "href": "../bulletin/the-first-church-was-not-todays-church.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "If you grew up in Masinloc you have walked past this building several thousand times without looking at it, which is the normal relationship between people and their own landmarks. It repays looking at, and it carries a formal status that most people who pass it daily could not name."
+        },
+        {
+          "type": "p",
+          "text": "San Andres Church was declared a National Cultural Treasure on 31 July 2001. That is the highest category of protection the Philippine state gives to a built heritage structure, and it places the building in a small national group rather than a long provincial list."
+        },
+        {
+          "type": "h2",
+          "text": "Not the first church"
+        },
+        {
+          "type": "p",
+          "text": "The mission was established in 1607, but the structure standing today is not the one built then. The Recollect account states plainly that the first church was ordinarily made of light materials and did not last long. That single line corrects the most persistent error in local storytelling: a scene set in 1607 should not show the present stone church, its coral-stone walls or its facade. What the missionaries built was modest, temporary, and gone."
+        },
+        {
+          "type": "p",
+          "text": "What stands now is the result of a long sequence of building, damage and repair, including an 1825 restoration, earthquake damage in 1970 and again in December 1999, and the repair work that followed each. In 2021 the parish was publicly elevated as the Diocesan Shrine of San Andres."
+        },
+        {
+          "type": "pull",
+          "text": "A building can disappear while a date remains. A later building can inherit the identity of an earlier one."
+        },
+        {
+          "type": "h2",
+          "text": "Why the dates get confused"
+        },
+        {
+          "type": "p",
+          "text": "Heritage declarations generate more than one date. There is the declaration itself, and there is often a later ceremony at which a marker is unveiled at the site. These are separate events and they are easy to merge into a single remembered year. This account carries the declaration date, 31 July 2001, because that is the one that can be checked against the national record."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "A marker unveiling in November 2012 has been mentioned to this project, and no National Museum, Philippine Information Agency, Philippine News Agency or Official Gazette record for it has been located. If you hold a photograph of the marker, a programme, or a parish or municipal record of the unveiling, that is the missing piece."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "How the building actually reached us",
+              "href": "../bulletin/san-andres-church-across-the-centuries.html"
+            },
+            {
+              "label": "The first church was not today's church",
+              "href": "../bulletin/the-first-church-was-not-todays-church.html"
+            }
+          ]
+        }
       ],
       "sources": [
-        { "label": "List of National Cultural Treasures of the Philippines", "publisher": "Official Gazette of the Republic of the Philippines", "href": "https://www.officialgazette.gov.ph/lists/national-cultural-treasures-of-the-philippines/" },
-        { "label": "National Cultural Treasures", "publisher": "National Museum of the Philippines", "href": "https://www.nationalmuseum.gov.ph/our-collections/archaeology/national-cultural-treasures/" }
+        {
+          "label": "List of National Cultural Treasures of the Philippines",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/lists/national-cultural-treasures-of-the-philippines/"
+        },
+        {
+          "label": "National Cultural Treasures",
+          "publisher": "National Museum of the Philippines",
+          "href": "https://www.nationalmuseum.gov.ph/our-collections/archaeology/national-cultural-treasures/"
+        }
       ],
-      "related": ["masinloc-history-has-more-than-one-starting-date", "eight-reasons-to-turn-off-the-highway"]
+      "related": [
+        "masinloc-history-has-more-than-one-starting-date",
+        "eight-reasons-to-turn-off-the-highway"
+      ]
     },
-
     {
       "slug": "the-sambal-words-we-refuse-to-lose",
       "theme": "history",
@@ -307,23 +796,59 @@
       "updated": "2026-08-23",
       "hero": null,
       "body": [
-        { "type": "p", "text": "The first thing to establish, because it is the thing most often got wrong from outside: Sambal is a language, not a dialect of Tagalog. It belongs to the Austronesian family, as Tagalog and Ilocano do, but it is a sibling rather than a variant. Speaking Sambal is not speaking Tagalog with an accent." },
-        { "type": "p", "text": "The variety spoken in Masinloc is the one this project records as Sambal Tina. Both Tagalog and Ilocano are also spoken here, and both have left marks on how people talk, which is what happens to any language on a coast with a highway through it." },
-        { "type": "h2", "text": "Where the language is holding" },
-        { "type": "p", "text": "Language loss is rarely total and rarely even. It happens by domain. A language can disappear from schoolwork and official business while holding firmly in the kitchen, on a boat, at a funeral, and in the names of plants, fish and shellfish. That is roughly the shape of it here. The words for what you catch, cook and grow are among the most durable, precisely because they are used by people doing those things daily." },
-        { "type": "pull", "text": "A dictionary nobody can correct is a monument. A dictionary anybody can correct is a language." },
-        { "type": "p", "text": "The dictionary on this site holds several thousand entries drawn from an existing archival source, kept deliberately separate from a second layer of speaker-confirmed usage. The separation matters: the archive records what the source said, and corrections read as corrections, attributed and dated, rather than as a silent rewrite of the record. Anyone who grew up with these words can submit an addition or a correction." },
-        { "type": "h2", "text": "Why spelling is not a small question" },
-        { "type": "p", "text": "Written Sambal has no single settled orthography, and the same word can appear in several spellings across sources of different ages. This project's rule is not to quietly modernise a spelling to make a page tidier. Where an older source spells something one way and current speakers say it another, both are recorded, because the difference between them is itself evidence." },
-        { "type": "links", "items": [
-          { "label": "The Sambal Tina dictionary", "href": "../sambal-tina.html" },
-          { "label": "What is Sambal Tina, and why older sources say Tina", "href": "../bulletin/what-is-sambal-tina.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "The first thing to establish, because it is the thing most often got wrong from outside: Sambal is a language, not a dialect of Tagalog. It belongs to the Austronesian family, as Tagalog and Ilocano do, but it is a sibling rather than a variant. Speaking Sambal is not speaking Tagalog with an accent."
+        },
+        {
+          "type": "p",
+          "text": "The variety spoken in Masinloc is the one this project records as Sambal Tina. Both Tagalog and Ilocano are also spoken here, and both have left marks on how people talk, which is what happens to any language on a coast with a highway through it."
+        },
+        {
+          "type": "h2",
+          "text": "Where the language is holding"
+        },
+        {
+          "type": "p",
+          "text": "Language loss is rarely total and rarely even. It happens by domain. A language can disappear from schoolwork and official business while holding firmly in the kitchen, on a boat, at a funeral, and in the names of plants, fish and shellfish. That is roughly the shape of it here. The words for what you catch, cook and grow are among the most durable, precisely because they are used by people doing those things daily."
+        },
+        {
+          "type": "pull",
+          "text": "A dictionary nobody can correct is a monument. A dictionary anybody can correct is a language."
+        },
+        {
+          "type": "p",
+          "text": "The dictionary on this site holds several thousand entries drawn from an existing archival source, kept deliberately separate from a second layer of speaker-confirmed usage. The separation matters: the archive records what the source said, and corrections read as corrections, attributed and dated, rather than as a silent rewrite of the record. Anyone who grew up with these words can submit an addition or a correction."
+        },
+        {
+          "type": "h2",
+          "text": "Why spelling is not a small question"
+        },
+        {
+          "type": "p",
+          "text": "Written Sambal has no single settled orthography, and the same word can appear in several spellings across sources of different ages. This project's rule is not to quietly modernise a spelling to make a page tidier. Where an older source spells something one way and current speakers say it another, both are recorded, because the difference between them is itself evidence."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The Sambal Tina dictionary",
+              "href": "../sambal-tina.html"
+            },
+            {
+              "label": "What is Sambal Tina, and why older sources say Tina",
+              "href": "../bulletin/what-is-sambal-tina.html"
+            }
+          ]
+        }
       ],
       "sources": [],
-      "related": ["come-hungry", "masinloc-history-has-more-than-one-starting-date", "masinloc-actually"]
+      "related": [
+        "come-hungry",
+        "masinloc-history-has-more-than-one-starting-date",
+        "masinloc-actually"
+      ]
     },
-
     {
       "slug": "not-the-lgu-website",
       "theme": "start",
@@ -333,32 +858,612 @@
       "updated": "2026-08-23",
       "hero": null,
       "body": [
-        { "type": "p", "text": "Discover Masinloc and Masinloc Connect are independent private initiatives. They are not official websites, programmes, offices or services of the Municipal Government of Masinloc, the Province of Zambales, or any Philippine government agency. That is stated plainly on the trust page, in the machine-readable metadata, and here, because being mistaken for the LGU would be bad for the LGU and bad for this project." },
-        { "type": "p", "text": "The distinction is not modesty. It is what makes this kind of work possible. An official municipal site is, correctly, an instrument of the institution that publishes it. It announces, it records, it represents. What it generally cannot do is publish a page saying the town's most repeated founding date does not survive checking, or that a beloved local claim about a world record has no documentation behind it." },
-        { "type": "h2", "text": "What independence is for" },
-        { "type": "p", "text": "An independent project can hold a question open. It can publish the sentence \"this remains unverified\" and treat that as a finished piece of work rather than an embarrassment. Several articles on this site do exactly that, and they are among the more useful things here." },
-        { "type": "pull", "text": "The most valuable thing an independent record can publish is an honest \"not yet\"." },
-        { "type": "p", "text": "It cuts the other way too, and should. This project has no authority to speak for Masinloc, cannot issue or process any government document, and does not claim endorsement it has not been given. Where coordination with the municipal government happens, it will be described accurately and only after it is confirmed by the appropriate office." },
-        { "type": "h2", "text": "How to check what you read here" },
-        { "type": "p", "text": "Fact-heavy articles carry a short sources section at the foot. Where a claim rests on something this project has not been able to locate, that is said in the article rather than left for the reader to discover. And where an article is wrong, the correction path is a contact form that a person reads, not a form that generates an automatic reply." },
-        { "type": "links", "items": [
-          { "label": "Trust, identity and disclosures", "href": "../trust.html" },
-          { "label": "The source register for published claims", "href": "../sources.html" },
-          { "label": "Tell us what we got wrong", "href": "../contact.html" }
-        ]}
+        {
+          "type": "p",
+          "text": "Discover Masinloc and Masinloc Connect are independent private initiatives. They are not official websites, programmes, offices or services of the Municipal Government of Masinloc, the Province of Zambales, or any Philippine government agency. That is stated plainly on the trust page, in the machine-readable metadata, and here, because being mistaken for the LGU would be bad for the LGU and bad for this project."
+        },
+        {
+          "type": "p",
+          "text": "The distinction is not modesty. It is what makes this kind of work possible. An official municipal site is, correctly, an instrument of the institution that publishes it. It announces, it records, it represents. What it generally cannot do is publish a page saying the town's most repeated founding date does not survive checking, or that a beloved local claim about a world record has no documentation behind it."
+        },
+        {
+          "type": "h2",
+          "text": "What independence is for"
+        },
+        {
+          "type": "p",
+          "text": "An independent project can hold a question open. It can publish the sentence \"this remains unverified\" and treat that as a finished piece of work rather than an embarrassment. Several articles on this site do exactly that, and they are among the more useful things here."
+        },
+        {
+          "type": "pull",
+          "text": "The most valuable thing an independent record can publish is an honest \"not yet\"."
+        },
+        {
+          "type": "p",
+          "text": "It cuts the other way too, and should. This project has no authority to speak for Masinloc, cannot issue or process any government document, and does not claim endorsement it has not been given. Where coordination with the municipal government happens, it will be described accurately and only after it is confirmed by the appropriate office."
+        },
+        {
+          "type": "h2",
+          "text": "How to check what you read here"
+        },
+        {
+          "type": "p",
+          "text": "Fact-heavy articles carry a short sources section at the foot. Where a claim rests on something this project has not been able to locate, that is said in the article rather than left for the reader to discover. And where an article is wrong, the correction path is a contact form that a person reads, not a form that generates an automatic reply."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "Trust, identity and disclosures",
+              "href": "../trust.html"
+            },
+            {
+              "label": "The source register for published claims",
+              "href": "../sources.html"
+            },
+            {
+              "label": "Tell us what we got wrong",
+              "href": "../contact.html"
+            }
+          ]
+        }
       ],
       "sources": [],
-      "related": ["masinloc-right-now", "masinloc-actually"]
+      "related": [
+        "masinloc-right-now",
+        "masinloc-actually"
+      ]
+    },
+    {
+      "slug": "thirteen-ways-to-be-masinloc",
+      "theme": "start",
+      "title": "Thirteen Ways to Be Masinloc",
+      "deck": "The town is thirteen barangays, and they are not interchangeable. One holds the power station, one is an island, two are the old town centre, and the rest are the reason the others work.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": null,
+      "body": [
+        {
+          "type": "p",
+          "text": "Ask somebody in Masinloc where they are from and they will not say Masinloc. They will name a barangay, and the answer will carry information that the municipal name does not: whether they grew up nearer the sea or the mountains, whether the road reaches them easily, what their family probably does for a living."
+        },
+        {
+          "type": "p",
+          "text": "There are thirteen of them: Baloganon, Bamban, Bani, Collat, Inhobol, North Poblacion, San Lorenzo, San Salvador, Santa Rita, Santo Rosario, South Poblacion, Taltal and Tapuac. That is the whole municipality. A place of fifty-six thousand people divided thirteen ways is a place where the divisions still mean something in daily life."
+        },
+        {
+          "type": "h2",
+          "text": "The ones outsiders end up hearing about"
+        },
+        {
+          "type": "p",
+          "text": "North Poblacion and South Poblacion are the old town centre, which is where the church is, where the municipal offices are, and where somebody driving through actually passes. When a visitor says they have been to Masinloc, this is almost always what they mean."
+        },
+        {
+          "type": "p",
+          "text": "Bani carries the power station, which makes it the barangay with the largest built structure and the most national significance per square metre in the municipality. San Salvador is an island, which makes it the barangay you cannot drive to, and the one with the longest documented history — it is named in a Spanish account of a raid in 1649 and it sits inside the protected marine area."
+        },
+        {
+          "type": "pull",
+          "text": "A municipality is an administrative fact. A barangay is where somebody is actually from."
+        },
+        {
+          "type": "h2",
+          "text": "Why the list is worth publishing"
+        },
+        {
+          "type": "p",
+          "text": "Partly because it is the sort of thing that is oddly hard to find stated plainly and correctly in one place, and partly because it is the frame every other article on this site sits inside. When something here says the mangoes come from a particular place, or the fishing happens in a particular bay, the barangay is the unit that makes the sentence specific rather than decorative."
+        },
+        {
+          "type": "p",
+          "text": "It is also the honest answer to a question outsiders ask in the wrong shape. There is no single thing that being from Masinloc looks like. There are thirteen versions of it, and people here can tell them apart at a distance."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The current population, officials and other live numbers",
+              "href": "masinloc-right-now.html"
+            },
+            {
+              "label": "San Salvador, and why it is more than a beach",
+              "href": "san-salvador-has-a-better-story.html"
+            },
+            {
+              "label": "The power station in Bani",
+              "href": "the-giant-in-bani.html"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "2024 Census of Population, population counts declared official",
+          "publisher": "Philippine Statistics Authority",
+          "href": "https://psa.gov.ph/content/2024-census-population-popcen-population-counts-declared-official-president"
+        },
+        {
+          "label": "Masinloc, Zambales — barangay roster",
+          "publisher": "PhilAtlas",
+          "href": "https://www.philatlas.com/luzon/r03/zambales/masinloc.html"
+        }
+      ],
+      "related": [
+        "masinloc-right-now",
+        "san-salvador-has-a-better-story",
+        "the-giant-in-bani"
+      ]
+    },
+    {
+      "slug": "before-you-point-waze-at-masinloc",
+      "theme": "places",
+      "title": "Before You Point Waze at Masinloc",
+      "deck": "Where the town actually is, how long the drive really takes, and the practical things this site will not pretend to know for you.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": {
+        "family": "locations",
+        "name": "masinloc-baywalk",
+        "alt": "The Masinloc Baywalk along the town's coastline",
+        "caption": "The Baywalk, where the coast road meets the town."
+      },
+      "body": [
+        {
+          "type": "p",
+          "text": "Masinloc sits on the western coast of Zambales, in Central Luzon, between Palauig to the south and Candelaria to the north. From Manila it is roughly two hundred and fifty kilometres by road. The honest travel time is a range rather than a number: a clear early-morning run can be four to five hours, and an ordinary one is longer than you planned for."
+        },
+        {
+          "type": "p",
+          "text": "The route most people take runs up through Bataan and Zambales along the coastal highway, and the last stretch is genuinely pleasant driving — sea on one side, the Zambales range on the other. The road passes through the poblacion, which is why so many people's entire experience of the town is a church glimpsed at speed."
+        },
+        {
+          "type": "h2",
+          "text": "What this site will not tell you"
+        },
+        {
+          "type": "p",
+          "text": "No bus schedules, no fare tables, no opening hours, no entrance fees. Not because they are unknowable but because they change without announcement, and a schedule published once and never revisited is worse than no schedule: it looks authoritative and it is wrong. Anything on this site that would go stale within a year is either kept current deliberately, on a page that says when it was last checked, or it is not published."
+        },
+        {
+          "type": "pull",
+          "text": "A wrong timetable is more expensive than a missing one. Somebody plans around a wrong timetable."
+        },
+        {
+          "type": "p",
+          "text": "For current transport, ask at your point of departure on the day, or ask locally once you arrive. In a town this size that is not a fallback — it is how everyone including residents finds out what is running."
+        },
+        {
+          "type": "h2",
+          "text": "Two practical things that are stable"
+        },
+        {
+          "type": "p",
+          "text": "The first is that the interesting parts of Masinloc require leaving the highway. The river, the cave, the sandbar and the island are all deliberate detours, and none of them announces itself with signage a stranger would spot at speed."
+        },
+        {
+          "type": "p",
+          "text": "The second is that the water in front of the town is a protected area with rules attached. If you are coming to swim, snorkel, fish or take a boat out, that is worth knowing before you arrive rather than after somebody tells you."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "Eight places worth the detour",
+              "href": "eight-reasons-to-turn-off-the-highway.html"
+            },
+            {
+              "label": "What protected water means in practice",
+              "href": "the-sea-in-front-of-masinloc.html"
+            },
+            {
+              "label": "What to eat when you get here",
+              "href": "come-hungry.html"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "related": [
+        "eight-reasons-to-turn-off-the-highway",
+        "come-hungry",
+        "the-sea-in-front-of-masinloc"
+      ]
+    },
+    {
+      "slug": "san-salvador-has-a-better-story",
+      "theme": "sea",
+      "title": "San Salvador Has a Better Story Than “Nice Beach”",
+      "deck": "An island barangay that turns up by name in a 1649 Spanish account, sits inside a legally protected marine area, and did community-based reef management before most places had the phrase.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": {
+        "family": "locations",
+        "name": "san-salvador-island",
+        "alt": "San Salvador Island off the coast of Masinloc, Zambales",
+        "caption": "San Salvador Island, a barangay you cannot drive to."
+      },
+      "body": [
+        {
+          "type": "p",
+          "text": "San Salvador is one of Masinloc's thirteen barangays and the only one you cannot reach by road. That single fact shapes everything else about it: a different relationship with the sea, a different set of daily problems, and a documented history that is longer and stranger than the beach it gets described as."
+        },
+        {
+          "type": "h2",
+          "text": "It is in the seventeenth-century record"
+        },
+        {
+          "type": "p",
+          "text": "A Spanish account of a raid on this coast in 1649 describes an attacking force being driven back by defenders under Fray Francisco de San Jose, and withdrawing to an adjacent islet the account names as Pulo San Salvador. The following day the defenders attacked the hideout and captured the raiders' caracoas and war material. Whatever else is uncertain about that episode, the island is in the document, by name, in the middle of a fight."
+        },
+        {
+          "type": "p",
+          "text": "That is a rare thing for a small island barangay: a named appearance in a colonial-era narrative, attached to a specific event rather than to a general description of the coast."
+        },
+        {
+          "type": "h2",
+          "text": "And it is in the environmental record"
+        },
+        {
+          "type": "p",
+          "text": "San Salvador sits inside what is now the Masinloc and Oyon Bay Protected Landscape and Seascape. The community-based marine management work carried out around the island from the late 1980s onward is among the better documented Philippine examples of its kind, and it predates the 1993 proclamation that created the marine reserve. The national designation arrived to formalise something local people had already begun."
+        },
+        {
+          "type": "pull",
+          "text": "The protection did not arrive from Manila and find an empty island. It arrived and found people already doing the work."
+        },
+        {
+          "type": "p",
+          "text": "That order of events matters, and it is usually told backwards. A protected area imposed on a community and a protected area that grew out of one are different institutions with different chances of working, whatever the map looks like."
+        },
+        {
+          "type": "h2",
+          "text": "Why “nice beach” is the weakest thing you can say about it"
+        },
+        {
+          "type": "p",
+          "text": "There are a great many nice beaches on this coast and in this country. There are very few small islands that appear by name in a 1649 account of a sea raid, sit inside the only legislated marine protected area in the region, and carry a locally-originated conservation history that researchers have actually written up. Leading with the sand is choosing the least distinctive thing about the place."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The 1649 account in full",
+              "href": "../bulletin/1649-when-six-caracoas-came.html"
+            },
+            {
+              "label": "What the protected area covers, and what protection does not mean",
+              "href": "the-sea-in-front-of-masinloc.html"
+            },
+            {
+              "label": "All thirteen barangays",
+              "href": "thirteen-ways-to-be-masinloc.html"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Proclamation No. 231, s. 1993",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/"
+        },
+        {
+          "label": "Marine protected area in Zambales earns national recognition",
+          "publisher": "Philippine Information Agency",
+          "href": "https://pia.gov.ph/news/marine-protected-area-in-zambales-earns-national-recognition/"
+        }
+      ],
+      "related": [
+        "the-sea-in-front-of-masinloc",
+        "thirteen-ways-to-be-masinloc",
+        "why-is-there-a-shoal-named-after-masinloc"
+      ]
+    },
+    {
+      "slug": "masinloc-masingloc-and-the-origin-story",
+      "theme": "history",
+      "title": "Masinloc, Masingloc and the Trouble With a Good Origin Story",
+      "deck": "There are several explanations for the town's name. Some are plausible, one is very widely repeated, and none of them is settled. This article does not pick a winner.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": null,
+      "body": [
+        {
+          "type": "p",
+          "text": "Place-name origins are the most satisfying kind of local history and the least reliable. They are short, they are memorable, they explain something everybody uses daily, and they are almost never documented in a way that would survive a careful look. Masinloc is no exception."
+        },
+        {
+          "type": "p",
+          "text": "The spelling itself has moved. Older documents and older maps carry forms including Masingloc, and variation of that kind is entirely normal for a Philippine place name written down by people using a different language's orthography over several centuries. The variation is evidence about how the name was heard and transcribed. It is not, on its own, evidence about what the name means."
+        },
+        {
+          "type": "h2",
+          "text": "What is usually offered"
+        },
+        {
+          "type": "p",
+          "text": "The explanations in circulation generally work by finding a Sambal or related root inside the name and building a story around it. Some of these are linguistically reasonable. What none of them currently has, so far as this project has been able to establish, is a documentary chain: an early source that states the derivation, or a linguistic analysis published by somebody qualified to make it and reviewed by others."
+        },
+        {
+          "type": "p",
+          "text": "That gap is the point of this article. A derivation can be plausible and still be a folk etymology, and folk etymologies are not a failure of a community's memory. They are a normal feature of how living places explain themselves to themselves."
+        },
+        {
+          "type": "pull",
+          "text": "An unresolved name is not an embarrassment. Publishing a resolution the evidence does not support would be."
+        },
+        {
+          "type": "h2",
+          "text": "What would actually settle it"
+        },
+        {
+          "type": "p",
+          "text": "An early Spanish-era document giving the derivation explicitly. A comparative analysis by a historical linguist working with Sambal and its relatives. Or the recovery of the early Zambal grammar and glossary work associated with the Recollect mission on this coast, which has not been located and which would be the single most valuable document that could turn up for the language history of this town."
+        },
+        {
+          "type": "p",
+          "text": "Until one of those exists, the honest formulation is that the name is old, that it has been written several ways, that several derivations are offered locally, and that none is documented. That sentence is less fun than a good origin story. It has the advantage of still being true next year."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "This article deliberately names no single preferred derivation. If you hold an early source, a published linguistic treatment, or a well-recorded elder account of the name, it is exactly what is missing — and an attributed oral account, clearly labelled as one, would be a genuine addition rather than a compromise."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "Why the founding date has the same problem",
+              "href": "masinloc-history-has-more-than-one-starting-date.html"
+            },
+            {
+              "label": "The language the name comes from",
+              "href": "the-sambal-words-we-refuse-to-lose.html"
+            },
+            {
+              "label": "Why older sources say Tina",
+              "href": "../bulletin/why-older-sources-say-tina.html"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "related": [
+        "masinloc-history-has-more-than-one-starting-date",
+        "the-sambal-words-we-refuse-to-lose",
+        "every-november-masinloc-stages-a-battle"
+      ]
+    },
+    {
+      "slug": "every-november-masinloc-stages-a-battle",
+      "theme": "history",
+      "title": "Every November, Masinloc Stages a Battle",
+      "deck": "Binabayani is a war dance performed in connection with the feast of San Andres. It is genuinely old, genuinely alive, and the date everybody prints for its origin cannot be found in any located source.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": {
+        "family": "discover",
+        "name": "binabayani-festival",
+        "alt": "Binabayani performers in Masinloc, Zambales",
+        "caption": "Binabayani, performed in connection with the feast of San Andres. Masinloc, Zambales."
+      },
+      "body": [
+        {
+          "type": "p",
+          "text": "Binabayani is not a parade. It is a staged fight — movement, sound, costume, pursuit and combat — performed in connection with the feast of San Andres, and it is usually described as a war dance between Aetas and Christians. If you have only ever seen Philippine town fiestas on video, the thing that will surprise you is how physical it is."
+        },
+        {
+          "type": "p",
+          "text": "It is one of the strongest pieces of public memory this town has. It carries devotion, local identity, a story about the sea, and an inherited choreography that people learn by doing rather than from a manual. It is performed by Masinloqueños for Masinloqueños, and its survival does not depend on anyone outside noticing."
+        },
+        {
+          "type": "h2",
+          "text": "The date problem"
+        },
+        {
+          "type": "p",
+          "text": "Modern accounts very often give 1621 as the year Binabayani began, sometimes attaching an early telling to Capt. Florentino Elicano and a connection to Municipal Judge Gerardo Elicano, and sometimes attaching a narrative about an image or bell recovered from the sea. The research behind this project went looking for the document under the date and could not find one."
+        },
+        {
+          "type": "p",
+          "text": "So the accurate sentence is not that Binabayani began in 1621. It is that Binabayani is a living Masinloc tradition, commonly interpreted as a conflict between Aetas and Christians, joined to devotion to San Andres and to local stories about something arriving from the sea — and that the 1621 origin, the attribution, the bell narrative and the first performance are not established by any located primary source."
+        },
+        {
+          "type": "pull",
+          "text": "Calling oral tradition oral tradition does not demote it. It protects it from being checked and found wanting against a standard it never claimed."
+        },
+        {
+          "type": "h2",
+          "text": "Why removing the date is not a loss"
+        },
+        {
+          "type": "p",
+          "text": "It feels like one. The instinct is that a tradition with a date is more serious than a tradition without one, and that giving up the date gives up standing. The opposite is closer to the truth. A date that collapses the first time a researcher checks it takes the rest of the account down with it. A tradition described accurately as a living practice, with its origins openly unresolved, is not vulnerable in that way."
+        },
+        {
+          "type": "p",
+          "text": "There is also a question worth sitting with about what the dance depicts. A performance built around a conflict between Aetas and Christians is a performance about this coast's own history of encounter, and the people on one side of that encounter are not an abstraction. They have descendants. How the tradition is described matters for that reason as well as for the documentary one."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The full research: what Binabayani remembers",
+              "href": "../bulletin/what-binabayani-remembers.html"
+            },
+            {
+              "label": "The church the feast belongs to",
+              "href": "the-church-masinloquenos-walk-past.html"
+            },
+            {
+              "label": "Why the founding date has the same shape of problem",
+              "href": "masinloc-history-has-more-than-one-starting-date.html"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "related": [
+        "the-church-masinloquenos-walk-past",
+        "masinloc-masingloc-and-the-origin-story",
+        "masinloc-history-has-more-than-one-starting-date"
+      ]
+    },
+    {
+      "slug": "how-masinloc-makes-a-living",
+      "theme": "economy",
+      "title": "How Masinloc Makes a Living",
+      "deck": "A power station, a protected bay, mango season, and the people who left. Four economies in one municipality, none of which can be described without the others.",
+      "published": "2026-08-23",
+      "updated": "2026-08-23",
+      "hero": null,
+      "body": [
+        {
+          "type": "p",
+          "text": "A coastal town of fifty-six thousand people does not have an economy. It has several, running at different speeds, and a household will usually be attached to more than one of them."
+        },
+        {
+          "type": "h2",
+          "text": "The plant"
+        },
+        {
+          "type": "p",
+          "text": "The coal-fired station in Barangay Bani runs three units totalling 1,023 megawatts and feeds the Luzon grid. For the municipality it is an employer of a particular kind of skilled worker, a procurement channel, a ratepayer and a permanent item on the local agenda. It is also the reason Masinloc appears in national arguments about energy that the town did not start."
+        },
+        {
+          "type": "h2",
+          "text": "The water"
+        },
+        {
+          "type": "p",
+          "text": "Fishing here happens inside a legal instrument. The bay is a protected area of more than seven and a half thousand hectares, and the rules that come with that status shape who may fish where, with what, and when. That is a real constraint on a real livelihood, and it is the reason enforcement, community management and local participation are not abstractions in this town."
+        },
+        {
+          "type": "h2",
+          "text": "The fruit"
+        },
+        {
+          "type": "p",
+          "text": "Zambales mangoes carry a reputation that reaches well beyond the province, and Masinloc has a genuine growing history within that. Mango income is seasonal and weather-exposed in the way tree-crop income always is, which makes it a supplement to household income more often than a foundation for it."
+        },
+        {
+          "type": "h2",
+          "text": "The people who left"
+        },
+        {
+          "type": "p",
+          "text": "The fourth economy does not appear in any local ledger. Masinloqueños work in Manila, on ships, and in a long list of other countries, and money moves home. This is the least visible and often the most decisive part of how a Philippine coastal town actually funds itself, and it is why the outward-facing half of this project exists at all: a town's diaspora is part of its economy, and staying findable to it is not sentiment."
+        },
+        {
+          "type": "pull",
+          "text": "A town with a diaspora has an economy with a postal address somewhere else."
+        },
+        {
+          "type": "h2",
+          "text": "What this article is not"
+        },
+        {
+          "type": "p",
+          "text": "It is not a jobs page. Current openings, employers, applicants and the workflows around them belong to Masinloc Connect, which is built for it and can keep the information accurate. Discover explains how the town earns; Connect is where the actual opportunities live. Keeping those apart is what stops this section quietly rotting into a stale listings page."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The power station, in detail",
+              "href": "the-giant-in-bani.html"
+            },
+            {
+              "label": "The protected bay the fishing happens in",
+              "href": "the-sea-in-front-of-masinloc.html"
+            },
+            {
+              "label": "The mango question",
+              "href": "the-sweetest-mango-came-from-where-exactly.html"
+            },
+            {
+              "label": "Masinloc Connect",
+              "href": "../connect.html"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Masinloc Power Plant — plant profile, units and capacity",
+          "publisher": "SMC Global Power Holdings Corp.",
+          "href": "https://www.smcglobalpower.com.ph/our-business-power-generation?slug=masinloc-power-plant&p=4"
+        },
+        {
+          "label": "Proclamation No. 231, s. 1993",
+          "publisher": "Official Gazette of the Republic of the Philippines",
+          "href": "https://www.officialgazette.gov.ph/1993/08/18/proclamation-no-231-s-1993/"
+        },
+        {
+          "label": "Zambales celebrates thriving mango industry",
+          "publisher": "Philippine News Agency",
+          "href": "https://www.pna.gov.ph/articles/1066123"
+        }
+      ],
+      "related": [
+        "the-giant-in-bani",
+        "the-sweetest-mango-came-from-where-exactly",
+        "the-sea-in-front-of-masinloc"
+      ]
     }
   ],
   "currentFacts": {
-    "population": { "value": "56,579", "label": "Population", "note": "2024 Census of Population", "verified": "2026-08-23", "source": "Philippine Statistics Authority" },
-    "censusYear": { "value": "2024", "label": "Census year", "verified": "2026-08-23", "source": "Philippine Statistics Authority" },
-    "mayor": { "value": "Hazel J. Lim", "label": "Municipal Mayor", "note": "Elected 12 May 2025, term to 2028", "verified": "2026-08-23", "source": "2025 local election results" },
-    "viceMayor": { "value": "Arsenia J. Lim", "label": "Vice Mayor", "note": "Elected 12 May 2025, term to 2028", "verified": "2026-08-23", "source": "2025 local election results" },
-    "barangays": { "value": "13", "label": "Barangays", "verified": "2026-08-23", "source": "Philippine Statistics Authority" },
-    "zip": { "value": "2211", "label": "ZIP code", "verified": "2026-08-23", "source": "Philippine Postal Corporation" },
-    "province": { "value": "Zambales", "label": "Province", "verified": "2026-08-23", "source": "Philippine Statistics Authority" },
-    "region": { "value": "Central Luzon (Region III)", "label": "Region", "verified": "2026-08-23", "source": "Philippine Statistics Authority" }
+    "population": {
+      "value": "56,579",
+      "label": "Population",
+      "note": "2024 Census of Population",
+      "verified": "2026-08-23",
+      "source": "Philippine Statistics Authority"
+    },
+    "censusYear": {
+      "value": "2024",
+      "label": "Census year",
+      "verified": "2026-08-23",
+      "source": "Philippine Statistics Authority"
+    },
+    "mayor": {
+      "value": "Hazel J. Lim",
+      "label": "Municipal Mayor",
+      "note": "Elected 12 May 2025, term to 2028",
+      "verified": "2026-08-23",
+      "source": "2025 local election results"
+    },
+    "viceMayor": {
+      "value": "Arsenia J. Lim",
+      "label": "Vice Mayor",
+      "note": "Elected 12 May 2025, term to 2028",
+      "verified": "2026-08-23",
+      "source": "2025 local election results"
+    },
+    "barangays": {
+      "value": "13",
+      "label": "Barangays",
+      "verified": "2026-08-23",
+      "source": "Philippine Statistics Authority"
+    },
+    "zip": {
+      "value": "2211",
+      "label": "ZIP code",
+      "verified": "2026-08-23",
+      "source": "Philippine Postal Corporation"
+    },
+    "province": {
+      "value": "Zambales",
+      "label": "Province",
+      "verified": "2026-08-23",
+      "source": "Philippine Statistics Authority"
+    },
+    "region": {
+      "value": "Central Luzon (Region III)",
+      "label": "Region",
+      "verified": "2026-08-23",
+      "source": "Philippine Statistics Authority"
+    }
   }
 }

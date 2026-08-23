@@ -37,6 +37,7 @@ const data = JSON.parse(await fs.readFile('data/discover.json', 'utf8'));
 const articles = data.articles;
 
 const failures = [];
+const pending = [];
 const fail = (m) => failures.push(m);
 
 const browser = await chromium.launch({ headless: true });
@@ -147,7 +148,12 @@ for (const article of articles) {
 
   // Heroes keep their own shape. A rendered ratio that has drifted from the
   // decoded one means something cropped the artwork.
-  if (article.hero) {
+  if (article.hero && await page.locator('.d-hero img').count() === 0) {
+    /* The data names a hero whose artwork has not been delivered yet. The
+       article is published and opens on type; this is reported rather than
+       failed, so an undelivered asset never blocks a correction going out. */
+    pending.push(`${article.slug} (${article.hero.name})`);
+  } else if (article.hero) {
     const shape = await page.locator('.d-hero img').first().evaluate((img) => ({
       naturalRatio: img.naturalWidth / img.naturalHeight,
       renderedRatio: img.getBoundingClientRect().width / img.getBoundingClientRect().height,
@@ -220,3 +226,8 @@ console.log(`${articles.length} articles: all built, all linked from the hub, un
   + 'descriptions, self-referencing canonicals, breadcrumbs and valid BlogPosting data.');
 console.log('No FAQ markup. No hero is cropped. Every internal link resolves. '
   + 'No job listings crossed the line into Discover.');
+if (pending.length) {
+  console.log(`\n${pending.length} article(s) are waiting on hero artwork and open on type `
+    + 'until it is delivered:');
+  for (const item of pending) console.log(`  - ${item}`);
+}
