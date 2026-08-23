@@ -330,9 +330,10 @@ def render() -> str:
     </div>
     <div class="hero-inner">
       <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
-      <h1 id="heroTitle"><span class="mask"><span>Discover</span></span><span class="mask"><span><em>Masinloc.</em></span></span></h1>
-      <p class="hero-sub">History&nbsp;&middot; Language&nbsp;&middot; People&nbsp;&middot; Place</p>
+      <h1 id="heroTitle"><span class="mask"><span>Masinloc,</span></span> <span class="mask"><span><em>in our words.</em></span></span></h1>
       <p class="hero-note rise" style="--delay:520ms">A town on the Zambales coast, and the record of it kept by the people who live here.</p>
+      <p class="hero-sub rise" style="--delay:600ms">History&nbsp;&middot; Language&nbsp;&middot; People&nbsp;&middot; Place</p>
+      <a class="hero-enter rise" style="--delay:680ms" href="#discoverTitle">Start with the places <i aria-hidden="true">&darr;</i></a>
     </div>
     <p class="hero-cue"><i></i>Scroll</p>
   </section>

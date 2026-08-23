@@ -111,7 +111,8 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
 
     const runs = await page.evaluate(() => {
       const out = [];
-      for (const selector of ['.hero-mark', '.hero h1', '.hero-sub', '.hero-note', '#menuToggle']) {
+      for (const selector of ['.hero-mark', '.hero h1', '.hero-sub', '.hero-note',
+        '.hero-enter', '#menuToggle']) {
         const el = document.querySelector(selector);
         if (!el || !el.getClientRects().length) continue;
         const size = parseFloat(getComputedStyle(el).fontSize);
@@ -320,7 +321,8 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
 
   /* Copy that establishes the page must exist in the HTML, not appear later. */
   const text = (await page.textContent('main')) || '';
-  for (const needed of ['Discover', 'Masinloc', 'Sambal Tina', 'Hamat River']) {
+  for (const needed of ['Masinloc, in our words', 'Sambal Tina', 'Hamat River',
+    'Start with the places']) {
     if (!text.includes(needed)) fail(`with JavaScript off, "${needed}" is missing from the page`);
   }
   const slides = await page.$$eval('.slide-art', (els) => els.length);

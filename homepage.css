@@ -154,21 +154,41 @@ html{scroll-padding-top:96px}
   max-width:13ch;
 }
 .hero h1 em{font-style:italic}
+/* The sentence that actually explains what this is comes straight after the
+   headline and is set to be read. It used to sit last at 14px in a 34ch
+   column — the most informative line in the hero was its smallest type, which
+   is the wrong way round for a reader who came to understand the place. */
+.hero-note{
+  margin:clamp(22px,3.4vh,34px) 0 0;max-width:40ch;
+  color:rgba(255,255,255,.88);
+  font:400 clamp(16px,1.35vw,19px)/1.6 var(--font-ui);
+  border-left:2px solid var(--yellow);
+  padding-left:16px;
+}
+/* The four terms are a contents line, not a claim, so they step back behind
+   the sentence above them. */
 .hero-sub{
-  margin:clamp(20px,3vh,30px) 0 0;
-  color:rgba(255,255,255,.86);
-  font:500 clamp(13px,1.25vw,15.5px)/1.5 var(--font-ui);
+  margin:clamp(18px,2.6vh,26px) 0 0;
+  color:rgba(255,255,255,.60);
+  font:500 clamp(11.5px,1.05vw,13px)/1.5 var(--font-ui);
   letter-spacing:.22em;text-transform:uppercase;
 }
-/* Contextual detail sits at the far edge rather than under the headline, so
-   the composition reads as a spread. */
-.hero-note{
-  margin:clamp(26px,4vh,40px) 0 0;max-width:34ch;
-  color:rgba(255,255,255,.72);
-  font:400 14px/1.65 var(--font-ui);
-  border-left:2px solid var(--yellow);
-  padding-left:14px;
+/* The hero had no way into the page at all, and the scroll cue it relied on is
+   hidden on a phone. One link, to the first thing below it. */
+.hero-enter{
+  display:inline-flex;align-items:center;gap:10px;
+  margin:clamp(26px,3.8vh,38px) 0 0;
+  padding-bottom:7px;
+  color:var(--white);text-decoration:none;
+  font:600 13.5px/1 var(--font-ui);
+  border-bottom:1px solid rgba(255,255,255,.34);
+  transition:border-color 300ms var(--ease-standard),gap 300ms var(--ease-standard);
 }
+.hero-enter:hover,.hero-enter:focus-visible{border-bottom-color:var(--yellow);gap:15px}
+.hero-enter i{font-style:normal;transition:transform 300ms var(--ease-standard)}
+.hero-enter:hover i{transform:translateY(3px)}
+/* The heading it lands on must clear the fixed navigation. */
+#discoverTitle{scroll-margin-top:104px}
 .hero-cue{
   position:absolute;right:var(--gutter);bottom:clamp(20px,4vh,34px);z-index:3;
   display:flex;align-items:center;gap:12px;writing-mode:vertical-rl;
