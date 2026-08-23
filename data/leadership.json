@@ -6,20 +6,21 @@
     "The incumbent is listed first because she holds the office. That is an information hierarchy, not a ranking, and it must not be expressed as a larger card or a louder treatment.",
     "The former mayors are listed in the order supplied. No chronology is inferred and no term dates are invented.",
     "Spelling of names is fixed. Do not add or remove middle names, initials or honorifics.",
-    "Portraits come from the project's approved originals. No AI portraits, no facial alteration, no per-person beautification."
+    "Portraits come from the project's approved originals. No AI portraits, no facial alteration, no per-person beautification.",
+    "Warmth is allowed and wanted. The restraint in these rules is about facts, not about tone: say nothing the page cannot show, and say it gladly."
   ],
   "page": {
     "eyebrow": "Leadership",
     "title": "The people who have carried the responsibility of leading Masinloc.",
     "metaTitle": "Municipal Leadership | Masinloc, Zambales",
     "description": "The Municipal Mayor of Masinloc, Zambales now in office and the mayors who held the office before her, presented as a portrait record of name and office.",
-    "lead": "A portrait record of the office of Municipal Mayor of Masinloc, Zambales. Each profile carries a name and an office, and nothing more: no terms, no dates, no political information.",
-    "provenance": "Discover Masinloc is an independent community platform and not an official municipal government website. For official records and public services, refer to the appropriate government offices."
+    "lead": "Five Masinloqueños have held this office. Their portraits hang together here — the mayor serving now and the mayors who served before her, each given the same place on the page.",
+    "provenance": "This page keeps to names and offices; the rest of each story belongs to the people who lived it. Discover Masinloc is an independent community platform, not an official municipal government website — for official records and public services, please refer to the appropriate government offices."
   },
   "sections": {
     "current": {
       "heading": "Current Municipal Mayor",
-      "blurb": "The office as it stands now."
+      "blurb": "Serving Masinloc today."
     },
     "former": {
       "heading": "Former Municipal Mayors",
@@ -77,7 +78,7 @@
   "womenInLeadership": {
     "heading": "Women in Leadership",
     "fact": "Masinloc has been continuously led by women since 2010.",
-    "note": "This is a continuity across three administrations, not the achievement of any one of them.",
+    "note": "Three women, three administrations, one continuous stretch of leadership that belongs to all of them.",
     "recognises": [
       "Desiree S. Edora",
       "Arsenia Jalata Lim",

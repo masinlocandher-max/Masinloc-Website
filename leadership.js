@@ -17,6 +17,15 @@
   const cards = [...document.querySelectorAll('.leader')];
   if (!cards.length) return;
 
+  // Where scroll timelines are supported, leadership.css owns the arrival
+  // entirely and this script stays out of it. Adding the one-shot reveal on
+  // top would mean two things animating the same opacity, and the one-shot
+  // would win and flatten the scroll-driven beat.
+  const scrollDriven = window.CSS
+    && CSS.supports
+    && CSS.supports('animation-timeline', 'view()');
+  if (scrollDriven) return;
+
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   cards.forEach((card) => {

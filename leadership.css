@@ -179,13 +179,88 @@
 .lead-provenance a{color:var(--blue)}
 
 /* --- motion --------------------------------------------------------------- */
-/* The reveal itself is site-polish.css's, unchanged: it is already gated on
-   html.js so a portrait is never hidden when scripts do not run, and it
-   already switches off under prefers-reduced-motion. leadership.js only marks
-   which elements take part. Only the hover depth is defined here, and it is
-   turned off with everything else when less motion is asked for. */
+/* Scroll-driven, so each portrait arrives on the reader's own timing rather
+   than firing once and being over. Scrolling the page walks the leaders up
+   into place one after another: the portrait settles down into its frame, the
+   card lifts, and the name arrives just behind it — the beat a gallery gives
+   a picture when you stop in front of it.
+
+   It is a real scroll timeline, not a scroll listener: `animation-timeline:
+   view()` runs on the compositor, works with scripts off, and scrubs backwards
+   when the reader scrolls back up. Every leader gets the same animation with
+   the same range, so nobody makes a bigger entrance than anybody else.
+
+   Three fallbacks, in order:
+     - No `animation-timeline` support: leadership.js adds the one-shot reveal
+       from site-polish.css instead, and the two never both run.
+     - No JavaScript and no support: nothing is hidden in the first place.
+     - Reduced motion or print: no animation at all, everything simply there. */
+
+@keyframes leader-arrive{
+  from{opacity:0;transform:translateY(46px)}
+  to{opacity:1;transform:none}
+}
+/* The portrait starts a touch large and high in the frame and settles down
+   into it. It ends at exactly scale(1), so the finished state is the whole
+   painting, uncropped, the same as every other. */
+@keyframes portrait-settle{
+  from{transform:scale(1.05) translateY(-2.2%)}
+  to{transform:none}
+}
+@keyframes caption-arrive{
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:none}
+}
+
+@media (prefers-reduced-motion:no-preference){
+  @supports (animation-timeline:view()){
+    /* The card names its own view timeline so everything inside it can share
+       one. An anonymous `view()` on a descendant resolves against its nearest
+       scroll container, and .leader-frame is one — `overflow:hidden` makes it
+       a scroll container even though nothing scrolls in it. The portrait's
+       timeline came out inactive and its animation sat frozen at the end
+       state. Naming the timeline on .leader, whose scroller is the page,
+       fixes it and keeps all three parts of a card on the same clock. */
+    .leader{
+      view-timeline-name:--leader-view;
+      animation:leader-arrive linear both;
+      animation-timeline:--leader-view;
+      /* Ranged in `cover`, not `entry`. `entry 100%` means "fully inside the
+         viewport", which a card taller than the window can never reach — the
+         same trap as a non-zero IntersectionObserver threshold. `cover` is a
+         fraction of (viewport + element) and always completes. It finishes
+         early, so nothing is still fading while a name is being read. */
+      animation-range:cover 0% cover 22%;
+    }
+    /* On <picture> rather than the <img>, so the hover depth on the image
+       still composes instead of being overridden by the running animation. */
+    .leader-frame picture{
+      animation:portrait-settle linear both;
+      animation-timeline:--leader-view;
+      animation-range:cover 0% cover 30%;
+    }
+    .leader figcaption{
+      animation:caption-arrive linear both;
+      animation-timeline:--leader-view;
+      animation-range:cover 5% cover 26%;
+    }
+    .women-inner{
+      animation:leader-arrive linear both;
+      animation-timeline:view();
+      animation-range:cover 0% cover 24%;
+    }
+  }
+}
 
 @media (prefers-reduced-motion:reduce){
   .leader-frame img{transition:none}
   .leader figure:hover .leader-frame img{transform:none}
+}
+
+/* On paper there is no scroll, so a timeline would never advance and could
+   leave a leader printed blank. */
+@media print{
+  .leader,.leader-frame picture,.leader figcaption,.women-inner{
+    animation:none!important;opacity:1!important;transform:none!important;
+  }
 }

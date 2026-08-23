@@ -180,6 +180,100 @@ for (const [label, viewport] of [
   await context.close();
 }
 
+/* --- the arrival is scroll-driven, and equally so for everyone ------------- */
+
+const moving = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+const scroller = await moving.newPage();
+await scroller.goto(`${baseURL}/leadership.html`, { waitUntil: 'networkidle' });
+
+const supported = await scroller.evaluate(
+  () => CSS.supports('animation-timeline', 'view()'));
+
+if (supported) {
+  // Same animation, same range, same timeline for every leader: an entrance
+  // is one more thing that could be made grander for one person.
+  const motion = await scroller.locator('.leader').evaluateAll(cards => cards.map((card) => {
+    const style = getComputedStyle(card);
+    const pic = getComputedStyle(card.querySelector('picture'));
+    const cap = getComputedStyle(card.querySelector('figcaption'));
+    return [style.animationName, style.animationRangeStart, style.animationRangeEnd,
+      pic.animationName, pic.animationRangeStart, pic.animationRangeEnd,
+      cap.animationName, cap.animationRangeStart, cap.animationRangeEnd].join('|');
+  }));
+  if (new Set(motion).size !== 1) {
+    fail(`the arrival animation is not identical for every leader: ${[...new Set(motion)].join('  ///  ')}`);
+  }
+  if (motion[0].startsWith('none')) {
+    fail('scroll timelines are supported but no arrival animation is attached');
+  }
+
+  // Scrub it. A one-shot reveal would jump 0 to 1; a scroll timeline holds
+  // intermediate values that track the scroll position and run backwards.
+  const readProgress = () => scroller.locator('.leader').evaluateAll(
+    cards => cards.map((card) => {
+      const parts = [card, card.querySelector('picture'), card.querySelector('figcaption')];
+      return parts.map((el) => {
+        const [animation] = el.getAnimations();
+        return animation ? animation.effect.getComputedTiming().progress : null;
+      });
+    }));
+
+  // A card already on screen at load has legitimately finished arriving before
+  // anyone scrolls, so only the ones that start below the fold are required to
+  // scrub. Everyone is required to finish.
+  const startsBelowFold = await scroller.locator('.leader').evaluateAll(
+    cards => cards.map(c => c.getBoundingClientRect().top >= window.innerHeight));
+
+  const maxScroll = await scroller.evaluate(
+    () => document.documentElement.scrollHeight - window.innerHeight);
+  const stops = [0, 0.12, 0.2, 0.28, 0.36, 0.5, 0.7, 1]
+    .map(fraction => Math.round(maxScroll * fraction));
+
+  const samples = [];
+  for (const y of stops) {
+    await scroller.evaluate(v => window.scrollTo(0, v), y);
+    await scroller.waitForTimeout(220);
+    samples.push(await readProgress());
+  }
+
+  // Somewhere in that sweep every below-the-fold leader must have been
+  // mid-arrival, and every leader must finish. A frozen timeline reads as 1 at
+  // every sample — that is how the portrait animation failed when it was first
+  // wired up, and how a range that never completes shows itself.
+  for (const [index, leader] of leaders.entries()) {
+    for (const [part, label] of [[0, 'card'], [1, 'portrait'], [2, 'caption']]) {
+      const track = samples.map(s => s[index][part]);
+      if (track.some(v => v === null)) {
+        fail(`${leader.name}: no ${label} animation is attached`);
+        continue;
+      }
+      if (startsBelowFold[index] && !track.some(v => v > 0.02 && v < 0.98)) {
+        fail(`${leader.name}: the ${label} never scrubs — it is ${track.join(', ')} across the `
+          + 'scroll, so its timeline is frozen rather than scroll-driven');
+      }
+      if (Math.max(...track) < 0.99) {
+        fail(`${leader.name}: the ${label} never completes (peaks at `
+          + `${Math.max(...track).toFixed(3)}), so it is left mid-arrival for good`);
+      }
+    }
+  }
+
+  // It must land on the whole painting: scale exactly 1, nothing cropped.
+  await scroller.evaluate(() => window.scrollTo(
+    0, document.documentElement.scrollHeight - window.innerHeight));
+  await scroller.waitForTimeout(300);
+  const settled = await scroller.locator('.leader picture').evaluateAll(
+    pictures => pictures.map(p => getComputedStyle(p).transform));
+  for (const [index, transform] of settled.entries()) {
+    if (transform !== 'none' && transform !== 'matrix(1, 0, 0, 1, 0, 0)') {
+      fail(`${leaders[index].name}: the portrait settles at ${transform}, not its full frame`);
+    }
+  }
+} else {
+  console.log('note: this browser has no scroll timelines; the one-shot fallback was checked');
+}
+await moving.close();
+
 /* --- motion is optional, the record is not --------------------------------- */
 
 const plain = await browser.newContext({
@@ -189,11 +283,20 @@ const plain = await browser.newContext({
 const bare = await plain.newPage();
 await bare.goto(`${baseURL}/leadership.html`, { waitUntil: 'domcontentloaded' });
 
-const visible = await bare.locator('.leader').evaluateAll(
-  cards => cards.filter(c => getComputedStyle(c).opacity !== '0').length);
-if (visible !== leaders.length) {
-  fail(`no-js: ${visible} of ${leaders.length} portraits are visible without JavaScript`);
+// The arrival is CSS, so it still runs with scripts off — which means the test
+// is that scrolling to a leader reveals them, not that all five are painted at
+// the top of the page.
+for (const [index, leader] of leaders.entries()) {
+  const card = bare.locator('.leader').nth(index);
+  await card.scrollIntoViewIfNeeded();
+  await bare.waitForTimeout(220);
+  const shown = await card.evaluate(c => Number(getComputedStyle(c).opacity));
+  if (shown < 0.9) {
+    fail(`no-js: ${leader.name} is still at opacity ${shown} after scrolling to them`);
+  }
 }
+// And the text is in the document either way, for a reader without CSS and for
+// anything that never scrolls at all.
 for (const leader of leaders) {
   if (!(await bare.locator('body').innerText()).includes(leader.name)) {
     fail(`no-js: ${leader.name} is missing`);
@@ -217,6 +320,24 @@ const transform = await quiet.locator('.leader img').first()
 if (transform !== 'none' && transform !== 'matrix(1, 0, 0, 1, 0, 0)') {
   fail(`reduced motion: the portrait still scales on hover (${transform})`);
 }
+
+// The scroll-driven arrival must be off too, and off means nothing is hidden
+// waiting for a scroll that a reader may never make.
+const quietMotion = await quiet.locator('.leader').evaluateAll(cards => cards.map((card) => {
+  const parts = [card, card.querySelector('picture'), card.querySelector('figcaption')];
+  return {
+    names: parts.map(el => getComputedStyle(el).animationName).join(','),
+    opacity: Math.min(...parts.map(el => Number(getComputedStyle(el).opacity))),
+  };
+}));
+for (const [index, state] of quietMotion.entries()) {
+  if (state.names !== 'none,none,none') {
+    fail(`reduced motion: ${leaders[index].name} still animates (${state.names})`);
+  }
+  if (state.opacity < 1) {
+    fail(`reduced motion: ${leaders[index].name} is at opacity ${state.opacity}`);
+  }
+}
 await still.close();
 
 await browser.close();
@@ -231,5 +352,7 @@ console.log('LEADERSHIP QA PASSED');
 console.log(`At three widths, all ${leaders.length} portraits render at the same card size, `
   + 'frame, border, decoded resolution, name type and caption padding.');
 console.log(`${current.name} is first and carries the only current-office marker, which is a word.`);
-console.log('The three women are named at one size. Every portrait is visible with '
-  + 'JavaScript off, and hover motion stops under reduced motion.');
+console.log('Each card, portrait and caption arrives on the same scroll timeline with the '
+  + 'same range, scrubs with the scroll, and settles on the full uncropped painting.');
+console.log('The three women are named at one size. Every portrait is reachable with '
+  + 'JavaScript off, and all motion stops under reduced motion.');
