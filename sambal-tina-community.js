@@ -170,7 +170,21 @@
         cache: 'no-store'
       });
       const result = await response.json().catch(() => ({}));
-      if (!response.ok || !result.ok) throw new Error(result.error || 'Submission failed.');
+      if (!response.ok || !result.ok) {
+        /* The function's own contract decides this, not a status range.
+           400 (validation), 403 (verification failed), 413 (too large) and
+           429 (too many submissions) carry sentences written for the person
+           at the form. 404 and 405 are the infrastructure answering — a
+           missing or misrouted function — and repeating those puts
+           "Function not found" in front of someone who only wanted to send us a word.
+           Everything they typed is left in the form either way. */
+        const READER_STATUSES = [400, 403, 413, 429];
+        const forReader = READER_STATUSES.includes(response.status) && result.error;
+        throw new Error(forReader
+          ? result.error
+          : 'We could not send this just now. Please try again in a few '
+            + 'minutes — what you typed is still here.');
+      }
 
       const reference = result.reference_code || result.reference || '';
       form.reset();
