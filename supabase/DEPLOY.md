@@ -1,21 +1,18 @@
-# Deploying and verifying the backend
+# Deploying and verifying the Masinloc backend
 
-The Supabase backend is version-controlled in `supabase/` and is already deployed to project `uwcqvsitjtknxsaypjxj`.
+Production project: `uwcqvsitjtknxsaypjxj`
 
-This runbook is the recovery, redeploy, and verification procedure. Do not infer production state from this file alone: always inspect the linked project first.
+The Supabase backend is version-controlled in `supabase/` and is already deployed. This runbook is the recovery, redeploy, and verification procedure. Never infer production state from GitHub alone: inspect the linked project before changing it and verify it again afterward.
 
-## Required pre-deploy checks
+## Release gate
 
-From the repository root, all repository checks and all 12 browser suites must pass before a production code push or function redeploy:
+Before a production code push or Edge Function redeploy, run every repository check and the browser QA suites defined in `.github/workflows/browser-qa.yml`. Never disable or weaken a check to make a deployment pass.
+
+At minimum:
 
 ```bash
 for s in scripts/check-*.py; do python3 "$s"; done
-python3 -m http.server 8000 --bind 127.0.0.1 &
 ```
-
-Then run the browser suites in the exact order in `.github/workflows/browser-qa.yml`.
-
-Never disable or weaken a check to make a deploy pass.
 
 ## Establish the live state first
 
@@ -24,14 +21,19 @@ supabase functions list --project-ref uwcqvsitjtknxsaypjxj
 supabase migration list --project-ref uwcqvsitjtknxsaypjxj
 ```
 
-The two public form functions are:
+Compare those results with this repository. If production contains a migration or function that is missing here, reconcile the drift before deploying unrelated work.
 
-- `submit-masinloc`
-- `business-dashboard-interest`
+## Production Edge Functions
 
-Both must be deployed with JWT verification disabled. These endpoints are called by anonymous visitors; the functions enforce their own origin allowlist, rate limiting, honeypot, input limits, upload validation, and optional Turnstile checks.
+Three public Edge Functions are part of the Masinloc backend:
 
-`submit-professional-profile` also exists in the project but is a separate professional-profile flow and is not part of this two-function deploy command.
+- `submit-masinloc` — business, story/history, dictionary, contact, legacy professional intake, and resume-support submissions.
+- `submit-professional-profile` — current professional-profile intake, duplicate handling, and recovery challenge flow.
+- `business-dashboard-interest` — records a verified business owner's interest in the future dashboard.
+
+All three are intentionally deployed with JWT verification disabled because visitors are not signed in. Their protection is implemented in the function body: exact origin allowlists, method/content-type checks, request-size limits, keyed rate-limit fingerprints, global abuse ceilings, honeypots where applicable, input limits, private storage, upload MIME and magic-byte checks where applicable, and security-event logging.
+
+`SUPABASE_SERVICE_ROLE_KEY` belongs only inside Edge Functions. It must never appear in browser JavaScript, HTML, logs, screenshots, or public documentation. The admin browser client uses a publishable key; RLS is the authorization boundary.
 
 ## Database migrations
 
@@ -42,7 +44,9 @@ supabase link --project-ref uwcqvsitjtknxsaypjxj
 supabase db push
 ```
 
-The migration directory now contains both the repository migrations and the historical production versions needed to keep migration history reconcilable. Do not delete an apparently duplicated historical migration just because a later idempotent migration covers the same table; the timestamp is part of the deployed history.
+The migration directory contains both repository migrations and the historical production versions needed to keep deployed history reconcilable. Do not delete an apparently duplicated historical migration merely because a later idempotent migration covers the same object; the timestamp is part of the deployed history.
+
+Security migrations deliberately deny `anon` and ordinary `authenticated` access to internal abuse-prevention, sequence, duplicate-challenge, and recovery-challenge state. Do not grant browser access to those objects to make a client error disappear; fix the calling path instead.
 
 The backend depends on:
 
@@ -57,8 +61,6 @@ The backend depends on:
 - `security_events`
 - `check_submission_rate_limit()`
 
-The production project also carries later hardening migrations for professional-profile recovery, business-owner privacy, dashboard interest, security-event categories, function search paths, FK indexes, and dictionary defaults.
-
 ### Business Dashboard columns
 
 `business-dashboard-interest` requires:
@@ -69,65 +71,76 @@ alter table public.business_submissions
   add column if not exists dashboard_interest_at timestamptz;
 ```
 
-The statement is safe if the columns already exist. Verify before changing anything.
+Verify before changing anything; the statement is safe when the columns already exist.
 
-## Deploy the functions
+## Deploy all Masinloc functions
 
 ```bash
 supabase functions deploy submit-masinloc --no-verify-jwt
+supabase functions deploy submit-professional-profile --no-verify-jwt
 supabase functions deploy business-dashboard-interest --no-verify-jwt
 ```
 
-Do not omit `--no-verify-jwt` for these two public submission endpoints.
+Deploying only a subset creates production drift. If only one function changed, still verify the full inventory and record which versions are active.
 
-## Optional Turnstile
+## Bot verification / Cloudflare Turnstile
 
-Turnstile is disabled unless the project secrets enable it:
+The functions support Turnstile, but `TURNSTILE_REQUIRED=true` must not be enabled until the browser forms render a real Turnstile widget and send its token. Enabling the secret without the frontend integration would reject legitimate visitors.
+
+Once the frontend widget is deployed and verified:
 
 ```bash
 supabase secrets set TURNSTILE_SECRET_KEY=your_secret_key
 supabase secrets set TURNSTILE_REQUIRED=true
 ```
 
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are provided by Supabase and should not be set manually.
+Do not commit either secret. Keep hostname validation restricted to the canonical Masinloc domains and the exact production Vercel alias. Do not trust wildcard `*.vercel.app` preview origins against the production database.
+
+## Admin authentication hardening
+
+The admin console supports password and magic-link login and relies on `app_metadata.role = admin` plus RLS. In Supabase Auth settings:
+
+- keep public sign-up disabled;
+- enable leaked-password protection for password login;
+- use a unique, strong admin password;
+- prefer the magic-link path for routine administrator access.
 
 ## HTTP verification
 
 ```bash
 BASE=https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-masinloc
 
+# Allowed origin and known public resource.
 curl -s "$BASE?resource=dictionary-contributors" \
   -H "Origin: https://masinloc-zambales.com"
 
+# Missing origin must be refused.
 curl -s -o /dev/null -w '%{http_code}\n' \
   "$BASE?resource=dictionary-contributors"
+# expect: 403
 
+# Unknown resource must be refused.
 curl -s -w '\n%{http_code}\n' \
   "$BASE?resource=anything-else" \
   -H "Origin: https://masinloc-zambales.com"
+# expect: 404 and {"ok":false,"error":"Not found"}
 ```
 
-Expected behavior:
-
-- allowed-origin contributors request: HTTP 200 and `{"ok":true,"contributors":[...],"count":...}`
-- no Origin header: HTTP 403
-- unknown resource from an allowed Origin: HTTP 404 and `{"ok":false,"error":"Not found"}`
-
-A 404 because the Edge Function itself does not exist means the function was not deployed. A 500 from a deployed function usually means its database contract is incomplete or another server-side dependency failed; inspect Edge Function and Postgres logs rather than guessing.
+A 404 because the Edge Function itself does not exist means the function was not deployed. A 500 from a deployed function usually means its database contract is incomplete or another server-side dependency failed. Inspect Edge Function and Postgres logs rather than guessing.
 
 ## End-to-end proof
 
-The GET checks only prove that the function answers. The complete path is proven by a real browser submission from the live site followed by a matching production row.
-
-Test both:
-
-1. `https://masinloc-zambales.com/contact.html` → `contact_submissions`
-2. the contribution form on `https://masinloc-zambales.com/sambal-tina.html` → `dictionary_submissions`
-
-For each test, record the HTTP result/reference code, confirm the matching row, then remove only the clearly identified test record. Never delete or modify unrelated submissions.
+The GET checks prove only that the endpoint answers. Complete one real browser submission from the live site and confirm the matching production row in the private admin console. For test records, remove only the clearly identified test row; never delete unrelated submissions.
 
 ## Security integrity
 
-`security_events.category` must accept every category handled by `submit-masinloc`: `business`, `story`, `dictionary`, `contact`, `professional`, and `resume`. `scripts/check-backend-contract.py` enforces this relationship so a new form category cannot silently lose security logging.
+- RLS stays enabled on every table exposed through the Data API.
+- Internal security/rate/recovery tables stay service-role only.
+- `security_events.category` must accept every submission category handled by `submit-masinloc`.
+- Private uploads stay in private Storage buckets and are opened only through short-lived signed URLs for authorized admins.
+- Public functions never trust a browser merely because it presents a Vercel-looking hostname.
+- Browser code never receives the service-role key.
+- Security-event raw IP retention is temporary; keyed pseudonymous fingerprints are used for pattern detection.
+- Production and GitHub source must describe the same functions and migrations.
 
-After schema changes, review Supabase security and performance advisors. Treat service-role-only tables with RLS and no browser policy as intentional only when their grants confirm that design.
+After DDL changes, review Supabase security and performance advisors. A service-role-only table with RLS and no browser policy can be intentional only when its grants confirm that design.
