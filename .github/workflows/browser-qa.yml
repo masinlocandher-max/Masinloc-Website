@@ -2,7 +2,7 @@ name: Browser QA
 
 # Site integrity has always run on both. Browser QA ran only on pull requests,
 # so every direct push to main — which is what production deploys from — went
-# out with none of the thirteen browser suites having run against it.
+# out with none of the twelve browser suites having run against it.
 on:
   pull_request:
     branches: [main]
