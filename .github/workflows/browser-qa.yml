@@ -68,6 +68,9 @@ jobs:
       - name: Run municipal leadership checks
         run: node scripts/leadership-qa.mjs
 
+      - name: Measure text contrast against what is painted behind it
+        run: node scripts/contrast-qa.mjs
+
       - name: Run responsive checks across screen sizes
         run: node scripts/responsive-qa.mjs
 

@@ -178,6 +178,18 @@ for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js",
             fail(f"{script}: hardcodes the identity colour {colour}; inline styles "
                  f"beat every stylesheet, so use a token instead")
 
+# Inline <style> blocks are stylesheets too, and they were not being read. The
+# 404 page carried the navy identity colour as a literal there for exactly that
+# reason.
+for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
+    text = path.read_text(encoding="utf-8")
+    rel = path.relative_to(ROOT).as_posix()
+    for style in re.findall(r"<style[^>]*>(.*?)</style>", text, re.S):
+        for colour in LOCKED_COLOURS:
+            if colour.lower() in style.lower():
+                fail(f"{rel}: inline <style> hardcodes the identity colour {colour}; "
+                     f"use the token from {TOKENS_CSS}")
+
 # Every page wearing the shared shell needs the palette that shell is written
 # against, and this is discovered from the filesystem rather than from a list.
 # The lists above are curated, and trust.html was never added to one: it shipped

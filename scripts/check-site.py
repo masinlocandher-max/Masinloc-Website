@@ -64,6 +64,7 @@ REQUIRED = [
     "scripts/build-leadership.py",
     "scripts/check-leadership.py",
     "scripts/leadership-qa.mjs",
+    "scripts/contrast-qa.mjs",
     "scripts/responsive-qa.mjs",
     "styles.css",
     "connect-polish.css",
