@@ -51,9 +51,15 @@ CANONICAL = re.compile(r'<link\s+rel="canonical"\s+href="([^"]+)"', re.I)
 NOINDEX = re.compile(r'<meta\s+name="robots"[^>]*content="[^"]*noindex', re.I)
 
 
+# Every directory that publishes pages. A section added to the site and not
+# added here would build, deploy and never be listed — silently.
+PAGE_DIRS = ["*.html", "bulletin/*.html", "discover/*.html"]
+
+
 def pages() -> list[Path]:
-    found = sorted(p for p in ROOT.glob("*.html"))
-    found += sorted(ROOT.glob("bulletin/*.html"))
+    found: list[Path] = []
+    for pattern in PAGE_DIRS:
+        found += sorted(ROOT.glob(pattern))
     return found
 
 

@@ -39,6 +39,9 @@ const PAGES = [
   'sources.html', 'bulletin/why-mabayani-exists.html',
   'bulletin/was-masinloc-founded-in-1572.html', 'contact.html', 'connect.html',
   'trust.html', 'privacy.html', '404.html',
+  'discover/index.html', 'discover/masinloc-actually.html',
+  'discover/masinloc-right-now.html', 'discover/the-sweetest-mango-came-from-where-exactly.html',
+  'discover/come-hungry.html', 'discover/the-sea-in-front-of-masinloc.html',
 ];
 
 const VIEWPORTS = [['desktop', { width: 1280, height: 860 }], ['phone', { width: 390, height: 780 }]];

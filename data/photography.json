@@ -84,5 +84,12 @@
     "origin": "Google Drive - Masinloc connect hero",
     "note": "The Masinloc Connect hero. Not a photograph: a supplied brand graphic of the Masinloc mark on a navy field, circled by an orbit carrying the palette as nodes, with the left of the frame left empty for the headline. scripts/build-connect-hero.py produces two crops from the one original — the full 16:9 for landscape viewports, and a 4:5 crop around the orbit for phones, where cover on a 16:9 graphic would leave only an unrecognisable third of the mark. Nothing is upscaled and the artwork itself is never altered.",
     "mapping": "scripts/build-connect-hero.py"
+  },
+  "discover": {
+    "directory": "assets/discover/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / Additional image",
+    "note": "Approved hero artwork for the Discover section, supplied by the project with the branded treatment already applied: the real photograph full-bleed, the official logo, the translucent geometric ribbons in yellow, red and blue, and where present a map-pin location label and footer line. scripts/build-discover-assets.py only re-encodes and resizes them — nothing is cropped, reframed or retouched, because cropping would cut the logo, label or footer off finished artwork. Native aspect ratios are recorded in data/discover-assets.json and the pages are built around them. pamislat: real pamislat gathered on this coast. mangoes-masinloc: ripe mangoes in crates, carrying the supplied 'Masinloc, Zambales' label. dinamulag-mango: ripe dinamulag (carabao) mangoes; no location is claimed for this one because the asset does not establish it.",
+    "mapping": "scripts/build-discover-assets.py"
   }
 }

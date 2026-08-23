@@ -60,7 +60,7 @@ HEAD = """<!doctype html>
   <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    <a href="index.html">Home</a>
+    <a href="index.html">Home</a><a href="discover/index.html">Discover</a>
     <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
@@ -110,7 +110,7 @@ FOOT = """</main>
 
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="index.html">Home</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>
 {jsonld}

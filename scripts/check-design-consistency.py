@@ -29,6 +29,7 @@ SUBPAGES = {
 
 EXPECTED_NAV = [
     ("index.html", "Home"),
+    ("discover/index.html", "Discover"),
     ("a-closer-look.html", "A Closer Look"),
     ("verified-history.html", "Verified History"),
     ("masinloc-bulletin.html", "Masinloc Bulletin"),

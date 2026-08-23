@@ -74,6 +74,7 @@ pending_dir = manifest["pending"]["directory"]
 campaign_dir = manifest["campaigns"]["directory"]
 leadership_dir = manifest["leadership"]["directory"]
 connect_dir = manifest["connect"]["directory"]
+discover_dir = manifest["discover"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
@@ -157,6 +158,15 @@ for page in pages:
                      f"scripts/build-connect-hero.py")
             continue
 
+        # Discover hero artwork: assets/discover/<name>-<width>.<ext>, built
+        # by scripts/build-discover-assets.py from the approved originals.
+        if path.startswith(discover_dir):
+            name = Path(path).stem
+            if not re.fullmatch(r"[a-z0-9-]+-\d+", name):
+                fail(f"{page.name}: {path} is not a build product of "
+                     f"scripts/build-discover-assets.py")
+            continue
+
         fail(f"{page.name}: {path} is not listed in data/photography.json")
 
 # Every approved photograph should actually exist.
@@ -172,7 +182,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
     if (relative in approved or relative.startswith(pending_dir)
             or relative.startswith(campaign_dir)
             or relative.startswith(leadership_dir)
-            or relative.startswith(connect_dir)):
+            or relative.startswith(connect_dir)
+            or relative.startswith(discover_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

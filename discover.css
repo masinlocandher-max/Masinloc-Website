@@ -1,0 +1,272 @@
+/* Discover Masinloc — the outward-facing editorial layer.
+
+   Two decisions govern this file.
+
+   The articles are the product. The reading column is sized for prose rather
+   than for the viewport, the type is large enough to read for ten minutes, and
+   nothing decorative sits between the headline and the first sentence. There
+   are no scroll effects, no reveal animations and no card hover choreography,
+   because every one of those spends attention that belongs to the writing.
+
+   Heroes are never cropped. The approved originals arrive with the branded
+   treatment already applied — logo, geometric ribbons, location label, footer
+   line — so a fixed aspect ratio would cut somebody else's finished artwork.
+   Every hero here is width-constrained and height-auto, and the layout accepts
+   whatever ratio the artwork has. That is why you will not find an
+   aspect-ratio or object-fit declaration on a hero in this file. */
+
+:root{
+  --d-measure:66ch;
+  --d-wide:1180px;
+}
+
+/* ---------------------------------------------------------------- shared -- */
+
+.d-hub,.d-article{
+  max-width:var(--d-wide);
+  margin:0 auto;
+  padding:0 clamp(18px,4vw,40px) clamp(64px,8vw,110px);
+}
+
+/* Breadcrumbs. bulletin.css and contact.css each carry their own copy of this
+   and Discover loads neither, so without these rules the trail renders as a raw
+   numbered list — which is exactly how it shipped the first time.
+
+   The padding is small because .about-page puts the navigation in flow rather
+   than over the page; the large clearance the photographic pages need would be
+   an empty band here. */
+.d-article .crumbs,.d-hub .crumbs{padding:clamp(18px,3vw,28px) 0 0}
+.crumbs ol{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-wrap:wrap;gap:8px;
+  font:400 12.5px/1.5 var(--font-ui);
+}
+.crumbs li{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.crumbs li+li::before{content:"/";color:var(--line)}
+.crumbs a{color:var(--blue);text-decoration:none}
+.crumbs a:hover,.crumbs a:focus-visible{text-decoration:underline}
+.crumbs [aria-current]{color:var(--ink)}
+
+.d-theme,.d-hub-kicker,.d-rel-theme,.d-lead-theme{
+  font:700 11px/1.4 var(--font-ui);
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  color:var(--blue);
+  margin:0;
+}
+
+/* ------------------------------------------------------------------- hub -- */
+
+.d-hub-head{max-width:760px;margin:clamp(18px,3vw,30px) 0 clamp(38px,5vw,58px)}
+.d-hub-head h1{
+  font:400 clamp(38px,6vw,72px)/1.02 var(--font-editorial);
+  letter-spacing:-.03em;color:var(--navy);margin:10px 0 18px;
+}
+.d-hub-intro{
+  font:400 clamp(16px,1.5vw,19px)/1.62 var(--font-ui);
+  color:var(--text);margin:0 0 14px;max-width:62ch;
+}
+.d-hub-note{
+  font:400 13.5px/1.6 var(--font-ui);color:var(--muted);margin:0;max-width:58ch;
+  padding-left:14px;border-left:2px solid var(--yellow);
+}
+
+/* The lead story is the one piece of hierarchy on the page. It is bigger
+   because it is the door, not because it is newer. */
+.d-lead{margin:0 0 clamp(46px,6vw,72px)}
+.d-lead-link{
+  display:grid;gap:clamp(16px,2.4vw,30px);
+  text-decoration:none;color:inherit;align-items:center;
+  grid-template-columns:1fr;
+}
+@media (min-width:860px){
+  .d-lead-link{grid-template-columns:1.35fr 1fr}
+}
+.d-lead-media{display:block;border-radius:18px;overflow:hidden;background:var(--soft)}
+.d-lead-img,.d-card-img,.d-hero-img,.d-figure-img{
+  display:block;width:100%;height:auto;  /* native ratio, never cropped */
+}
+.d-lead-title{
+  display:block;
+  font:400 clamp(27px,3.2vw,42px)/1.1 var(--font-editorial);
+  letter-spacing:-.022em;color:var(--navy);margin:8px 0 12px;
+}
+.d-lead-deck{
+  display:block;font:400 15.5px/1.6 var(--font-ui);color:var(--text);
+  max-width:46ch;
+}
+.d-lead-go{
+  display:inline-block;margin-top:16px;
+  font:700 12.5px/1 var(--font-ui);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--blue);border-bottom:2px solid var(--yellow);padding-bottom:5px;
+}
+.d-lead-link:hover .d-lead-title,.d-lead-link:focus-visible .d-lead-title{color:var(--blue)}
+
+.d-theme-head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;
+  padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:22px;
+}
+.d-theme-head h2{
+  font:400 clamp(21px,2.2vw,27px)/1.2 var(--font-editorial);
+  color:var(--navy);margin:0;letter-spacing:-.015em;
+}
+.d-theme-head p{font:400 13.5px/1.5 var(--font-ui);color:var(--muted);margin:0}
+.d-theme{margin:0 0 clamp(40px,5vw,62px)}
+
+.d-grid{
+  list-style:none;margin:0;padding:0;
+  display:grid;gap:clamp(16px,2.2vw,26px);
+  grid-template-columns:1fr;
+}
+@media (min-width:620px){.d-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1000px){.d-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.d-card a{display:block;text-decoration:none;color:inherit;height:100%}
+.d-card-media{display:block;border-radius:14px;overflow:hidden;background:var(--soft);margin-bottom:13px}
+.d-card-title{
+  display:block;font:400 clamp(18px,1.7vw,21px)/1.24 var(--font-editorial);
+  color:var(--navy);letter-spacing:-.012em;margin-bottom:7px;
+}
+.d-card-deck{display:block;font:400 14px/1.58 var(--font-ui);color:var(--text)}
+.d-card a:hover .d-card-title,.d-card a:focus-visible .d-card-title{color:var(--blue)}
+/* A card with no photograph is not a broken card. It gets a rule instead, so
+   the grid does not develop a hole where an image would have been. */
+.d-card-text a{
+  border-top:3px solid var(--yellow);padding-top:16px;
+}
+
+/* --------------------------------------------------------------- article -- */
+
+.d-head{max-width:var(--d-measure);margin:clamp(16px,2.5vw,26px) 0 clamp(24px,3vw,34px)}
+.d-head h1{
+  font:400 clamp(32px,5vw,56px)/1.06 var(--font-editorial);
+  letter-spacing:-.028em;color:var(--navy);margin:10px 0 16px;
+}
+.d-deck{
+  font:400 clamp(16.5px,1.6vw,20px)/1.55 var(--font-ui);
+  color:var(--text);margin:0 0 18px;
+}
+.d-meta{
+  font:400 12.5px/1.5 var(--font-ui);color:var(--muted);margin:0;
+  padding-top:14px;border-top:1px solid var(--line);
+}
+
+.d-hero{margin:0 0 clamp(26px,3.5vw,40px)}
+.d-hero picture{display:block;border-radius:16px;overflow:hidden;background:var(--soft)}
+.d-hero figcaption,.d-figure figcaption{
+  font:400 13px/1.55 var(--font-ui);color:var(--muted);
+  margin-top:10px;max-width:var(--d-measure);
+}
+
+.d-body{max-width:var(--d-measure)}
+.d-body p{
+  font:400 clamp(16.5px,1.35vw,18px)/1.72 var(--font-ui);
+  color:var(--ink);margin:0 0 1.15em;
+}
+.d-body h2{
+  font:400 clamp(23px,2.4vw,30px)/1.2 var(--font-editorial);
+  letter-spacing:-.018em;color:var(--navy);
+  margin:clamp(34px,4vw,48px) 0 14px;
+}
+
+.d-pull{
+  margin:clamp(30px,4vw,42px) 0;padding:0 0 0 20px;
+  border-left:3px solid var(--yellow);
+}
+.d-pull p{
+  font:400 clamp(19px,2vw,24px)/1.38 var(--font-editorial);
+  color:var(--navy);margin:0;letter-spacing:-.012em;
+}
+
+.d-note{
+  margin:clamp(28px,3.5vw,40px) 0;padding:clamp(18px,2vw,24px);
+  background:var(--soft);border:1px solid var(--line);border-radius:14px;
+}
+.d-note-label{
+  font:700 11px/1.4 var(--font-ui);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--red-ink);margin:0 0 8px !important;
+}
+.d-note p{font-size:14.5px !important;line-height:1.65 !important;margin:0 !important;color:var(--text)}
+
+.d-figure{margin:clamp(30px,4vw,44px) 0}
+.d-figure picture{display:block;border-radius:14px;overflow:hidden;background:var(--soft)}
+
+.d-inline-links{
+  list-style:none;margin:clamp(26px,3vw,36px) 0;padding:18px 0 0;
+  border-top:1px solid var(--line);
+}
+.d-inline-links li{margin:0 0 10px}
+.d-inline-links a{
+  font:400 15px/1.5 var(--font-ui);color:var(--blue);
+  text-decoration:none;border-bottom:1px solid rgba(13,59,158,.28);padding-bottom:2px;
+}
+.d-inline-links a::after{content:" →";opacity:.7}
+.d-inline-links a:hover,.d-inline-links a:focus-visible{border-bottom-color:var(--blue)}
+
+/* Current-facts table on Masinloc, Right Now. Each value carries its own
+   source and check date, because a number without either is a rumour. */
+.facts{
+  display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;margin:clamp(24px,3vw,32px) 0;
+  grid-template-columns:1fr;
+}
+@media (min-width:640px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fact{background:var(--white);padding:16px 18px}
+.fact dt{
+  font:700 11px/1.4 var(--font-ui);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:7px;
+}
+.fact dd{margin:0}
+.fact dd strong{
+  display:block;font:400 clamp(20px,2vw,25px)/1.15 var(--font-editorial);
+  color:var(--navy);
+}
+.fact-note{display:block;font:400 13px/1.5 var(--font-ui);color:var(--text);margin-top:5px}
+.fact-src{display:block;font:400 11.5px/1.5 var(--font-ui);color:var(--muted);margin-top:7px}
+
+.d-sources{
+  max-width:var(--d-measure);margin:clamp(40px,5vw,58px) 0 0;
+  padding-top:22px;border-top:1px solid var(--line);
+}
+.d-sources h2{
+  font:700 12px/1.4 var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 14px;
+}
+.d-sources ul{list-style:none;margin:0;padding:0}
+.d-sources li{
+  font:400 14px/1.55 var(--font-ui);color:var(--ink);margin:0 0 12px;
+}
+.d-sources li span{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.d-sources a{color:var(--blue);text-decoration:none;border-bottom:1px solid rgba(13,59,158,.28)}
+.d-sources a:hover,.d-sources a:focus-visible{border-bottom-color:var(--blue)}
+
+.d-related{margin:clamp(46px,6vw,70px) 0 0;padding-top:26px;border-top:1px solid var(--line)}
+.d-related h2{
+  font:400 clamp(21px,2.2vw,26px)/1.2 var(--font-editorial);
+  color:var(--navy);margin:0 0 20px;
+}
+.d-related ul{
+  list-style:none;margin:0;padding:0;display:grid;gap:16px;grid-template-columns:1fr;
+}
+@media (min-width:700px){.d-related ul{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.d-rel a{
+  display:block;text-decoration:none;color:inherit;height:100%;
+  padding-top:14px;border-top:2px solid var(--line);
+}
+.d-rel a:hover,.d-rel a:focus-visible{border-top-color:var(--yellow)}
+.d-rel-title{
+  display:block;font:400 17.5px/1.26 var(--font-editorial);color:var(--navy);
+  margin:7px 0 6px;
+}
+.d-rel-deck{display:block;font:400 13.5px/1.55 var(--font-ui);color:var(--muted)}
+.d-rel a:hover .d-rel-title,.d-rel a:focus-visible .d-rel-title{color:var(--blue)}
+
+/* ------------------------------------------------------------ focus/motion */
+
+.d-hub a:focus-visible,.d-article a:focus-visible{
+  outline:3px solid rgba(30,99,233,.4);outline-offset:3px;border-radius:4px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .d-hub *,.d-article *{transition:none !important;animation:none !important}
+}

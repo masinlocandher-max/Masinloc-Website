@@ -1,0 +1,43 @@
+{
+  "pamislat": {
+    "source": "Pamislat.png",
+    "native": {
+      "width": 1290,
+      "height": 761
+    },
+    "ratio": 1.6951,
+    "widths": [
+      640,
+      960,
+      1280
+    ]
+  },
+  "mangoes-masinloc": {
+    "source": "8EB59CBA-5F46-4CF6-AA24-91FBA38FA635.png",
+    "native": {
+      "width": 1672,
+      "height": 941
+    },
+    "ratio": 1.7768,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
+  },
+  "dinamulag-mango": {
+    "source": "Dinamulag Mango.png",
+    "native": {
+      "width": 1691,
+      "height": 930
+    },
+    "ratio": 1.8183,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
+  }
+}

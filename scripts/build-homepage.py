@@ -313,6 +313,7 @@ def render() -> str:
   <button class="nav-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Menu"><span></span><span></span></button>
   <nav class="home-links" id="primaryNav" aria-label="Primary">
     <a href="index.html" aria-current="page">Home</a>
+    <a href="discover/index.html">Discover</a>
     <a href="a-closer-look.html">A Closer Look</a>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
@@ -512,13 +513,14 @@ def render() -> str:
       </a>
 
       <ul class="routes">
-        <li class="rise"><a href="destinations.html"><span class="r-name">Places</span><span class="r-what">Eight destinations, photographed where they actually are.</span></a></li>
-        <li class="rise" style="--delay:60ms"><a href="sambal-tina.html"><span class="r-name">Sambal Tina</span><span class="r-what">{n['total']:,} entries, free to search, with the page reference on every one.</span></a></li>
-        <li class="rise" style="--delay:120ms"><a href="leadership.html"><span class="r-name">Municipal Leadership</span><span class="r-what">The mayor serving now, and the four who served before her.</span></a></li>
-        <li class="rise" style="--delay:180ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
-        <li class="rise" style="--delay:240ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">All {story_count} stories, and the questions still open.</span></a></li>
-        <li class="rise" style="--delay:300ms"><a href="sources.html"><span class="r-name">Sources &amp; References</span><span class="r-what">Every study, record and archive the history here rests on.</span></a></li>
-        <li class="rise" style="--delay:360ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
+        <li class="rise"><a href="discover/index.html"><span class="r-name">Discover Masinloc</span><span class="r-what">The long answer: what the town is, what it grows and catches, and which questions are still open.</span></a></li>
+        <li class="rise" style="--delay:60ms"><a href="destinations.html"><span class="r-name">Places</span><span class="r-what">Eight destinations, photographed where they actually are.</span></a></li>
+        <li class="rise" style="--delay:120ms"><a href="sambal-tina.html"><span class="r-name">Sambal Tina</span><span class="r-what">{n['total']:,} entries, free to search, with the page reference on every one.</span></a></li>
+        <li class="rise" style="--delay:180ms"><a href="leadership.html"><span class="r-name">Municipal Leadership</span><span class="r-what">The mayor serving now, and the four who served before her.</span></a></li>
+        <li class="rise" style="--delay:240ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
+        <li class="rise" style="--delay:300ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">All {story_count} stories, and the questions still open.</span></a></li>
+        <li class="rise" style="--delay:360ms"><a href="sources.html"><span class="r-name">Sources &amp; References</span><span class="r-what">Every study, record and archive the history here rests on.</span></a></li>
+        <li class="rise" style="--delay:420ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
       </ul>
     </div>
   </section>
@@ -531,6 +533,7 @@ def render() -> str:
     <div class="foot-cols">
       <img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales">
       <nav class="foot-nav" aria-label="Footer">
+        <a href="discover/index.html">Discover</a>
         <a href="destinations.html">Places</a>
         <a href="sambal-tina.html">Sambal Tina</a>
         <a href="a-closer-look.html">A Closer Look</a>
