@@ -288,12 +288,35 @@ for rel in ("verified-history.html",):
             if marker in text:
                 fail(f"{rel}: publishing entries detected before the section is ready: {marker}")
 
-# Masinloc Connect uses the same verified high-resolution place photograph and a dedicated responsive shell.
+# Masinloc Connect has its own supplied hero — the Masinloc mark on a navy
+# field, circled by an orbit — and a dedicated responsive shell.
+#
+# This rule used to require the shared place photograph twice over, "for both
+# landing and chooser photography". Neither half of that holds any more: the
+# chooser screen is gone, and Connect no longer borrows the editorial hero. The
+# photograph itself is unchanged and still byte-locked below for the nine pages
+# that do use it.
+#
+# What is worth guarding here is that Connect's hero is served in every format
+# and at every width the build produces, since a missing tier degrades silently
+# to a heavier file or a broken image rather than to an error.
 connect = ROOT / "connect.html"
 if connect.is_file():
     connect_text = connect.read_text(encoding="utf-8")
-    if connect_text.count("assets/stage1/masinloc-hero.avif") < 2:
-        fail("connect.html must use the verified hero for both landing and chooser photography")
+    connect_hero = ROOT / "assets" / "connect"
+    for width in (640, 960, 1280, 1672):
+        for ext in ("avif", "webp", "jpg"):
+            if not (connect_hero / f"connect-hero-{width}.{ext}").is_file():
+                fail(f"Masinloc Connect hero missing {width}px {ext}")
+    for width in (390, 560, 753):
+        for ext in ("avif", "webp", "jpg"):
+            if not (connect_hero / f"connect-hero-portrait-{width}.{ext}").is_file():
+                fail(f"Masinloc Connect phone hero missing {width}px {ext}")
+    if "connect-hero-portrait-390" not in connect_text:
+        fail("connect.html must serve the phone crop of its hero: a 16:9 graphic "
+             "cropped by a portrait viewport loses the mark")
+    if "assets/stage1/masinloc-hero" in connect_text:
+        fail("connect.html should use its own hero, not the shared photograph")
     for required_ref in ("connect-polish.css", "connect-shell.css", "connect-shell.js"):
         if required_ref not in connect_text:
             fail(f"connect.html missing required shell asset: {required_ref}")

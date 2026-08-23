@@ -26,20 +26,37 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .overlay-nav nav a::after{content:"";position:absolute;left:0;right:100%;bottom:5px;height:1px;background:var(--blue);transition:right 220ms var(--ease)}
 .overlay-nav nav a:hover::after{right:0}
 
-/* Connect hero: cleaner, editorial and more spacious. */
-.landing-view .hero{height:clamp(410px,46vw,610px);min-height:410px;background:#eaf0f7}
-.landing-view .hero-img{object-position:center 52%;transform:scale(1.015);animation:connect-hero-in 1.05s var(--ease) both}
-.landing-view .hero-fade{background:linear-gradient(90deg,rgba(255,255,255,.99) 0%,rgba(255,255,255,.94) 28%,rgba(255,255,255,.63) 44%,rgba(255,255,255,.10) 72%,rgba(255,255,255,0) 100%)}
+/* Connect hero ------------------------------------------------------------
+   The hero is a brand graphic rather than a photograph: the Masinloc mark on
+   a deep navy field, circled by an orbit carrying the palette as nodes, with
+   the left two-thirds left empty for the headline. It illustrates the tagline
+   literally — the town at the centre, connected outward.
+
+   Everything below follows from the ground being dark. The scrim runs navy to
+   transparent so the type side is solid and the mark side stays clear, and
+   every piece of type on it is light. Nothing here is a taste change: navy
+   text on a navy field is invisible. */
+/* Height is set against the graphic's 16:9. A shorter band crops the top
+   points off the mark; a taller one pushes the choices below the fold. */
+.landing-view .hero{height:clamp(430px,50vw,684px);min-height:430px;background:var(--navy-deep)}
+.landing-view .hero picture{display:contents}
+.landing-view .hero-img{object-position:center 44%;transform:scale(1.01);animation:connect-hero-in 1.05s var(--ease) both}
+.landing-view .hero-fade{background:linear-gradient(90deg,
+  rgba(3,17,47,.97) 0%,rgba(3,17,47,.93) 26%,rgba(3,17,47,.72) 44%,
+  rgba(3,17,47,.24) 68%,rgba(3,17,47,0) 88%)}
 .landing-view .hero-copy{left:clamp(28px,6vw,94px);top:50%;transform:translateY(-42%);max-width:560px}
-.landing-view .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
-.landing-view .hero-copy h1{font-size:clamp(58px,7.3vw,108px);line-height:.84;letter-spacing:-.055em;color:var(--navy);font-weight:900}
-.landing-view .connect{font-size:clamp(24px,2.8vw,38px);letter-spacing:.24em;color:var(--blue);margin:12px 0 15px}
+.landing-view .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.76);margin-bottom:8px}
+.landing-view .hero-copy h1{font-size:clamp(58px,7.3vw,108px);line-height:.84;letter-spacing:-.055em;color:var(--white);font-weight:900}
+/* CONNECT takes the yellow of the orbit. The identity blue is legible enough
+   on this ground to pass as large text and no more; against the mark a few
+   hundred pixels away it reads as a dim version of itself. */
+.landing-view .connect{font-size:clamp(24px,2.8vw,38px);letter-spacing:.24em;color:var(--yellow);margin:12px 0 15px}
 .landing-view .brand-rule{width:144px;height:3px;margin-bottom:19px}
 /* The tagline. It sits directly under the MASINLOC CONNECT lockup and is the
    line that says what the place is for, so it carries more weight than the
    four-part manifesto it replaced. */
-.landing-view .manifesto{font-size:clamp(16px,1.5vw,23px);line-height:1.32;letter-spacing:-.012em;color:var(--navy);margin-bottom:12px;text-wrap:balance}
-.landing-view .intro{font-size:13px;line-height:1.72;color:var(--text);max-width:490px}
+.landing-view .manifesto{font-size:clamp(16px,1.5vw,23px);line-height:1.32;letter-spacing:-.012em;color:var(--white);margin-bottom:12px;text-wrap:balance}
+.landing-view .intro{font-size:13px;line-height:1.72;color:rgba(255,255,255,.78);max-width:490px}
 
 /* Choice area -------------------------------------------------------------
    Three cards, and they are the whole point of the page: everything above
@@ -234,9 +251,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 @media(max-width:800px){
   /* Mobile navigation for both headers belongs to connect-shell.css, which
      loads after this file. Nothing about the header bar is set here. */
-  .landing-view .hero{height:610px;min-height:610px}
-  .landing-view .hero-fade{background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.83) 42%,rgba(255,255,255,.30) 70%,rgba(255,255,255,.04) 100%)}
-  .landing-view .hero-copy{left:22px;right:22px;transform:none;max-width:none}
   .landing-view .hero-copy h1{font-size:clamp(52px,17vw,76px)}
   .landing-view .manifesto{font-size:19px}.landing-view .intro{font-size:12px;max-width:340px}
   .quick-choices{padding:50px 18px 74px}
@@ -249,8 +263,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .resume-modal-card{padding:30px 22px}.success-panel{padding:40px 22px}
 }
 
+/* Phones only. Above this the viewport is wide enough for the graphic to sit
+   behind the type the way it does on a desktop; below it, it cannot.
+
+   Overlaying does not survive the rotation. The mark sits in the middle of its
+   own frame, which is exactly where the headline has to go, so any scrim dark
+   enough to keep the type readable also turns the mark to mud — and the
+   version without a scrim put "Connecting Masinloqueños" across a red diamond.
+   Stacked, both are themselves: the type on flat navy, then the mark and its
+   orbit uncropped at full width. The 4:5 crop that <picture> serves here is
+   built for exactly this (see scripts/build-connect-hero.py). */
+@media(max-width:600px){
+  .landing-view .hero{height:auto;min-height:0;display:flex;flex-direction:column;overflow:visible}
+  .landing-view .hero-img{position:static;order:2;width:100%;height:auto;
+    object-fit:contain;transform:none;animation:none}
+  .landing-view .hero-fade{display:none}
+  /* The navigation is absolutely positioned over the top of the page, so the
+     copy has to clear it itself once it is no longer positioned too. */
+  .landing-view .hero-copy{position:static;order:1;left:auto;top:auto;right:auto;
+    padding:110px 22px 26px;transform:none;max-width:none}
+}
+
 @media(max-width:520px){
-  .landing-view .hero{height:590px;min-height:590px}
+  /* No fixed height here: the stacked hero above is sized by its contents.
+     Pinning one made the graphic overflow and the first choice card sit on
+     top of it. */
   .quick-card{grid-template-columns:48px 1fr 20px}.icon-circle{width:46px;height:46px}
   .form-tools{padding:0 16px}.progress-rail{grid-template-columns:repeat(4,1fr)}
   .step-node strong{font-size:8px;line-height:1.2}

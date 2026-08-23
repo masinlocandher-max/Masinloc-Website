@@ -73,6 +73,7 @@ approved = {entry["path"]: entry for entry in manifest["approved"]}
 pending_dir = manifest["pending"]["directory"]
 campaign_dir = manifest["campaigns"]["directory"]
 leadership_dir = manifest["leadership"]["directory"]
+connect_dir = manifest["connect"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
@@ -145,6 +146,17 @@ for page in pages:
                      f"photographs listed in data/locations.json")
             continue
 
+        # The Masinloc Connect hero: assets/connect/connect-hero[-portrait]-<width>.
+        # Built from one supplied original by scripts/build-connect-hero.py, so
+        # the name is the whole contract — anything else in there is a file
+        # nobody built.
+        if path.startswith(connect_dir):
+            name = Path(path).stem
+            if not re.fullmatch(r"connect-hero(?:-portrait)?-\d+", name):
+                fail(f"{page.name}: {path} is not a build product of "
+                     f"scripts/build-connect-hero.py")
+            continue
+
         fail(f"{page.name}: {path} is not listed in data/photography.json")
 
 # Every approved photograph should actually exist.
@@ -159,7 +171,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
     relative = path.relative_to(ROOT).as_posix()
     if (relative in approved or relative.startswith(pending_dir)
             or relative.startswith(campaign_dir)
-            or relative.startswith(leadership_dir)):
+            or relative.startswith(leadership_dir)
+            or relative.startswith(connect_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

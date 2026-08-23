@@ -77,5 +77,12 @@
     "origin": "Google Drive - Mayors",
     "note": "Painted official portraits of the Municipal Mayor and former Municipal Mayors of Masinloc, supplied by the project. Every portrait is cropped to the same 4:5, resized through the same width ladder and encoded at the same quality by scripts/build-leadership.py — no per-person crop, size, sharpening or retouching. Faces are never altered. Mapping is fixed in data/leadership.json.",
     "mapping": "data/leadership.json"
+  },
+  "connect": {
+    "directory": "assets/connect/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc connect hero",
+    "note": "The Masinloc Connect hero. Not a photograph: a supplied brand graphic of the Masinloc mark on a navy field, circled by an orbit carrying the palette as nodes, with the left of the frame left empty for the headline. scripts/build-connect-hero.py produces two crops from the one original — the full 16:9 for landscape viewports, and a 4:5 crop around the orbit for phones, where cover on a 16:9 graphic would leave only an unrecognisable third of the mark. Nothing is upscaled and the artwork itself is never altered.",
+    "mapping": "scripts/build-connect-hero.py"
   }
 }

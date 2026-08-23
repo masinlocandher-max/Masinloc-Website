@@ -95,6 +95,59 @@ async function assertVerifiedImage(page, selector, label) {
   if (state.opacity < 0.9) failures.push(`${label}: image opacity ${state.opacity}`);
 }
 
+/* The Masinloc Connect hero is art-directed, so a fixed decoded size is the
+   wrong thing to assert — the whole point is that the size and the crop change
+   with the viewport. What must hold is that the right crop is chosen.
+
+   A 16:9 graphic in a portrait viewport, covered, shows about a third of its
+   width and loses the mark entirely, which is why the phone is served its own
+   4:5 crop. If <picture>'s media queries ever stop matching, the phone quietly
+   falls back to the landscape file and the hero becomes an unrecognisable
+   fragment — visible to a person, invisible to a test that only checks pixels
+   decoded. This checks the file that was actually chosen. */
+async function assertConnectHero(page, viewportName) {
+  const image = page.locator('.landing-view .hero-img');
+  if (!(await image.isVisible())) {
+    failures.push(`${viewportName}/connect hero: image is not visible`);
+    return;
+  }
+  const state = await image.evaluate(img => ({
+    src: img.currentSrc || img.src,
+    w: img.naturalWidth,
+    h: img.naturalHeight,
+    opacity: Number(getComputedStyle(img).opacity),
+  }));
+
+  if (!/assets\/connect\/connect-hero/.test(state.src)) {
+    failures.push(`${viewportName}/connect hero: serving ${state.src}, not its own hero`);
+    return;
+  }
+  if (!state.w || !state.h) {
+    failures.push(`${viewportName}/connect hero: image did not decode`);
+    return;
+  }
+  if (state.opacity < 0.9) {
+    failures.push(`${viewportName}/connect hero: image opacity ${state.opacity}`);
+  }
+
+  const portrait = state.src.includes('-portrait-');
+  const ratio = state.w / state.h;
+  if (viewportName === 'mobile') {
+    if (!portrait) {
+      failures.push(`${viewportName}/connect hero: served the landscape crop `
+        + `(${state.src.split('/').pop()}); a portrait viewport crops the mark away`);
+    } else if (Math.abs(ratio - 0.8) > 0.02) {
+      failures.push(`${viewportName}/connect hero: phone crop is ${ratio.toFixed(3)}, expected 4:5`);
+    }
+  } else {
+    if (portrait) {
+      failures.push(`${viewportName}/connect hero: served the phone crop at desktop width`);
+    } else if (Math.abs(ratio - 16 / 9) > 0.02) {
+      failures.push(`${viewportName}/connect hero: landscape crop is ${ratio.toFixed(3)}, expected 16:9`);
+    }
+  }
+}
+
 async function assertSharedNavigation(page, pageName, viewportName) {
   const header = page.locator('header').first();
   const logo = header.locator('img[src="assets/masinloc-logo.webp"]').first();
@@ -219,7 +272,7 @@ for (const [viewportName, viewport] of viewports) {
       }
 
       if (pageName === 'connect') {
-        await assertVerifiedImage(page, '.landing-view .hero-img', `${viewportName}/connect hero`);
+        await assertConnectHero(page, viewportName);
       }
 
       if (pageName !== 'not-found') {
