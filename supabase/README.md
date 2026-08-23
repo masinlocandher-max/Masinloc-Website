@@ -28,13 +28,17 @@ reported rather than failed, so the remaining gap stays visible.
 
 ## Deploying
 
-Both steps need a Supabase login with access to project `uwcqvsitjtknxsaypjxj`.
+**[DEPLOY.md](DEPLOY.md) is the runbook** — the commands, what each one does,
+and how to check afterwards that it worked. The short version:
 
 ```bash
 supabase link --project-ref uwcqvsitjtknxsaypjxj
 supabase db push                             # applies migrations/
 supabase functions deploy submit-masinloc --no-verify-jwt
 ```
+
+Both steps need a Supabase login with access to project `uwcqvsitjtknxsaypjxj`,
+which is why this cannot be automated from here and has to be run by hand.
 
 `--no-verify-jwt` is required: the endpoint is called by anonymous visitors
 submitting a form. It does not rely on Supabase auth for its own protection.
