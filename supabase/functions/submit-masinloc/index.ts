@@ -22,7 +22,7 @@ function cleanName(name:string){return name.normalize("NFKD").replace(/[^a-zA-Z0
 function required(payload:Record<string,unknown>,fields:string[]){for(const f of fields){if(payload[f]===undefined||payload[f]===null||String(payload[f]).trim()==="")throw new Error("VALIDATION")}}
 function text(v:unknown,max:number){const s=String(v??"").trim();if(s.length>max)throw new Error("VALIDATION");return s}
 function emailText(v:unknown){const s=text(v,320).toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s))throw new Error("VALIDATION");return s}
-function facebookLink(v:unknown){const s=text(v,500);try{const u=new URL(s);const h=u.hostname.toLowerCase();const ok=h==="facebook.com"||h.endsWith(".facebook.com")||h==="fb.com"||h.endsWith(".fb.com")||h==="m.me"||h.endsWith(".m.me");if(u.protocol!=="https:"||!ok)throw new Error();return u.toString()}catch{throw new Error("VALIDATION")}}
+function facebookLink(v:unknown){const s=text(v,300);try{const u=new URL(s);const h=u.hostname.toLowerCase();const ok=h==="facebook.com"||h.endsWith(".facebook.com")||h==="fb.com"||h.endsWith(".fb.com")||h==="m.me"||h.endsWith(".m.me");if(u.protocol!=="https:"||!ok)throw new Error();return u.toString()}catch{throw new Error("VALIDATION")}}
 async function sha256(value:string){const bytes=new TextEncoder().encode(value);const hash=await crypto.subtle.digest("SHA-256",bytes);return[...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("")}
 function clientIp(req:Request){return req.headers.get("cf-connecting-ip")||req.headers.get("x-real-ip")||(req.headers.get("x-forwarded-for")||"unknown").split(",")[0].trim()}
 function safeHeader(value:string|null,max=500){return(value||"").slice(0,max)||null}
@@ -60,16 +60,15 @@ async function dictionaryContributors(){
 
 function rowFor(category:Category,p:Record<string,any>,files:string[]){
   if(category==="business"){
-    required(p,["brandName","storeLocations","ownerName","ownerEmail","ownerPhone","facebookPage","shortDescription"]);
-    const ownerPhone=text(p.ownerPhone,100);
+    required(p,["brandName","ownerName","ownerEmail","ownerPhone","contactNumber","facebookPage","shortDescription"]);
     return{
       brand_name:text(p.brandName,120),
       brand_logo_path:files[0]||null,
-      store_locations:text(p.storeLocations,1500),
+      store_locations:p.storeLocations?text(p.storeLocations,1500):null,
       owner_name:text(p.ownerName,160),
       owner_email:emailText(p.ownerEmail),
-      owner_phone:ownerPhone,
-      contact_number:ownerPhone,
+      owner_phone:text(p.ownerPhone,100),
+      contact_number:text(p.contactNumber,80),
       facebook_page:facebookLink(p.facebookPage),
       short_description:text(p.shortDescription,1200),
     };
