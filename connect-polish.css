@@ -35,7 +35,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .landing-view .hero-copy h1{font-size:clamp(58px,7.3vw,108px);line-height:.84;letter-spacing:-.055em;color:var(--navy);font-weight:900}
 .landing-view .connect{font-size:clamp(24px,2.8vw,38px);letter-spacing:.24em;color:var(--blue);margin:12px 0 15px}
 .landing-view .brand-rule{width:144px;height:3px;margin-bottom:19px}
-.landing-view .manifesto{font-size:clamp(15px,1.25vw,19px);line-height:1.45;color:var(--ink);margin-bottom:9px}
+/* The tagline. It sits directly under the MASINLOC CONNECT lockup and is the
+   line that says what the place is for, so it carries more weight than the
+   four-part manifesto it replaced. */
+.landing-view .manifesto{font-size:clamp(16px,1.5vw,23px);line-height:1.32;letter-spacing:-.012em;color:var(--navy);margin-bottom:12px;text-wrap:balance}
 .landing-view .intro{font-size:13px;line-height:1.72;color:var(--text);max-width:490px}
 
 /* Choice area -------------------------------------------------------------
@@ -235,7 +238,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .landing-view .hero-fade{background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(255,255,255,.83) 42%,rgba(255,255,255,.30) 70%,rgba(255,255,255,.04) 100%)}
   .landing-view .hero-copy{left:22px;right:22px;transform:none;max-width:none}
   .landing-view .hero-copy h1{font-size:clamp(52px,17vw,76px)}
-  .landing-view .manifesto{font-size:15px}.landing-view .intro{font-size:12px;max-width:340px}
+  .landing-view .manifesto{font-size:19px}.landing-view .intro{font-size:12px;max-width:340px}
   .quick-choices{padding:50px 18px 74px}
   .quick-grid{grid-template-columns:1fr;gap:12px}
   .quick-card{min-height:0;padding:20px;grid-template-columns:54px 1fr 24px}
