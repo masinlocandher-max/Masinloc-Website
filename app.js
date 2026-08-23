@@ -1,8 +1,20 @@
 (function(){
   const ENDPOINT='https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-masinloc';
-  const DRAFT_MAX_AGE_MS=7*24*60*60*1000;
+  const DRAFT_MAX_AGE_MS=12*60*60*1000;
+  const DRAFT_KEY='masinlocConnectDraft';
   let fileStore={};
   let persistedProfessional=null;
+  let draftMemory=null;
+
+  function setSessionDraft(value){
+    try{sessionStorage.setItem(DRAFT_KEY,value)}catch{draftMemory=value}
+  }
+  function getSessionDraft(){
+    try{return sessionStorage.getItem(DRAFT_KEY)}catch{return draftMemory}
+  }
+  function removeSessionDraft(){
+    try{sessionStorage.removeItem(DRAFT_KEY)}catch{draftMemory=null}
+  }
 
   const style=document.createElement('style');
   style.textContent=`
@@ -71,7 +83,8 @@
     const submittedAt=new Date().toISOString();
     lastSubmission={reference:ref,type:category,data:{...payload},submittedAt,backendId:result.id||null};
     storeSet('masinlocLastSubmission',JSON.stringify({reference:ref,type:category,data:{},submittedAt,backendId:result.id||null}));
-    storeRemove('masinlocConnectDraft');
+    removeSessionDraft();
+    storeRemove(DRAFT_KEY);
     document.querySelector('#refCode').textContent=ref;
     const lead=document.querySelector('#successView .success-panel>p');
     const note=document.querySelector('#successView .success-small');
@@ -159,6 +172,10 @@
     };
 
     const originalStoreGet=storeGet;
+    const legacyDraft=originalStoreGet(DRAFT_KEY);
+    if(legacyDraft&&!getSessionDraft())setSessionDraft(legacyDraft);
+    storeRemove(DRAFT_KEY);
+
     const draftIsFresh=(draft)=>{
       const updated=Date.parse(draft?.updatedAt||'');
       return Number.isFinite(updated) && Date.now()-updated<=DRAFT_MAX_AGE_MS;
@@ -170,25 +187,27 @@
       delete draftData.brandLogo;
       delete draftData.media;
       delete draftData.existingResume;
-      storeSet('masinlocConnectDraft',JSON.stringify({type,step,data:draftData,updatedAt:new Date().toISOString()}));
+      setSessionDraft(JSON.stringify({type,step,data:draftData,updatedAt:new Date().toISOString()}));
       const status=document.querySelector('#saveStatus');
-      if(status) status.textContent='Saved on this device for 7 days';
+      if(status) status.textContent='Saved for this browser session';
     };
 
     checkDraft=function(){
-      const raw=originalStoreGet('masinlocConnectDraft');
+      const raw=getSessionDraft();
       if(!raw){document.querySelector('#resumeBar').hidden=true;return}
       try{
         const draft=JSON.parse(raw);
         if(!draftIsFresh(draft)){
-          storeRemove('masinlocConnectDraft');
+          removeSessionDraft();
           document.querySelector('#resumeBar').hidden=true;
           return;
         }
         document.querySelector('#resumeMeta').textContent=`${configs[draft.type]?.label||'Submission'} · Step ${(draft.step||0)+1} of 4`;
         document.querySelector('#resumeBar').hidden=false;
+        const status=document.querySelector('#saveStatus');
+        if(status) status.textContent='Saved for this browser session';
       }catch{
-        storeRemove('masinlocConnectDraft');
+        removeSessionDraft();
         document.querySelector('#resumeBar').hidden=true;
       }
     };
