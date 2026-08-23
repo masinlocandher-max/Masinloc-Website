@@ -317,14 +317,14 @@ html{scroll-padding-top:96px}
   margin:10px 0 0;font:500 12px/1 var(--font-ui);
   letter-spacing:.14em;text-transform:uppercase;color:var(--blue);
 }
-.place-rhyme{
+.place-what{
   margin:16px 0 0;max-width:44ch;
   font:400 clamp(15px,1.35vw,17.5px)/1.6 var(--font-editorial);
   color:var(--text);
   opacity:0;max-height:0;overflow:hidden;
   transition:opacity 460ms var(--ease-standard),max-height 620ms var(--ease-out);
 }
-.place-row.is-live .place-rhyme{opacity:1;max-height:9em}
+.place-row.is-live .place-what{opacity:1;max-height:9em}
 /* On phones the sticky frame sits above its own name, so each place is one
    self-contained scene rather than a split composition. */
 .place-shot{display:none}
@@ -572,6 +572,41 @@ html{scroll-padding-top:96px}
   margin:0;font:400 clamp(34px,6vw,86px)/1 var(--font-editorial);
   letter-spacing:-.025em;max-width:14ch;
 }
+/* The page used to end on a list of section names. This is the one thing worth
+   pressing on a reader who came to understand the town: MABAYANI's opening
+   story, named, with the question it starts from. The routes below it stay a
+   quiet index — the lead is the only thing here asking to be clicked. */
+.close-lead{
+  display:block;margin:clamp(30px,5vh,56px) 0 0;
+  padding:clamp(26px,3.4vw,44px);
+  max-width:840px;
+  text-decoration:none;color:inherit;
+  background:var(--navy);border-radius:14px;
+  border-left:3px solid var(--yellow);
+  transition:transform 320ms var(--ease-standard),background 320ms var(--ease-standard);
+}
+.close-lead:hover,.close-lead:focus-visible{transform:translateY(-2px)}
+.cl-kicker{
+  display:block;font:600 10.5px/1 var(--font-ui);letter-spacing:.2em;
+  text-transform:uppercase;color:var(--yellow);
+}
+.cl-title{
+  display:block;margin-top:16px;max-width:22ch;
+  font:400 clamp(24px,3.2vw,42px)/1.08 var(--font-editorial);
+  letter-spacing:-.02em;color:var(--white);
+}
+.cl-stand{
+  display:block;margin-top:14px;max-width:52ch;
+  font:400 clamp(15px,1.3vw,16.5px)/1.6 var(--font-ui);
+  color:rgba(255,255,255,.74);
+}
+.cl-go{
+  display:flex;align-items:center;gap:10px;margin-top:20px;
+  font:600 13.5px/1 var(--font-ui);color:var(--white);
+}
+.cl-go i{font-style:normal;transition:transform 320ms var(--ease-standard)}
+.close-lead:hover .cl-go i{transform:translateX(5px)}
+
 .routes{list-style:none;margin:clamp(34px,6vh,66px) 0 0;padding:0;
   border-top:1px solid var(--line)}
 .routes a{
@@ -642,7 +677,7 @@ html{scroll-padding-top:96px}
     border-radius:12px;overflow:hidden;margin-bottom:20px;background:var(--soft);
   }
   .place-shot img{width:100%;height:100%;object-fit:cover;object-position:var(--focus,50% 50%)}
-  .place-rhyme{opacity:1;max-height:none}
+  .place-what{opacity:1;max-height:none}
   .place-name{color:var(--ink)}
   .community-inner{grid-template-columns:1fr}
   .language-scene{grid-template-columns:1fr;justify-items:center;gap:28px}
@@ -704,6 +739,6 @@ html{scroll-padding-top:96px}
   .entry{opacity:1;transform:none;filter:none}
   .hero-mark,.hero-cue{opacity:1;transform:none}
   .discover-shot.is-live{transform:none}
-  .place-rhyme{opacity:1;max-height:none}
+  .place-what{opacity:1;max-height:none}
   .rail-track.is-animating{transition:none}
 }

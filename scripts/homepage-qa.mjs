@@ -13,6 +13,7 @@
  *     page has to be complete with JavaScript off and under reduced motion.
  */
 import { chromium } from '@playwright/test';
+import fs from 'node:fs/promises';
 
 const URL = 'http://localhost:8000/index.html';
 const problems = [];
@@ -130,6 +131,59 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
          + `read (${state.row})`);
     }
     if (!state.caption) fail('the sticky photograph carries no locality caption');
+  }
+
+  /* Each place must carry the factual line from data/locations.json — what it
+     is, where it is, why it matters — and not the rhyming couplet. The homepage
+     is where someone works out what this town actually holds; the rhyme has its
+     own home on destinations.html, printed beside the same caption. */
+  const locations = JSON.parse(await fs.readFile('data/locations.json', 'utf8')).locations;
+  const lines = await page.$$eval('.place-row .place-what',
+    (els) => els.map(el => el.textContent.trim()));
+  if (lines.length !== locations.length) {
+    fail(`${lines.length} place descriptions for ${locations.length} places`);
+  }
+  locations.forEach((location, index) => {
+    if (lines[index] !== location.caption) {
+      fail(`${location.name}: the homepage shows "${lines[index]}" instead of its `
+        + 'what/where/why caption');
+    }
+    if (lines[index] === location.rhyme) {
+      fail(`${location.name}: the homepage is leading with the rhyme again`);
+    }
+  });
+  await page.close();
+}
+
+/* --- the ending ----------------------------------------------------------- */
+/* The page used to end on a list of section names. It now ends on the one
+   story worth pressing, and the index below it has to be complete: a section
+   that exists but is not reachable from the front page is one nobody finds. */
+{
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(URL, { waitUntil: 'networkidle' });
+
+  const bulletin = JSON.parse(await fs.readFile('data/bulletin.json', 'utf8'));
+  const entry = bulletin.articles.find(a => a.slug === bulletin.entryStory);
+
+  const lead = await page.$('.close-lead');
+  if (!lead) {
+    fail('the page does not end on a story worth reading');
+  } else {
+    const href = await lead.getAttribute('href');
+    if (href !== `bulletin/${entry.slug}.html`) {
+      fail(`the closing story points at ${href}, not the entry story`);
+    }
+    const title = (await page.textContent('.cl-title') || '').trim();
+    if (title !== entry.title) fail(`the closing story is titled "${title}"`);
+  }
+
+  const routes = await page.$$eval('.routes a', els => els.map(a => a.getAttribute('href')));
+  for (const section of ['destinations.html', 'sambal-tina.html', 'leadership.html',
+    'verified-history.html', 'masinloc-bulletin.html', 'sources.html', 'connect.html']) {
+    if (!routes.includes(section)) {
+      fail(`the closing index does not reach ${section}`);
+    }
   }
   await page.close();
 }

@@ -30,6 +30,8 @@ LOCATIONS = json.loads((ROOT / "data" / "locations.json").read_text(encoding="ut
 LIVING = json.loads((ROOT / "data" / "sambal-tina-living.json").read_text(encoding="utf-8"))
 CAMPAIGNS = json.loads((ROOT / "data" / "campaigns.json").read_text(encoding="utf-8"))
 DICT = json.loads((ROOT / "data" / "sambal-tina.json").read_text(encoding="utf-8"))
+BULLETIN = json.loads((ROOT / "data" / "bulletin.json").read_text(encoding="utf-8"))
+LEADERSHIP = json.loads((ROOT / "data" / "leadership.json").read_text(encoding="utf-8"))
 
 CAMPAIGN_WIDTHS = [480, 768, 1120, 1440, 1672]
 PLACE_WIDTHS = [480, 768, 1120, 1536, 2048]
@@ -144,7 +146,7 @@ def discover_rows() -> str:
               <span class="place-index">{i:02d}</span>
               <h3 class="place-name">{esc(location['name'])}</h3>
               <p class="place-where">{esc(location['locality'])}</p>
-              <p class="place-rhyme">{esc(location['rhyme'])}</p>
+              <p class="place-what">{esc(location['caption'])}</p>
             </a>
           </li>""")
     return "\n".join(out)
@@ -256,7 +258,16 @@ def counts() -> dict:
 
 # --- page ---------------------------------------------------------------------
 
+def entry_story() -> dict:
+    """The story MABAYANI opens with, named from the data rather than pinned here."""
+    slug = BULLETIN["entryStory"]
+    return next(a for a in BULLETIN["articles"] if a["slug"] == slug)
+
+
 def render() -> str:
+    entry = entry_story()
+    story_count = sum(1 for a in BULLETIN["articles"] if a.get("status") == "published")
+
     n = counts()
     known = living_index()
     feature = known.get("lanom") or LIVING["entries"][0]
@@ -330,7 +341,7 @@ def render() -> str:
   <section class="campaign" aria-labelledby="campaignTitle">
     <div class="campaign-head">
       <h2 class="stage-label" id="campaignTitle">{esc(CAMPAIGNS['label'])}</h2>
-      <p>What is happening in Masinloc now.</p>
+      <p>What we are building for Masinloc.</p>
     </div>
     <div class="rail" data-rail>
       <div class="rail-window">
@@ -452,13 +463,23 @@ def render() -> str:
   <!-- 07 ................................................................. -->
   <section class="close" aria-labelledby="closeTitle">
     <div class="close-inner">
-      <h2 id="closeTitle" class="rise">What will you discover next?</h2>
+      <h2 id="closeTitle" class="rise">If you only read one thing.</h2>
+
+      <a class="close-lead rise" href="bulletin/{entry['slug']}.html">
+        <span class="cl-kicker">{esc(BULLETIN['publication']['kicker'])} &middot; {esc(BULLETIN['publication']['name'])}</span>
+        <span class="cl-title">{esc(entry['title'])}</span>
+        <span class="cl-stand">{esc(entry['standfirst'])}</span>
+        <span class="cl-go">Start the first story <i aria-hidden="true">&rarr;</i></span>
+      </a>
+
       <ul class="routes">
         <li class="rise"><a href="destinations.html"><span class="r-name">Places</span><span class="r-what">Eight destinations, photographed where they actually are.</span></a></li>
         <li class="rise" style="--delay:60ms"><a href="sambal-tina.html"><span class="r-name">Sambal Tina</span><span class="r-what">{n['total']:,} entries, free to search, with the page reference on every one.</span></a></li>
-        <li class="rise" style="--delay:120ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
-        <li class="rise" style="--delay:180ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">What is happening here, explained properly.</span></a></li>
-        <li class="rise" style="--delay:240ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
+        <li class="rise" style="--delay:120ms"><a href="leadership.html"><span class="r-name">Municipal Leadership</span><span class="r-what">The mayor serving now, and the four who served before her.</span></a></li>
+        <li class="rise" style="--delay:180ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
+        <li class="rise" style="--delay:240ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">All {story_count} stories, and the questions still open.</span></a></li>
+        <li class="rise" style="--delay:300ms"><a href="sources.html"><span class="r-name">Sources &amp; References</span><span class="r-what">Every study, record and archive the history here rests on.</span></a></li>
+        <li class="rise" style="--delay:360ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
       </ul>
     </div>
   </section>
