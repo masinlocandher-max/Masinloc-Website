@@ -94,21 +94,35 @@ def shallow_repository() -> bool:
         return False
 
 
-STAMP_ONLY = re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$')
+# Site furniture: the chrome every page carries, as opposed to the page's own
+# subject matter. A change confined to these is not a change to what the page
+# says, which is the question <lastmod> answers.
+FURNITURE = (
+    # A stylesheet link, with or without a cache-buster.
+    re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$'),
+    # The footer navigation, whether it lives on one line or several.
+    re.compile(r'^[+-].*class="(footer-nav|foot-nav)"'),
+    re.compile(r'^[+-]\s*<a href="[^"]*">[^<]*</a>\s*$'),
+)
 
 
 def cosmetic_only(commit: str, rel: str) -> bool:
-    """True when this commit's only change to this page was a stylesheet link.
+    """True when this commit changed only this page's furniture.
 
-    Bumping `site.css?v=...` across every page is a real edit to the file and a
-    real commit, but it is not a change to what the page says. Dating a page by
-    it would move forty <lastmod> values at once for a stylesheet refresh.
+    Two things reach every page at once and neither is content.
 
-    The whole link line is matched rather than just the `?v=` fragment, because
-    a stamp added to a stylesheet that never had one shows up as a removed line
-    with no stamp on it and an added line with one. Either way what changed is
-    how the page is painted, not what it says, and <lastmod> answers the second
-    question.
+    Bumping `site.css?v=...` across all forty-odd pages is a real edit and a
+    real commit, but it changes how the page is painted, not what it says. The
+    whole link line is matched rather than just the `?v=` fragment, because a
+    stamp added to a stylesheet that never had one appears as a removed line
+    with no stamp and an added line with one.
+
+    Adding a section to the footer navigation is the same shape of change: the
+    Marketplace launching put one new link into the footer of thirty-nine
+    pages, and dating all thirty-nine to that day would tell search engines
+    that thirty-nine articles had been rewritten. They had not. The page that
+    genuinely changed — the article whose text now points at the Marketplace —
+    has an edit outside the footer, so it still counts.
     """
     try:
         out = subprocess.run(
@@ -118,7 +132,8 @@ def cosmetic_only(commit: str, rel: str) -> bool:
         return False
     edits = [line for line in out.stdout.splitlines()
              if line[:1] in "+-" and not line.startswith(("+++", "---"))]
-    return bool(edits) and all(STAMP_ONLY.match(line) for line in edits)
+    return bool(edits) and all(
+        any(pattern.match(line) for pattern in FURNITURE) for line in edits)
 
 
 def last_content_change(path: Path) -> str:
