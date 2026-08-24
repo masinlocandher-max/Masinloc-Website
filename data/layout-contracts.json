@@ -121,6 +121,40 @@
       "phone": { "display": "block" }
     },
     {
+      "page": "marketplace.html",
+      "section": "Marketplace directory grid",
+      "selector": ".mk-grid",
+      "minChildren": 2,
+      "note": "two columns while the directory is small; the generator drops mk-grid-few at three businesses",
+      "desktop": { "display": "grid", "columns": 2, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "marketplace.html",
+      "section": "Marketplace category filters",
+      "selector": ".mk-filters",
+      "minChildren": 2,
+      "note": "a filter row that stops being a row stacks three chips down the page",
+      "desktop": { "display": "flex", "childrenSideBySide": true },
+      "phone": { "display": "flex", "childrenSideBySide": true }
+    },
+    {
+      "page": "marketplace.html",
+      "section": "Marketplace business names",
+      "selector": ".mk-card-name",
+      "note": "another <span> that is only a heading because CSS says so",
+      "desktop": { "display": "block" },
+      "phone": { "display": "block" }
+    },
+    {
+      "page": "marketplace/diwan-coffee.html",
+      "section": "Business detail facts",
+      "selector": ".mk-facts",
+      "minChildren": 3,
+      "desktop": { "display": "grid", "columns": 2 },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
       "page": "index.html",
       "section": "Homepage hero frame",
       "selector": ".hero-media",

@@ -41,6 +41,10 @@ jobs:
         run: python3 scripts/check-design-consistency.py
       - name: Verify every page's markup and its stylesheets agree
         run: python3 scripts/check-stylesheets.py
+      - name: Verify the Marketplace publishes no private submission data
+        run: python3 scripts/check-marketplace-privacy.py
+      - name: Rebuild the Marketplace and verify it reproduces
+        run: python3 scripts/build-marketplace.py
       - name: Validate JavaScript syntax
         run: |
           node --check site.js
@@ -71,6 +75,7 @@ jobs:
           node --check scripts/leadership-qa.mjs
           node --check scripts/contrast-qa.mjs
           node --check scripts/layout-contracts.mjs
+          node --check marketplace.js
       - name: Validate locations mapping and photography
         run: python3 scripts/check-locations.py
       - name: Audit every photograph on the site

@@ -132,7 +132,8 @@ def visible_text(markup: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body))
 
 
-pages = sorted(p for p in ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
+pages = (sorted(p for p in ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
+         + sorted(ROOT.glob("marketplace/*.html")))
 titles: dict[str, str] = {}
 descriptions: dict[str, str] = {}
 inbound: dict[str, set[str]] = {p.relative_to(ROOT).as_posix(): set() for p in pages}

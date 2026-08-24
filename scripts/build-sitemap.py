@@ -61,7 +61,7 @@ NOINDEX = re.compile(r'<meta\s+name="robots"[^>]*content="[^"]*noindex', re.I)
 
 # Every directory that publishes pages. A section added to the site and not
 # added here would build, deploy and never be listed — silently.
-PAGE_DIRS = ["*.html", "bulletin/*.html", "discover/*.html"]
+PAGE_DIRS = ["*.html", "bulletin/*.html", "discover/*.html", "marketplace/*.html"]
 
 
 def pages() -> list[Path]:

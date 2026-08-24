@@ -333,3 +333,38 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .site-footer .footer-item span{font-size:10px}
 .site-footer .footer-item strong,.site-footer .footer-item a{font-size:13px}
 .site-footer .footer-bottom{font-size:11px}
+
+/* The Marketplace band. Masinloc Connect is where somebody goes to submit a
+   business; this is the one place on that page that answers the opposite
+   question — I want to FIND a business — so it sits directly under the
+   chooser rather than competing with it. */
+.mk-band{
+  max-width:1150px;margin:0 auto;
+  padding:26px 42px 34px;
+  display:flex;flex-wrap:wrap;gap:20px 34px;
+  align-items:center;justify-content:space-between;
+  border-top:1px solid var(--line);
+}
+.mk-band-copy{max-width:620px}
+.mk-band-label{
+  margin:0 0 8px;color:var(--blue);
+  font:800 10px/1 var(--sans);letter-spacing:.13em;
+}
+.mk-band h2{
+  margin:0 0 8px;color:var(--navy);
+  font-family:var(--font-editorial);font-weight:400;
+  font-size:clamp(22px,2.4vw,32px);line-height:1.14;
+}
+.mk-band p{margin:0;font-size:11px;line-height:1.65;color:#56617d}
+.mk-band-cta{
+  flex:0 0 auto;
+  background:var(--blue);color:#fff;border-radius:5px;
+  padding:13px 18px;font-size:11px;font-weight:800;letter-spacing:.02em;
+}
+.mk-band-cta:hover{background:var(--navy)}
+.mk-band-cta:focus-visible{outline:3px solid rgba(13,59,158,.45);outline-offset:3px}
+
+@media(max-width:800px){
+  .mk-band{padding:22px 17px 28px}
+  .mk-band-cta{width:100%;text-align:center}
+}

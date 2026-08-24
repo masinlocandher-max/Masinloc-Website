@@ -548,6 +548,7 @@ def render() -> str:
       <img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales">
       <nav class="foot-nav" aria-label="Footer">
         <a href="discover/index.html">Discover</a>
+        <a href="marketplace.html">Marketplace</a>
         <a href="destinations.html">Places</a>
         <a href="sambal-tina.html">Sambal Tina</a>
         <a href="a-closer-look.html">A Closer Look</a>

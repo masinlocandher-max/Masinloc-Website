@@ -538,11 +538,15 @@
         {
           "type": "note",
           "label": "Still open",
-          "text": "This article deliberately names no restaurants. Businesses open and close, and a list frozen into an article goes stale within a year while continuing to look current. When the Marketplace launches, current food businesses will be listed there, where they can be kept accurate."
+          "text": "This article deliberately names no restaurants. Businesses open and close, and a list frozen into an article goes stale within a year while continuing to look current. Food businesses that have been approved for the Marketplace are listed there instead, where they can be kept accurate."
         },
         {
           "type": "links",
           "items": [
+            {
+              "label": "Food businesses in the Masinloc Marketplace",
+              "href": "../marketplace.html"
+            },
             {
               "label": "The Sambal Tina dictionary",
               "href": "../sambal-tina.html"

@@ -94,7 +94,7 @@ def classes_in(css: str) -> set[str]:
 
 def pages() -> list[Path]:
     found: list[Path] = []
-    for pattern in ("*.html", "bulletin/*.html", "discover/*.html"):
+    for pattern in ("*.html", "bulletin/*.html", "discover/*.html", "marketplace/*.html"):
         found.extend(sorted(ROOT.glob(pattern)))
     return found
 
