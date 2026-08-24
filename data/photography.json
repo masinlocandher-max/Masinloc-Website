@@ -91,5 +91,12 @@
     "origin": "Google Drive - Masinloc Website Asset / Additional image",
     "note": "Approved hero artwork for the Discover section, supplied by the project with the branded treatment already applied: the real photograph full-bleed, the official logo, the translucent geometric ribbons in yellow, red and blue, and where present a map-pin location label and footer line. scripts/build-discover-assets.py only re-encodes and resizes them — nothing is cropped, reframed or retouched, because cropping would cut the logo, label or footer off finished artwork. Native aspect ratios are recorded in data/discover-assets.json and the pages are built around them. pamislat: real pamislat gathered on this coast. mangoes-masinloc: ripe mangoes in crates, carrying the supplied 'Masinloc, Zambales' label. dinamulag-mango: ripe dinamulag (carabao) mangoes; no location is claimed for this one because the asset does not establish it.",
     "mapping": "scripts/build-discover-assets.py"
+  },
+  "notfound": {
+    "directory": "assets/notfound/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / 404",
+    "note": "The artwork shown on the 404 page, supplied finished by the project: Binabayani performers photographed at a fiesta, darkened, with the official logo centred, the tricolour rule and the footer strip inside the frame. scripts/build-404-hero.py only re-encodes and resizes it; nothing is cropped, because a crop would cut the logo or the footer. Note that the message baked into the artwork reads “Maintenance on going”, which is not what a 404 means — the page carries its own message underneath rather than relying on the artwork to explain itself.",
+    "mapping": "scripts/build-404-hero.py"
   }
 }
