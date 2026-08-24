@@ -63,6 +63,29 @@ def pages() -> list[Path]:
     return found
 
 
+def shallow_repository() -> bool:
+    """True when the checkout has no real history to read dates from.
+
+    This matters more than it looks. In a shallow clone — which is what
+    actions/checkout does by default — `git log -1 --format=%cs -- <file>`
+    does not fail and does not come back empty. It returns the tip commit's
+    date for EVERY file, because that is the only commit present. Generating
+    from that produces a sitemap claiming every page on the site changed today,
+    which is precisely the deployment-date stamping this script exists to
+    prevent, and it would do it silently.
+
+    So a shallow checkout is treated as "dates unknowable" rather than as
+    "dates are today".
+    """
+    try:
+        out = subprocess.run(["git", "rev-parse", "--is-shallow-repository"],
+                             cwd=ROOT, capture_output=True, text=True,
+                             timeout=20, check=False)
+        return out.stdout.strip() == "true"
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
 def last_content_change(path: Path) -> str:
     """The date this page's content last changed, from the history."""
     try:
@@ -123,6 +146,7 @@ def render(entries: list[tuple[str, str]]) -> str:
 
 
 def main() -> int:
+    shallow = shallow_repository()
     entries, problems = collect()
     if problems:
         print("SITEMAP BUILD FAILED")
@@ -135,6 +159,24 @@ def main() -> int:
 
     if check:
         current = SITEMAP.read_text(encoding="utf-8") if SITEMAP.is_file() else ""
+        if shallow:
+            # Dates cannot be verified here, so only the URL set is checked.
+            # Comparing dates against a shallow checkout would fail every run
+            # for a reason that has nothing to do with the sitemap.
+            listed = set(re.findall(r"<loc>([^<]+)</loc>", current))
+            expected = {url for url, _ in entries}
+            if listed != expected:
+                print("SITEMAP IS OUT OF DATE")
+                for url in sorted(expected - listed):
+                    print(f"  missing: {url}")
+                for url in sorted(listed - expected):
+                    print(f"  stale:   {url}")
+                print("Run: python3 scripts/build-sitemap.py")
+                return 1
+            print(f"SITEMAP UP TO DATE — {len(entries)} URLs.")
+            print("Shallow checkout: the URL set was verified, the dates were not. "
+                  "Use fetch-depth: 0 to check those too.")
+            return 0
         if current != rendered:
             print("SITEMAP IS OUT OF DATE")
             print("Run: python3 scripts/build-sitemap.py")
@@ -142,6 +184,14 @@ def main() -> int:
         print(f"SITEMAP UP TO DATE — {len(entries)} URLs, "
               f"each dated by its own last content change.")
         return 0
+
+    if shallow:
+        print("REFUSING TO WRITE sitemap.xml")
+        print("This is a shallow checkout, where git reports the tip commit's date "
+              "for every file. Writing now would stamp every page with today and "
+              "call it a content change.")
+        print("Run: git fetch --unshallow")
+        return 1
 
     SITEMAP.write_text(rendered, encoding="utf-8")
     newest = max(e[1] for e in entries)

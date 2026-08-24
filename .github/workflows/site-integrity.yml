@@ -13,7 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
+        # Full history, not the default shallow clone. sitemap.xml derives each
+        # page's lastmod from the last commit that touched it, and a shallow
+        # checkout reports the tip commit's date for every file — which would
+        # make the sitemap check fail on every run, and would silently stamp
+        # every page with the deploy date if it ever wrote instead of checked.
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Validate Stage 1 integrity
         run: python3 scripts/check-site.py
       - name: Validate Sambal Tina dictionary
