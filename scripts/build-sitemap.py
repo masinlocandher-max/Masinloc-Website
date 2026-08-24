@@ -23,12 +23,20 @@ How it decides
   filename. If a page disagrees with itself about where it lives, that is a
   fault worth failing on rather than papering over.
 
-- WHICH DATE. The last commit that touched the file. This works precisely
-  because every generator here produces byte-identical output from unchanged
-  data: rebuilding a story whose prose has not changed produces no diff, so no
-  commit, so no new date. The date moves when the content moves. An uncommitted
-  file falls back to its modification time, which is the honest answer for
-  something that is not in the history yet.
+- WHICH DATE. The last commit that changed the page's CONTENT. This works
+  precisely because every generator here produces byte-identical output from
+  unchanged data: rebuilding a story whose prose has not changed produces no
+  diff, so no commit, so no new date. The date moves when the content moves. An
+  uncommitted file falls back to its modification time, which is the honest
+  answer for something that is not in the history yet.
+
+  "Content" excludes one thing deliberately: a commit whose only change to the
+  page is a stylesheet cache-buster (`site.css?v=20260821-1`). Those stamps are
+  bumped across all forty-odd pages whenever a shared stylesheet changes, and
+  counting that as a modification would republish the whole sitemap with one
+  date — a deployment wearing a content change's clothes, which is the exact
+  thing this script was written to stop. A commit that touches a stamp AND real
+  markup still counts, because the markup changed.
 
 Usage
 -----
@@ -86,15 +94,47 @@ def shallow_repository() -> bool:
         return False
 
 
-def last_content_change(path: Path) -> str:
-    """The date this page's content last changed, from the history."""
+STAMP_ONLY = re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$')
+
+
+def cosmetic_only(commit: str, rel: str) -> bool:
+    """True when this commit's only change to this page was a stylesheet link.
+
+    Bumping `site.css?v=...` across every page is a real edit to the file and a
+    real commit, but it is not a change to what the page says. Dating a page by
+    it would move forty <lastmod> values at once for a stylesheet refresh.
+
+    The whole link line is matched rather than just the `?v=` fragment, because
+    a stamp added to a stylesheet that never had one shows up as a removed line
+    with no stamp on it and an added line with one. Either way what changed is
+    how the page is painted, not what it says, and <lastmod> answers the second
+    question.
+    """
     try:
         out = subprocess.run(
-            ["git", "log", "-1", "--format=%cs", "--", str(path.relative_to(ROOT))],
+            ["git", "show", "--format=", "--unified=0", commit, "--", rel],
             cwd=ROOT, capture_output=True, text=True, timeout=20, check=False)
-        stamp = out.stdout.strip()
-        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", stamp):
-            return stamp
+    except (OSError, subprocess.SubprocessError):
+        return False
+    edits = [line for line in out.stdout.splitlines()
+             if line[:1] in "+-" and not line.startswith(("+++", "---"))]
+    return bool(edits) and all(STAMP_ONLY.match(line) for line in edits)
+
+
+def last_content_change(path: Path) -> str:
+    """The date this page's content last changed, from the history."""
+    rel = str(path.relative_to(ROOT))
+    try:
+        out = subprocess.run(
+            ["git", "log", "--format=%H %cs", "-n", "25", "--", rel],
+            cwd=ROOT, capture_output=True, text=True, timeout=30, check=False)
+        for line in out.stdout.splitlines():
+            commit, _, stamp = line.partition(" ")
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", stamp.strip()):
+                continue
+            if cosmetic_only(commit, rel):
+                continue
+            return stamp.strip()
     except (OSError, subprocess.SubprocessError):
         pass
     # Not committed yet, or no git available. Its mtime is what we honestly know.

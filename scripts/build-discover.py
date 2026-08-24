@@ -169,11 +169,11 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <meta name="twitter:image" content="{og_image}">
 {extra}<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-<link rel="stylesheet" href="../tokens.css?v=20260822-1">
-<link rel="stylesheet" href="../site.css?v=20260820-1">
+<link rel="stylesheet" href="../tokens.css?v=20260823-1">
+<link rel="stylesheet" href="../site.css?v=20260821-1">
 <link rel="stylesheet" href="../site-polish.css?v=20260820-1">
 <link rel="stylesheet" href="../discover.css?v=20260823-1">
-<link rel="stylesheet" href="../site-stability.css?v=20260821-1">
+<link rel="stylesheet" href="../site-stability.css?v=20260823-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
      over the full-bleed photograph on Places and disappears completely on a

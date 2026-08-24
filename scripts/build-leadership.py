@@ -264,11 +264,11 @@ def page() -> str:
 <meta name="twitter:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="stylesheet" href="tokens.css?v=20260822-1">
-<link rel="stylesheet" href="site.css?v=20260820-1">
+<link rel="stylesheet" href="tokens.css?v=20260823-1">
+<link rel="stylesheet" href="site.css?v=20260821-1">
 <link rel="stylesheet" href="site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="site-stability.css?v=20260821-1">
-<link rel="stylesheet" href="leadership.css?v=20260822-1">
+<link rel="stylesheet" href="site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="leadership.css?v=20260823-1">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>

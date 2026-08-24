@@ -662,3 +662,99 @@ mark{background:rgba(255,199,0,.34);color:inherit;border-radius:2px;padding:0 1p
   color:var(--text);font-style:italic;
 }
 .entry-example span{font-style:normal;color:var(--muted)}
+
+/* Sambal Tina 101 — the primer between the statistics and the promise.
+
+   This section was written and shipped with no styling at all. Its rules had
+   been drafted in sambal-tina-community.css, a stylesheet no page ever linked,
+   so the markup arrived on the page and fell back to browser defaults: three
+   articles stacked full-width instead of a three-column grid, "01/02/03"
+   rendering as ordinary body text rather than as markers, and the three core
+   vowels running together as "AIO".
+
+   The rules here are new rather than recovered. The drafted ones were built
+   for a dark hero — white text, translucent white borders — and this section
+   sits on the light page, so lifting them would have produced white-on-white.
+   They also targeted `.vowel-row span` while the markup uses `<b>`, which is
+   the more accurate element anyway: these are three letters being pointed at,
+   not three spans.
+
+   The proportions deliberately match .dict-promise directly below it — same
+   content width, same three columns, same blue rule over each card — because
+   the two sections are read as a pair and had no reason to disagree. */
+.dict-primer{
+  width:var(--content);
+  margin:0 auto;
+  padding:70px 0 8px;
+}
+.dict-primer-head{max-width:780px;margin:0 0 34px}
+.dict-primer-head h2{
+  margin:0 0 14px;
+  color:var(--navy);
+  font-family:var(--font-editorial);
+  font-weight:400;
+  font-size:clamp(28px,3vw,40px);
+  letter-spacing:-.03em;
+}
+.dict-primer-head p{
+  margin:0;
+  color:var(--text);
+  font-size:15px;
+  line-height:1.7;
+}
+.primer-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(24px,3vw,44px);
+}
+.primer-grid article{
+  padding-top:20px;
+  border-top:3px solid var(--blue);
+}
+.primer-number{
+  display:block;
+  margin:0 0 9px;
+  color:var(--blue);
+  font:800 11px/1 var(--font-ui);
+  letter-spacing:.18em;
+}
+.primer-grid h3{
+  margin:0 0 11px;
+  color:var(--navy);
+  font-family:var(--font-display);
+  font-size:16px;
+  line-height:1.3;
+  letter-spacing:-.01em;
+}
+.primer-grid p{
+  margin:0;
+  color:var(--text);
+  font-size:14px;
+  line-height:1.75;
+}
+
+/* A, I, O. Three letters set apart from the sentence that introduces them,
+   so the reader can see the vowel system rather than only read about it. */
+.vowel-row{
+  display:flex;
+  gap:10px;
+  margin:18px 0 0;
+}
+.vowel-row b{
+  display:grid;
+  place-items:center;
+  width:52px;
+  height:52px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--soft);
+  color:var(--navy);
+  font-family:var(--font-display);
+  font-size:20px;
+  font-weight:800;
+}
+
+@media(max-width:980px){
+  .dict-primer{padding-top:52px}
+  .primer-grid{grid-template-columns:1fr;gap:26px}
+}

@@ -133,10 +133,10 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 <meta name="twitter:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
 {extra}<link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
-<link rel="stylesheet" href="{up}tokens.css?v=20260822-1">
-<link rel="stylesheet" href="{up}site.css?v=20260820-1">
+<link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
+<link rel="stylesheet" href="{up}site.css?v=20260821-1">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="{up}site-stability.css?v=20260821-1">
+<link rel="stylesheet" href="{up}site-stability.css?v=20260823-1">
 <link rel="stylesheet" href="{up}bulletin.css?v=20260822-2">
 </head>
 <body class="about-page">
