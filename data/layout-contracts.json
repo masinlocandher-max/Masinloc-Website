@@ -1,0 +1,132 @@
+{
+  "_comment": [
+    "Layout contracts for the sections that would be worst to ship broken.",
+    "",
+    "These exist because of a real failure. The 'Sambal Tina 101' primer shipped",
+    "with no CSS at all — its rules lived in a stylesheet no page linked — and",
+    "every check in the repository passed. Contrast measures painted text,",
+    "responsive measures overflow, and unstyled text is usually still legible",
+    "and still fits. Nothing was watching for a section that had simply lost its",
+    "styling and fallen back to browser defaults.",
+    "",
+    "So each entry states the few structural facts that separate a laid-out",
+    "section from a stack of defaults: what it lays out AS, how many columns it",
+    "resolves to, and whether its children actually sit beside each other.",
+    "",
+    "Deliberately NOT asserted: pixel sizes, colours, fonts, spacing, or",
+    "screenshots. Those change constantly for good reasons and would turn this",
+    "into noise that gets ignored — which is worse than no check. Everything",
+    "here is a property that only changes when something is genuinely broken.",
+    "",
+    "'display' is the sharpest tool in the box: a <span> is inline until CSS says",
+    "otherwise, and a <div> is block. An element that is supposed to be a grid",
+    "and reports 'block' has lost its rules. That is exactly what the primer did."
+  ],
+  "widths": { "desktop": 1280, "phone": 390 },
+  "contracts": [
+    {
+      "page": "sambal-tina.html",
+      "section": "Sambal Tina 101 primer — the section that shipped unstyled",
+      "selector": ".primer-grid",
+      "minChildren": 3,
+      "desktop": { "display": "grid", "columns": 3, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "sambal-tina.html",
+      "section": "Sambal Tina 101 — the numbered markers",
+      "selector": ".primer-number",
+      "note": "a <span> is inline by default; block is only true when the CSS loaded",
+      "desktop": { "display": "block" },
+      "phone": { "display": "block" }
+    },
+    {
+      "page": "sambal-tina.html",
+      "section": "Sambal Tina 101 — the three core vowels",
+      "selector": ".vowel-row",
+      "minChildren": 3,
+      "note": "unstyled this reads as the single run-together word AIO",
+      "desktop": { "display": "flex", "childrenSideBySide": true },
+      "phone": { "display": "flex", "childrenSideBySide": true }
+    },
+    {
+      "page": "sambal-tina.html",
+      "section": "The dictionary promise",
+      "selector": ".promise-grid",
+      "minChildren": 3,
+      "desktop": { "display": "grid", "columns": 3, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "discover/index.html",
+      "section": "Discover hub article grid",
+      "selector": ".d-grid",
+      "minChildren": 3,
+      "desktop": { "display": "grid", "columns": 3, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "discover/index.html",
+      "section": "Discover card titles",
+      "selector": ".d-card-title",
+      "note": "another <span> that depends entirely on CSS to become a heading",
+      "desktop": { "display": "block" },
+      "phone": { "display": "block" }
+    },
+    {
+      "page": "leadership.html",
+      "section": "Municipal leadership portraits",
+      "selector": ".leader-grid",
+      "desktop": { "display": "grid", "columns": 2 },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "connect.html",
+      "section": "Masinloc Connect quick choices",
+      "selector": ".quick-grid",
+      "minChildren": 3,
+      "desktop": { "display": "grid", "columns": 3, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "connect.html",
+      "section": "Masinloc Connect purpose cards",
+      "selector": ".purpose-grid",
+      "minChildren": 2,
+      "desktop": { "display": "grid", "columns": 2, "childrenSideBySide": true },
+      "phone": { "display": "grid", "columns": 1 }
+    },
+    {
+      "page": "connect.html",
+      "section": "Masinloc Connect hero",
+      "selector": ".hero",
+      "note": "below 600px the hero stops being a picture with words on it and stacks",
+      "desktop": { "display": "block" },
+      "phone": { "display": "flex" }
+    },
+    {
+      "page": "destinations.html",
+      "section": "Places hero",
+      "selector": ".places-hero",
+      "minChildren": 4,
+      "desktop": { "display": "flex" },
+      "phone": { "display": "flex" }
+    },
+    {
+      "page": "masinloc-bulletin.html",
+      "section": "Bulletin story list",
+      "selector": ".story-list",
+      "minChildren": 3,
+      "desktop": { "display": "block" },
+      "phone": { "display": "block" }
+    },
+    {
+      "page": "index.html",
+      "section": "Homepage hero frame",
+      "selector": ".hero-media",
+      "note": "full bleed via position:absolute — an inset frame put a hard seam down the photograph",
+      "desktop": { "display": "block", "position": "absolute" },
+      "phone": { "display": "block", "position": "absolute" }
+    }
+  ]
+}

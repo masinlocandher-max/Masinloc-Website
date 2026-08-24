@@ -76,6 +76,9 @@ jobs:
       - name: Run Discover Masinloc checks
         run: node scripts/discover-qa.mjs
 
+      - name: Verify critical sections still hold their shape
+        run: node scripts/layout-contracts.mjs
+
       - name: Measure text contrast against what is painted behind it
         run: node scripts/contrast-qa.mjs
 
