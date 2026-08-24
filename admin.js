@@ -82,7 +82,7 @@ function cellValue(r,key){
  if(key==='created_at')return formatDate(r[key]);
  if(key==='status'||key==='severity')return statusHTML(r[key]);
  if(key==='public_profile')return r[key]?'Public':'Private';
- if(key==='submission_type'||key==='topic')return pretty(r[key]);
+ if(key==='submission_type'||key==='topic')return esc(pretty(r[key]));
  if(key==='ip_address')return r[key]?`<code>${esc(r[key])}</code>`:'Hashed only';
  const v=r[key];return v===null||v===undefined||v===''?'—':esc(v);
 }

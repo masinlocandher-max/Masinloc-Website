@@ -6,7 +6,7 @@ This runbook is the recovery, redeploy, and verification procedure. Do not infer
 
 ## Required pre-deploy checks
 
-From the repository root, all repository checks and all 12 browser suites must pass before a production code push or function redeploy:
+From the repository root, all repository checks and all 13 browser suites must pass before a production code push or function redeploy:
 
 ```bash
 for s in scripts/check-*.py; do python3 "$s"; done
