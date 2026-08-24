@@ -105,5 +105,11 @@
     "origin": "Google Drive - Masinloc Website Asset / Hero landing page",
     "note": "The landing page hero: Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta. Unlike the Connect, Discover and 404 artwork this arrives as a plain photograph with no logo, ribbons or baked-in text, so it is placed with object-fit like any editorial photograph — the frame moves, the photograph is not altered. Built by scripts/build-landing-hero.py. It replaces the aerial photograph as the homepage hero; that file is unchanged, still byte-locked, and still the share image for nine other pages.",
     "mapping": "scripts/build-landing-hero.py"
+  },
+  "marketplaceLogos": {
+    "directory": "assets/marketplace/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / Marketplace Logo",
+    "note": "Business logos supplied by the businesses themselves for publication in the Marketplace. scripts/build-marketplace-logos.py only re-encodes and resizes them: nothing is cropped, because a logo is finished artwork and trimming it returns a mark the business did not design. Each is shown contained in a square frame at its native ratio. A logo is read before it is published. Adaler's Grazing Delights supplied one with two mobile numbers set into the artwork, and this site publishes no phone numbers, so it is held back rather than cropped — the decision is the owner's. data/marketplace-logos.json records which have been reviewed and cleared."
   }
 }

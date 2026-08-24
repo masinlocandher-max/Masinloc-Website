@@ -182,8 +182,11 @@ def footer(depth: int) -> str:
 </footer>"""
 
 
-def head(*, title: str, description: str, url: str, depth: int, ld: str) -> str:
+def head(*, title: str, description: str, url: str, depth: int, ld: str,
+         image: str | None = None) -> str:
     up = "../" if depth else ""
+    # A business with a logo shares its own mark rather than the town hero.
+    og_image = image or f"{SITE}/assets/stage1/masinloc-hero.avif"
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -199,17 +202,17 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str) -> str:
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
+<meta property="og:image" content="{og_image}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{esc(title)}">
 <meta name="twitter:description" content="{esc(description)}">
-<meta name="twitter:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
+<meta name="twitter:image" content="{og_image}">
 <link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
 <link rel="stylesheet" href="{up}site.css?v=20260821-1">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="{up}marketplace.css?v=20260825-1">
+<link rel="stylesheet" href="{up}marketplace.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260823-1">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
@@ -280,6 +283,46 @@ def local_business_ld(business: dict) -> dict:
     return node
 
 
+LOGOS_MANIFEST = ROOT / "data" / "marketplace-logos.json"
+LOGOS = (json.loads(LOGOS_MANIFEST.read_text(encoding="utf-8"))
+         if LOGOS_MANIFEST.is_file() else {})
+
+
+def logo(slug: str, *, sizes: str, eager: bool = False) -> str:
+    """A business's logo, at whatever widths were actually built.
+
+    Returns "" when there is no logo, which is the normal case rather than an
+    error: a business whose artwork has not been supplied, or whose artwork is
+    held back, gets the letterform card instead. Nothing here ever emits a
+    frame it cannot fill.
+
+    The mark is never cropped. It keeps its own square and its own ground,
+    because a logo is finished artwork and trimming it produces a mark the
+    business did not design.
+    """
+    entry = LOGOS.get(slug)
+    if not entry or not entry.get("widths"):
+        return ""
+
+    widths = entry["widths"]
+    largest = widths[-1]
+    native = entry["native"]
+
+    def srcset(ext: str) -> str:
+        return ", ".join(f"../assets/marketplace/{slug}-{w}.{ext} {w}w" for w in widths)
+
+    loading = ('fetchpriority="high" decoding="async"' if eager
+               else 'loading="lazy" decoding="async"')
+    return (
+        f'<picture>'
+        f'<source type="image/avif" sizes="{sizes}" srcset="{srcset("avif")}">'
+        f'<source type="image/webp" sizes="{sizes}" srcset="{srcset("webp")}">'
+        f'<img src="../assets/marketplace/{slug}-{largest}.jpg" sizes="{sizes}" '
+        f'srcset="{srcset("jpg")}" width="{native["width"]}" height="{native["height"]}" '
+        f'alt="{esc(entry["alt"])}" {loading}>'
+        f'</picture>')
+
+
 def context_block(business: dict) -> str:
     """Where this business sits in Masinloc, in a sentence and a link or two.
 
@@ -316,10 +359,12 @@ def card(business: dict) -> str:
     """
     href = f"marketplace/{business['slug']}.html"
     label = LABEL[business["category"]]
-    if business.get("image"):
-        media = (f'<span class="mk-card-media">'
-                 f'<img src="{esc(business["image"])}" alt="{esc(business["name"])} logo" '
-                 f'loading="lazy" decoding="async"></span>')
+    # The card sits in a track that is 350-580px wide depending on the count and
+    # the viewport; the mark is shown small inside it, so a 160 or 320 wide
+    # derivative is plenty.
+    mark = logo(business["slug"], sizes="120px")
+    if mark:
+        media = f'<span class="mk-card-media">{mark.replace("../assets/", "assets/")}</span>'
         variant = ""
     else:
         media = f'<span class="mk-card-mark" aria-hidden="true">{esc(business["name"][:1])}</span>'
@@ -458,11 +503,9 @@ def detail_page(business: dict) -> str:
     ]
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, indent=2, ensure_ascii=False)
 
-    if business.get("image"):
-        media = (f'<figure class="mk-detail-media"><img src="../{esc(business["image"])}" '
-                 f'alt="{esc(business["name"])} logo" decoding="async"></figure>')
-    else:
-        media = f'<p class="mk-detail-mark" aria-hidden="true">{esc(business["name"][:1])}</p>'
+    mark = logo(slug, sizes="180px", eager=True)
+    media = (f'<figure class="mk-detail-media">{mark}</figure>' if mark
+             else f'<p class="mk-detail-mark" aria-hidden="true">{esc(business["name"][:1])}</p>')
 
     # Every row here is conditional. An absent field produces no row at all —
     # never an empty one and never a placeholder. There is no Contact row: the
@@ -480,7 +523,10 @@ def detail_page(business: dict) -> str:
         cta = (f'<a class="mk-detail-cta" href="{esc(business["facebook"])}" '
                f'rel="noopener nofollow" target="_blank">Message on Facebook</a>')
 
-    return f"""{head(title=title, description=description, url=url, depth=1, ld=ld)}
+    og_logo = (f"{SITE}/assets/marketplace/{slug}-{LOGOS[slug]['widths'][-1]}.jpg"
+           if LOGOS.get(slug, {}).get("widths") else None)
+
+    return f"""{head(title=title, description=description, url=url, depth=1, ld=ld, image=og_logo)}
 {nav(1)}
 <main id="main">
   {crumbs([("Masinloc, Zambales", "../index.html"),
@@ -531,9 +577,12 @@ def main() -> int:
     print(f"marketplace.html + {len(BUSINESSES)} business page(s)")
     print(f"categories with businesses: {', '.join(sorted(LABEL[c] for c in used))}")
     print(f"categories shown: only those {len(used)}, not all {len(CATEGORIES)}")
-    without = [b["name"] for b in BUSINESSES if not b.get("image")]
+    with_logo = [b["name"] for b in BUSINESSES if LOGOS.get(b["slug"], {}).get("widths")]
+    without = [b["name"] for b in BUSINESSES if not LOGOS.get(b["slug"], {}).get("widths")]
+    if with_logo:
+        print(f"logo published for: {', '.join(with_logo)}")
     if without:
-        print(f"no image available for: {', '.join(without)} — text-led cards used")
+        print(f"no logo published for: {', '.join(without)} — text-led cards used")
     return 0
 
 

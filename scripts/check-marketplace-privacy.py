@@ -165,6 +165,32 @@ def main() -> int:
                     problems.append(
                         f"data/marketplace.json: {label}.{key} contains the email {address}")
 
+    # A logo is an image of text as far as everything above is concerned. None
+    # of those checks can read pixels, so a phone number printed inside a mark
+    # would sail past all of them and still be perfectly readable to a visitor
+    # — and to image search. That is not hypothetical: Adaler's Grazing
+    # Delights supplied a logo with "ZAMBALES, 0950-417-2222/ 0909-184-6669"
+    # set into it, one of which is the number this site was told to stop
+    # publishing.
+    #
+    # So a published logo has to carry a recorded human review saying somebody
+    # looked at the artwork and found no contact details in it. The check
+    # cannot read the image; it can insist that a person did.
+    logos_file = ROOT / "data" / "marketplace-logos.json"
+    logos = json.loads(logos_file.read_text(encoding="utf-8")) if logos_file.is_file() else {}
+    for slug, entry in logos.items():
+        if not entry.get("widths"):
+            continue
+        review = entry.get("artworkReviewed")
+        if not review:
+            problems.append(
+                f"{slug}: a logo is published with no artworkReviewed record. Read the "
+                f"artwork at full size and record whether contact details are set into it.")
+        elif review.get("contactDetailsInArtwork"):
+            problems.append(
+                f"{slug}: the logo is published although its artwork is recorded as "
+                f"carrying contact details. This site publishes no phone numbers.")
+
     # Every approved business should actually have a page, or the directory is
     # quietly dropping somebody who was told they were listed.
     built = {p.stem for p in PAGES_DIR.glob("*.html")}

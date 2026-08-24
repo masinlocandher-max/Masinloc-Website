@@ -143,8 +143,18 @@
    gives an article with no artwork, so the two sections agree. */
 .mk-card-text>a{border-top-color:var(--yellow)}
 
-.mk-card-media{display:block;margin:0 0 14px;background:var(--soft);border-radius:10px;overflow:hidden}
-.mk-card-media img{display:block;width:100%;height:auto}
+/* A supplied logo, shown whole. These are square brand marks with their own
+   ground and their own margins, so the frame is square and the mark is
+   contained rather than covered — a crop would hand back a mark the business
+   did not design. The box is small on purpose: the card is a directory entry,
+   not a billboard. */
+.mk-card-media{
+  display:block;width:64px;height:64px;margin:0 0 14px;
+  border:1px solid var(--line);border-radius:14px;background:var(--white);
+  overflow:hidden;
+}
+.mk-card-media picture,.mk-card-media img{display:block;width:100%;height:100%}
+.mk-card-media img{object-fit:contain}
 
 .mk-card-mark{
   display:grid;place-items:center;
@@ -219,8 +229,13 @@
 
 .mk-detail{padding-top:clamp(16px,2.4vw,26px);padding-bottom:clamp(56px,7vw,88px)}
 .mk-detail-head{max-width:var(--mk-measure)}
-.mk-detail-media{margin:0 0 18px;max-width:180px}
-.mk-detail-media img{display:block;width:100%;height:auto;border-radius:12px}
+.mk-detail-media{
+  margin:0 0 18px;width:96px;height:96px;
+  border:1px solid var(--line);border-radius:18px;background:var(--white);
+  overflow:hidden;
+}
+.mk-detail-media picture,.mk-detail-media img{display:block;width:100%;height:100%}
+.mk-detail-media img{object-fit:contain}
 .mk-detail-mark{
   display:grid;place-items:center;
   width:66px;height:66px;margin:0 0 18px;

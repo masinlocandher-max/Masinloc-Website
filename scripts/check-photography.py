@@ -77,6 +77,7 @@ connect_dir = manifest["connect"]["directory"]
 discover_dir = manifest["discover"]["directory"]
 notfound_dir = manifest["notfound"]["directory"]
 landing_dir = manifest["landingHero"]["directory"]
+marketplace_dir = manifest["marketplaceLogos"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
@@ -169,6 +170,15 @@ for page in pages:
                      f"scripts/build-discover-assets.py")
             continue
 
+        # Marketplace business logos: assets/marketplace/<slug>-<width>.<ext>,
+        # built by scripts/build-marketplace-logos.py from the supplied files.
+        if path.startswith(marketplace_dir):
+            name = Path(path).stem
+            if not re.fullmatch(r"[a-z0-9-]+-\d+", name):
+                fail(f"{page.name}: {path} is not a build product of "
+                     f"scripts/build-marketplace-logos.py")
+            continue
+
         # The 404 artwork: assets/notfound/notfound-<width>.<ext>.
         if path.startswith(notfound_dir):
             name = Path(path).stem
@@ -203,7 +213,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
             or relative.startswith(connect_dir)
             or relative.startswith(discover_dir)
             or relative.startswith(notfound_dir)
-            or relative.startswith(landing_dir)):
+            or relative.startswith(landing_dir)
+            or relative.startswith(marketplace_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

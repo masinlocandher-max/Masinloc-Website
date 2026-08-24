@@ -1,0 +1,22 @@
+{
+  "diwan-coffee": {
+    "source": "Diwan.JPG",
+    "alt": "Diwan Coffee logo: a stylised coffee cup with a coffee bean and rising steam",
+    "native": {
+      "width": 2000,
+      "height": 2000
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480,
+      640
+    ],
+    "artworkReviewed": {
+      "date": "2026-08-24",
+      "contactDetailsInArtwork": false,
+      "note": "Read at full size before publishing. The mark is a stylised cup, a coffee bean and rising steam over the wordmark 'diwan coffee'. No phone number, email or address is set into the artwork."
+    }
+  }
+}
