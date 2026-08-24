@@ -18,5 +18,16 @@
       "contactDetailsInArtwork": false,
       "note": "Read at full size before publishing. The mark is a stylised cup, a coffee bean and rising steam over the wordmark 'diwan coffee'. No phone number, email or address is set into the artwork."
     }
+  },
+  "adalers-grazing-delights": {
+    "source": "Adalers.JPG",
+    "widths": [],
+    "heldBack": {
+      "date": "2026-08-24",
+      "decidedBy": "site owner",
+      "reason": "The supplied artwork has two mobile numbers set into it: 'ZAMBALES, 0950-417-2222/ 0909-184-6669'. The first is the number this site was asked to stop publishing; the second had never appeared in the submission data. This site publishes no phone numbers, and a number printed inside an image is as public as one printed in the markup while being invisible to every text-based check here.",
+      "notCropped": "Trimming the strip would also remove 'ZAMBALES' and the tagline and would publish a mark the business did not design. Logos are never cropped.",
+      "unblockedBy": "A version of the logo from the business without the contact strip. Drop it into the Marketplace Logo folder, remove the 'blocked' entry for this slug in scripts/build-marketplace-logos.py, run that script, then record an artworkReviewed block confirming no contact details are set into it."
+    }
   }
 }
