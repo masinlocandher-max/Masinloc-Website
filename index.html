@@ -22,7 +22,7 @@
 <meta name="twitter:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="preload" as="image" href="assets/stage1/masinloc-hero.avif" type="image/avif" fetchpriority="high">
+<link rel="preload" as="image" href="assets/hero/landing-hero-1280.avif" imagesrcset="assets/hero/landing-hero-640.avif 640w, assets/hero/landing-hero-960.avif 960w, assets/hero/landing-hero-1280.avif 1280w, assets/hero/landing-hero-1672.avif 1672w" imagesizes="100vw" type="image/avif" fetchpriority="high">
 <link rel="stylesheet" href="tokens.css?v=20260822-1">
 <link rel="stylesheet" href="site.css?v=20260820-1">
 <link rel="stylesheet" href="site-polish.css?v=20260820-1">
@@ -51,7 +51,11 @@
   <!-- 01 ................................................................. -->
   <section class="hero" aria-labelledby="heroTitle">
     <div class="hero-media">
-      <img src="assets/stage1/masinloc-hero.avif" alt="Masinloc, Zambales from the air, with San Andres Church and the town around it" width="1600" height="900" fetchpriority="high" decoding="async">
+      <picture>
+        <source type="image/avif" sizes="100vw" srcset="assets/hero/landing-hero-640.avif 640w, assets/hero/landing-hero-960.avif 960w, assets/hero/landing-hero-1280.avif 1280w, assets/hero/landing-hero-1672.avif 1672w">
+        <source type="image/webp" sizes="100vw" srcset="assets/hero/landing-hero-640.webp 640w, assets/hero/landing-hero-960.webp 960w, assets/hero/landing-hero-1280.webp 1280w, assets/hero/landing-hero-1672.webp 1672w">
+        <img src="assets/hero/landing-hero-1280.jpg" sizes="100vw" srcset="assets/hero/landing-hero-640.jpg 640w, assets/hero/landing-hero-960.jpg 960w, assets/hero/landing-hero-1280.jpg 1280w, assets/hero/landing-hero-1672.jpg 1672w" width="1672" height="941" alt="Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta" fetchpriority="high" decoding="async">
+      </picture>
     </div>
     <div class="hero-inner">
       <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
@@ -601,7 +605,7 @@
         "url": "https://masinloc-zambales.com/trust.html",
         "name": "Discover Masinloc and Masinloc Connect Platform Trust Information"
       },
-      "primaryImageOfPage": "https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif"
+      "primaryImageOfPage": "https://masinloc-zambales.com/assets/hero/landing-hero-1672.jpg"
     },
     {
       "@type": "Place",

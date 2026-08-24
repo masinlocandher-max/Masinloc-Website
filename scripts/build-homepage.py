@@ -272,7 +272,17 @@ def render() -> str:
     known = living_index()
     feature = known.get("lanom") or LIVING["entries"][0]
     left_cards, right_cards = entry_cards()
-    hero = "assets/stage1/masinloc-hero.avif"
+    # The landing hero is the supplied Binabayani photograph from Drive, served
+    # responsively. The aerial photograph it replaced is untouched and still
+    # byte-locked — nine other pages use it as their share image.
+    hero_sizes = "100vw"
+    def _hero_srcset(ext: str) -> str:
+        return ", ".join(f"assets/hero/landing-hero-{w}.{ext} {w}w"
+                         for w in (640, 960, 1280, 1672))
+
+    hero_avif = _hero_srcset("avif")
+    hero_webp = _hero_srcset("webp")
+    hero_jpg = _hero_srcset("jpg")
 
     return f"""<!doctype html>
 <html lang="en">
@@ -298,7 +308,7 @@ def render() -> str:
 <meta name="twitter:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="preload" as="image" href="{hero}" type="image/avif" fetchpriority="high">
+<link rel="preload" as="image" href="assets/hero/landing-hero-1280.avif" imagesrcset="{hero_avif}" imagesizes="{hero_sizes}" type="image/avif" fetchpriority="high">
 <link rel="stylesheet" href="tokens.css?v=20260822-1">
 <link rel="stylesheet" href="site.css?v=20260820-1">
 <link rel="stylesheet" href="site-polish.css?v=20260820-1">
@@ -327,7 +337,11 @@ def render() -> str:
   <!-- 01 ................................................................. -->
   <section class="hero" aria-labelledby="heroTitle">
     <div class="hero-media">
-      <img src="{hero}" alt="Masinloc, Zambales from the air, with San Andres Church and the town around it" width="1600" height="900" fetchpriority="high" decoding="async">
+      <picture>
+        <source type="image/avif" sizes="{hero_sizes}" srcset="{hero_avif}">
+        <source type="image/webp" sizes="{hero_sizes}" srcset="{hero_webp}">
+        <img src="assets/hero/landing-hero-1280.jpg" sizes="{hero_sizes}" srcset="{hero_jpg}" width="1672" height="941" alt="Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta" fetchpriority="high" decoding="async">
+      </picture>
     </div>
     <div class="hero-inner">
       <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
@@ -592,7 +606,7 @@ def render() -> str:
         "url": "https://masinloc-zambales.com/trust.html",
         "name": "Discover Masinloc and Masinloc Connect Platform Trust Information"
       }},
-      "primaryImageOfPage": "https://masinloc-zambales.com/{hero}"
+      "primaryImageOfPage": "https://masinloc-zambales.com/assets/hero/landing-hero-1672.jpg"
     }},
     {{
       "@type": "Place",

@@ -98,5 +98,12 @@
     "origin": "Google Drive - Masinloc Website Asset / 404",
     "note": "The artwork shown on the 404 page, supplied finished by the project: Binabayani performers photographed at a fiesta, darkened, with the official logo centred, the tricolour rule and the footer strip inside the frame. scripts/build-404-hero.py only re-encodes and resizes it; nothing is cropped, because a crop would cut the logo or the footer. Note that the message baked into the artwork reads “Maintenance on going”, which is not what a 404 means — the page carries its own message underneath rather than relying on the artwork to explain itself.",
     "mapping": "scripts/build-404-hero.py"
+  },
+  "landingHero": {
+    "directory": "assets/hero/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / Hero landing page",
+    "note": "The landing page hero: Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta. Unlike the Connect, Discover and 404 artwork this arrives as a plain photograph with no logo, ribbons or baked-in text, so it is placed with object-fit like any editorial photograph — the frame moves, the photograph is not altered. Built by scripts/build-landing-hero.py. It replaces the aerial photograph as the homepage hero; that file is unchanged, still byte-locked, and still the share image for nine other pages.",
+    "mapping": "scripts/build-landing-hero.py"
   }
 }

@@ -39,5 +39,19 @@
       1280,
       1672
     ]
+  },
+  "landing-hero": {
+    "source": "landing-hero.png",
+    "native": {
+      "width": 1672,
+      "height": 941
+    },
+    "ratio": 1.7768,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
   }
 }

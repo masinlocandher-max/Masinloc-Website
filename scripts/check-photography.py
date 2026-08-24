@@ -76,6 +76,7 @@ leadership_dir = manifest["leadership"]["directory"]
 connect_dir = manifest["connect"]["directory"]
 discover_dir = manifest["discover"]["directory"]
 notfound_dir = manifest["notfound"]["directory"]
+landing_dir = manifest["landingHero"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
@@ -176,6 +177,14 @@ for page in pages:
                      f"scripts/build-404-hero.py")
             continue
 
+        # The landing hero: assets/hero/landing-hero-<width>.<ext>.
+        if path.startswith(landing_dir):
+            name = Path(path).stem
+            if not re.fullmatch(r"landing-hero-\d+", name):
+                fail(f"{page.name}: {path} is not a build product of "
+                     f"scripts/build-landing-hero.py")
+            continue
+
         fail(f"{page.name}: {path} is not listed in data/photography.json")
 
 # Every approved photograph should actually exist.
@@ -193,7 +202,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
             or relative.startswith(leadership_dir)
             or relative.startswith(connect_dir)
             or relative.startswith(discover_dir)
-            or relative.startswith(notfound_dir)):
+            or relative.startswith(notfound_dir)
+            or relative.startswith(landing_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 

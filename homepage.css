@@ -117,7 +117,14 @@ html{scroll-padding-top:96px}
    to the right, leaving the left as deliberate negative space for type. It
    bleeds past the gutter rather than sitting in a container. */
 .hero-media{
-  position:absolute;inset:0 0 0 auto;width:min(82%,1420px);
+  /* Full bleed, not the right 82%. Insetting the frame left a hard vertical
+     edge where the photograph stopped and the navy field began — measured as a
+     258-value single-pixel step at 18% of the viewport width. The aerial
+     photograph this replaced was dark along that line so the seam never showed;
+     the Binabayani photograph has bright sky and white costumes there, and the
+     cut was obvious. The scrim below already carries the left side to solid
+     navy for the type, so the frame has no reason to stop early. */
+  position:absolute;inset:0;
   z-index:0;
 }
 .hero-media::after{

@@ -175,8 +175,14 @@ for page in pages:
         fail(f"{name}: canonical does not point at {SITE}: {parser.canonical}")
 
     # --- one H1, in order ------------------------------------------------
+    # A MINIMAL page is one whose entire content is a single supplied artwork
+    # carrying its own message. 404.html is the only one: it is noindex, it has
+    # no prose to head, and a heading there would either duplicate what the
+    # artwork already says or contradict it. The landmark and alt-text rules
+    # below still apply, because those are about whether the page is navigable
+    # and readable rather than about how it ranks.
     h1s = [text for level, text in parser.headings if level == 1]
-    if len(h1s) != 1:
+    if name not in MINIMAL and len(h1s) != 1:
         fail(f"{name}: expected exactly one H1, found {len(h1s)}")
 
     levels = [level for level, _ in parser.headings]
@@ -191,7 +197,12 @@ for page in pages:
             break
 
     # --- semantics -------------------------------------------------------
-    for landmark in ("main", "header", "footer"):
+    # A MINIMAL page still needs <main> and <header> — the first so assistive
+    # technology can reach the content, the second because it carries the only
+    # link out. It does not need a <footer>, having no secondary navigation to
+    # put in one.
+    required_landmarks = ("main", "header") if name in MINIMAL else ("main", "header", "footer")
+    for landmark in required_landmarks:
         if landmark not in parser.landmarks:
             fail(f"{name}: no <{landmark}> landmark")
 

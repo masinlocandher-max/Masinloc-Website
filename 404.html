@@ -13,61 +13,40 @@
 <link rel="stylesheet" href="site.css?v=20260820-1">
 <link rel="stylesheet" href="site-stability.css?v=20260821-1">
 <style>
-/* One navy field with the approved artwork at the top of it.
+/* The artwork is the page. No headline, no paragraph, no buttons — the supplied
+   piece carries its own message, its own logo and its own footer strip, and it
+   was asked to stand on its own.
 
-   The artwork is shown whole. It is 1536x1024 and it carries the logo, the
-   tricolour rule and the footer strip inside the frame, so it is never cropped
-   to a layout ratio — the layout takes its ratio instead.
+   It is shown whole and never cropped: 1536x1024, scaled to fit the viewport in
+   both directions so nothing inside the frame is ever cut off.
 
-   The artwork's own message is "Maintenance on going". That is not what a 404
-   means, so the page does not rely on it: the real message sits underneath in
-   the site's own voice, where the two agree rather than contradict each other.
-   The artwork also cannot give anybody somewhere to go, which is what the links
-   below it are for.
-
-   Colours come from tokens.css, which this page already loads. */
+   Two things remain, and both are deliberate. The masthead is the page's only
+   landmark and its only way back into the site; without it the page has no
+   <header> element and no exit, which the guards fail on and which strands
+   anybody arriving from a stale link. And the alt text repeats the words
+   printed inside the artwork, because an image of text is silent to a screen
+   reader — that is not extra text on the page, it is the same message made
+   available to somebody who cannot see it. */
 body{background:var(--navy);color:var(--white);min-height:100svh;
-  display:flex;flex-direction:column}
+  display:flex;align-items:center;justify-content:center;padding:0;margin:0}
 
-/* The masthead stays. Removing it cost the page its <header> landmark and its
-   only clickable route home — both caught by the guards. It is small and
-   knocked out to white; the large centred logo inside the artwork is part of
-   the artwork and is not a link. */
-.not-found-head{padding:18px clamp(20px,5vw,48px) 10px}
-.not-found-head img{height:30px;width:auto;display:block;filter:brightness(0) invert(1)}
+.nf-head{position:absolute;top:0;left:0;padding:18px clamp(18px,4vw,40px)}
+.nf-head img{height:28px;width:auto;display:block;filter:brightness(0) invert(1)}
+.nf-head a:focus-visible{outline:3px solid rgba(255,255,255,.7);outline-offset:4px}
 
-/* Capped by height, not cropped. At full width the artwork filled a desktop
-   screen on its own, which left a visitor who followed a broken link reading
-   "Maintenance on going" with no other message in view. Constraining the height
-   and letting the width follow keeps every pixel of the artwork and puts the
-   page's real message and its links on the same screen. */
-.not-found-art{display:flex;justify-content:center;padding:0 clamp(14px,3vw,32px)}
-.not-found-art img{display:block;max-width:100%;max-height:56vh;width:auto;height:auto}
-
-.not-found{flex:1;display:grid;place-items:center;
-  padding:clamp(28px,5vw,52px) 24px clamp(40px,6vw,64px);text-align:center}
-.not-found-inner{max-width:640px}
-.not-found h1{margin:0;font-family:var(--font-editorial);
-  font-size:clamp(38px,6vw,64px);font-weight:400;line-height:1;letter-spacing:-.035em}
-.not-found p{margin:20px auto 30px;max-width:520px;
-  color:rgba(255,255,255,.76);font-size:15px;line-height:1.7}
-.not-found-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.not-found-foot{padding:0 clamp(20px,5vw,48px) 34px;text-align:center;
-  font:400 13px/1.7 var(--font-ui);color:rgba(255,255,255,.6)}
-.not-found-foot a{color:rgba(255,255,255,.88)}
-.not-found-foot a:hover,.not-found-foot a:focus-visible{color:var(--white)}
+.nf-art{margin:0;padding:clamp(56px,9vw,86px) clamp(12px,3vw,28px) clamp(20px,4vw,32px);
+  display:flex;justify-content:center;width:100%}
+.nf-art img{display:block;max-width:100%;max-height:84svh;width:auto;height:auto}
 </style>
 </head>
 <body>
-<header class="not-found-head"><a href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a></header>
-<figure class="not-found-art">
+<header class="nf-head"><a href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a></header>
+<main><figure class="nf-art">
   <picture>
     <source type="image/avif" sizes="(min-width: 1180px) 1180px, 100vw" srcset="assets/notfound/notfound-640.avif 640w, assets/notfound/notfound-960.avif 960w, assets/notfound/notfound-1280.avif 1280w, assets/notfound/notfound-1536.avif 1536w">
     <source type="image/webp" sizes="(min-width: 1180px) 1180px, 100vw" srcset="assets/notfound/notfound-640.webp 640w, assets/notfound/notfound-960.webp 960w, assets/notfound/notfound-1280.webp 1280w, assets/notfound/notfound-1536.webp 1536w">
-    <img src="assets/notfound/notfound-1280.jpg" sizes="(min-width: 1180px) 1180px, 100vw" srcset="assets/notfound/notfound-640.jpg 640w, assets/notfound/notfound-960.jpg 960w, assets/notfound/notfound-1280.jpg 1280w, assets/notfound/notfound-1536.jpg 1536w" width="1536" height="1024" alt="Binabayani performers at a Masinloc fiesta, beneath the Masinloc Zambales mark" fetchpriority="high" decoding="async">
+    <img src="assets/notfound/notfound-1280.jpg" sizes="(min-width: 1180px) 1180px, 100vw" srcset="assets/notfound/notfound-640.jpg 640w, assets/notfound/notfound-960.jpg 960w, assets/notfound/notfound-1280.jpg 1280w, assets/notfound/notfound-1536.jpg 1536w" width="1536" height="1024" alt="Maintenance on going. We are currently improving your experience. We will be back soon." fetchpriority="high" decoding="async">
   </picture>
-</figure>
-<main class="not-found"><div class="not-found-inner"><h1>Wala pa kami rito.</h1><p>We are building this a piece at a time, and this corner is still empty. If you followed a link to get here, it has either moved or has not been published yet. Here is what is already up.</p><div class="not-found-actions"><a class="button primary" href="index.html">Home</a><a class="button secondary" href="discover/index.html">Discover Masinloc</a><a class="button secondary" href="connect.html">Masinloc Connect</a></div></div></main>
-<footer class="not-found-foot"><p>Masinloc, Zambales &middot; <a href="index.html">Home</a> &middot; <a href="discover/index.html">Discover</a> &middot; <a href="sambal-tina.html">Sambal Tina Dictionary</a> &middot; <a href="destinations.html">Places</a> &middot; <a href="leadership.html">Municipal Leadership</a></p></footer>
+</figure></main>
 </body>
 </html>

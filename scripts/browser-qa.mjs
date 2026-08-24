@@ -106,6 +106,40 @@ async function assertVerifiedImage(page, selector, label) {
    falls back to the landscape file and the hero becomes an unrecognisable
    fragment — visible to a person, invisible to a test that only checks pixels
    decoded. This checks the file that was actually chosen. */
+/* The landing hero is a responsive srcset now, so a fixed decoded size is the
+   wrong assertion — it would fail on any viewport that legitimately picks a
+   different width. What must hold is that the homepage is serving its own hero
+   from the approved family, at the source photograph's own 16:9, visible and
+   opaque. */
+async function assertLandingHero(page, viewportName) {
+  const image = page.locator('.hero-media img');
+  if (!(await image.isVisible())) {
+    failures.push(`${viewportName}/home hero: image is not visible`);
+    return;
+  }
+  const state = await image.evaluate((img) => ({
+    src: img.currentSrc || img.src,
+    w: img.naturalWidth,
+    h: img.naturalHeight,
+    opacity: Number(getComputedStyle(img).opacity),
+  }));
+  if (!/assets\/hero\/landing-hero-/.test(state.src)) {
+    failures.push(`${viewportName}/home hero: serving ${state.src}, not the approved landing hero`);
+    return;
+  }
+  if (!state.w || !state.h) {
+    failures.push(`${viewportName}/home hero: image did not decode`);
+    return;
+  }
+  const ratio = state.w / state.h;
+  if (Math.abs(ratio - 16 / 9) > 0.02) {
+    failures.push(`${viewportName}/home hero: decoded at ${ratio.toFixed(3)}, expected 16:9`);
+  }
+  if (state.opacity < 0.9) {
+    failures.push(`${viewportName}/home hero: image opacity ${state.opacity}`);
+  }
+}
+
 async function assertConnectHero(page, viewportName) {
   const image = page.locator('.landing-view .hero-img');
   if (!(await image.isVisible())) {
@@ -269,7 +303,7 @@ for (const [viewportName, viewport] of viewports) {
       if (pageName !== 'admin') await assertThemeColour(page, pageName, viewportName);
 
       if (pageName === 'home') {
-        await assertVerifiedImage(page, '.hero-media img', `${viewportName}/home hero`);
+        await assertLandingHero(page, viewportName);
       }
 
       if (pageName === 'connect') {
