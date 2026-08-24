@@ -186,7 +186,11 @@
       "photo": "32FB1D9E-23A6-4AF5-A730-49B843DDD671.png",
       "card": "16967159-8517-4F18-9B9C-FA1338724144.jpg",
       "focus": "50% 46%",
-      "caption": "A public seafront walk in the Masinloc town centre, and the site of the town's MASINLOC sign."
+      "caption": "A public seafront walk in the Masinloc town centre, and the site of the town's MASINLOC sign.",
+      "reads": {
+        "href": "marketplace/diwan-coffee.html",
+        "label": "Diwan Coffee, at the Pasalubong Center here"
+      }
     }
   ]
 }

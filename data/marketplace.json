@@ -8,10 +8,8 @@
     "there is no migration here describing it. More importantly there is no",
     "public read path to it: the table has no anon SELECT policy, and the",
     "columns a visitor may see have never been separated from the ones they may",
-    "not. The dictionary has that separation — sambal-tina.js reads",
-    "dictionary_entries with an explicit column list against a published-only",
-    "policy — and until business_submissions has the same, a browser cannot be",
-    "pointed at it without risking owner_name, owner_email and owner_phone.",
+    "not. Until it has that separation, a browser cannot be pointed at it without",
+    "risking owner_name, owner_email and owner_phone.",
     "",
     "So this file carries only what a business asked to have published, entered",
     "deliberately rather than queried indiscriminately. Approved-only holds by",
@@ -21,40 +19,73 @@
     "supabase/MARKETPLACE-LIVE-DATA.md describes what to deploy to move this to",
     "a live feed, and what the page would then read.",
     "",
-    "WHAT MAY AND MAY NOT APPEAR HERE",
+    "NO PHONE NUMBERS, ANYWHERE",
     "",
-    "The submission form collects two phone numbers and the distinction is the",
-    "whole privacy model: contact_number is the number the business wants",
-    "customers to call, owner_phone is the owner's own line. Only the first is",
-    "public. Likewise owner_name and owner_email are never published, and",
-    "neither are reference codes, submission ids, moderation status or",
-    "dashboard-interest flags.",
+    "Both businesses submitted a mobile number and neither is published. The",
+    "public contact method is Facebook. The numbers are not held here at all —",
+    "not in a private key, not commented out — because a field that is absent",
+    "from the data cannot leak into a page, a script, a data attribute or a",
+    "JSON-LD block by mistake. contact and contact_number are in the generator's",
+    "FORBIDDEN list, so re-adding one fails the build rather than shipping.",
+    "",
+    "Likewise owner_name, owner_email, owner_phone, reference codes, submission",
+    "ids, moderation status and dashboard-interest flags never appear here.",
+    "",
+    "THE FACEBOOK LINKS ARE SHARE LINKS",
+    "",
+    "Both are facebook.com/share/... URLs, which is what the businesses supplied.",
+    "They resolve to the right page, and they are published as-is. They are not",
+    "canonical Page URLs and nothing here describes them as such; rewriting one",
+    "into a cleaner-looking /pagename form would be inventing an address.",
+    "",
+    "WHAT MAY AND MAY NOT APPEAR HERE",
     "",
     "Public fields, matching what the edge function writes:",
     "  brand_name -> name, store_locations -> location,",
-    "  short_description -> description, contact_number -> contact,",
-    "  facebook_page -> facebook",
+    "  short_description -> description, facebook_page -> facebook",
     "",
-    "'category' is the one field with no column behind it. It is editorial",
-    "classification, not submitted data, which is why it lives here and is kept",
-    "to a short list rather than invented per business.",
+    "'category', 'descriptor', 'schemaType' and 'metaDescription' have no column",
+    "behind them. They are editorial: how the business is classified, how it is",
+    "described in a search result, and which schema.org subtype is defensible for",
+    "it. They live here because a human decided them, not because a table did.",
     "",
     "IMAGES",
     "",
     "Logos are uploaded to masinloc-business-assets, which the edge function",
-    "creates with public:false. A public page cannot load them, and signing a",
-    "URL needs the service role. Neither business therefore carries an image,",
-    "and the cards are built to look deliberate without one rather than to show",
-    "a broken frame. See the runbook for the two ways to change that."
+    "creates with public:false. A public page cannot load them, and signing a URL",
+    "needs the service role. Neither business therefore carries an image, and the",
+    "cards are built to look deliberate without one rather than to show a broken",
+    "frame. See the runbook for the two ways to change that."
   ],
   "categories": [
-    { "id": "food-drinks", "label": "Food & Drinks" },
-    { "id": "catering-events", "label": "Catering & Events" },
-    { "id": "retail", "label": "Retail" },
-    { "id": "beauty-wellness", "label": "Beauty & Wellness" },
-    { "id": "services", "label": "Services" },
-    { "id": "tourism-accommodation", "label": "Tourism & Accommodation" },
-    { "id": "other", "label": "Other" }
+    {
+      "id": "food-drinks",
+      "label": "Food & Drinks"
+    },
+    {
+      "id": "catering-events",
+      "label": "Catering & Events"
+    },
+    {
+      "id": "retail",
+      "label": "Retail"
+    },
+    {
+      "id": "beauty-wellness",
+      "label": "Beauty & Wellness"
+    },
+    {
+      "id": "services",
+      "label": "Services"
+    },
+    {
+      "id": "tourism-accommodation",
+      "label": "Tourism & Accommodation"
+    },
+    {
+      "id": "other",
+      "label": "Other"
+    }
   ],
   "businesses": [
     {
@@ -64,9 +95,16 @@
       "location": "Masinloc Baywalk, Pasalubong Center Stall #8, Masinloc, Zambales",
       "barangay": "Masinloc Baywalk",
       "description": "Coffee, non-coffee drinks, freshly made pastries, and signature drinks including the Diwan Alon Latte and the Diwan Alon Biscoff Latte.",
-      "contact": "0905 515 6571",
-      "contactDigits": "+639055156571",
-      "_facebook": "The submitted Facebook entry has not been verified as a resolvable page URL, so no link is published. Nothing is guessed or tidied into a canonical form."
+      "descriptor": "Coffee Shop",
+      "schemaType": "CafeOrCoffeeShop",
+      "metaDescription": "Diwan Coffee is a coffee shop at Masinloc Baywalk in Masinloc, Zambales, serving coffee, non-coffee drinks and freshly made pastries. Find it on Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/19N6bZoTdn/?mibextid=wwXIfr",
+      "context": [
+        {
+          "label": "Masinloc Baywalk, where this stall is",
+          "href": "../destinations.html#masinloc-baywalk"
+        }
+      ]
     },
     {
       "slug": "adalers-grazing-delights",
@@ -75,9 +113,16 @@
       "location": "Barangay Inhobol, Masinloc, Zambales",
       "barangay": "Inhobol",
       "description": "Grazing tables and food stations, including kakanin, bread, street food and food offerings for events.",
-      "contact": "0950 417 2222",
-      "contactDigits": "+639504172222",
-      "_facebook": "A Facebook share URL was submitted. A share URL is not a page URL, and rewriting one into the other would be inventing an address, so no link is published until the page's own URL is confirmed."
+      "descriptor": "Catering",
+      "schemaType": "FoodEstablishment",
+      "metaDescription": "Adaler's Grazing Delights provides catering, grazing tables and food stations for events in Barangay Inhobol, Masinloc, Zambales. Find it on Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/1HkafuWsjt/?mibextid=wwXIfr",
+      "context": [
+        {
+          "label": "Barangay Inhobol, and the other twelve",
+          "href": "../discover/thirteen-ways-to-be-masinloc.html"
+        }
+      ]
     }
   ]
 }

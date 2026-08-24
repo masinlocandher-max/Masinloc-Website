@@ -10,17 +10,26 @@ inventory, because none of those help with that.
 
 WHAT IT REFUSES TO PRINT
 
-The submission form collects two phone numbers, and the difference is the
-privacy model in one line: contact_number is the number a business wants
-customers to ring, owner_phone is the owner's own. Only the first appears here.
-Neither owner_name nor owner_email is carried in the data file at all, so there
-is no path by which they could reach a page — the safest way to not leak a
-field is to not have it. Reference codes, submission ids, moderation status and
-dashboard-interest flags are the same.
+No phone numbers. Not the owner's, and not the business contact number either.
+The submission form collects both, and both stay in the submissions table where
+only the admin console can see them; the public contact method is Facebook.
 
-That is enforced rather than trusted: PUBLIC_FIELDS below is the whole list of
-keys a business may carry, and an unexpected key fails the build. If somebody
-later pastes a raw submission row into the data file, this stops it.
+The numbers are not held in this repository at all — not in the data file, not
+in a key prefixed to mark it private, not commented out. That is the point. A
+field that does not exist cannot be rendered into a page, a data attribute, a
+script object or a JSON-LD block by a future edit that forgets why it mattered.
+The same is true of owner_name, owner_email, reference codes, submission ids,
+moderation status and dashboard-interest flags.
+
+That is enforced rather than trusted, in three ways. PUBLIC_FIELDS is the whole
+list of keys a business may carry, so an unexpected key fails the build.
+FORBIDDEN names the private ones explicitly, so re-adding `contact` is a build
+failure and not a silent regression. And every string value is checked against
+the shape of a Philippine mobile number, so one pasted into a description is
+caught too.
+
+scripts/check-marketplace-privacy.py then re-checks the built pages, because
+the data being clean and the pages being clean are different claims.
 
 ABSENT FIELDS ARE ABSENT
 
@@ -51,14 +60,31 @@ SITE = "https://masinloc-zambales.com"
 # render. Both should stop the build.
 PUBLIC_FIELDS = {
     "slug", "name", "category", "location", "barangay", "description",
-    "contact", "contactDigits", "image", "facebook",
+    "descriptor", "schemaType", "metaDescription", "image", "facebook",
+    "context",
 }
-# Keys that would mean a raw submission row had been pasted in.
+# Keys that would mean a raw submission row had been pasted in — or that a
+# phone number had found its way back. Both businesses submitted a mobile
+# number and neither is published; Facebook is the public contact method. The
+# numbers are not held anywhere in this repository, because a field that does
+# not exist cannot leak into a page, a data attribute or a JSON-LD block.
 FORBIDDEN = {
     "owner_name", "owner_email", "owner_phone", "ownerName", "ownerEmail",
     "ownerPhone", "reference_code", "referenceCode", "id", "status",
     "dashboard_interest", "dashboard_interest_at", "internal_notes", "notes",
     "brand_logo_path",
+    "contact", "contactDigits", "contact_number", "contactNumber",
+    "phone", "telephone", "mobile",
+}
+
+# schema.org subtypes a business may claim. Each is a real type on the
+# LocalBusiness branch, and each has to be defensible from what the business
+# actually said it does — a coffee shop may be a CafeOrCoffeeShop; nothing here
+# may claim a Restaurant or a Hotel on a hunch.
+SCHEMA_TYPES = {
+    "LocalBusiness", "FoodEstablishment", "CafeOrCoffeeShop", "Bakery",
+    "Restaurant", "Store", "HealthAndBeautyBusiness", "ProfessionalService",
+    "LodgingBusiness", "TouristAttraction",
 }
 
 spec = json.loads(DATA.read_text(encoding="utf-8"))
@@ -100,6 +126,19 @@ def validate() -> list[str]:
         if facebook is not None:
             if not re.match(r"^https://(www\.|m\.)?(facebook\.com|fb\.com)/.+", facebook):
                 problems.append(f"{name}: facebook {facebook!r} is not a resolvable https Facebook URL")
+
+        subtype = business.get("schemaType")
+        if subtype is not None and subtype not in SCHEMA_TYPES:
+            problems.append(f"{name}: schemaType {subtype!r} is not an allowed schema.org subtype")
+
+        # A phone number reaching a public page is the failure this whole file
+        # is arranged to prevent, so it is checked by shape as well as by key
+        # name. A number pasted into a description would pass the key check.
+        for key, value in business.items():
+            if isinstance(value, str) and re.search(r"(?:\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}", value):
+                problems.append(
+                    f"{name}: {key} contains what looks like a mobile number. "
+                    f"The Marketplace publishes no phone numbers.")
     return problems
 
 
@@ -170,7 +209,7 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str) -> str:
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
 <link rel="stylesheet" href="{up}site.css?v=20260821-1">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="{up}marketplace.css?v=20260824-1">
+<link rel="stylesheet" href="{up}marketplace.css?v=20260825-1">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260823-1">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
@@ -198,12 +237,29 @@ def local_business_ld(business: dict) -> dict:
     """Only fields the business actually supplied.
 
     Nothing is inferred: no opening hours, no price range, no geo coordinates,
-    no aggregate rating. A directory that decorates its structured data with
-    guesses is publishing claims the business never made.
+    no aggregate rating, no menu, no served cuisine, no awards. A directory
+    that decorates its structured data with guesses is publishing claims the
+    business never made, and structured data is the easiest place to do that
+    because nobody reads it.
+
+    NO TELEPHONE. Neither business's number is published anywhere on this site,
+    and JSON-LD is machine-readable text in the page source like any other — a
+    number here would be as public as one printed on the page, and more likely
+    to be missed in review.
+
+    The subtype comes from the data rather than being guessed here. A coffee
+    shop that says it sells coffee may be a CafeOrCoffeeShop; a caterer is a
+    FoodEstablishment, which is true of anyone who prepares food for people,
+    rather than a Restaurant, which would assert premises they never claimed.
+
+    `containedInPlace` is the entity link that matters for a directory like
+    this: it ties each business to Masinloc as a place, which is the context
+    somebody searching "coffee shop Masinloc" is actually using.
     """
+    url = f"{SITE}/marketplace/{business['slug']}.html"
     node = {
-        "@type": "LocalBusiness",
-        "@id": f"{SITE}/marketplace/{business['slug']}.html#business",
+        "@type": business.get("schemaType", "LocalBusiness"),
+        "@id": f"{url}#business",
         "name": business["name"],
         "description": business["description"],
         "address": {"@type": "PostalAddress",
@@ -211,13 +267,44 @@ def local_business_ld(business: dict) -> dict:
                     "addressLocality": "Masinloc",
                     "addressRegion": "Zambales",
                     "addressCountry": "PH"},
-        "url": f"{SITE}/marketplace/{business['slug']}.html",
+        "areaServed": {"@type": "Place", "name": "Masinloc, Zambales, Philippines"},
+        "containedInPlace": {"@type": "Place", "name": "Masinloc, Zambales, Philippines"},
+        "url": url,
+        "isPartOf": {"@id": f"{SITE}/marketplace.html#directory"},
     }
-    if business.get("contactDigits"):
-        node["telephone"] = business["contactDigits"]
+    # A share link is still a link to the business's own Facebook, so it
+    # identifies them. It is not a canonical Page URL and is not described as
+    # one anywhere; rewriting it into a tidier form would invent an address.
     if business.get("facebook"):
         node["sameAs"] = [business["facebook"]]
     return node
+
+
+def context_block(business: dict) -> str:
+    """Where this business sits in Masinloc, in a sentence and a link or two.
+
+    This exists for a reader first. Somebody who has just found a coffee stall
+    reasonably wonders where the Baywalk is, and the site has a page about it.
+    That the same link also tells a search engine this page belongs to a body
+    of Masinloc content is a consequence of the link being real, not the reason
+    for it — which is why there is exactly one, chosen per business, pointing
+    at the place its own submitted address names. A block of assorted links to
+    unrelated pages would help nobody and would be obvious.
+    """
+    links = business.get("context") or []
+    items = "".join(
+        f'<li><a href="{esc(link["href"])}">{esc(link["label"])}</a></li>'
+        for link in links)
+    return f"""    <section class="mk-context" aria-labelledby="mkContextTitle">
+      <h2 id="mkContextTitle">In Masinloc</h2>
+      <p>{esc(business["name"])} is listed in the Masinloc Connect Marketplace, a
+        directory of businesses in the municipality of Masinloc, Zambales. Listings
+        are reviewed before they appear, and show only the details a business
+        chose to publish.</p>
+      {f'<ul class="mk-context-links">{items}</ul>' if items else ''}
+    </section>
+
+"""
 
 
 def card(business: dict) -> str:
@@ -342,8 +429,26 @@ def detail_page(business: dict) -> str:
     url = f"{SITE}/marketplace/{slug}.html"
     label = LABEL[business["category"]]
 
-    title = f"{business['name']} | Masinloc Marketplace"
-    description = business["description"][:300]
+    # Name, what it is, where it is, and whose directory it is on — in that
+    # order, because that is the order of usefulness to somebody reading a
+    # result. Somebody searching "coffee shop Masinloc" and somebody searching
+    # "Diwan Coffee" are both served by the same honest sentence, and neither
+    # needs the town repeated three times to find it.
+    #
+    # The brand segment is dropped when the title would overrun. A search
+    # result truncates around sixty-five characters, and with all four segments
+    # "Adaler's Grazing Delights | Catering in Masinloc, Zambales | Masinloc
+    # Connect" is seventy-seven — so the part that would actually be cut is
+    # "Masinloc Connect", the one segment that is pure brand. Losing it in the
+    # title costs nothing: it is still the og:site_name, the breadcrumb, the
+    # navigation and the sentence under the facts. Losing "in Masinloc,
+    # Zambales" to a truncated tail would cost the search this page is for.
+    descriptor = business.get("descriptor")
+    stem = (f"{business['name']} | {descriptor} in Masinloc, Zambales" if descriptor
+            else f"{business['name']} | Masinloc, Zambales")
+    with_brand = f"{stem} | Masinloc Connect"
+    title = with_brand if len(with_brand) <= 65 else stem
+    description = business.get("metaDescription") or business["description"][:300]
 
     graph = [
         breadcrumb_ld([("Masinloc, Zambales", f"{SITE}/"),
@@ -360,22 +465,20 @@ def detail_page(business: dict) -> str:
         media = f'<p class="mk-detail-mark" aria-hidden="true">{esc(business["name"][:1])}</p>'
 
     # Every row here is conditional. An absent field produces no row at all —
-    # never an empty one and never a placeholder.
+    # never an empty one and never a placeholder. There is no Contact row: the
+    # only contact method published is Facebook, below.
     rows = [f'<div class="mk-fact"><dt>Category</dt><dd>{esc(label)}</dd></div>',
-            f'<div class="mk-fact"><dt>Location</dt><dd>{esc(business["location"])}</dd></div>']
-    if business.get("contact"):
-        tel = business.get("contactDigits") or re.sub(r"\D", "", business["contact"])
-        rows.append(f'<div class="mk-fact"><dt>Contact</dt>'
-                    f'<dd><a href="tel:{esc(tel)}">{esc(business["contact"])}</a></dd></div>')
+            f'<div class="mk-fact"><dt>Location</dt>'
+            f'<dd>{esc(business["location"])}</dd></div>']
     if business.get("facebook"):
-        rows.append(f'<div class="mk-fact"><dt>Facebook</dt>'
+        rows.append(f'<div class="mk-fact"><dt>Contact</dt>'
                     f'<dd><a href="{esc(business["facebook"])}" rel="noopener nofollow" '
-                    f'target="_blank">{esc(business["name"])} on Facebook</a></dd></div>')
+                    f'target="_blank">Message {esc(business["name"])} on Facebook</a></dd></div>')
 
     cta = ""
-    if business.get("contact"):
-        tel = business.get("contactDigits") or re.sub(r"\D", "", business["contact"])
-        cta = (f'<a class="mk-detail-cta" href="tel:{esc(tel)}">Call {esc(business["name"])}</a>')
+    if business.get("facebook"):
+        cta = (f'<a class="mk-detail-cta" href="{esc(business["facebook"])}" '
+               f'rel="noopener nofollow" target="_blank">Message on Facebook</a>')
 
     return f"""{head(title=title, description=description, url=url, depth=1, ld=ld)}
 {nav(1)}
@@ -397,6 +500,7 @@ def detail_page(business: dict) -> str:
       {chr(10).join("      " + r for r in rows).strip()}
     </dl>
 
+{context_block(business)}
     <p class="mk-back"><a href="../marketplace.html">Back to the Marketplace</a></p>
   </article>
 </main>

@@ -19,10 +19,14 @@ WHAT IT LOOKS FOR
 
 2. Anything that looks like a private contact regardless of what it is called.
    An email address on a marketplace page is almost certainly an owner's, since
-   no public field in the schema holds one. A phone number is checked against
-   the numbers the data file actually publishes, so a second, unpublished
-   number appearing in a page is caught even though phone numbers in general
-   are expected there.
+   no public field in the schema holds one.
+
+   Phone numbers are simpler than they used to be: there is no allowlist. The
+   Marketplace publishes no number of any kind — the public contact method is
+   Facebook — so any Philippine mobile number appearing anywhere in a page is a
+   leak by definition, whether it is in the markup, a data attribute, a script
+   object, a meta tag or a JSON-LD block. A tel: link fails on sight, since the
+   only thing it can carry is a number.
 
 3. Invented trust signals. Ratings, review counts, "verified" badges and
    follower counts are not in the data and cannot be, so if one appears
@@ -53,6 +57,9 @@ PRIVATE_NAMES = [
     "dashboard_interest", "dashboardInterest", "internal_notes", "internalNotes",
     "brand_logo_path", "submission_id", "submissionId",
     "moderation", "reviewer", "admin_note",
+    # The Marketplace publishes no phone number of any kind, so the field names
+    # that would carry one are private here too.
+    "contact_number", "contactNumber", "contactDigits", "telephone",
 ]
 
 # Marketing furniture that would have to be invented to appear.
@@ -68,11 +75,6 @@ PHONE = re.compile(r"(?:\+?63|0)9\d{2}[\s-]?\d{3}[\s-]?\d{4}")
 TAG = re.compile(r"<[^>]+>")
 
 
-def digits(value: str) -> str:
-    d = re.sub(r"\D", "", value)
-    return "63" + d[1:] if d.startswith("0") else d
-
-
 def main() -> int:
     problems: list[str] = []
 
@@ -84,10 +86,6 @@ def main() -> int:
     businesses = spec["businesses"]
 
     approved = {b["name"] for b in businesses}
-    published_numbers = {
-        digits(b[key]) for b in businesses
-        for key in ("contact", "contactDigits") if b.get(key)
-    }
     # The site's own address is published on purpose, everywhere.
     allowed_emails = {"hello@masinloc-zambales.com"}
 
@@ -117,12 +115,18 @@ def main() -> int:
             if address.lower() not in allowed_emails:
                 problems.append(f"{rel}: publishes the email address {address}")
 
+        # No phone number of any kind, from any source. There is no allowlist
+        # to fall through: the Marketplace's public contact method is Facebook,
+        # so any Philippine mobile number appearing anywhere in a page — in the
+        # markup, a data attribute, a script, a meta tag or a JSON-LD block —
+        # is a leak by definition.
         for number in set(PHONE.findall(raw)):
-            if digits(number) not in published_numbers:
-                problems.append(
-                    f"{rel}: publishes the phone number {number}, which is not the "
-                    f"business contact number in data/marketplace.json — an owner's "
-                    f"private line reaches a page exactly like this")
+            problems.append(
+                f"{rel}: publishes the phone number {number}. The Marketplace "
+                f"publishes no phone numbers — the public contact method is Facebook.")
+
+        if "tel:" in lowered:
+            problems.append(f"{rel}: contains a tel: link, which can only carry a phone number")
 
         # Every business named on a detail page must be an approved one.
         if page.parent == PAGES_DIR:
@@ -136,6 +140,30 @@ def main() -> int:
                     problems.append(
                         f"{rel}: describes {name!r}, which is not in data/marketplace.json "
                         f"— only approved businesses may be published")
+
+    # data/marketplace.json is not only build input. vercel.json gives /data/
+    # its own Cache-Control header, so the file is served at a public URL and
+    # anybody can read it — which makes it exactly the "client-side JSON" a
+    # leak test should cover. Values are checked rather than the whole file,
+    # because the leading _comment documents the private column names on
+    # purpose and naming a column is not disclosing it.
+    for business in businesses:
+        label = business.get("name", business.get("slug", "?"))
+        for key, value in business.items():
+            if key.startswith("_"):
+                continue
+            if key.lower() in {n.lower() for n in PRIVATE_NAMES}:
+                problems.append(f"data/marketplace.json: {label} carries the private key {key!r}")
+            if not isinstance(value, str):
+                continue
+            if PHONE.search(value):
+                problems.append(
+                    f"data/marketplace.json: {label}.{key} contains a phone number, "
+                    f"and this file is publicly served")
+            for address in EMAIL.findall(value):
+                if address.lower() not in allowed_emails:
+                    problems.append(
+                        f"data/marketplace.json: {label}.{key} contains the email {address}")
 
     # Every approved business should actually have a page, or the directory is
     # quietly dropping somebody who was told they were listed.
@@ -153,8 +181,9 @@ def main() -> int:
     print("MARKETPLACE PRIVACY CHECK PASSED")
     print(f"{len(pages)} page(s), {len(businesses)} approved business(es): no owner name, "
           f"email or private number, no reference codes or moderation fields.")
-    print("No invented ratings, reviews, badges or follower counts. "
-          "Every published phone number is the one the business asked to publish.")
+    print("No phone number of any kind, and no tel: link — the public contact "
+          "method is Facebook.")
+    print("No invented ratings, reviews, badges or follower counts.")
     return 0
 
 

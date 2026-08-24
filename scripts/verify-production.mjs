@@ -72,15 +72,42 @@ const section = (t) => console.log(`\n=== ${t} ===`);
 /* --- 1. transport and redirects ------------------------------------------ */
 
 section('Transport and redirects');
-for (const [from, expectHost] of [
-  [BASE.replace('https://', 'http://'), null],
-  ['https://www.masinloc-zambales.com', null],
+
+/* The canonical host is the apex. Every canonical tag, the sitemap and
+   robots.txt all say masinloc-zambales.com with no www, so a www request that
+   served a 200 instead of redirecting would put the whole site at two
+   addresses — which is the duplicate-content problem canonical tags exist to
+   avoid, arriving through the front door.
+
+   Both the final host AND the redirect's own status code are checked. A 302
+   works for a visitor but tells a crawler the move is temporary, so the www
+   host keeps being crawled and keeps competing. */
+const canonicalHost = new URL(BASE).host;
+for (const from of [
+  BASE.replace('https://', 'http://'),
+  `https://www.${canonicalHost}`,
+  `http://www.${canonicalHost}`,
 ]) {
   try {
-    const r = await fetch(from, { redirect: 'follow' });
-    if (!r.ok) fail(`${from} -> HTTP ${r.status}`);
-    else if (!r.url.startsWith('https://')) fail(`${from} did not end on https (${r.url})`);
-    else ok(`${from} -> ${r.url} (${r.status})`);
+    const hop = await fetch(from, { redirect: 'manual' });
+    const location = hop.headers.get('location');
+    const followed = await fetch(from, { redirect: 'follow' });
+
+    if (!followed.ok) {
+      fail(`${from} -> HTTP ${followed.status}`);
+      continue;
+    }
+    const landedHost = new URL(followed.url).host;
+    if (landedHost !== canonicalHost) {
+      fail(`${from} landed on ${landedHost}, expected the canonical ${canonicalHost}`);
+    } else if (!followed.url.startsWith('https://')) {
+      fail(`${from} did not end on https (${followed.url})`);
+    } else if (hop.status >= 300 && hop.status < 400 && ![301, 308].includes(hop.status)) {
+      fail(`${from} redirects with ${hop.status}; a permanent 301 or 308 is what tells `
+        + `a crawler to stop indexing the other host (Location: ${location})`);
+    } else {
+      ok(`${from} -> ${followed.url} (${hop.status === 200 ? 'direct' : hop.status + ' permanent'})`);
+    }
   } catch (e) { fail(`${from}: ${e.message}`); }
 }
 
