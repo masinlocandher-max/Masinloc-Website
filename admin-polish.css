@@ -79,6 +79,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 
 .status{border-radius:999px!important}
 .modal{background:rgba(3,17,47,.52)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+/* Respect the HTML hidden state. Without this, the modal's display:grid rule
+   overrides the browser's [hidden] behavior and blocks the login screen. */
+.modal[hidden]{display:none!important}
 .modal-card{border-radius:20px!important}
 
 @media(max-width:520px){
