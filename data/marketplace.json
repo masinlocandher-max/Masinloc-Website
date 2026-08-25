@@ -11,32 +11,32 @@
     "not. Until it has that separation, a browser cannot be pointed at it without",
     "risking owner_name, owner_email and owner_phone.",
     "",
-    "So this file carries only what a business asked to have published, entered",
-    "deliberately rather than queried indiscriminately. Approved-only holds by",
-    "construction: a row exists here because somebody put it here after it was",
-    "approved, not because a filter was applied correctly.",
+    "So this file carries only public-facing business information deliberately",
+    "reviewed for publication rather than queried indiscriminately. A row exists",
+    "here because it has been reviewed for the public directory, not because a",
+    "database filter happened to include it.",
     "",
     "supabase/MARKETPLACE-LIVE-DATA.md describes what to deploy to move this to",
     "a live feed, and what the page would then read.",
     "",
-    "NO PHONE NUMBERS, ANYWHERE",
+    "NO PHONE NUMBERS OR EMAIL ADDRESSES, ANYWHERE",
     "",
-    "Both businesses submitted a mobile number and neither is published. The",
-    "public contact method is Facebook. The numbers are not held here at all —",
-    "not in a private key, not commented out — because a field that is absent",
-    "from the data cannot leak into a page, a script, a data attribute or a",
-    "JSON-LD block by mistake. contact and contact_number are in the generator's",
-    "FORBIDDEN list, so re-adding one fails the build rather than shipping.",
+    "The public contact method is Facebook. Phone numbers and email addresses are",
+    "not held here at all — not in a private key, not commented out — because a",
+    "field that is absent from the data cannot leak into a page, a script, a data",
+    "attribute or a JSON-LD block by mistake. contact and contact_number are in",
+    "the generator's FORBIDDEN list, so re-adding one fails the build rather than",
+    "shipping.",
     "",
     "Likewise owner_name, owner_email, owner_phone, reference codes, submission",
     "ids, moderation status and dashboard-interest flags never appear here.",
     "",
     "THE FACEBOOK LINKS ARE SHARE LINKS",
     "",
-    "Both are facebook.com/share/... URLs, which is what the businesses supplied.",
-    "They resolve to the right page, and they are published as-is. They are not",
-    "canonical Page URLs and nothing here describes them as such; rewriting one",
-    "into a cleaner-looking /pagename form would be inventing an address.",
+    "Some entries use facebook.com/share/... URLs because those are the verified",
+    "public links supplied for the listing. They are published as-is. They are",
+    "not canonical Page URLs and nothing here describes them as such; rewriting",
+    "one into a cleaner-looking /pagename form would be inventing an address.",
     "",
     "WHAT MAY AND MAY NOT APPEAR HERE",
     "",
@@ -51,11 +51,9 @@
     "",
     "IMAGES",
     "",
-    "Logos are uploaded to masinloc-business-assets, which the edge function",
-    "creates with public:false. A public page cannot load them, and signing a URL",
-    "needs the service role. Neither business therefore carries an image, and the",
-    "cards are built to look deliberate without one rather than to show a broken",
-    "frame. See the runbook for the two ways to change that."
+    "Logos are published only after they are separately reviewed and entered in",
+    "data/marketplace-logos.json. A business without an approved logo manifest",
+    "entry gets the intentional text-led card rather than a broken image."
   ],
   "categories": [
     {
@@ -123,6 +121,94 @@
           "href": "../discover/thirteen-ways-to-be-masinloc.html"
         }
       ]
+    },
+    {
+      "slug": "zamgyup-199-masinloc",
+      "name": "Zamgyup 199",
+      "category": "food-drinks",
+      "location": "Barangay Inhobol, Masinloc, Zambales 2211",
+      "barangay": "Inhobol",
+      "description": "A Korean grill restaurant in Barangay Inhobol offering Korean-style grill dining, with dine-in, takeout and reservations listed on its Facebook page.",
+      "descriptor": "Korean Restaurant",
+      "schemaType": "Restaurant",
+      "metaDescription": "Zamgyup 199 is a Korean grill restaurant in Barangay Inhobol, Masinloc, Zambales. View its Masinloc Connect listing and Facebook page.",
+      "facebook": "https://www.facebook.com/share/1G7LLouFwr/?mibextid=wwXIfr",
+      "context": [
+        {
+          "label": "Barangay Inhobol, and the other twelve",
+          "href": "../discover/thirteen-ways-to-be-masinloc.html"
+        }
+      ]
+    },
+    {
+      "slug": "tagpuan-shawarma-grill",
+      "name": "Tagpuan Shawarma & Grill",
+      "category": "food-drinks",
+      "location": "Kapitan Tinong St. cor. Olongapo-Bugallon Rd., Masinloc, Zambales 2211",
+      "description": "A Masinloc bar and grill specializing in shawarma and grilled food, located at Kapitan Tinong Street corner Olongapo-Bugallon Road.",
+      "descriptor": "Shawarma & Grill",
+      "schemaType": "Restaurant",
+      "metaDescription": "Tagpuan Shawarma & Grill serves shawarma and grilled food in Masinloc, Zambales. Find its location and Facebook contact on Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/19dT1i8ubE/?mibextid=wwXIfr"
+    },
+    {
+      "slug": "coocaati-masinloc",
+      "name": "Coocaati",
+      "category": "food-drinks",
+      "location": "Conde St., North Poblacion, Masinloc, Zambales",
+      "barangay": "North Poblacion",
+      "description": "A Zambales coffee and donut brand with a Masinloc location on Conde Street, North Poblacion, serving coffee and donuts.",
+      "descriptor": "Coffee & Donuts",
+      "schemaType": "CafeOrCoffeeShop",
+      "metaDescription": "Coocaati is a coffee and donut brand with a location on Conde Street, North Poblacion, Masinloc, Zambales. Find it on Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/1RwL5znsuh/?mibextid=wwXIfr"
+    },
+    {
+      "slug": "1418-cafe",
+      "name": "1418 Cafe",
+      "category": "food-drinks",
+      "location": "Barangay Inhobol, Masinloc, Zambales 2211",
+      "barangay": "Inhobol",
+      "description": "A local café in Barangay Inhobol, Masinloc, with its Facebook page available for current offerings and inquiries.",
+      "descriptor": "Cafe",
+      "schemaType": "CafeOrCoffeeShop",
+      "metaDescription": "1418 Cafe is a local café in Barangay Inhobol, Masinloc, Zambales. View its location and Facebook contact on Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/19X8r25qkR/?mibextid=wwXIfr",
+      "context": [
+        {
+          "label": "Barangay Inhobol, and the other twelve",
+          "href": "../discover/thirteen-ways-to-be-masinloc.html"
+        }
+      ]
+    },
+    {
+      "slug": "captain-wheels-car-rental",
+      "name": "Captain Wheels",
+      "category": "services",
+      "location": "Barangay Inhobol, Masinloc, Zambales 2211",
+      "barangay": "Inhobol",
+      "description": "A vehicle rental service based in Barangay Inhobol, advertising sedans, SUVs, vans, pickup trucks and other rental vehicles.",
+      "descriptor": "Car Rental",
+      "schemaType": "LocalBusiness",
+      "metaDescription": "Captain Wheels is a vehicle rental service in Barangay Inhobol, Masinloc, Zambales. View its Masinloc Connect listing and Facebook page.",
+      "facebook": "https://www.facebook.com/share/1HmuayGknQ/?mibextid=wwXIfr",
+      "context": [
+        {
+          "label": "Barangay Inhobol, and the other twelve",
+          "href": "../discover/thirteen-ways-to-be-masinloc.html"
+        }
+      ]
+    },
+    {
+      "slug": "cakes-by-jacq",
+      "name": "CAKES by JACQ",
+      "category": "food-drinks",
+      "location": "Magsaysay Street, Masinloc, Zambales 2211",
+      "description": "A Masinloc-based cake business offering customized cakes, cupcakes and dessert treats for celebrations and special occasions.",
+      "descriptor": "Custom Cakes & Desserts",
+      "schemaType": "FoodEstablishment",
+      "metaDescription": "CAKES by JACQ offers customized cakes, cupcakes and dessert treats in Masinloc, Zambales. Find it and message the business through Masinloc Connect.",
+      "facebook": "https://www.facebook.com/share/19DKR8C3rZ/?mibextid=wwXIfr"
     }
   ]
 }
