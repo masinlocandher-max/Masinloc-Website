@@ -101,7 +101,8 @@ def shallow_repository() -> bool:
 # says, which is the question <lastmod> answers.
 FURNITURE = (
     # A stylesheet link, with or without a cache-buster.
-    re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$'),
+    re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css'
+               r'(\?v=(?:\d{8}-\d+|STAMP))?">\s*$'),
     # The footer navigation, whether it lives on one line or several.
     re.compile(r'^[+-].*class="(footer-nav|foot-nav)"'),
     # A line that is nothing but links. Both navigations are written this way —
@@ -110,6 +111,21 @@ FURNITURE = (
     # prose, since a single stray word outside an anchor fails the match.
     re.compile(r'^[+-]\s*(?:<a\b[^>]*>[^<]*</a>)+\s*$'),
 )
+
+CSS_STAMP = re.compile(r'(\.css)(?:\?v=\d{8}-\d+)?')
+
+
+def normalize_cosmetic_line(line: str) -> str:
+    """Erase only the two deployment details that do not change a page.
+
+    This lets one commit carry both the apex-to-www normalization and a
+    stylesheet cache-stamp refresh without turning their combination into a
+    content edit. The stylesheet filename and every non-host character remain,
+    so changing the linked sheet or page prose still survives normalization.
+    """
+    line = line.replace("www.masinloc-zambales.com",
+                        "masinloc-zambales.com")
+    return CSS_STAMP.sub(r'\1?v=STAMP', line)
 
 
 def uncommitted_pages() -> list[str]:
@@ -171,16 +187,29 @@ def cosmetic_only(commit: str, rel: str) -> bool:
         return False
     edits = [line for line in out.stdout.splitlines()
              if line[:1] in "+-" and not line.startswith(("+++", "---"))]
-    removed = [line[1:].replace("www.masinloc-zambales.com",
-                                "masinloc-zambales.com")
-               for line in edits if line.startswith("-")]
-    added = [line[1:].replace("www.masinloc-zambales.com",
-                              "masinloc-zambales.com")
-             for line in edits if line.startswith("+")]
-    if removed and added and Counter(removed) == Counter(added):
+    # A merge commit can appear in `git log -- <page>` even though it applies
+    # no page diff of its own. It is a history snapshot, not a content change;
+    # continue to the commit that actually changed the file.
+    if not edits:
         return True
-    return bool(edits) and all(
-        any(pattern.match(line) for pattern in FURNITURE) for line in edits)
+
+    removed = Counter(normalize_cosmetic_line(line[1:])
+                      for line in edits if line.startswith("-"))
+    added = Counter(normalize_cosmetic_line(line[1:])
+                    for line in edits if line.startswith("+"))
+
+    # Cancel paired lines after the narrowly scoped normalization. Anything
+    # left must independently be known site furniture; real markup or prose
+    # therefore continues to advance lastmod.
+    common = removed & added
+    removed -= common
+    added -= common
+    unmatched = ([f"-{line}" for line, count in removed.items()
+                  for _ in range(count)]
+                 + [f"+{line}" for line, count in added.items()
+                    for _ in range(count)])
+    return all(any(pattern.match(line) for pattern in FURNITURE)
+               for line in unmatched)
 
 
 def last_content_change(path: Path) -> str:
