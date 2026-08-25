@@ -75,16 +75,53 @@
         {
           "id": "diocese-san-andres-shrine",
           "title": "Elevation of the parish as the Diocesan Shrine of San Andres",
-          "author": "Diocese of Iba",
-          "publication": "Public church record, 2021",
-          "note": "The public record of the 2021 elevation of the Masinloc parish to a diocesan shrine.",
+          "author": "CBCP News",
+          "publication": "LiCAS.news Philippines, 1 December 2021",
+          "note": "A dated report on the Diocese of Iba's elevation of the Masinloc parish to the Diocesan Shrine of San Andres on 30 November 2021.",
           "tags": [
             "Church history",
             "2021"
           ],
-          "link": null,
-          "linkStatus": "Diocesan announcement not yet linked to a confirmed public page.",
+          "link": "https://philippines.licas.news/2021/12/01/2-zambales-parish-churches-declared-diocesan-shrines/",
+          "linkStatus": "Verified public report from CBCP News, published by LiCAS.news.",
           "type": "Official Record"
+        }
+      ]
+    },
+    {
+      "id": "government-records",
+      "title": "Government and public records",
+      "blurb": "Government pages used to verify public descriptions of Masinloc's founding and living traditions.",
+      "entries": [
+        {
+          "id": "dilg-zambales-history",
+          "title": "History of Zambales and its earliest towns",
+          "author": "Department of the Interior and Local Government, Zambales",
+          "publication": "DILG Region III, Zambales provincial profile",
+          "note": "The provincial history separates the Spanish exploration of Zambales in 1572 from the establishment of its earliest towns. It lists Masinloc as established in 1607, followed by Iba in 1611 and Santa Cruz in 1612.",
+          "tags": [
+            "1607",
+            "Founding year",
+            "Zambales"
+          ],
+          "link": "https://region3.dilg.gov.ph/zambales/index.php/about/who-we-are",
+          "linkStatus": "Official DILG page confirmed 25 August 2026.",
+          "type": "Government"
+        },
+        {
+          "id": "dot-binabayani-festival",
+          "title": "Binabayani Festival",
+          "author": "Department of Tourism",
+          "publication": "Love the Philippines destination directory",
+          "note": "The national tourism page identifies Binabayani as Masinloc's conflict portrayal and connects the performance with the feast of San Andres on 30 November. Community framing supplies the role names Kristiyano and Aeta and clarifies that Christian Masinloqueños are included in the Kristiyano side, not a third group separate from it.",
+          "tags": [
+            "Binabayani",
+            "Kristiyano and Aeta",
+            "Living tradition"
+          ],
+          "link": "https://www.tourism.gov.ph/explore/binabayani-festival/",
+          "linkStatus": "Official Department of Tourism page confirmed 25 August 2026.",
+          "type": "Government"
         }
       ]
     },

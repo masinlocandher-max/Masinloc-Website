@@ -12,6 +12,7 @@ PUBLIC_PAGES = [
     "destinations.html",
     "leadership.html",
     "verified-history.html",
+    "founder-of-masinloc.html",
     "masinloc-bulletin.html",
     "connect.html",
 ]
@@ -29,6 +30,7 @@ SUBPAGES = {
     # three links to it, including a card, and it stays in every footer — the
     # bar was trimmed, the page was not hidden.
     "verified-history.html": "a-closer-look.html",
+    "founder-of-masinloc.html": "a-closer-look.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.

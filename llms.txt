@@ -21,6 +21,7 @@ The project has reached out to the Municipal Government of Masinloc regarding po
 - Masinloc Connect: https://www.masinloc-zambales.com/connect.html
 - Sambal Tina Dictionary: https://www.masinloc-zambales.com/sambal-tina.html
 - Verified History: https://www.masinloc-zambales.com/verified-history.html
+- Founder of Masinloc: https://www.masinloc-zambales.com/founder-of-masinloc.html
 - Masinloc Bulletin: https://www.masinloc-zambales.com/masinloc-bulletin.html
 - A Closer Look at Masinloc: https://www.masinloc-zambales.com/a-closer-look.html
 - Places in Masinloc: https://www.masinloc-zambales.com/destinations.html
@@ -35,7 +36,7 @@ authoritative statement of what exists and what may be crawled.
 
 ## Trust and information standards
 
-The platform distinguishes documented facts from oral accounts, community submissions, interpretation, business-provided information, and claims still being checked. Verified History is reserved for material supported by records, credible references, archival material, or properly attributed evidence.
+The platform distinguishes documented facts from oral accounts, community submissions, interpretation, business-provided information, and claims still being checked. Verified History is reserved for material supported by records, credible references, archival material, or properly attributed evidence. The documented founding year published for Masinloc is 1607; 1572 refers to Spanish exploration in the wider Zambales history, not to the founding of the town.
 
 Masinloc Connect applies privacy-by-design safeguards to personal submissions, including controlled access, private handling of submitted files, validation controls, limited retention, and role-based administrative access. Privacy practices are designed around Republic Act No. 10173, the Data Privacy Act of 2012, its Implementing Rules and Regulations, and applicable National Privacy Commission rules and guidance.
 
@@ -58,4 +59,4 @@ Public cultural, historical, informational, and approved business content may be
 Official contact: hello@masinloc-zambales.com
 Official domain: www.masinloc-zambales.com
 
-Last reviewed: 2026-08-23
+Last reviewed: 2026-08-25

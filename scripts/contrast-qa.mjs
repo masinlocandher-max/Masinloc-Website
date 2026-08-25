@@ -35,9 +35,9 @@ const baseURL = process.env.QA_BASE_URL || 'http://127.0.0.1:8000';
 
 const PAGES = [
   'index.html', 'a-closer-look.html', 'destinations.html', 'sambal-tina.html',
-  'leadership.html', 'verified-history.html', 'masinloc-bulletin.html',
+  'leadership.html', 'verified-history.html', 'founder-of-masinloc.html', 'masinloc-bulletin.html',
   'sources.html', 'bulletin/why-mabayani-exists.html',
-  'bulletin/was-masinloc-founded-in-1572.html', 'contact.html', 'connect.html',
+  'bulletin/was-masinloc-founded-in-1572.html', 'bulletin/what-binabayani-remembers.html', 'contact.html', 'connect.html',
   'trust.html', 'privacy.html', '404.html',
   'discover/index.html', 'discover/masinloc-actually.html',
   'discover/masinloc-right-now.html', 'discover/the-sweetest-mango-came-from-where-exactly.html',

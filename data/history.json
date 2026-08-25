@@ -1,0 +1,132 @@
+{
+  "note": "Canonical web copy and claim register for Verified History and the founder profile. The MABAYANI research identifies the facts to investigate, but the website copy here is newly written and must not reproduce the publishable manuscript.",
+  "rules": [
+    "The documented founding year is 1607. The year 1572 belongs only to the wider history of Spanish exploration in Zambales.",
+    "Do not publish an exact month or day for the 1607 founding until a source carrying one is verified.",
+    "Founder means founder of the documented colonial mission town. It does not mean the first person to live in Masinloc.",
+    "Binabayani has two represented sides: Kristiyano and Aeta. The Kristiyano side includes Christian Masinloqueños and is not a third group separate from them.",
+    "A portrait of the founder may be added only from an approved, attributable historical or institutional source."
+  ],
+  "founding": {
+    "documentedYear": 1607,
+    "misattributedYear": 1572,
+    "founder": "Fray Andrés del Espíritu Santo",
+    "companion": "Fray Jerónimo de Cristo",
+    "summary": "The academic history of the Augustinian Recollect mission states that Fray Andrés del Espíritu Santo reached Masinloc by sea with Fray Jerónimo de Cristo in 1607, founded the mission town, and built its first church. DILG Zambales likewise lists Masinloc among the province's earliest towns and gives 1607 as its year of establishment.",
+    "precision": "The sources reviewed establish the year 1607 but do not supply a verified month and day. The site therefore publishes the year only."
+  },
+  "founder": {
+    "name": "Fray Andrés del Espíritu Santo",
+    "role": "Founder and first parish priest of the documented Masinloc mission town",
+    "birthYear": 1585,
+    "birthPlace": "Valladolid, Spain",
+    "portraitStatus": "Portrait to be added from an approved historical source",
+    "intro": "The surviving record identifies Fray Andrés del Espíritu Santo as the founder of Masinloc's mission town in 1607. His role is specific: he established the Recollect mission and its first church in a place where Sambal communities already lived.",
+    "facts": [
+      "He travelled north from Manila by sea and reached Masinloc in 1607 with Fray Jerónimo de Cristo.",
+      "The historical study names him as founder of the new pueblo and builder of its first church.",
+      "That first church was made from light materials and did not survive; it was not the stone San Andres Church seen today.",
+      "After Masinloc, he and Fray Jerónimo established Casborran, now Alaminos, and Bolinao in 1609, followed by Balincaguin, now Mabini, and Agno in 1610.",
+      "He later served for a combined twelve years as a senior Recollect superior in the Philippines and recorded early missions, churches, convents, and religious communities."
+    ],
+    "meaning": "Calling Fray Andrés the founder follows the language of the documentary source. It refers to the colonial mission town founded in 1607, not to the beginning of human life, settlement, or culture on this coast."
+  },
+  "timeline": [
+    {
+      "date": "Before 1607",
+      "title": "A community before the colonial record",
+      "text": "Sambal and Aeta communities were already part of the Zambales landscape before the Recollect mission. The sources reviewed do not support inventing an earlier municipal founding date, but colonial documentation is not the beginning of local life."
+    },
+    {
+      "date": "1607",
+      "title": "The documented founding of Masinloc",
+      "text": "Fray Andrés del Espíritu Santo reached Masinloc with Fray Jerónimo de Cristo. The Recollect history names Andrés as founder of the mission town and builder of its first light-material church."
+    },
+    {
+      "date": "1649",
+      "title": "Masinloc repelled six raiding vessels",
+      "text": "A Recollect account reports that six caracoas carrying more than six hundred raiders from Jolo and Borneo landed on the Masinloc coast. Local Zambaleño defenders, led in the account by Fray Francisco de San José, forced the raiders toward Pulo San Salvador and captured the vessels and war material after a second action the next day."
+    },
+    {
+      "date": "1745",
+      "title": "Work on the stone church began",
+      "text": "A late nineteenth-century account traditionally dates the beginning of the present stone church to 1745. Its completion year remains unknown because the records for much of the construction period did not survive."
+    },
+    {
+      "date": "21 April 1871",
+      "title": "Barrio San Vicente became independent Candelaria",
+      "text": "San Vicente, the earlier name associated with Candelaria, separated from its mother town of Masinloc as an independent town. The parish remained tied to San Andres of Masinloc until a later royal order."
+    },
+    {
+      "date": "21 June 1892",
+      "title": "Candelaria's parish separation was ordered",
+      "text": "A royal order issued in Madrid declared Candelaria independent from the parish matrix of San Andres in Masinloc. The historical study notes that another separation decree followed in early 1893 for reasons that remain unclear."
+    },
+    {
+      "date": "31 July 2001",
+      "title": "San Andres Church became a National Cultural Treasure",
+      "text": "The National Museum declared San Andres Parish Church a National Cultural Treasure, recognizing the importance of the surviving church complex after centuries of building, damage, and repair."
+    },
+    {
+      "date": "30 November 2021",
+      "title": "The parish became a diocesan shrine",
+      "text": "The Diocese of Iba elevated the parish as the Diocesan Shrine of San Andres, adding a new chapter to the religious institution founded in 1607."
+    }
+  ],
+  "facts": [
+    {
+      "number": "4",
+      "title": "towns later grew out of Masinloc's mission matrix",
+      "text": "The historical study traces Iba, Santa Cruz, Palauig, and Candelaria through earlier relationships with Masinloc's town or parish matrix. Their paths to independence were not identical."
+    },
+    {
+      "number": "Iba to Anda",
+      "title": "was the mission reach once associated with Masinloc",
+      "text": "Masinloc became a Recollect center for northern Zambales, then a much larger territory than the province known today."
+    },
+    {
+      "number": "1661",
+      "title": "is the earliest baptismal entry cited in the surviving copied record",
+      "text": "Older parish books were copied when their condition deteriorated, preserving names and a clerical sequence that might otherwise have disappeared."
+    },
+    {
+      "number": "1845",
+      "title": "a former Masinloc parish priest became Archbishop of Manila",
+      "text": "José Julián Aranguren served in Masinloc from 1836 to 1843 before his appointment to the metropolitan see of Manila."
+    }
+  ],
+  "sanVicente": {
+    "title": "Barrio San Vicente became Candelaria",
+    "intro": "San Vicente was the older name recorded for what became Candelaria. Its history shows how far Masinloc's town and parish relationships once extended beyond the municipality's present boundaries.",
+    "townDate": "21 April 1871",
+    "townEvent": "Candelaria separated from Masinloc, its town matrix, and became an independent town.",
+    "parishDate": "21 June 1892",
+    "parishEvent": "A royal order issued in Madrid declared Candelaria's parish independent from the parish matrix of San Andres in Masinloc.",
+    "openNote": "The historical study records another separation decree in early 1893 but says the reason for repeating it is unknown."
+  },
+  "battle": {
+    "title": "The battle on the Masinloc coast",
+    "intro": "The most dramatic documented military episode in Masinloc's early colonial history happened in 1649, not in the often-repeated Binabayani origin year.",
+    "steps": [
+      "Six caracoas reached the Masinloc shore and more than six hundred raiders began to disembark.",
+      "Many residents moved toward the mountains while local defenders organized under Fray Francisco de San José.",
+      "The defenders repelled the first landing and the surviving raiders withdrew to Pulo San Salvador.",
+      "The next day, the defenders attacked the island position and captured the vessels and war material."
+    ],
+    "caution": "The study uses the colonial expression Moro pirates and identifies the raiders with Jolo and Borneo. On this site, that wording is reported as the source's description of seventeenth-century raiders, not as a label for Muslim communities today. The individual names of the Masinloc defenders have not yet been recovered."
+  },
+  "binabayani": {
+    "title": "What Binabayani actually represents",
+    "summary": "The Department of Tourism recognizes Binabayani as Masinloc's conflict portrayal during the feast of San Andres. In Masinloc's own framing, the two represented sides are Kristiyano and Aeta. The Kristiyano side includes Christian Masinloqueños; Masinloqueños are not a separate third side.",
+    "status": "Binabayani is a living tradition connected with the feast of San Andres. Its exact first performance and the frequently repeated 1621 origin have not been established by a located primary source.",
+    "imageAlt": "Kristiyano and Aeta performers during Binabayani in Masinloc, Zambales"
+  },
+  "sources": [
+    "romanillos-masinloc-recollect-mission",
+    "dilg-zambales-history",
+    "dot-binabayani-festival",
+    "pascual-1891-account",
+    "nmp-san-andres",
+    "diocese-san-andres-shrine"
+  ]
+}

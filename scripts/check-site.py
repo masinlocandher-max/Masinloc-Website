@@ -17,6 +17,7 @@ PUBLIC_PAGES = [
     "destinations.html",
     "leadership.html",
     "verified-history.html",
+    "founder-of-masinloc.html",
     "masinloc-bulletin.html",
     "connect.html",
 ]
@@ -27,12 +28,17 @@ EDITORIAL_PAGES = [
     "destinations.html",
     "leadership.html",
     "verified-history.html",
+    "founder-of-masinloc.html",
     "masinloc-bulletin.html",
 ]
 REQUIRED = [
     "index.html",
     "a-closer-look.html",
     "verified-history.html",
+    "founder-of-masinloc.html",
+    "history.css",
+    "data/history.json",
+    "scripts/build-history.py",
     "masinloc-bulletin.html",
     "connect.html",
     "admin.html",
@@ -292,18 +298,15 @@ for path in list(ROOT.glob("*.html")) + list(ROOT.glob("*.css")) + list(ROOT.glo
         if forbidden in text:
             fail(f"obsolete Stage 1 mechanism referenced in {path.name}: {forbidden}")
 
-# A publishing section stays purpose-only until it has real reviewed material.
-# The Bulletin has now passed that point: it publishes source-controlled articles
-# whose evidence is checked by scripts/build-bulletin.py, which fails the build
-# on an article that names no source or cites one that does not exist. Verified
-# History has not passed it, and is deliberately still empty of event history.
-for rel in ("verified-history.html",):
-    path = ROOT / rel
-    if path.is_file():
-        text = path.read_text(encoding="utf-8").lower()
-        for marker in ("<time", "article-card", "article-list", "post-card", "story-card"):
-            if marker in text:
-                fail(f"{rel}: publishing entries detected before the section is ready: {marker}")
+# Verified History and the founder profile are built from one reviewed claim
+# register. This catches a hand edit, a drift back to 1572, an altered
+# Binabayani framing, or an unattributed founder image before release.
+_history_check = subprocess.run(
+    [sys.executable, str(ROOT / "scripts" / "build-history.py"), "--check"],
+    cwd=ROOT, capture_output=True, text=True, check=False)
+if _history_check.returncode:
+    fail("Verified History is out of date or violates its claim contract\n"
+         + "    " + _history_check.stdout.strip().replace("\n", "\n    "))
 
 # Masinloc Connect has its own supplied hero — the Masinloc mark on a navy
 # field, circled by an orbit — and a dedicated responsive shell.
@@ -466,7 +469,7 @@ if sitemap.is_file():
     for forbidden in ("admin.html", "404.html"):
         if forbidden in sitemap_text:
             fail(f"sitemap.xml must not publish {forbidden}")
-    for rel in ("a-closer-look.html", "verified-history.html", "masinloc-bulletin.html", "connect.html"):
+    for rel in ("a-closer-look.html", "verified-history.html", "founder-of-masinloc.html", "masinloc-bulletin.html", "connect.html"):
         if rel not in sitemap_text:
             fail(f"sitemap.xml missing current public route: {rel}")
     # Every built Bulletin story must be listed. scripts/build-bulletin.py keeps
@@ -496,5 +499,5 @@ print("SITE INTEGRITY CHECK PASSED")
 print("Current public routes, SEO essentials, local references and protected boundaries are present.")
 print("The exact approved hero remains byte-locked and intact across the public shell and Masinloc Connect.")
 print("Modern public-site and Masinloc Connect polish/navigation layers are present on every public surface.")
-print("Purpose-only History/Bulletin sections remain free of placeholder publishing entries.")
+print("Verified History and the founder profile match the reviewed history claim register.")
 print("Staged agent branches remain protected from automatic Vercel preview deployment.")

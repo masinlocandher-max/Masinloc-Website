@@ -491,7 +491,7 @@ def render() -> str:
 
       <div class="archive-close rise">
         <p class="archive-count"><strong>{n['check']}</strong> entries still read like the last one. Every one is left in the open, because a tidy invention would outlive us in a language with very little written down.</p>
-        <p class="archive-note">Event history &mdash; dates, names, what happened when &mdash; is not here yet. Verified History stays deliberately empty until there is something with a source behind it, and oral accounts will always be marked as what they are. <a href="verified-history.html">See how we are gathering it</a>.</p>
+        <p class="archive-note">Verified History now brings together Masinloc&rsquo;s documented 1607 founding, its founder, the 1649 defense of the coast, Barrio San Vicente, and the evidence behind each claim. Oral tradition remains clearly marked. <a href="verified-history.html">Read the verified timeline</a>.</p>
       </div>
     </div>
   </section>
