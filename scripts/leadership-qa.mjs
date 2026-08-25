@@ -226,7 +226,10 @@ if (supported) {
 
   const maxScroll = await scroller.evaluate(
     () => document.documentElement.scrollHeight - window.innerHeight);
-  const stops = [0, 0.12, 0.2, 0.28, 0.36, 0.5, 0.7, 1]
+  /* Sample densely enough to observe a deliberately early compositor
+     animation. Eight coarse whole-page stops could jump from 0 straight to 1
+     across a genuine scroll timeline and falsely call it a one-shot reveal. */
+  const stops = Array.from({ length: 51 }, (_unused, index) => index / 50)
     .map(fraction => Math.round(maxScroll * fraction));
 
   const samples = [];

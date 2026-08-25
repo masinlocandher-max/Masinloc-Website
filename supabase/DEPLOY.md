@@ -97,14 +97,14 @@ supabase secrets set TURNSTILE_REQUIRED=true
 BASE=https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-masinloc
 
 curl -s "$BASE?resource=dictionary-contributors" \
-  -H "Origin: https://masinloc-zambales.com"
+  -H "Origin: https://www.masinloc-zambales.com"
 
 curl -s -o /dev/null -w '%{http_code}\n' \
   "$BASE?resource=dictionary-contributors"
 
 curl -s -w '\n%{http_code}\n' \
   "$BASE?resource=anything-else" \
-  -H "Origin: https://masinloc-zambales.com"
+  -H "Origin: https://www.masinloc-zambales.com"
 ```
 
 Expected behavior:
@@ -121,8 +121,8 @@ The GET checks only prove that the function answers. The complete path is proven
 
 Test both:
 
-1. `https://masinloc-zambales.com/contact.html` → `contact_submissions`
-2. the contribution form on `https://masinloc-zambales.com/sambal-tina.html` → `dictionary_submissions`
+1. `https://www.masinloc-zambales.com/contact.html` → `contact_submissions`
+2. the contribution form on `https://www.masinloc-zambales.com/sambal-tina.html` → `dictionary_submissions`
 
 For each test, record the HTTP result/reference code, confirm the matching row, then remove only the clearly identified test record. Never delete or modify unrelated submissions.
 

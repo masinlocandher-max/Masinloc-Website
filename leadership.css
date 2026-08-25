@@ -230,24 +230,24 @@
          same trap as a non-zero IntersectionObserver threshold. `cover` is a
          fraction of (viewport + element) and always completes. It finishes
          early, so nothing is still fading while a name is being read. */
-      animation-range:cover 0% cover 22%;
+      animation-range:cover 0% cover 8%;
     }
     /* On <picture> rather than the <img>, so the hover depth on the image
        still composes instead of being overridden by the running animation. */
     .leader-frame picture{
       animation:portrait-settle linear both;
       animation-timeline:--leader-view;
-      animation-range:cover 0% cover 30%;
+      animation-range:cover 0% cover 9%;
     }
     .leader figcaption{
       animation:caption-arrive linear both;
       animation-timeline:--leader-view;
-      animation-range:cover 5% cover 26%;
+      animation-range:cover 1% cover 9%;
     }
     .women-inner{
       animation:leader-arrive linear both;
       animation-timeline:view();
-      animation-range:cover 0% cover 24%;
+      animation-range:cover 0% cover 9%;
     }
   }
 }

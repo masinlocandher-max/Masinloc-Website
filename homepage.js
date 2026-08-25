@@ -21,15 +21,39 @@
   /* threshold 0, deliberately: a stage taller than the viewport can never
      show a given fraction of itself, and anything asking for one would stay
      invisible on a phone forever. */
+  const revealTargets = [...document.querySelectorAll('.rise, .mask, .language-scene')];
+  const reveal = (element) => {
+    element.classList.add('is-in');
+    shown.unobserve(element);
+  };
   const shown = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-in');
-      shown.unobserve(entry.target);
+      reveal(entry.target);
     });
-  }, { threshold: 0, rootMargin: '0px 0px -12% 0px' });
+  }, { threshold: 0, rootMargin: '0px' });
 
-  document.querySelectorAll('.rise, .mask, .language-scene').forEach((el) => shown.observe(el));
+  revealTargets.forEach((element) => shown.observe(element));
+
+  /* A reader can fling past a short row between two observer samples. Once an
+     element has crossed the viewport it must not remain transparent forever,
+     so a passive, frame-coalesced check reveals anything the scroll has
+     already passed. This is a fallback for fast travel, not a second motion
+     system: the same class and transition still do the work. */
+  let revealFrame = 0;
+  const revealPassed = () => {
+    revealFrame = 0;
+    for (const element of revealTargets) {
+      if (!element.classList.contains('is-in')
+          && element.getBoundingClientRect().top < window.innerHeight) {
+        reveal(element);
+      }
+    }
+  };
+  window.addEventListener('scroll', () => {
+    if (!revealFrame) revealFrame = requestAnimationFrame(revealPassed);
+  }, { passive: true });
+  revealPassed();
 
   /* --- hero drift ------------------------------------------------------- */
   /* The navigation's scrolled and open states belong to site.js, which every

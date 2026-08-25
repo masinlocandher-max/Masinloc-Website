@@ -44,8 +44,14 @@ ASSETS = {}
 _assets_file = ROOT / "data" / "discover-assets.json"
 if _assets_file.is_file():
     ASSETS = json.loads(_assets_file.read_text(encoding="utf-8"))
+LOCATION_META = {
+    location["slug"]: location
+    for location in json.loads(
+        (ROOT / "data" / "locations.json").read_text(encoding="utf-8")
+    )["locations"]
+}
 
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
 SECTION = DATA["section"]
 THEMES = {t["id"]: t for t in DATA["themes"]}
 ARTICLES = DATA["articles"]
@@ -90,7 +96,7 @@ def picture(hero: dict, *, eager: bool, classes: str = "d-hero-img",
     if family == "stage1":
         # The one shared editorial photograph, a single byte-locked AVIF.
         return (f'<img class="{classes}" src="../{directory}/{name}.avif" '
-                f'alt="{esc(hero["alt"])}" '
+                f'width="1536" height="864" alt="{esc(hero["alt"])}" '
                 + ('fetchpriority="high" decoding="async"' if eager
                    else 'loading="lazy" decoding="async"') + ">")
 
@@ -103,7 +109,7 @@ def picture(hero: dict, *, eager: bool, classes: str = "d-hero-img",
         return ", ".join(f"../{directory}/{name}-{w}.{ext} {w}w" for w in widths)
 
     dims = ""
-    meta = ASSETS.get(name)
+    meta = ASSETS.get(name) or LOCATION_META.get(name)
     if meta:
         dims = f' width="{meta["native"]["width"]}" height="{meta["native"]["height"]}"'
 
@@ -307,6 +313,8 @@ def article_page(article: dict) -> str:
     url = f"{SITE}/discover/{article['slug']}.html"
     image = hero_url(article.get("hero"))
     theme = THEMES[article["theme"]]
+    meta_title = article.get("metaTitle", f"{article['title']} | Discover Masinloc")
+    meta_description = article.get("metaDescription", article["deck"])
 
     graph = [
         breadcrumb_ld([
@@ -318,7 +326,7 @@ def article_page(article: dict) -> str:
             "@type": "BlogPosting",
             "@id": f"{url}#article",
             "headline": article["title"],
-            "description": article["deck"],
+            "description": meta_description,
             "datePublished": article["published"],
             "dateModified": article["updated"],
             "inLanguage": "en-PH",
@@ -355,8 +363,8 @@ def article_page(article: dict) -> str:
     updated_line = ("" if published == updated
                     else f' · <span>Updated <time datetime="{updated}">{updated}</time></span>')
 
-    return f"""{head(title=f"{article['title']} | Discover Masinloc",
-                     description=article["deck"], url=url, image=image, extra=extra)}
+    return f"""{head(title=meta_title,
+                     description=meta_description, url=url, image=image, extra=extra)}
 {nav("Discover")}
 <main class="d-article">
   {crumbs([("Masinloc, Zambales", "../index.html"),
@@ -492,8 +500,8 @@ def hub_page() -> str:
             continue
         sections.append(theme_section(theme, members))
 
-    return f"""{head(title="Discover Masinloc | Masinloc, Zambales",
-                     description=SECTION["intro"], url=url,
+    return f"""{head(title=SECTION.get("metaTitle", "Discover Masinloc | Masinloc, Zambales"),
+                     description=SECTION.get("metaDescription", SECTION["intro"]), url=url,
                      image=hero_url(lead.get("hero")))}
 {nav("Discover")}
 <main class="d-hub">

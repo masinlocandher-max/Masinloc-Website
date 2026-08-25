@@ -124,7 +124,7 @@ def discover_shots() -> str:
             <picture>
               <source type="image/avif" srcset="{srcset(slug, 'avif', PLACE_WIDTHS, 'locations')}" sizes="52vw">
               <source type="image/webp" srcset="{srcset(slug, 'webp', PLACE_WIDTHS, 'locations')}" sizes="52vw">
-              <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" alt="{esc(location['alt'])}" loading="lazy" decoding="async">
+              <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" width="{location['native']['width']}" height="{location['native']['height']}" alt="{esc(location['alt'])}" loading="lazy" decoding="async">
             </picture>
           </div>""")
     return "\n".join(out)
@@ -140,7 +140,7 @@ def discover_rows() -> str:
                 <picture>
                   <source type="image/avif" srcset="{srcset(slug, 'avif', PLACE_WIDTHS, 'locations')}" sizes="100vw">
                   <source type="image/webp" srcset="{srcset(slug, 'webp', PLACE_WIDTHS, 'locations')}" sizes="100vw">
-                  <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" alt="" loading="lazy" decoding="async">
+                  <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" width="{location['native']['width']}" height="{location['native']['height']}" alt="" loading="lazy" decoding="async">
                 </picture>
               </span>
               <span class="place-index">{i:02d}</span>
@@ -293,19 +293,19 @@ def render() -> str:
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <title>Masinloc, Zambales | History, Sambal Tina &amp; Places</title>
 <meta name="description" content="Masinloc, Zambales through its places, the Sambal Tina language recorded in {n['total']:,} dictionary entries, and the archive behind both.">
-<link rel="canonical" href="https://masinloc-zambales.com/">
+<link rel="canonical" href="https://www.masinloc-zambales.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Masinloc, Zambales">
 <meta property="og:locale" content="en_PH">
 <meta property="og:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
 <meta property="og:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
-<meta property="og:url" content="https://masinloc-zambales.com/">
-<meta property="og:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
+<meta property="og:url" content="https://www.masinloc-zambales.com/">
+<meta property="og:image" content="https://www.masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
 <meta property="og:image:alt" content="The Masinloc Connect app shown on a phone">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
 <meta name="twitter:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
-<meta name="twitter:image" content="https://masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
+<meta name="twitter:image" content="https://www.masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preload" as="image" href="assets/hero/landing-hero-1280.avif" imagesrcset="{hero_avif}" imagesizes="{hero_sizes}" type="image/avif" fetchpriority="high">
@@ -313,7 +313,7 @@ def render() -> str:
 <link rel="stylesheet" href="site.css?v=20260825-1">
 <link rel="stylesheet" href="site-polish.css?v=20260825-1">
 <link rel="stylesheet" href="site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="homepage.css?v=20260824-1">
+<link rel="stylesheet" href="homepage.css?v=20260825-1">
 </head>
 <body class="home">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -349,7 +349,7 @@ def render() -> str:
       <h1 id="heroTitle"><span class="mask"><span>The world</span></span> <span class="mask"><span><em>finds us here.</em></span></span></h1>
       <p class="hero-note rise" style="--delay:520ms">Discover Masinloc through its people, culture, places, businesses, and ideas.</p>
       <div class="hero-cta rise" style="--delay:640ms">
-        <a class="cta-primary" href="a-closer-look.html">Discover Masinloc</a>
+        <a class="cta-primary" href="discover/index.html">Discover Masinloc</a>
         <a class="cta-secondary" href="connect.html">Explore Masinloc Connect</a>
       </div>
     </div>
@@ -535,7 +535,8 @@ def render() -> str:
         <li class="rise" style="--delay:240ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
         <li class="rise" style="--delay:300ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">All {story_count} stories, and the questions still open.</span></a></li>
         <li class="rise" style="--delay:360ms"><a href="sources.html"><span class="r-name">Sources &amp; References</span><span class="r-what">Every study, record and archive the history here rests on.</span></a></li>
-        <li class="rise" style="--delay:420ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
+        <li class="rise" style="--delay:420ms"><a href="marketplace.html"><span class="r-name">Marketplace</span><span class="r-what">Approved local businesses, food and services, with details supplied by the people who run them.</span></a></li>
+        <li class="rise" style="--delay:480ms"><a href="connect.html"><span class="r-name">Masinloc Connect</span><span class="r-what">Your business, your story, your trade. Add it to the record.</span></a></li>
       </ul>
     </div>
   </section>
@@ -563,7 +564,7 @@ def render() -> str:
     </div>
     <div class="foot-base">
       <span>&copy; 2026 Mabayani Project by FMB. All rights reserved.</span>
-      <span>masinloc-zambales.com</span>
+      <span>www.masinloc-zambales.com</span>
     </div>
   </div>
 </footer>
@@ -574,45 +575,45 @@ def render() -> str:
   "@graph": [
     {{
       "@type": "WebSite",
-      "@id": "https://masinloc-zambales.com/#website",
-      "url": "https://masinloc-zambales.com/",
+      "@id": "https://www.masinloc-zambales.com/#website",
+      "url": "https://www.masinloc-zambales.com/",
       "name": "Discover Masinloc",
       "alternateName": "Masinloc, Zambales",
       "description": "An independent community record of Masinloc, Zambales: its places, the Sambal Tina language, and local history.",
       "inLanguage": "en-PH",
-      "publisher": {{ "@id": "https://masinloc-zambales.com/#publisher" }}
+      "publisher": {{ "@id": "https://www.masinloc-zambales.com/#publisher" }}
     }},
     {{
       "@type": "Organization",
-      "@id": "https://masinloc-zambales.com/#publisher",
+      "@id": "https://www.masinloc-zambales.com/#publisher",
       "name": "Mabayani Project by FMB",
-      "url": "https://masinloc-zambales.com/",
-      "logo": "https://masinloc-zambales.com/assets/masinloc-logo.webp",
+      "url": "https://www.masinloc-zambales.com/",
+      "logo": "https://www.masinloc-zambales.com/assets/masinloc-logo.webp",
       "email": "hello@masinloc-zambales.com"
     }},
     {{
       "@type": "WebPage",
-      "@id": "https://masinloc-zambales.com/#webpage",
-      "url": "https://masinloc-zambales.com/",
+      "@id": "https://www.masinloc-zambales.com/#webpage",
+      "url": "https://www.masinloc-zambales.com/",
       "name": "Masinloc, Zambales | History, Sambal Tina & Places",
-      "isPartOf": {{ "@id": "https://masinloc-zambales.com/#website" }},
+      "isPartOf": {{ "@id": "https://www.masinloc-zambales.com/#website" }},
       "inLanguage": "en-PH",
       "about": [
-        {{ "@id": "https://masinloc-zambales.com/#place" }},
+        {{ "@id": "https://www.masinloc-zambales.com/#place" }},
         {{ "@type": "Thing", "name": "Sambal Tina language and culture" }},
         {{ "@type": "Thing", "name": "Masinloc local history" }}
       ],
       "subjectOf": {{
         "@type": "AboutPage",
-        "@id": "https://masinloc-zambales.com/trust.html#webpage",
-        "url": "https://masinloc-zambales.com/trust.html",
+        "@id": "https://www.masinloc-zambales.com/trust.html#webpage",
+        "url": "https://www.masinloc-zambales.com/trust.html",
         "name": "Discover Masinloc and Masinloc Connect Platform Trust Information"
       }},
-      "primaryImageOfPage": "https://masinloc-zambales.com/assets/hero/landing-hero-1672.jpg"
+      "primaryImageOfPage": "https://www.masinloc-zambales.com/assets/hero/landing-hero-1672.jpg"
     }},
     {{
       "@type": "Place",
-      "@id": "https://masinloc-zambales.com/#place",
+      "@id": "https://www.masinloc-zambales.com/#place",
       "name": "Masinloc",
       "address": {{
         "@type": "PostalAddress",

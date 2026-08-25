@@ -41,7 +41,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-HOST = "masinloc-zambales.com"
+HOST = "www.masinloc-zambales.com"
 SITE = f"https://{HOST}"
 ENDPOINT = "https://api.indexnow.org/IndexNow"
 TIMEOUT = 20

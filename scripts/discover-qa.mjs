@@ -100,7 +100,7 @@ for (const article of articles) {
   if (!meta.robots.includes('max-image-preview:large')) {
     fail(`${article.slug}: missing max-image-preview:large`);
   }
-  const expected = `https://masinloc-zambales.com/discover/${article.slug}.html`;
+  const expected = `https://www.masinloc-zambales.com/discover/${article.slug}.html`;
   if (meta.canonical !== expected) {
     fail(`${article.slug}: canonical is ${meta.canonical}, expected ${expected}`);
   }

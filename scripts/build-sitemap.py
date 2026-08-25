@@ -30,13 +30,14 @@ How it decides
   uncommitted file falls back to its modification time, which is the honest
   answer for something that is not in the history yet.
 
-  "Content" excludes one thing deliberately: a commit whose only change to the
+  "Content" excludes site furniture deliberately: a commit whose only change to the
   page is a stylesheet cache-buster (`site.css?v=20260825-1`). Those stamps are
   bumped across all forty-odd pages whenever a shared stylesheet changes, and
   counting that as a modification would republish the whole sitemap with one
   date — a deployment wearing a content change's clothes, which is the exact
   thing this script was written to stop. A commit that touches a stamp AND real
-  markup still counts, because the markup changed.
+  markup still counts, because the markup changed. Pure apex-to-www hostname
+  normalization is also furniture; accompanying prose still advances the date.
 
 Usage
 -----
@@ -46,6 +47,7 @@ Usage
 from __future__ import annotations
 
 import re
+from collections import Counter
 import subprocess
 import sys
 from datetime import date, timezone, datetime
@@ -53,7 +55,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SITEMAP = ROOT / "sitemap.xml"
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
 
 CANONICAL = re.compile(r'<link\s+rel="canonical"\s+href="([^"]+)"', re.I)
 NOINDEX = re.compile(r'<meta\s+name="robots"[^>]*content="[^"]*noindex', re.I)
@@ -99,7 +101,8 @@ def shallow_repository() -> bool:
 # says, which is the question <lastmod> answers.
 FURNITURE = (
     # A stylesheet link, with or without a cache-buster.
-    re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$'),
+    re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css'
+               r'(\?v=(?:\d{8}-\d+|STAMP))?">\s*$'),
     # The footer navigation, whether it lives on one line or several.
     re.compile(r'^[+-].*class="(footer-nav|foot-nav)"'),
     # A line that is nothing but links. Both navigations are written this way —
@@ -108,6 +111,21 @@ FURNITURE = (
     # prose, since a single stray word outside an anchor fails the match.
     re.compile(r'^[+-]\s*(?:<a\b[^>]*>[^<]*</a>)+\s*$'),
 )
+
+CSS_STAMP = re.compile(r'(\.css)(?:\?v=\d{8}-\d+)?')
+
+
+def normalize_cosmetic_line(line: str) -> str:
+    """Erase only the two deployment details that do not change a page.
+
+    This lets one commit carry both the apex-to-www normalization and a
+    stylesheet cache-stamp refresh without turning their combination into a
+    content edit. The stylesheet filename and every non-host character remain,
+    so changing the linked sheet or page prose still survives normalization.
+    """
+    line = line.replace("www.masinloc-zambales.com",
+                        "masinloc-zambales.com")
+    return CSS_STAMP.sub(r'\1?v=STAMP', line)
 
 
 def uncommitted_pages() -> list[str]:
@@ -140,7 +158,7 @@ def uncommitted_pages() -> list[str]:
 def cosmetic_only(commit: str, rel: str) -> bool:
     """True when this commit changed only this page's furniture.
 
-    Two things reach every page at once and neither is content.
+    Three things can reach every page at once and none is content.
 
     Bumping `site.css?v=...` across all forty-odd pages is a real edit and a
     real commit, but it changes how the page is painted, not what it says. The
@@ -154,6 +172,12 @@ def cosmetic_only(commit: str, rel: str) -> bool:
     that thirty-nine articles had been rewritten. They had not. The page that
     genuinely changed — the article whose text now points at the Marketplace —
     has an edit outside the footer, so it still counts.
+
+    A canonical host migration is compared even more narrowly. Removed and
+    added lines are compared after stripping only the exact `www.` token from
+    this site's hostname. If those normalized multisets match, the commit was
+    pure hostname normalization. Any accompanying prose edit keeps the sets
+    different and remains a genuine content change.
     """
     try:
         out = subprocess.run(
@@ -163,8 +187,29 @@ def cosmetic_only(commit: str, rel: str) -> bool:
         return False
     edits = [line for line in out.stdout.splitlines()
              if line[:1] in "+-" and not line.startswith(("+++", "---"))]
-    return bool(edits) and all(
-        any(pattern.match(line) for pattern in FURNITURE) for line in edits)
+    # A merge commit can appear in `git log -- <page>` even though it applies
+    # no page diff of its own. It is a history snapshot, not a content change;
+    # continue to the commit that actually changed the file.
+    if not edits:
+        return True
+
+    removed = Counter(normalize_cosmetic_line(line[1:])
+                      for line in edits if line.startswith("-"))
+    added = Counter(normalize_cosmetic_line(line[1:])
+                    for line in edits if line.startswith("+"))
+
+    # Cancel paired lines after the narrowly scoped normalization. Anything
+    # left must independently be known site furniture; real markup or prose
+    # therefore continues to advance lastmod.
+    common = removed & added
+    removed -= common
+    added -= common
+    unmatched = ([f"-{line}" for line, count in removed.items()
+                  for _ in range(count)]
+                 + [f"+{line}" for line, count in added.items()
+                    for _ in range(count)])
+    return all(any(pattern.match(line) for pattern in FURNITURE)
+               for line in unmatched)
 
 
 def last_content_change(path: Path) -> str:

@@ -94,7 +94,7 @@ These are not code regressions and cannot be completed from repository code alon
 - Enable Supabase Auth leaked-password protection in the project Auth settings.
 - Cloudflare Turnstile hooks exist in the frontend and submission function, but enforcement must remain off until the correct production site key, secret, allowed hostnames, and `TURNSTILE_REQUIRED=true` are configured together and tested end to end.
 - Protect the GitHub `main` branch with required status checks when repository settings access is available. Until then, the merge workflow and written branch policy are operational guardrails rather than a GitHub-enforced rule.
-- Confirm that `masinloc-zambales.com` is attached to the intended production deployment and that the deployment source is this repository's `main` branch. Hosting/domain ownership is outside repository code and must be verified at the hosting account.
+- Confirm that `www.masinloc-zambales.com` is attached to the intended production deployment, that the apex permanently redirects to it, and that the deployment source is this repository's `main` branch. Hosting/domain ownership is outside repository code and must be verified at the hosting account.
 
 ## Sambal Tina dictionary
 
