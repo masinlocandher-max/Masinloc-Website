@@ -78,6 +78,8 @@ jobs:
           node --check scripts/marketplace-qa.mjs
           node --check scripts/wordscapes-qa.mjs
           node --check marketplace.js
+      - name: Validate security invariants
+        run: python3 scripts/check-security.py
       - name: Validate locations mapping and photography
         run: python3 scripts/check-locations.py
       - name: Audit every photograph on the site
