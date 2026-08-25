@@ -156,6 +156,7 @@ html{scroll-padding-top:96px}
    alternative would be cropping the photograph to manufacture height, which is
    the thing being undone. */
 .hero{
+  --h1-size:clamp(46px,8.6vw,124px);
   position:relative;
   /* site.css sets height:100svh, max-height:980px and overflow:hidden on .hero
      for connect.html, which still wants a viewport-height band. Those are
@@ -198,7 +199,10 @@ html{scroll-padding-top:96px}
 
 .hero h1{
   margin:0;color:var(--white);
-  font:400 clamp(46px,8.6vw,124px)/.94 var(--font-editorial);
+  /* Held in a variable because the phone overlay's pull is derived from it:
+     two lines at .94 leading is 1.88 times the size. If these two ever drift
+     apart the headline stops landing on the frame. */
+  font:400 var(--h1-size)/.94 var(--font-editorial);
   letter-spacing:-.025em;
   max-width:13ch;
 }
@@ -901,19 +905,6 @@ html{scroll-padding-top:96px}
   }
   
 
-  /* Below this width the photograph is too short to stand under the copy.
-     At 390px the frame is 219px tall and the headline alone would more than
-     fill it, so the copy comes off the picture and sits beneath it on the navy
-     field. The photograph stays whole — cropping it to manufacture the height
-     an overlay needs is exactly what this change undid. */
-  .hero{padding:0 0 clamp(44px,7vh,72px)}
-  .hero-inner{position:relative;left:auto;right:auto;bottom:auto;
-    margin-top:clamp(26px,4vh,40px)}
-  .hero-media::after{
-    /* Nothing sits on the frame here, so only the join with the navy field
-       below it needs softening. */
-    background:linear-gradient(to top,var(--navy-deep),rgba(3,17,47,.55) 7%,transparent 18%);
-  }
   .hero h1{max-width:100%}
   .hero-note{position:relative;right:auto;bottom:auto;text-align:left;
     border-right:0;border-left:2px solid var(--yellow);padding:0 0 0 12px;
@@ -923,6 +914,55 @@ html{scroll-padding-top:96px}
   .routes a{flex-direction:column;gap:6px}
   .routes .r-what{margin-left:0;text-align:left}
   .foot-nav{margin-left:0;width:100%}
+}
+
+@media (max-width:739px){
+  /* THE OVERLAY ON A PHONE: the headline sits on the frame's lower band.
+
+     740px is where the arithmetic turns over. The frame is 1.777:1, so its
+     height is the width divided by that: at 768px it is 432px and the copy
+     block is about 396px, which fits inside with room. At 390px the frame is
+     219px and the block is nearly twice that. Fitting it inside there is
+     impossible without cropping the picture to manufacture height or shrinking
+     the headline to something no hero should be set in.
+
+     So the block is not fitted inside the frame — it is pulled up until both
+     lines of the headline land on the photograph's lower band, and the note
+     and the buttons carry on beneath it on the navy, where they are easier to
+     read and easier to tap. The picture is still whole, and the headline is
+     still on it.
+
+     The pull is a negative margin rather than absolute positioning on purpose:
+     the block stays in flow, so the hero's height is still computed from real
+     content and nothing below it has to be told where to start. */
+  .hero{padding:0 0 clamp(40px,6vh,64px)}
+  /* One logo, not two. The hero mark and the navigation's brand are the same
+     image sixty pixels apart on a 390px screen, and the mark landed in the
+     middle of the frame where the scrim is lightest — measured 2.11:1. The bar
+     already has a ground that carries it, so the bar keeps the brand here and
+     the hero drops its own copy. */
+  .hero-mark{display:none}
+  .home-nav .brand img{opacity:1;transform:none}
+  .hero-inner{
+    position:relative;left:auto;right:auto;bottom:auto;
+    /* Exactly the headline's own height, plus a hair of inset. The pull has to
+       track the type, not the viewport: the block's top lands at the frame's
+       lower edge by default, so lifting it by the height of the two lines puts
+       precisely those two lines on the picture and leaves everything after
+       them below it. A viewport-based guess drifted at both ends — the second
+       line crossed the edge at 320px and again at 739px. */
+    margin-top:calc(-1.88 * var(--h1-size) - 10px);
+  }
+  .hero-media::after{
+    /* Weighted to the lower band, because that is the band the type is on.
+       The top half of the frame — sky, bunting, the church tower — is left
+       almost untouched, and the join with the navy below is carried by the
+       same gradient rather than a second one. */
+    background:linear-gradient(to top,
+      var(--navy-deep) 0%,rgba(3,17,47,.93) 10%,rgba(3,17,47,.86) 30%,
+      rgba(3,17,47,.72) 46%,rgba(3,17,47,.30) 58%,rgba(3,17,47,.08) 72%,
+      rgba(3,17,47,0) 84%);
+  }
 }
 
 /* Reduced motion keeps the whole story and drops the travel. Nothing is
