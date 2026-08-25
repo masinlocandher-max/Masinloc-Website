@@ -111,13 +111,15 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
 
     const runs = await page.evaluate(() => {
       const out = [];
-      /* Only what actually sits over the photograph is sampled here.
-         The headline, the mark, the note and the buttons used to be laid over
-         the frame behind a scrim; they now sit below it on solid --navy-deep,
-         where the question is settled by the token rather than by whichever
-         part of a photograph a crop happened to expose. contrast-qa measures
-         them there. What remains over the picture is the fixed navigation. */
-      for (const selector of ['.home-nav a', '.home-nav .brand img', '#menuToggle']) {
+      /* Everything that sits over the photograph, measured against the
+         photograph. The frame is no longer cropped, so what is behind any
+         given glyph is now the same picture at every width rather than
+         whichever third a crop happened to expose — but it is still a
+         photograph, and a scrim over it is still the only thing making white
+         type legible. The navigation is included because it is fixed over the
+         frame's top edge. */
+      for (const selector of ['.hero-mark', '.hero h1', '.hero-note',
+        '.cta-secondary', '.home-nav a', '#menuToggle']) {
         const el = document.querySelector(selector);
         if (!el || !el.getClientRects().length) continue;
         const size = parseFloat(getComputedStyle(el).fontSize);
@@ -139,8 +141,8 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
       return out;
     });
 
-    // Hide the navigation itself, so what is sampled is the ground behind it.
-    await page.addStyleTag({ content: '.home-nav{visibility:hidden !important}' });
+    // Hide everything in front of the photograph, so only the scrim is sampled.
+    await page.addStyleTag({ content: '.hero-inner,.home-nav{visibility:hidden !important}' });
     await page.waitForTimeout(150);
 
     const worst = new Map();

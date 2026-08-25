@@ -106,22 +106,28 @@ html{scroll-padding-top:96px}
 
 /* ------------------------------------------------------------- 01 · hero -- */
 
-/* THE HERO SHOWS THE WHOLE PHOTOGRAPH.
+/* THE WHOLE PHOTOGRAPH, WITH THE HEADLINE ON IT.
 
-   It used to fill the viewport: the frame was pinned to the inset, cropped
-   with object-fit:cover, held at scale(1.06), and drifted on scroll — and the
-   headline sat on top of it behind a scrim built to keep white type legible
-   over whatever the crop happened to expose.
+   The frame used to be pinned to a viewport-height band, cropped with
+   object-fit:cover, held at scale(1.06) here and scale(1.025) in
+   site-polish.css, and drifted on scroll. That composition decides for the
+   viewer which two thirds of a photograph they are allowed to see, and it
+   decides differently at every window size. The Binabayani frame is a
+   photograph of people — dancers crossing the plaza in front of San Andres —
+   and the crop cut performers out of their own picture.
 
-   That composition decides for the viewer which two thirds of a photograph
-   they are allowed to see, and it decides differently at every window size.
-   The Binabayani frame is a photograph of people: dancers crossing the plaza
-   in front of San Andres. Cropping it to a letterbox and then scaling in cut
-   performers out of their own picture.
+   Nothing is cropped or scaled now: the picture is sized to its own ratio and
+   the hero is as tall as the picture is. The type still sits ON it, which is
+   what the hero is for. Those two are independent — the crop was never what
+   made the overlay possible, it was just what the old code happened to do.
 
-   So the photograph is now shown whole, at its own ratio, and the type has
-   moved below it into the navy field. Nothing is cropped, nothing is scaled,
-   and the hero is as tall as the picture is — which is the honest height. */
+   The overlay needs somewhere to sit, and that is a question of height. At
+   1280px the frame is 720px tall and the copy block is about 420px, so it has
+   room. Below about 820px the frame is under 460px and the headline alone
+   would fill it, so the copy drops beneath the picture instead of being
+   squeezed over it — see the phone block near the end of this file. The
+   alternative would be cropping the photograph to manufacture height, which is
+   the thing being undone. */
 .hero{
   position:relative;
   /* site.css sets height:100svh, max-height:980px and overflow:hidden on .hero
@@ -131,31 +137,35 @@ html{scroll-padding-top:96px}
   height:auto;min-height:0;max-height:none;overflow:visible;
   /* The top padding is the navigation's own band. The bar is fixed and
      transparent until it scrolls, so it used to sit on the photograph and
-     needed a scrim dark enough to carry white links — which meant darkening
-     the top of the very picture this change exists to show. Starting the
-     photograph below the bar costs one strip of navy and buys back the whole
-     frame: the links land on solid --navy-deep at roughly 15:1, and nothing
-     is painted over the photograph at all. */
-  padding:clamp(78px,9vh,94px) 0 clamp(56px,8vh,96px);
+     needed a scrim dark enough to carry white links over open sky — which
+     meant darkening the top of the very picture this change exists to show.
+     Starting the frame below the bar costs one strip of navy and keeps the
+     scrim off the top of the photograph entirely. */
+  padding:clamp(78px,9vh,94px) 0 0;
   background:var(--navy-deep);
 }
 .hero-media{position:relative;inset:auto;z-index:0;display:block}
 .hero-media::after{
-  /* One gradient, and it only touches the bottom edge. The photograph meets
-     the navy field below it, and without this the join is a hard horizontal
-     rule across the page. Nothing sits over the picture, so there is no scrim
-     over the picture. */
+  /* Light falling across the frame, not a wash over it: strongest at the lower
+     left where the type sits, gone by the right-hand third. The photograph's
+     subject is centre and right — the dancers, the church — so the weight is
+     carried where the picture is darkest and emptiest anyway. */
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,var(--navy-deep),rgba(3,17,47,.55) 7%,transparent 18%);
+  background:
+    linear-gradient(96deg,rgba(3,17,47,.93) 0%,rgba(3,17,47,.90) 26%,
+      rgba(3,17,47,.74) 46%,rgba(3,17,47,.34) 64%,rgba(3,17,47,0) 82%),
+    linear-gradient(to top,rgba(3,17,47,.90) 0%,rgba(3,17,47,.48) 28%,
+      rgba(3,17,47,.06) 54%,rgba(3,17,47,0) 70%);
 }
 /* Whole frame, native ratio. No object-fit, no aspect-ratio, no transform:
    each of those is a decision about what to hide. */
 .hero-media img{width:100%;height:auto;display:block;object-fit:fill}
 
+/* On the picture, bottom left — where the scrim above is heaviest. */
 .hero-inner{
-  position:relative;z-index:2;max-width:min(100%,1560px);width:100%;
+  position:absolute;z-index:2;left:0;right:0;bottom:clamp(30px,5vh,74px);
+  max-width:min(100%,1560px);width:100%;
   margin-inline:auto;padding-inline:var(--gutter);
-  margin-top:clamp(30px,4.5vh,58px);
 }
 .hero-mark{height:52px;width:auto;display:block;margin-bottom:clamp(22px,4vh,44px);
   opacity:0;transform:translate3d(0,14px,0);
@@ -861,7 +871,19 @@ html{scroll-padding-top:96px}
   }
   
 
+  /* Below this width the photograph is too short to stand under the copy.
+     At 390px the frame is 219px tall and the headline alone would more than
+     fill it, so the copy comes off the picture and sits beneath it on the navy
+     field. The photograph stays whole — cropping it to manufacture the height
+     an overlay needs is exactly what this change undid. */
   .hero{padding:clamp(70px,11vh,80px) 0 clamp(44px,7vh,72px)}
+  .hero-inner{position:relative;left:auto;right:auto;bottom:auto;
+    margin-top:clamp(26px,4vh,40px)}
+  .hero-media::after{
+    /* Nothing sits on the frame here, so only the join with the navy field
+       below it needs softening. */
+    background:linear-gradient(to top,var(--navy-deep),rgba(3,17,47,.55) 7%,transparent 18%);
+  }
   .hero h1{max-width:100%}
   .hero-note{position:relative;right:auto;bottom:auto;text-align:left;
     border-right:0;border-left:2px solid var(--yellow);padding:0 0 0 12px;
