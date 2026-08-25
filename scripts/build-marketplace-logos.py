@@ -15,10 +15,11 @@ NOTHING IS UPSCALED. The ladder stops at the original's own width.
 
 WHY A LOGO IS READ BEFORE IT IS PUBLISHED
 
-Adaler's Grazing Delights supplied a logo with two mobile numbers set into the
-artwork: "ZAMBALES, 0950-417-2222/ 0909-184-6669". One of those is the number
-this site was explicitly asked to stop publishing; the other had never appeared
-in the submission data at all.
+Adaler's Grazing Delights first supplied a logo with two mobile numbers set
+into the artwork, in a band under the wordmark. One was the number this site
+had been asked to stop publishing; the other had never appeared in the
+submission data at all. (They are not written out here. A file that records the
+removal of a number by quoting it has not removed anything.)
 
 A number printed inside an image is invisible to every text-based check here —
 check-marketplace-privacy.py reads markup, not pixels — but it is not invisible
@@ -60,11 +61,13 @@ LOGOS = {
         "alt": "Diwan Coffee logo: a stylised coffee cup with a coffee bean and rising steam",
     },
     "adalers-grazing-delights": {
-        "file": "Adalers.JPG",
-        "alt": "Adaler's Grazing Delights logo: an orange pretzel above the business name",
-        "blocked": ("the artwork has two mobile numbers set into it "
-                    "(ZAMBALES, 0950-417-2222/ 0909-184-6669), and this site was "
-                    "asked to publish no phone numbers"),
+        # Replaced 2026-08-24. The first file carried a line of contact details
+        # in a band under the wordmark and was held back for that reason. This
+        # is the same mark with that band removed by the business — the rule now
+        # runs straight into the tagline — so it publishes.
+        "file": "Adalers.png",
+        "alt": ("Adaler's Grazing Delights logo: an orange pretzel above the "
+                "business name and the line Artfully Arranged, Perfectly Shared"),
     },
 }
 
@@ -137,7 +140,15 @@ def main() -> int:
         existing = {}
         if MANIFEST.is_file():
             existing = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        existing.update(built)
+        # Merge per key rather than replacing the entry. artworkReviewed is
+        # recorded by a person after looking at the file, and a plain update()
+        # here would silently discard it every time the script re-ran — which
+        # would then fail check-marketplace-privacy.py for a reason that had
+        # nothing to do with the artwork.
+        for slug, entry in built.items():
+            merged = dict(existing.get(slug, {}))
+            merged.update(entry)
+            existing[slug] = merged
         MANIFEST.write_text(json.dumps(existing, indent=2, ensure_ascii=False) + "\n",
                             encoding="utf-8")
         files = sorted(OUT.glob("*"))

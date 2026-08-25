@@ -31,7 +31,7 @@ How it decides
   answer for something that is not in the history yet.
 
   "Content" excludes one thing deliberately: a commit whose only change to the
-  page is a stylesheet cache-buster (`site.css?v=20260821-1`). Those stamps are
+  page is a stylesheet cache-buster (`site.css?v=20260825-1`). Those stamps are
   bumped across all forty-odd pages whenever a shared stylesheet changes, and
   counting that as a modification would republish the whole sitemap with one
   date — a deployment wearing a content change's clothes, which is the exact

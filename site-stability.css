@@ -37,7 +37,7 @@ img[src="assets/masinloc-logo.webp"]{
   top:auto!important;
 }
 
-@media(max-width:980px){
+@media(max-width:1099px){
   .site-nav .brand img{width:120px!important;max-width:120px!important}
   .home-footer .footer-brand img{width:136px!important;max-width:136px!important}
   .home-footer{padding-left:22px!important;padding-right:22px!important}

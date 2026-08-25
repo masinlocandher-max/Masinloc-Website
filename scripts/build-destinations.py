@@ -49,10 +49,10 @@ HEAD = """<!doctype html>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
-<link rel="stylesheet" href="site.css?v=20260821-1">
-<link rel="stylesheet" href="site-polish.css?v=20260820-1">
+<link rel="stylesheet" href="site.css?v=20260825-1">
+<link rel="stylesheet" href="site-polish.css?v=20260825-1">
 <link rel="stylesheet" href="destinations.css?v=20260823-1">
-<link rel="stylesheet" href="site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="site-stability.css?v=20260825-1">
 </head>
 <body class="about-page places-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -60,7 +60,7 @@ HEAD = """<!doctype html>
   <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    <a href="index.html">Home</a><a href="discover/index.html">Discover</a>
+    <a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a>
     <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>

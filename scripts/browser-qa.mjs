@@ -21,6 +21,7 @@ const pages = [
 const expectedNavText = [
   'Home',
   'Discover',
+  'Marketplace',
   'A Closer Look',
   'Verified History',
   'Masinloc Bulletin',

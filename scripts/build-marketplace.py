@@ -164,6 +164,7 @@ def nav(depth: int) -> str:
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
     {item(f"{up}index.html", "Home")}
     {item(f"{up}discover/index.html", "Discover")}
+    {item(f"{up}marketplace.html", "Marketplace")}
     {item(f"{up}a-closer-look.html", "A Closer Look")}
     {item(f"{up}verified-history.html", "Verified History")}
     {item(f"{up}masinloc-bulletin.html", "Masinloc Bulletin")}
@@ -210,10 +211,10 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
-<link rel="stylesheet" href="{up}site.css?v=20260821-1">
-<link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="{up}marketplace.css?v=20260825-2">
-<link rel="stylesheet" href="{up}site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="{up}site.css?v=20260825-1">
+<link rel="stylesheet" href="{up}site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="{up}marketplace.css?v=20260825-4">
+<link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
      Discover page. Without it the shared navigation paints white links on a
@@ -350,38 +351,72 @@ def context_block(business: dict) -> str:
 """
 
 
-def card(business: dict) -> str:
-    """One business, as it appears in the directory.
+def initials(name: str) -> str:
+    """Two letters at most, from the words that carry the name.
 
-    No image is not a broken image. A business whose logo the site cannot serve
-    gets a text-led card carrying its initial, which is the same treatment
-    Discover gives an article with no artwork.
+    "Adaler's Grazing Delights" gives AG, not AGD: three letters start to read
+    as an acronym the business does not use. Punctuation and the possessive are
+    ignored, so the letters come from the words a person would say.
+    """
+    words = [w for w in re.split(r"[^A-Za-z]+", name) if w]
+    return "".join(w[0] for w in words[:2]).upper() or name[:1].upper()
+
+
+def row(business: dict) -> str:
+    """One business, as a directory entry rather than a product card.
+
+    The composition is horizontal and reads the way somebody scans a printed
+    directory: the mark first, then who and where, then what they actually do.
+
+      LOGO  |  NAME / CATEGORY / LOCATION  |  DESCRIPTION
+
+    The logo is the largest thing in the row by a wide margin, and it is not
+    put in a circle, a pill or an avatar chip — it sits on the page with room
+    around it, at its own proportions. A business that has gone to the trouble
+    of having a mark drawn should have it treated as a mark.
+
+    Where there is no logo the placeholder is the initials set in the editorial
+    face, with no container. Restrained on purpose: it should read as a
+    considered absence, not as a broken image or an invented monogram.
+
+    Location renders only when there is one. Category and location are joined
+    by a middot rather than stacked, because at a glance they answer one
+    question together — what they are and where.
     """
     href = f"marketplace/{business['slug']}.html"
     label = LABEL[business["category"]]
-    # The card sits in a track that is 350-580px wide depending on the count and
-    # the viewport; the mark is shown small inside it, so a 160 or 320 wide
-    # derivative is plenty.
-    mark = logo(business["slug"], sizes="120px")
+    location = business.get("location")
+
+    # The logo box is 168px at desktop and 132px on a phone; a 320 or 480 wide
+    # derivative covers both at 2x.
+    mark = logo(business["slug"], sizes="(max-width: 720px) 132px, 168px")
     if mark:
-        media = f'<span class="mk-card-media">{mark.replace("../assets/", "assets/")}</span>'
-        variant = ""
+        media = f'<span class="mk-logo">{mark.replace("../assets/", "assets/")}</span>'
     else:
-        media = f'<span class="mk-card-mark" aria-hidden="true">{esc(business["name"][:1])}</span>'
-        variant = " mk-card-text"
+        media = (f'<span class="mk-logo mk-logo-none" aria-hidden="true">'
+                 f'{esc(initials(business["name"]))}</span>')
+
+    meta = f'<span class="mk-meta-cat">{esc(label)}</span>'
+    if location:
+        meta += f'<span class="mk-meta-loc">{esc(location)}</span>'
+
+    haystack = " ".join([business["name"], label, location or "",
+                         business.get("barangay", ""), business["description"]]).lower()
 
     return (
-        f'<li class="mk-card{variant}" data-category="{esc(business["category"])}" '
-        f'data-search="{esc(" ".join([business["name"], label, business["location"], business.get("barangay", ""), business["description"]]).lower())}">'
+        f'<li class="mk-item" data-category="{esc(business["category"])}" '
+        f'data-search="{esc(haystack)}">'
         f'<a href="{href}">'
         f'{media}'
-        f'<span class="mk-card-body">'
-        f'<span class="mk-card-cat">{esc(label)}</span>'
-        f'<span class="mk-card-name">{esc(business["name"])}</span>'
-        f'<span class="mk-card-loc">{esc(business["location"])}</span>'
-        f'<span class="mk-card-desc">{esc(business["description"])}</span>'
-        f'<span class="mk-card-cta">View business</span>'
-        f'</span></a></li>')
+        f'<span class="mk-ident">'
+        f'<span class="mk-name">{esc(business["name"])}</span>'
+        f'<span class="mk-meta">{meta}</span>'
+        f'</span>'
+        f'<span class="mk-about">'
+        f'<span class="mk-desc">{esc(business["description"])}</span>'
+        f'<span class="mk-more">View business</span>'
+        f'</span>'
+        f'</a></li>')
 
 
 def hub_page() -> str:
@@ -409,15 +444,9 @@ def hub_page() -> str:
         f'<button type="button" class="mk-chip" data-filter="{esc(c["id"])}">{esc(c["label"])}</button>'
         for c in used)
 
-    cards = "\n      ".join(card(b) for b in BUSINESSES)
+    rows = "\n      ".join(row(b) for b in BUSINESSES)
     count = len(BUSINESSES)
     noun = "business" if count == 1 else "businesses"
-
-    # A three-column grid holding two cards reads as a column that failed to
-    # load rather than as a directory with two entries in it. While the
-    # directory is small the grid narrows to match, so the row is full and the
-    # cards keep a sensible width. The class disappears on its own at three.
-    few = " mk-grid-few" if count < 3 else ""
 
     return f"""{head(title=title, description=description, url=url, depth=0, ld=ld)}
 {nav(0)}
@@ -445,8 +474,8 @@ def hub_page() -> str:
   <section class="mk-results" aria-labelledby="mkResultsTitle">
     <h2 id="mkResultsTitle" class="visually-hidden">Businesses</h2>
     <p class="mk-count" id="mkCount" role="status">{count} {noun}</p>
-    <ul class="mk-grid{few}" id="mkGrid">
-      {cards}
+    <ul class="mk-list" id="mkGrid">
+      {rows}
     </ul>
     <p class="mk-empty" id="mkEmpty" hidden>No businesses found. Try another name, category, or location.</p>
   </section>
@@ -460,7 +489,7 @@ def hub_page() -> str:
 </main>
 {footer(0)}
 <script src="site.js?v=20260820-2"></script>
-<script src="marketplace.js?v=20260824-1"></script>
+<script src="marketplace.js?v=20260825-1"></script>
 <script type="application/ld+json">
 {ld}
 </script>
@@ -503,9 +532,9 @@ def detail_page(business: dict) -> str:
     ]
     ld = json.dumps({"@context": "https://schema.org", "@graph": graph}, indent=2, ensure_ascii=False)
 
-    mark = logo(slug, sizes="180px", eager=True)
+    mark = logo(slug, sizes="(max-width: 720px) 150px, 200px", eager=True)
     media = (f'<figure class="mk-detail-media">{mark}</figure>' if mark
-             else f'<p class="mk-detail-mark" aria-hidden="true">{esc(business["name"][:1])}</p>')
+             else f'<p class="mk-detail-mark" aria-hidden="true">{esc(initials(business["name"]))}</p>')
 
     # Every row here is conditional. An absent field produces no row at all —
     # never an empty one and never a placeholder. There is no Contact row: the

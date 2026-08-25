@@ -22,7 +22,7 @@
   const count = document.getElementById('mkCount');
   const empty = document.getElementById('mkEmpty');
   const chips = [...document.querySelectorAll('.mk-chip')];
-  const cards = [...grid.querySelectorAll('.mk-card')];
+  const cards = [...grid.querySelectorAll('.mk-item')];
 
   let category = 'all';
   let term = '';

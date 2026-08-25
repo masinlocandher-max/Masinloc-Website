@@ -134,9 +134,9 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 {extra}<link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
-<link rel="stylesheet" href="{up}site.css?v=20260821-1">
-<link rel="stylesheet" href="{up}site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="{up}site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="{up}site.css?v=20260825-1">
+<link rel="stylesheet" href="{up}site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 <link rel="stylesheet" href="{up}bulletin.css?v=20260822-2">
 </head>
 <body class="about-page">
@@ -147,6 +147,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
     <a href="{up}index.html">Home</a>
     <a href="{up}discover/index.html">Discover</a>
+    <a href="{up}marketplace.html">Marketplace</a>
     <a href="{up}a-closer-look.html">A Closer Look</a>
     <a href="{up}verified-history.html">Verified History</a>
     <a class="active" href="{up}masinloc-bulletin.html" aria-current="page">Masinloc Bulletin</a>

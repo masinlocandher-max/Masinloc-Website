@@ -128,6 +128,7 @@ def nav(active: str) -> str:
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
     {item("../index.html", "Home")}
     {item("index.html", "Discover")}
+    {item("../marketplace.html", "Marketplace")}
     {item("../a-closer-look.html", "A Closer Look")}
     {item("../verified-history.html", "Verified History")}
     {item("../masinloc-bulletin.html", "Masinloc Bulletin")}
@@ -170,10 +171,10 @@ def head(*, title: str, description: str, url: str, image: str | None,
 {extra}<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
-<link rel="stylesheet" href="../site.css?v=20260821-1">
-<link rel="stylesheet" href="../site-polish.css?v=20260820-1">
+<link rel="stylesheet" href="../site.css?v=20260825-1">
+<link rel="stylesheet" href="../site-polish.css?v=20260825-1">
 <link rel="stylesheet" href="../discover.css?v=20260823-1">
-<link rel="stylesheet" href="../site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
      over the full-bleed photograph on Places and disappears completely on a

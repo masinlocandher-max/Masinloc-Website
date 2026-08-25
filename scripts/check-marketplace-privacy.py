@@ -165,13 +165,25 @@ def main() -> int:
                     problems.append(
                         f"data/marketplace.json: {label}.{key} contains the email {address}")
 
+    # Every file under data/ is served publicly, so a number can reach the site
+    # through prose in a manifest as easily as through a page. That is not
+    # theoretical either: the note recording that Adaler's logo had been cleaned
+    # up originally quoted the very numbers it was describing the removal of.
+    for public_json in sorted((ROOT / "data").glob("marketplace*.json")):
+        text = public_json.read_text(encoding="utf-8")
+        for number in set(PHONE.findall(text)):
+            problems.append(
+                f"data/{public_json.name}: contains the phone number {number}. "
+                f"Everything under data/ is served publicly — describe a number's "
+                f"removal without writing it down.")
+
     # A logo is an image of text as far as everything above is concerned. None
     # of those checks can read pixels, so a phone number printed inside a mark
     # would sail past all of them and still be perfectly readable to a visitor
     # — and to image search. That is not hypothetical: Adaler's Grazing
-    # Delights supplied a logo with "ZAMBALES, 0950-417-2222/ 0909-184-6669"
-    # set into it, one of which is the number this site was told to stop
-    # publishing.
+    # Delights first supplied a logo with two mobile numbers set into it, one
+    # of which was the number this site had been told to stop publishing. They
+    # are not written out here, for the same reason they are not on the page.
     #
     # So a published logo has to carry a recorded human review saying somebody
     # looked at the artwork and found no contact details in it. The check

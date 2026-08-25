@@ -107,6 +107,12 @@ async function measure(label, width) {
     if (expected.position && found.position !== expected.position) {
       fail(`${where}: position is "${found.position}", expected "${expected.position}"`);
     }
+    /* Some elements matter because of how BIG they are, not how they lay out.
+       A directory whose logos quietly shrink to thumbnails has lost the thing
+       that made it scannable, and nothing else here would notice. */
+    if (expected.minWidth != null && found.width < expected.minWidth) {
+      fail(`${where}: renders ${found.width}px wide, expected at least ${expected.minWidth}px`);
+    }
     if (expected.columns != null && found.columns !== expected.columns) {
       fail(`${where}: resolves to ${found.columns} column(s), expected ${expected.columns}`);
     }

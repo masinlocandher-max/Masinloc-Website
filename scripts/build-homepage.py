@@ -310,9 +310,9 @@ def render() -> str:
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preload" as="image" href="assets/hero/landing-hero-1280.avif" imagesrcset="{hero_avif}" imagesizes="{hero_sizes}" type="image/avif" fetchpriority="high">
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
-<link rel="stylesheet" href="site.css?v=20260821-1">
-<link rel="stylesheet" href="site-polish.css?v=20260820-1">
-<link rel="stylesheet" href="site-stability.css?v=20260823-1">
+<link rel="stylesheet" href="site.css?v=20260825-1">
+<link rel="stylesheet" href="site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="site-stability.css?v=20260825-1">
 <link rel="stylesheet" href="homepage.css?v=20260824-1">
 </head>
 <body class="home">
@@ -324,6 +324,7 @@ def render() -> str:
   <nav class="home-links" id="primaryNav" aria-label="Primary">
     <a href="index.html" aria-current="page">Home</a>
     <a href="discover/index.html">Discover</a>
+    <a href="marketplace.html">Marketplace</a>
     <a href="a-closer-look.html">A Closer Look</a>
     <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>

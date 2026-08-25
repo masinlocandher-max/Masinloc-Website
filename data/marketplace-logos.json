@@ -20,14 +20,23 @@
     }
   },
   "adalers-grazing-delights": {
-    "source": "Adalers.JPG",
-    "widths": [],
-    "heldBack": {
+    "source": "Adalers.png",
+    "alt": "Adaler's Grazing Delights logo: an orange pretzel above the business name and the line Artfully Arranged, Perfectly Shared",
+    "native": {
+      "width": 1254,
+      "height": 1254
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480,
+      640
+    ],
+    "artworkReviewed": {
       "date": "2026-08-24",
-      "decidedBy": "site owner",
-      "reason": "The supplied artwork has two mobile numbers set into it: 'ZAMBALES, 0950-417-2222/ 0909-184-6669'. The first is the number this site was asked to stop publishing; the second had never appeared in the submission data. This site publishes no phone numbers, and a number printed inside an image is as public as one printed in the markup while being invisible to every text-based check here.",
-      "notCropped": "Trimming the strip would also remove 'ZAMBALES' and the tagline and would publish a mark the business did not design. Logos are never cropped.",
-      "unblockedBy": "A version of the logo from the business without the contact strip. Drop it into the Marketplace Logo folder, remove the 'blocked' entry for this slug in scripts/build-marketplace-logos.py, run that script, then record an artworkReviewed block confirming no contact details are set into it."
+      "contactDetailsInArtwork": false,
+      "note": "Replacement file, read at full size and at 4x on the band under the wordmark. The first file supplied had a line of contact details there; in this one the rule runs straight into the tagline 'Artfully Arranged, Perfectly Shared' and that line is gone. No phone number, email or address is set into the artwork. The numbers themselves are deliberately not quoted here: this file is served publicly at /data/, so writing them down to record their removal would republish them."
     }
   }
 }

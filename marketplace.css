@@ -7,17 +7,17 @@
 
    Two decisions govern the file.
 
-   It borrows rather than invents. The palette, type stacks, spacing rhythm and
-   the light .about-page shell all come from the existing system, and the card
-   proportions deliberately echo Discover's, because a visitor moving between
-   the two sections should not feel they have changed websites.
+   It borrows rather than invents. The palette, type stacks and spacing rhythm
+   and the light .about-page shell all come from the existing system, so a
+   visitor moving between here and Discover should not feel they have changed
+   websites.
 
-   A missing logo is a designed state, not a gap. Neither approved business has
-   a servable image — the upload bucket is private — so the card that leads
-   with a letterform is the normal case here, not a fallback. It is built to
-   look deliberate: the same yellow rule Discover uses on its text-only cards,
-   and the business's initial set large in the editorial face. When real logos
-   become available the .mk-card-media branch takes over with no layout change.
+   And the directory is a list, not a grid of cards. Each business is a row —
+   mark, then who and where, then what they do — separated by one hairline and
+   a lot of air. Hierarchy comes from the scale of the logo against the type,
+   not from giving every entry a box, a shadow and a rounded corner. That reads
+   as a directory somebody edits rather than a shop somebody stocks, and it
+   holds at two entries and at two hundred.
 */
 
 :root{
@@ -104,98 +104,97 @@
 
 .mk-results{padding-bottom:clamp(48px,6vw,72px)}
 .mk-count{
-  margin:0 0 18px;
+  margin:0 0 8px;
   color:var(--muted);
   font:600 11.5px/1.4 var(--font-ui);
   letter-spacing:.12em;
   text-transform:uppercase;
 }
 
-.mk-grid{
-  list-style:none;margin:0;padding:0;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:clamp(18px,2.4vw,30px);
-}
-/* While the directory holds one or two businesses, a three-track grid leaves a
-   stranded column that reads as content which failed to load. The generator
-   adds this class below three and drops it at three, so the row is always full
-   without the cards ever becoming absurdly wide. */
-.mk-grid-few{grid-template-columns:repeat(2,minmax(0,1fr));max-width:780px}
+/* The directory is a list of entries, not a grid of cards.
 
-.mk-card{min-width:0}
-.mk-card[hidden]{display:none}
-.mk-card>a{
-  display:flex;
-  flex-direction:column;
-  height:100%;
+   Each row reads left to right the way somebody scans a printed directory:
+   the mark, then who and where, then what they do. Rows are separated by a
+   single hairline and a lot of vertical air — no boxes, no borders on four
+   sides, no shadow. With two entries or two hundred that stays quiet and
+   scannable, and it lets the logos be the only strong shapes on the page.
+
+   The first track is fixed so every mark lands on the same left edge and the
+   column reads as a column. The last two are proportional, with the
+   description given the wider share because it is the only part that is
+   prose. */
+.mk-list{list-style:none;margin:0;padding:0}
+.mk-item{border-top:1px solid var(--line)}
+.mk-item[hidden]{display:none}
+.mk-item>a{
+  display:grid;
+  grid-template-columns:168px minmax(190px,0.9fr) minmax(0,1.35fr);
+  gap:clamp(22px,3.4vw,52px);
+  align-items:start;
+  padding:clamp(28px,3.6vw,44px) 0;
   text-decoration:none;
   color:inherit;
-  border-top:3px solid var(--blue);
-  padding-top:16px;
-  transition:border-color var(--ease);
 }
-.mk-card>a:hover{border-color:var(--navy)}
-.mk-card>a:hover .mk-card-cta{text-decoration:underline}
-.mk-card>a:focus-visible{outline:3px solid rgba(13,59,158,.45);outline-offset:4px}
+.mk-item>a:hover .mk-name{color:var(--blue)}
+.mk-item>a:hover .mk-more{text-decoration:underline}
+.mk-item>a:focus-visible{outline:3px solid rgba(13,59,158,.45);outline-offset:6px}
 
-/* The text-led card, which is currently every card. Same yellow rule Discover
-   gives an article with no artwork, so the two sections agree. */
-.mk-card-text>a{border-top-color:var(--yellow)}
-
-/* A supplied logo, shown whole. These are square brand marks with their own
-   ground and their own margins, so the frame is square and the mark is
-   contained rather than covered — a crop would hand back a mark the business
-   did not design. The box is small on purpose: the card is a directory entry,
-   not a billboard. */
-.mk-card-media{
-  display:block;width:64px;height:64px;margin:0 0 14px;
-  border:1px solid var(--line);border-radius:14px;background:var(--white);
-  overflow:hidden;
-}
-.mk-card-media picture,.mk-card-media img{display:block;width:100%;height:100%}
-.mk-card-media img{object-fit:contain}
-
-.mk-card-mark{
+/* The logo. No frame, no circle, no chip — it sits on the page at its own
+   proportions with room around it, and it is by a wide margin the largest
+   thing in the row. object-fit:contain keeps a non-square mark honest if one
+   ever arrives. */
+.mk-logo{
   display:grid;place-items:center;
-  width:54px;height:54px;margin:0 0 14px;
-  border:1px solid var(--line);border-radius:14px;background:var(--soft);
-  color:var(--navy);
-  font:700 24px/1 var(--font-editorial);
+  width:168px;height:168px;
+}
+.mk-logo picture{display:block;width:100%;height:100%}
+.mk-logo img{display:block;width:100%;height:100%;object-fit:contain}
+
+/* The placeholder for a business with no mark. Initials in the editorial
+   face, no container, no colour — a considered absence rather than an
+   invented logo. */
+.mk-logo-none{
+  color:var(--line);
+  font:400 clamp(46px,5vw,62px)/1 var(--font-editorial);
+  letter-spacing:.02em;
 }
 
-.mk-card-body{display:flex;flex-direction:column;flex:1}
-.mk-card-cat{
-  display:block;margin:0 0 8px;
+.mk-ident{display:block;min-width:0;padding-top:6px}
+.mk-name{
+  display:block;margin:0 0 12px;
+  color:var(--navy);
+  font:400 clamp(23px,2.5vw,30px)/1.14 var(--font-editorial);
+  letter-spacing:-.02em;
+  transition:color var(--ease);
+}
+.mk-meta{display:block;min-width:0}
+.mk-meta-cat{
   color:var(--blue);
-  font:800 10.5px/1 var(--font-ui);
+  font:800 10.5px/1.5 var(--font-ui);
   letter-spacing:.16em;text-transform:uppercase;
 }
-.mk-card-name{
-  display:block;margin:0 0 8px;
-  color:var(--navy);
-  font:400 clamp(19px,2vw,23px)/1.18 var(--font-editorial);
-  letter-spacing:-.015em;
-}
-.mk-card-loc{
-  display:block;margin:0 0 10px;
-  color:var(--muted);
-  font:400 13px/1.5 var(--font-ui);
-}
-.mk-card-desc{
-  display:block;margin:0 0 16px;
+/* Category and location answer one question together, so they sit on one
+   line joined by a middot rather than stacking into two labels. */
+.mk-meta-loc::before{content:"·";margin:0 9px;color:var(--muted)}
+.mk-meta-loc{color:var(--muted);font:400 13.5px/1.6 var(--font-ui)}
+
+.mk-about{display:block;min-width:0;padding-top:8px}
+.mk-desc{
+  display:block;margin:0 0 14px;
   color:var(--text);
-  font:400 14.5px/1.65 var(--font-ui);
+  font:400 15.5px/1.72 var(--font-ui);
+  max-width:52ch;
 }
-.mk-card-cta{
-  display:block;margin-top:auto;
+.mk-more{
+  display:block;
   color:var(--blue);
-  font:800 11.5px/1 var(--font-ui);
+  font:800 11px/1 var(--font-ui);
   letter-spacing:.1em;text-transform:uppercase;
 }
 
 .mk-empty{
   margin:0;padding:34px 0 0;
+  border-top:1px solid var(--line);
   color:var(--text);
   font:400 16px/1.6 var(--font-ui);
 }
@@ -229,18 +228,19 @@
 
 .mk-detail{padding-top:clamp(16px,2.4vw,26px);padding-bottom:clamp(56px,7vw,88px)}
 .mk-detail-head{max-width:var(--mk-measure)}
+/* The mark leads the page, at the same scale it commands in the listing and
+   with no frame around it — same reasoning as .mk-logo. */
 .mk-detail-media{
-  margin:0 0 18px;width:96px;height:96px;
-  border:1px solid var(--line);border-radius:18px;background:var(--white);
-  overflow:hidden;
+  margin:0 0 22px;width:200px;height:200px;
+  display:grid;place-items:center;
 }
-.mk-detail-media picture,.mk-detail-media img{display:block;width:100%;height:100%}
-.mk-detail-media img{object-fit:contain}
+.mk-detail-media picture{display:block;width:100%;height:100%}
+.mk-detail-media img{display:block;width:100%;height:100%;object-fit:contain}
 .mk-detail-mark{
   display:grid;place-items:center;
-  width:66px;height:66px;margin:0 0 18px;
-  border:1px solid var(--line);border-radius:16px;background:var(--soft);
-  color:var(--navy);font:700 30px/1 var(--font-editorial);
+  width:200px;height:200px;margin:0 0 22px;
+  color:var(--line);
+  font:400 clamp(56px,7vw,76px)/1 var(--font-editorial);letter-spacing:.02em;
 }
 .mk-detail h1{
   margin:0 0 16px;color:var(--navy);
@@ -273,12 +273,25 @@
 
 /* ------------------------------------------------------------ responsive -- */
 
-@media(max-width:980px){
-  .mk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+/* The row does not compress, it reflows. Below 720px the three tracks become
+   one column in reading order — logo, name, category and location, then the
+   description — and the mark stays deliberately large. A directory whose
+   logos shrink to thumbnails on a phone has given up the thing that made it
+   worth scanning. */
+@media(max-width:720px){
+  .mk-detail-media,.mk-detail-mark{width:150px;height:150px}
+  .mk-item>a{
+    grid-template-columns:1fr;
+    gap:16px;
+    padding:clamp(26px,6vw,34px) 0;
+  }
+  .mk-logo{width:132px;height:132px}
+  .mk-ident,.mk-about{padding-top:0}
+  .mk-name{margin-bottom:8px}
+  .mk-desc{max-width:none;margin-bottom:12px}
 }
 
 @media(max-width:640px){
-  .mk-grid{grid-template-columns:1fr;gap:26px}
   .mk-facts{grid-template-columns:1fr;gap:20px}
   /* A row of chips that wraps to three lines pushes the results off a phone
      screen entirely, so they scroll sideways in their own strip instead. */
@@ -297,7 +310,7 @@
 }
 
 @media(prefers-reduced-motion:reduce){
-  .mk-card>a,.mk-chip,.mk-search input,.mk-submit-cta,.mk-detail-cta{transition:none}
+  .mk-item>a,.mk-name,.mk-chip,.mk-search input,.mk-submit-cta,.mk-detail-cta{transition:none}
 }
 
 /* Where a business sits in Masinloc. One paragraph and, where there is a real
