@@ -110,6 +110,33 @@ FURNITURE = (
 )
 
 
+def uncommitted_pages() -> list[str]:
+    """Pages edited in the working tree but not yet committed.
+
+    This matters because of the order the dates are read in. `git log -- <page>`
+    answers from the HISTORY, so a page that has just been rebuilt but not yet
+    committed still reports the date of its previous commit — the edit sitting
+    on disk is invisible to it. Build the sitemap before committing and it
+    records the dates from before the change, then CI commits, recomputes, and
+    disagrees. That is not a hypothetical: it is exactly how this file went out
+    stale on 2026-08-25, with thirteen Discover pages stamped 08-23 for changes
+    made on the 25th.
+
+    The mtime fallback in last_content_change() does not cover this. It only
+    fires for a page with no history at all, which a rebuilt page has.
+
+    So: commit first, then build the sitemap, then commit the sitemap. This
+    refuses rather than writing something it knows is out of date.
+    """
+    try:
+        out = subprocess.run(["git", "status", "--porcelain", "--"] + PAGE_DIRS,
+                             cwd=ROOT, capture_output=True, text=True,
+                             timeout=20, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return []
+    return [line[3:].strip() for line in out.stdout.splitlines() if line[3:].strip()]
+
+
 def cosmetic_only(commit: str, rel: str) -> bool:
     """True when this commit changed only this page's furniture.
 
@@ -250,6 +277,18 @@ def main() -> int:
               "for every file. Writing now would stamp every page with today and "
               "call it a content change.")
         print("Run: git fetch --unshallow")
+        return 1
+
+    pending = uncommitted_pages()
+    if pending:
+        print("REFUSING TO WRITE sitemap.xml")
+        print(f"{len(pending)} page(s) are edited but not committed, so git still "
+              f"reports their PREVIOUS dates and this would record those:")
+        for rel in pending[:12]:
+            print(f"  {rel}")
+        if len(pending) > 12:
+            print(f"  … and {len(pending) - 12} more")
+        print("Commit the pages first, then build the sitemap, then commit it.")
         return 1
 
     SITEMAP.write_text(rendered, encoding="utf-8")
