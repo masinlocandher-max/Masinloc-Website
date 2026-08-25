@@ -76,9 +76,24 @@ The statement is safe if the columns already exist. Verify before changing anyth
 ```bash
 supabase functions deploy submit-masinloc --no-verify-jwt
 supabase functions deploy business-dashboard-interest --no-verify-jwt
+supabase functions deploy submit-professional-profile --no-verify-jwt
 ```
 
-Do not omit `--no-verify-jwt` for these two public submission endpoints.
+Do not omit `--no-verify-jwt` for these three public submission endpoints.
+
+`submit-professional-profile` was missing from this list until 2026-08-25, and
+its source was missing from the repository entirely. That is why it kept a
+broken CORS preflight for two days after the same fault was repaired in the
+other two: nobody was looking at it, and nothing deployed it. All three are
+version-controlled now, and `scripts/check-security.py` fails the build if any
+of them goes missing or reintroduces a 204 with a body.
+
+### Pending redeploy
+
+`submit-professional-profile` in this repository is ahead of the deployed
+version. The live copy still returns a body with its 204 preflight and still
+trusts any `masinloc-website-*.vercel.app` or `masinloc-connect-*.vercel.app`
+origin. Deploying the command above brings production in line.
 
 ## Optional Turnstile
 

@@ -34,6 +34,28 @@ for rel in sorted(required_edge_functions):
     if not (ROOT / rel).is_file():
         fail(f"production Edge Function is not version-controlled: {rel}")
 
+# A 204 carries no body.
+#
+# Returning `new Response("", {status: 204})` makes some browsers treat the
+# CORS preflight as malformed and drop the request before it is ever sent —
+# the form simply fails, with nothing in the network log to explain it. It was
+# live in all three functions, fixed in two of them on 2026-08-25, and left
+# unfixed in submit-professional-profile for two more days because that
+# function's source was not in this repository and so nobody was looking at it.
+#
+# Both halves are checked: the source must be present (above) and must not
+# return a body with a 204 (here). A new function written by copying an old one
+# is exactly how this comes back.
+EMPTY_BODY_204 = re.compile(r'new Response\(\s*["\'`]["\'`]\s*,\s*\{[^}]*status:\s*204', re.S)
+for rel in sorted(required_edge_functions):
+    path = ROOT / rel
+    if not path.is_file():
+        continue
+    if EMPTY_BODY_204.search(path.read_text(encoding="utf-8")):
+        fail(f"{rel}: returns a body with its 204 preflight. A 204 carries no "
+             f"body, and some browsers drop the request rather than send it. "
+             f"Use new Response(null, {{status: 204, ...}}).")
+
 secret_patterns = [
     re.compile(r"sb_secret_[A-Za-z0-9_-]{16,}"),
     re.compile(r"(?:service[_-]?role|secret)[A-Za-z0-9_-]*\s*[:=]\s*['\"]eyJ[A-Za-z0-9._-]{40,}", re.I),
