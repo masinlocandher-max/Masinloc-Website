@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Build the Discover Masinloc section from data/discover.json.
 
-Discover is the outward-facing editorial layer: written for somebody who does
-not live here and has no particular question yet. It is deliberately a
-different thing from the Masinloc Bulletin, which is the MABAYANI research
-record. Where the two touch the same subject, Discover links to the Bulletin
-rather than restating it — an article that competes with one of our own pages
-for the same search is a page we have to maintain twice and a reader we have
-split in half.
+Discover is where all the reading lives: the outward-facing editorial articles
+written for somebody who does not live here, the MABAYANI research sequence,
+the verified record, and the questions the evidence has not closed. One library
+with one front door. The Masinloc Bulletin is no longer a second one — it is
+the editorial publication, where announcements and news get posted.
+
+Nothing is restated across pages. An article that competes with one of our own
+for the same search is a page we maintain twice and a reader we split in half,
+so each collection is listed here and read where it lives.
 
 Everything the pages need is in the data file. This script owns the shell, the
 metadata, the structured data and the layout, so that a correction to a fact is
@@ -199,7 +201,7 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="../discover.css?v=20260825-2">
+<link rel="stylesheet" href="../discover.css?v=20260825-3">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
@@ -485,8 +487,12 @@ def sequence_section() -> str:
         first = ' d-seq-entry' if article["slug"] == entry else ""
         mins = article.get("readingMinutes")
         meta = f'<span class="d-seq-mins">{mins} min</span>' if mins else ""
+        # data-slug is what bulletin.js reads to dim the parts this reader has
+        # already opened and to count them up. The sequence moved here from the
+        # Bulletin; the place you keep your progress had to move with it, or
+        # the feature would have quietly stopped working.
         items.append(
-            f'<li class="d-seq-item{first}">'
+            f'<li class="d-seq-item{first}" data-slug="{esc(article["slug"])}">'
             f'<a href="../bulletin/{article["slug"]}.html">'
             f'<span class="d-seq-n">{n}</span>'
             f'<span class="d-seq-body">'
@@ -503,10 +509,47 @@ def sequence_section() -> str:
         f'    <p class="d-seq-lead">{esc(pub.get("blurb", ""))}</p>\n'
         f'    <p class="d-seq-note">Ten parts, written to be read in order. '
         f'Each one hands you the question the next one answers.</p>\n'
-        f'    <ol class="d-seq-list">{"".join(items)}</ol>\n'
-        f'    <p class="d-seq-more"><a href="../masinloc-bulletin.html">'
-        f'Open the Bulletin, with its sources and open questions</a></p>\n'
+        f'    <p class="d-seq-progress" id="mabProgress" hidden></p>\n'
+        f'    <ol class="d-seq-list" id="mabPath">{"".join(items)}</ol>\n'
         f'  </section>')
+
+
+def questions_section() -> str:
+    """The open questions, gathered from the articles that raised them.
+
+    Each one is written once, inside the story that earned it. Collecting them
+    here rather than restating them means the two can never drift apart, and it
+    keeps the honest part of the research — what is still unsettled — in the
+    library beside the stories rather than filed away on another page.
+    """
+    published = [a for a in BULLETIN["articles"] if a.get("status") == "published"]
+    found = []
+    for article in sorted(published, key=lambda a: a["order"]):
+        for block in article.get("body", []):
+            label = str(block.get("label", "")).lower()
+            if block.get("type") == "note" and label.startswith("still open"):
+                found.append((article, block["text"]))
+    if not found:
+        return ""
+
+    pieces = []
+    for article, text in found:
+        pieces.append(
+            f'<li class="d-open-item">'
+            f'<p class="d-open-q">{esc(text)}</p>'
+            f'<p class="d-open-src"><a href="../bulletin/{article["slug"]}.html">'
+            f'{esc(article["title"])}</a></p></li>')
+
+    return (
+        '  <section class="d-open" aria-labelledby="open-title">\n'
+        '    <div class="d-theme-head">\n'
+        '      <h2 id="open-title">Still open</h2>\n'
+        '      <p>The questions the evidence has not answered yet.</p>\n'
+        '    </div>\n'
+        f'    <ul class="d-open-list">{"".join(pieces)}</ul>\n'
+        '    <p class="d-open-more"><a href="../sources.html">'
+        'Every source these stories rest on &rarr;</a></p>\n'
+        '  </section>')
 
 
 def deck(text: str, limit: int = 260) -> str:
@@ -632,9 +675,12 @@ def hub_page() -> str:
 {sequence_section()}
 
 {record_section()}
+
+{questions_section()}
 </main>
 {FOOTER}
 <script src="../site.js?v=20260825-1"></script>
+<script src="../bulletin.js?v=20260825-2"></script>
 <script type="application/ld+json">
 {ld}
 </script>

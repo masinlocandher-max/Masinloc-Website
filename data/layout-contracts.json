@@ -233,10 +233,10 @@
       }
     },
     {
-      "page": "masinloc-bulletin.html",
-      "section": "Bulletin story list",
-      "selector": ".story-list",
-      "minChildren": 3,
+      "page": "discover/index.html",
+      "section": "MABAYANI sequence list",
+      "selector": ".d-seq-list",
+      "minChildren": 10,
       "desktop": {
         "display": "block"
       },

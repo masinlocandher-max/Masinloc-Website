@@ -107,10 +107,17 @@ REQUIRED = [
 # navigation would silently strand everything under it.
 MENU_LINKS = ["a-closer-look.html", "discover/index.html"]
 ARTICLE_HOME = "discover/index.html"
+# The Bulletin is deliberately not in this list any more. It is no longer a
+# collection of reading material — it is the editorial publication, where new
+# announcements get posted — so Discover linking to it would be Discover
+# linking sideways rather than down to something it houses. What Discover must
+# reach are the things it is the home of: the sequence's articles, the verified
+# record, and the sources those rest on.
 ARTICLE_HOME_CARRIES = [
-    "masinloc-bulletin.html",
     "verified-history.html",
     "founder-of-masinloc.html",
+    "sources.html",
+    "../bulletin/was-masinloc-founded-in-1572.html",
 ]
 FORBIDDEN_FILES = [
     "hero-loader.js",

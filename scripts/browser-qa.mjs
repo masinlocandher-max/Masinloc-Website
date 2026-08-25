@@ -396,15 +396,24 @@ for (const [viewportName, viewport] of viewports) {
         }
       }
 
+      /* The Bulletin no longer carries the library — the reading moved to
+         Discover — so what is checked here is that its empty state is a
+         finished page rather than a blank one: it says what it is for, and it
+         sends a reader looking for the articles to where they now live. An
+         empty publication that strands people is the failure mode. */
       if (pageName === 'bulletin') {
-        const stories = await page.locator('.story, .lead-card').count();
-        if (stories < 2) {
-          failures.push(`${viewportName}/${pageName}: the archive lists ${stories} stories`);
+        if (!(await page.locator('.bul-empty h2').isVisible())) {
+          failures.push(`${viewportName}/${pageName}: the empty state is missing`);
         }
-        const dated = await page.locator('time[datetime]').count();
-        if (dated < 1) failures.push(`${viewportName}/${pageName}: no story carries a date`);
-        if (!(await page.locator('a[href="sources.html"]').count())) {
-          failures.push(`${viewportName}/${pageName}: does not route to the evidence directory`);
+        const words = (await page.locator('.bul-empty').innerText()).trim().split(/\s+/).length;
+        if (words < 25) {
+          failures.push(`${viewportName}/${pageName}: the empty state is ${words} words — too bare to explain itself`);
+        }
+        if (!(await page.locator('a[href="discover/index.html"]').count())) {
+          failures.push(`${viewportName}/${pageName}: does not route a reader on to Discover`);
+        }
+        if (await page.locator('.story, .lead-card').count()) {
+          failures.push(`${viewportName}/${pageName}: still carries archive cards`);
         }
       }
 

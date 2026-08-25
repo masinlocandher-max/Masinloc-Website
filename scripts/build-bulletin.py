@@ -137,7 +137,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 <link rel="stylesheet" href="{up}site.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="{up}bulletin.css?v=20260822-2">
+<link rel="stylesheet" href="{up}bulletin.css?v=20260825-2">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -207,8 +207,8 @@ def continue_block(article: dict, by_slug: dict, total: int) -> str:
     if not nxt or nxt not in by_slug:
         return ("""      <nav class="continue continue-end" aria-label="Where to go next">
         <p class="continue-q">That is the end of the sequence.</p>
-        <a href="../masinloc-bulletin.html">
-          <span class="continue-label">Back to the Bulletin</span>
+        <a href="../discover/index.html">
+          <span class="continue-label">Back to Discover</span>
           <span class="continue-title">Every story, and the questions still open</span>
         </a>
       </nav>""")
@@ -296,7 +296,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
                 "@type": "BreadcrumbList",
                 "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Masinloc, Zambales", "item": f"{SITE}/"},
-                    {"@type": "ListItem", "position": 2, "name": "Masinloc Bulletin", "item": f"{SITE}/masinloc-bulletin.html"},
+                    {"@type": "ListItem", "position": 2, "name": "Discover Masinloc", "item": f"{SITE}/discover/"},
                     {"@type": "ListItem", "position": 3, "name": article["title"], "item": url},
                 ],
             },
@@ -320,7 +320,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
                 "@type": "Blog",
                 "@id": PUBLICATION["id"],
                 "name": PUBLICATION["name"],
-                "url": f"{SITE}/masinloc-bulletin.html",
+                "url": f"{SITE}/discover/",
                 "inLanguage": "en-PH",
                 "publisher": {"@id": f"{SITE}/#publisher"},
             },
@@ -342,7 +342,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="../index.html">Masinloc, Zambales</a></li>
-      <li><a href="../masinloc-bulletin.html">Masinloc Bulletin</a></li>
+      <li><a href="../discover/index.html">Discover Masinloc</a></li>
       <li><span aria-current="page">{esc(category)}</span></li>
     </ol>
   </nav>
@@ -390,87 +390,39 @@ def open_questions(articles: list[dict]) -> list[tuple[dict, str]]:
     return found
 
 
-def archive_page(articles: list[dict]) -> str:
+def publication_page(articles: list[dict]) -> str:
+    """The Bulletin, now that the research has moved to Discover.
+
+    Every article this page used to index is reading material, and reading
+    material has one home: Discover. What is left here is the thing the
+    Bulletin was always better suited to be — the place where something new
+    gets said. Announcements, notices, the practical things worth knowing.
+
+    Nothing has been posted yet, and the page says so plainly rather than
+    padding itself out. An empty shelf that admits it is empty is honest; one
+    dressed up with placeholders is not.
+    """
     url = f"{SITE}/masinloc-bulletin.html"
-    sequence = in_order(articles)
-    by_slug = {a["slug"]: a for a in articles}
-    entry = by_slug[ENTRY_STORY]
-    total = len(articles)
-
-    def card(a: dict) -> str:
-        return f"""          <li class="story" data-category="{esc(a['category'])}" data-slug="{esc(a['slug'])}">
-            <a href="bulletin/{esc(a['slug'])}.html">
-              <p class="story-cat">{esc(CATEGORIES[a['category']])}</p>
-              <h4 class="story-title">{esc(a['title'])}</h4>
-              <p class="story-stand">{esc(a['standfirst'])}</p>
-              <p class="story-meta"><time datetime="{a['published']}">{human_date(a['published'])}</time> &middot; {a['readingMinutes']} min read</p>
-            </a>
-          </li>"""
-
-    # The pathway rail: the whole sequence, in order, in one glance.
-    rail = "".join(
-        f'<li class="path-step" data-slug="{esc(a["slug"])}">'
-        f'<a href="bulletin/{esc(a["slug"])}.html">'
-        f'<span class="path-n">{a["order"] + 1}</span>'
-        f'<span class="path-way">{esc(PATHWAYS[a["pathway"]])}</span>'
-        f'<span class="path-title">{esc(a["title"])}</span>'
-        f'</a></li>'
-        for a in sequence)
-
-    recent = by_date(articles)[:3]
-    recent_cards = "\n".join(card(a) for a in recent)
-
-    groups = []
-    for heading, blurb, cats in GROUPS:
-        members = [a for a in sequence if a["category"] in cats]
-        if not members:
-            continue
-        anchor = heading.lower().replace(" & ", "-").replace(" ", "-")
-        groups.append(f"""    <section class="archive-group" id="{esc(anchor)}" aria-labelledby="{esc(anchor)}-title">
-      <div class="group-head">
-        <h3 id="{esc(anchor)}-title">{esc(heading)}</h3>
-        <p>{esc(blurb)}</p>
-      </div>
-      <ol class="story-list">
-{chr(10).join(card(a) for a in members)}
-      </ol>
-    </section>""")
-
-    questions = "".join(
-        f'<li><p class="q-text">{esc(text)}</p>'
-        f'<a href="bulletin/{esc(a["slug"])}.html">{esc(a["title"])}</a></li>'
-        for a, text in open_questions(articles))
 
     graph = {
         "@context": "https://schema.org",
         "@graph": [
             {
-                "@type": "CollectionPage",
-                "@id": f"{url}#webpage",
-                "url": url,
-                "name": "Masinloc Bulletin",
-                "description": "Historical, heritage and language reporting about Masinloc, Zambales.",
-                "isPartOf": {"@id": f"{SITE}/#website"},
-                "inLanguage": "en-PH",
-            },
-            {
-                "@type": "Blog",
-                "@id": PUBLICATION["id"],
-                "name": PUBLICATION["name"],
-                "url": url,
-                "description": PUBLICATION["blurb"],
-                "inLanguage": "en-PH",
-                "publisher": {"@id": f"{SITE}/#publisher"},
-            },
-            {
-                "@type": "ItemList",
-                "name": "MABAYANI, in reading order",
-                "itemListOrder": "https://schema.org/ItemListOrderAscending",
+                "@type": "BreadcrumbList",
                 "itemListElement": [
-                    {"@type": "ListItem", "position": a["order"] + 1,
-                     "url": f"{SITE}/bulletin/{a['slug']}.html", "name": a["title"]}
-                    for a in sequence
+                    {"@type": "ListItem", "position": 1, "name": "Masinloc, Zambales", "item": f"{SITE}/"},
+                    {"@type": "ListItem", "position": 2, "name": "Masinloc Bulletin", "item": url},
                 ],
+            },
+            {
+                "@type": "WebPage",
+                "@id": f"{url}#page",
+                "name": "Masinloc Bulletin",
+                "description": "Announcements, notices and news from Masinloc, Zambales.",
+                "url": url,
+                "inLanguage": "en-PH",
+                "isPartOf": {"@id": f"{SITE}/#website"},
+                "publisher": {"@id": f"{SITE}/#publisher"},
             },
         ],
     }
@@ -478,80 +430,38 @@ def archive_page(articles: list[dict]) -> str:
               + json.dumps(graph, indent=2, ensure_ascii=False) + "\n</script>\n")
 
     return shell_head(
-        "Masinloc Bulletin | History, Heritage & Language",
-        "Researched reporting on Masinloc, Zambales: its documented history, its heritage church, the Sambal Tina language, and the questions still open.",
+        "Masinloc Bulletin | Announcements & News",
+        "Announcements, notices and news from Masinloc, Zambales. The reading \u2014 history, heritage and language \u2014 lives in Discover.",
         url, depth=0) + f"""
-<main id="main" data-story-total="{total}">
+<main id="main">
   <section class="bulletin-hero">
     <p class="section-label">Masinloc Bulletin</p>
-    <h1>What we know about Masinloc, and how we know it.</h1>
-    <p class="lead">Historical, heritage and language reporting for Masinloc, Zambales. Every article names the evidence it rests on, and says plainly where the evidence stops. Sources are collected in our <a href="sources.html">Sources &amp; References</a> directory.</p>
+    <h1>What is happening in Masinloc.</h1>
+    <p class="lead">This is where announcements, notices and the practical things worth
+      knowing will be posted \u2014 the kind of news you would want before a weekend, a
+      fiesta, or a trip home.</p>
   </section>
 
-  <section class="mabayani" aria-labelledby="mabTitle">
-    <div class="mab-mark">
-      <p class="mab-kicker">{esc(PUBLICATION['kicker'])}</p>
-      <h2 id="mabTitle">{esc(PUBLICATION['name'])}</h2>
-      <p class="mab-lead">{esc(PUBLICATION['blurb'])}</p>
-    </div>
-
-    <a class="mab-entry" href="bulletin/{esc(entry['slug'])}.html">
-      <p class="mab-entry-label">Start here</p>
-      <h3>{esc(entry['title'])}</h3>
-      <p class="mab-entry-stand">{esc(entry['standfirst'])}</p>
-      <p class="mab-entry-go"><span>Read the first story</span> <span aria-hidden="true">→</span></p>
-    </a>
-
-    <div class="mab-path-wrap">
-      <div class="mab-path-head">
-        <h3 class="mab-path-title">Continue the story</h3>
-        <p class="mab-progress" id="mabProgress" hidden></p>
-      </div>
-      <ol class="mab-path" id="mabPath">
-{rail}
-      </ol>
-      <p class="mab-path-note">Each story stands on its own. Read in order and they build one argument about how Masinloc's history has been told.</p>
-    </div>
+  <section class="bul-empty" aria-labelledby="emptyTitle">
+    <h2 id="emptyTitle">Nothing posted yet</h2>
+    <p>The Bulletin is new. There is nothing here today, which is exactly what the
+      first day should look like. When there is something worth telling you \u2014 a
+      notice, a schedule, an announcement from the town \u2014 it will appear here,
+      dated and in plain words.</p>
+    <p class="bul-invite">If you know something Masinloc ought to hear about,
+      <a href="contact.html">tell us</a> and we will look into it.</p>
   </section>
 
-  <section class="bulletin-archive" aria-labelledby="archiveTitle">
-    <div class="archive-head">
-      <h2 id="archiveTitle">All stories</h2>
-      <div class="archive-filters" role="group" aria-label="Filter by category">
-        <button type="button" class="chip is-active" data-filter="all">All <span>{total}</span></button>
-        {"".join(
-            f'<button type="button" class="chip" data-filter="{esc(c["id"])}">'
-            f'{esc(c["label"])} <span>{sum(1 for a in articles if a["category"] == c["id"])}</span>'
-            "</button>"
-            for c in BULLETIN["categories"]
-            if any(a["category"] == c["id"] for a in articles))}
-      </div>
-    </div>
-
-    <section class="archive-group" id="recent" aria-labelledby="recent-title">
-      <div class="group-head">
-        <h3 id="recent-title">Recently added</h3>
-        <p>The newest work in the library.</p>
-      </div>
-      <ol class="story-list">
-{recent_cards}
-      </ol>
-    </section>
-
-{chr(10).join(groups)}
-    <p class="archive-empty" id="archiveEmpty" hidden>No stories in this category yet.</p>
-  </section>
-
-  <section class="open-questions" aria-labelledby="openTitle">
-    <h2 id="openTitle">Questions still open</h2>
-    <p class="open-lead">Research that has not been finished. Each one is stated in the article it belongs to, and each one is an invitation: if you can close one, <a href="contact.html">tell us</a>.</p>
-    <ul class="q-list">{questions}</ul>
+  <section class="bul-next" aria-labelledby="nextTitle">
+    <h2 id="nextTitle">Looking for the reading?</h2>
+    <p>It is all in one place now. Discover holds the stories about Masinloc, the
+      MABAYANI research sequence, the verified history and the founder of the town
+      \u2014 along with the questions the evidence has not answered yet.</p>
+    <p class="bul-next-go"><a href="discover/index.html">Open Discover Masinloc</a></p>
   </section>
 </main>
-""" + shell_foot(0, jsonld, '<script src="bulletin.js?v=20260822-2"></script>\n')
+""" + shell_foot(0, jsonld, "")
 
-
-# --- sources ------------------------------------------------------------------
 
 def sources_page() -> str:
     url = f"{SITE}/sources.html"
@@ -726,7 +636,7 @@ def main() -> int:
     for a in articles:
         (OUT / f"{a['slug']}.html").write_text(article_page(a, articles), encoding="utf-8")
 
-    (ROOT / "masinloc-bulletin.html").write_text(archive_page(articles), encoding="utf-8")
+    (ROOT / "masinloc-bulletin.html").write_text(publication_page(articles), encoding="utf-8")
     (ROOT / "sources.html").write_text(sources_page(), encoding="utf-8")
     listed = sync_sitemap(articles)
 
@@ -741,7 +651,7 @@ def main() -> int:
     linked = sum(1 for e in SOURCE_BY_ID.values() if e.get("link"))
     print(f"{len(SOURCE_BY_ID)} sources; {linked} with a verified public link, "
           f"{len(SOURCE_BY_ID) - linked} awaiting one")
-    print(f"{len(open_questions(articles))} open research questions listed")
+    print(f"{len(open_questions(articles))} open research questions, listed on Discover")
     print(f"sitemap.xml rebuilt by scripts/build-sitemap.py: {listed} URLs")
     return 0
 

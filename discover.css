@@ -385,20 +385,51 @@
 /* The way in. */
 .d-seq-entry .d-seq-n{color:var(--blue);font-weight:700}
 .d-seq-entry .d-seq-title{font-size:clamp(19px,2vw,23px)}
-.d-seq-more{margin:22px 0 0;font:400 15px/1.5 var(--font-ui)}
-.d-seq-more a{
-  color:var(--blue);text-decoration:none;
-  border-bottom:1px solid rgba(13,59,158,.28);padding-bottom:2px;
-}
-.d-seq-more a::after{content:" →";opacity:.7}
-.d-seq-more a:hover,.d-seq-more a:focus-visible{border-bottom-color:var(--blue)}
-
 .d-rec-meta{
   display:block;margin-top:8px;
   font:400 12.5px/1.4 var(--font-ui);color:var(--muted);
 }
 
+/* Where you got to. Written by bulletin.js from what this browser remembers,
+   so it is absent on a first visit and never announces itself. A part already
+   opened is stated quietly rather than struck through: this is a bookmark, not
+   a checklist, and a reader who wants to read one again should not feel they
+   are going backwards. */
+.d-seq-progress{
+  margin:14px 0 0;font:400 13.5px/1.5 var(--font-ui);color:var(--muted);
+}
+.d-seq-item.is-read .d-seq-n{color:var(--muted)}
+.d-seq-item.is-read .d-seq-title{color:var(--muted)}
+.d-seq-item.is-read>a::after{
+  content:"Read";
+  position:absolute;top:18px;right:0;
+  font:400 11.5px/1 var(--font-ui);letter-spacing:.04em;
+  color:var(--muted);opacity:.75;
+}
+.d-seq-item>a{position:relative}
+
+/* Still open: the questions the research has not closed. */
+.d-open{padding:56px 0 8px;border-top:1px solid var(--rule)}
+.d-open-list{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:22px}
+.d-open-item{
+  padding-left:18px;border-left:2px solid rgba(255,199,0,.55);
+}
+.d-open-q{
+  margin:0;max-width:74ch;
+  font:400 clamp(16px,1.7vw,18px)/1.6 var(--font-body);color:var(--ink);
+}
+.d-open-src{margin:8px 0 0;font:400 13.5px/1.5 var(--font-ui)}
+.d-open-src a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent}
+.d-open-src a:hover,.d-open-src a:focus-visible{color:var(--blue);border-bottom-color:var(--blue)}
+.d-open-more{margin:26px 0 0;font:400 15px/1.5 var(--font-ui)}
+.d-open-more a{
+  color:var(--blue);text-decoration:none;
+  border-bottom:1px solid rgba(13,59,158,.28);padding-bottom:2px;
+}
+.d-open-more a:hover,.d-open-more a:focus-visible{border-bottom-color:var(--blue)}
+
 @media (max-width:560px){
   .d-seq-item>a{grid-template-columns:32px minmax(0,1fr);gap:12px}
   .d-seq-mins{display:none}
+  .d-seq-item.is-read>a::after{display:none}
 }

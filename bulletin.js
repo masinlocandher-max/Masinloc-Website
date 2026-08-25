@@ -43,7 +43,11 @@
   const path = document.getElementById('mabPath');
   if (path) {
     const seen = readSet();
-    const steps = [...path.querySelectorAll('.path-step')];
+    // Keyed off data-slug rather than a marker class: the sequence is styled
+    // differently on Discover than it was here, and a hook that needs a
+    // matching CSS rule in whichever sheet the host page loads is a hook that
+    // breaks the next time the sequence is restyled.
+    const steps = [...path.querySelectorAll('[data-slug]')];
     let done = 0;
     steps.forEach((step) => {
       if (seen.has(step.dataset.slug)) {

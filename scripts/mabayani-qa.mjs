@@ -1,10 +1,10 @@
-/* QA for the MABAYANI flagship on the Masinloc Bulletin.
+/* QA for the MABAYANI sequence, which lives on Discover.
 
    This suite exists for the two promises that are easy to break by accident:
 
-   1. The flagship is pinned. It sits above the archive permanently, whatever
-      was published most recently, and it is the first thing on the page after
-      the masthead.
+   1. The sequence is ordered and complete. It sits above the verified record
+      and the open questions, its ten parts run in the order the data declares,
+      and the reveal is last — a filterable grid would destroy the argument.
    2. The creator is anonymous until the closing story. Checked here in a real
       browser — rendered text, not source — because that is what a reader sees.
 
@@ -43,41 +43,42 @@ for (const [label, viewport] of [
   page.on('pageerror', e => errors.push(`pageerror: ${e.message}`));
   page.on('console', m => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });
 
-  await page.goto(`${baseURL}/masinloc-bulletin.html`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseURL}/discover/index.html`, { waitUntil: 'networkidle' });
 
-  const flagship = page.locator('.mabayani');
+  const flagship = page.locator('.d-seq');
   if (!(await flagship.isVisible())) fail(`${label}: the MABAYANI block is not visible`);
 
-  // Pinned means positioned above the archive, not merely present on the page.
+  // The sequence sits above the record and the open questions, in that order:
+  // the stories first, then what they settled, then what they did not.
   const order = await page.evaluate(() => {
-    const mark = document.querySelector('.mabayani');
-    const archive = document.querySelector('.bulletin-archive');
-    const questions = document.querySelector('.open-questions');
-    if (!mark || !archive || !questions) return null;
-    return {
-      mark: mark.getBoundingClientRect().top + window.scrollY,
-      archive: archive.getBoundingClientRect().top + window.scrollY,
-      questions: questions.getBoundingClientRect().top + window.scrollY,
+    const top = (sel) => {
+      const el = document.querySelector(sel);
+      return el ? el.getBoundingClientRect().top + window.scrollY : null;
     };
+    const mark = top('.d-seq');
+    const record = top('.d-theme[aria-labelledby="record-title"]');
+    const questions = top('.d-open');
+    if (mark === null || record === null || questions === null) return null;
+    return { mark, record, questions };
   });
-  if (!order) fail(`${label}: the Bulletin is missing one of its three sections`);
+  if (!order) fail(`${label}: Discover is missing the sequence, the record or the open questions`);
   else {
-    if (order.mark >= order.archive) fail(`${label}: MABAYANI sits below the archive`);
-    if (order.archive >= order.questions) fail(`${label}: open questions are not last`);
+    if (order.mark >= order.record) fail(`${label}: MABAYANI sits below the verified record`);
+    if (order.record >= order.questions) fail(`${label}: open questions are not last`);
   }
 
   // The entry story is the one door in, and it is the data's entry story.
-  const entryHref = await page.locator('.mab-entry').getAttribute('href');
-  if (entryHref !== `bulletin/${data.entryStory}.html`) {
+  const entryHref = await page.locator('.d-seq-entry a').getAttribute('href');
+  if (entryHref !== `../bulletin/${data.entryStory}.html`) {
     fail(`${label}: the start-here card points at ${entryHref}, not the entry story`);
   }
 
   // The whole sequence, in order, with the reveal last.
-  const rail = await page.locator('.mab-path .path-step').evaluateAll(
+  const rail = await page.locator('.d-seq-list [data-slug]').evaluateAll(
     steps => steps.map(s => ({
       slug: s.dataset.slug,
-      n: s.querySelector('.path-n').textContent.trim(),
-      title: s.querySelector('.path-title').textContent.trim(),
+      n: s.querySelector('.d-seq-n').textContent.trim(),
+      title: s.querySelector('.d-seq-title').textContent.trim(),
     })));
   if (rail.length !== sequence.length) {
     fail(`${label}: the pathway lists ${rail.length} stories, expected ${sequence.length}`);
@@ -94,18 +95,18 @@ for (const [label, viewport] of [
   });
 
   // Every story reachable from this page in one click.
-  const hrefs = new Set(await page.locator('a[href^="bulletin/"]').evaluateAll(
+  const hrefs = new Set(await page.locator('a[href^="../bulletin/"]').evaluateAll(
     links => links.map(a => a.getAttribute('href'))));
   for (const article of articles) {
-    if (!hrefs.has(`bulletin/${article.slug}.html`)) {
-      fail(`${label}: ${article.slug} is not linked from the Bulletin`);
+    if (!hrefs.has(`../bulletin/${article.slug}.html`)) {
+      fail(`${label}: ${article.slug} is not linked from Discover`);
     }
   }
 
   // Anonymity, as rendered.
   const visible = (await page.locator('body').innerText()).toLowerCase();
   for (const needle of [creator.toLowerCase(), surname.toLowerCase()]) {
-    if (visible.includes(needle)) fail(`${label}: the Bulletin names the creator ("${needle}")`);
+    if (visible.includes(needle)) fail(`${label}: Discover names the creator ("${needle}")`);
   }
 
   const overflow = await page.evaluate(
@@ -117,12 +118,12 @@ for (const [label, viewport] of [
   if (progressBefore) fail(`${label}: progress is shown to a reader who has read nothing`);
 
   await page.goto(`${baseURL}/bulletin/${data.entryStory}.html`, { waitUntil: 'networkidle' });
-  await page.goto(`${baseURL}/masinloc-bulletin.html`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseURL}/discover/index.html`, { waitUntil: 'networkidle' });
   const progressText = (await page.locator('#mabProgress').textContent() || '').trim();
   if (progressText !== `1 of ${sequence.length} stories explored`) {
     fail(`${label}: after reading one story the progress note reads "${progressText}"`);
   }
-  if (!(await page.locator(`.path-step[data-slug="${data.entryStory}"]`)
+  if (!(await page.locator(`.d-seq-item[data-slug="${data.entryStory}"]`)
     .evaluate(el => el.classList.contains('is-read')))) {
     fail(`${label}: the story just read is not marked in the pathway`);
   }
@@ -170,8 +171,8 @@ for (const article of sequence) {
     if (question !== article.nextQuestion) {
       fail(`${article.slug}: the question carrying the reader on does not match the data`);
     }
-  } else if (await next.getAttribute('href') !== '../masinloc-bulletin.html') {
-    fail(`${article.slug}: the last story does not return the reader to the Bulletin`);
+  } else if (await next.getAttribute('href') !== '../discover/index.html') {
+    fail(`${article.slug}: the last story does not return the reader to Discover`);
   }
 
   // Nothing on an article page may behave like a player.
@@ -194,15 +195,12 @@ const plain = await browser.newContext({
   reducedMotion: 'reduce',
 });
 const page = await plain.newPage();
-await page.goto(`${baseURL}/masinloc-bulletin.html`, { waitUntil: 'domcontentloaded' });
+await page.goto(`${baseURL}/discover/index.html`, { waitUntil: 'domcontentloaded' });
 
-if (await page.locator('.mab-path .path-step').count() !== sequence.length) {
+if (await page.locator('.d-seq-list [data-slug]').count() !== sequence.length) {
   fail('no-js: the pathway is incomplete without JavaScript');
 }
-if (await page.locator('.bulletin-archive .story').count() < sequence.length) {
-  fail('no-js: the archive does not list every story without JavaScript');
-}
-if (await page.locator('.open-questions .q-list li').count() === 0) {
+if (await page.locator('.d-open-list .d-open-item').count() === 0) {
   fail('no-js: the open questions are missing without JavaScript');
 }
 if (await page.locator('#mabProgress').isVisible()) {
@@ -219,8 +217,9 @@ if (failures.length) {
 }
 
 console.log('MABAYANI QA PASSED');
-console.log(`The flagship is pinned above the archive at both widths; all ${sequence.length} `
-  + 'stories are reachable in one click and ordered as the data declares.');
+console.log(`The sequence sits above the verified record and the open questions at both `
+  + `widths; all ${sequence.length} stories are reachable from Discover in one click `
+  + 'and ordered as the data declares.');
 console.log(`The creator is named only in ${reveal.slug}; every other story is attributed to `
   + `${data.publication.name}.`);
 console.log('Progress stays silent until something is read. No players, no autoplay. '
