@@ -102,7 +102,11 @@ FURNITURE = (
     re.compile(r'^[+-]\s*<link rel="stylesheet" href="[^"]+\.css(\?v=\d{8}-\d+)?">\s*$'),
     # The footer navigation, whether it lives on one line or several.
     re.compile(r'^[+-].*class="(footer-nav|foot-nav)"'),
-    re.compile(r'^[+-]\s*<a href="[^"]*">[^<]*</a>\s*$'),
+    # A line that is nothing but links. Both navigations are written this way —
+    # sometimes one anchor per line, sometimes the whole row on one — so this
+    # covers a link added to either without matching any line that also carries
+    # prose, since a single stray word outside an anchor fails the match.
+    re.compile(r'^[+-]\s*(?:<a\b[^>]*>[^<]*</a>)+\s*$'),
 )
 
 
