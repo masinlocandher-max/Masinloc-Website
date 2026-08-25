@@ -41,6 +41,14 @@ ORIGINALS = {
     "Pamislat.png": "pamislat",
     "8EB59CBA-5F46-4CF6-AA24-91FBA38FA635.png": "mangoes-masinloc",
     "Dinamulag Mango.png": "dinamulag-mango",
+    # Supplied 2026-08-25, the four that finished the first round of Discover
+    # subjects. Pamislat and Dinamulag Mango above are re-exports of the same
+    # photographs at full resolution: the originals were 12-23 MB and could not
+    # be retrieved when the section was first built, so the pages have been
+    # running on smaller crops until now.
+    "Binabayani Feastival.png": "binabayani-festival",
+    "Suman and Mango.png": "suman-and-mango",
+    "Powerplant in bani.png": "powerplant-bani",
 }
 
 

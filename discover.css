@@ -47,10 +47,16 @@
 .crumbs a:hover,.crumbs a:focus-visible{text-decoration:underline}
 .crumbs [aria-current]{color:var(--ink)}
 
+/* Kickers, in the words they were written in.
+   These used to be set in caps with wide tracking. Nothing here is shouted:
+   theme names, labels and section headings all read in the case they were
+   typed, so "Food and local flavors" arrives as a phrase rather than as
+   signage. Caps are reserved for text that is genuinely part of a logo.
+   Lowercase reads smaller than caps at the same size, so each of these gained
+   a point and gave back the tracking that was propping the caps up. */
 .d-theme,.d-hub-kicker,.d-rel-theme,.d-lead-theme{
-  font:700 11px/1.4 var(--font-ui);
-  letter-spacing:.15em;
-  text-transform:uppercase;
+  font:700 12.5px/1.4 var(--font-ui);
+  letter-spacing:.01em;
   color:var(--blue);
   margin:0;
 }
@@ -97,7 +103,7 @@
 }
 .d-lead-go{
   display:inline-block;margin-top:16px;
-  font:700 12.5px/1 var(--font-ui);letter-spacing:.08em;text-transform:uppercase;
+  font:700 13.5px/1 var(--font-ui);letter-spacing:.005em;
   color:var(--blue);border-bottom:2px solid var(--yellow);padding-bottom:5px;
 }
 .d-lead-link:hover .d-lead-title,.d-lead-link:focus-visible .d-lead-title{color:var(--blue)}
@@ -133,6 +139,68 @@
    the grid does not develop a hole where an image would have been. */
 .d-card-text a{
   border-top:3px solid var(--yellow);padding-top:16px;
+}
+
+/* -------------------------------------------------- hub: section shapes -- */
+
+/* Nineteen articles laid out as nineteen identical cards reads as an archive,
+   and an archive tells you nothing about which door to open. Each theme
+   declares a shape in data/discover.json instead, and one article in the
+   theme is promoted to carry it.
+
+   The shapes are compositions, not decorations: none of them changes what a
+   card contains, and every one of them collapses to the same single-column
+   stack on a phone. A theme whose promoted article has no built photograph
+   falls back to the plain grid in the generator, so a shape can never render
+   as a large empty frame. */
+
+/* CLUSTER — one article at reading size with its companions stacked beside it.
+   Used where a theme is a set of related pieces rather than a list: the food
+   articles are three parts of one subject and are composed as one block. */
+@media (min-width:900px){
+  .d-grid--cluster{grid-template-columns:1.7fr minmax(0,1fr);align-items:start}
+  .d-grid--cluster>.d-card-lead{grid-row:1 / span 2}
+}
+/* The promoted article carries a larger photograph, so it gets the type to
+   match. Without this it is the same 21px title as the two beside it and the
+   composition reads as an accident of the grid rather than a decision. */
+.d-card-lead .d-card-title{
+  font-size:clamp(21px,2.3vw,29px);line-height:1.14;letter-spacing:-.018em;margin-bottom:9px;
+}
+.d-card-lead .d-card-deck{font-size:16px;line-height:1.64}
+
+/* FEATURE — a single article given the width of the section, image beside
+   copy. Used for a theme that is one substantial piece: a cultural subject
+   with one long article should not be a lonely card in a three-up row. */
+.d-grid--feature>.d-card-feature{grid-column:1 / -1}
+.d-card-feature>a{display:grid;gap:clamp(16px,2.4vw,30px);align-items:center}
+@media (min-width:860px){
+  .d-card-feature>a{grid-template-columns:1.1fr minmax(0,1fr)}
+}
+.d-card-feature .d-card-media{margin-bottom:0}
+.d-card-feature .d-card-title{
+  font-size:clamp(24px,3vw,38px);line-height:1.08;letter-spacing:-.022em;margin-bottom:10px;
+}
+.d-card-feature .d-card-deck{font-size:15.5px;line-height:1.62;max-width:48ch}
+
+/* WIDE — the photograph across the full section, copy underneath. Used where
+   the subject is physically large and the picture is the argument. */
+.d-grid--wide>.d-card-wide{grid-column:1 / -1}
+.d-card-wide .d-card-media{margin-bottom:18px}
+.d-card-wide .d-card-title{
+  font-size:clamp(23px,2.7vw,34px);line-height:1.12;letter-spacing:-.02em;margin-bottom:9px;
+}
+.d-card-wide .d-card-deck{font-size:16px;line-height:1.64}
+/* Under a photograph this wide, a headline and a paragraph stacked in the left
+   third leave the other two thirds empty and the block stops looking composed.
+   The two sit side by side instead, so the copy carries the same measure the
+   picture does. */
+@media (min-width:900px){
+  .d-card-wide .d-card-body{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+    gap:clamp(24px,3.4vw,56px);align-items:start;
+  }
+  .d-card-wide .d-card-title{margin-bottom:0}
 }
 
 /* --------------------------------------------------------------- article -- */
@@ -183,7 +251,7 @@
   background:var(--soft);border:1px solid var(--line);border-radius:14px;
 }
 .d-note-label{
-  font:700 11px/1.4 var(--font-ui);letter-spacing:.14em;text-transform:uppercase;
+  font:700 12.5px/1.4 var(--font-ui);letter-spacing:.01em;
   color:var(--red-ink);margin:0 0 8px !important;
 }
 .d-note p{font-size:14.5px !important;line-height:1.65 !important;margin:0 !important;color:var(--text)}
@@ -213,7 +281,7 @@
 @media (min-width:640px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .fact{background:var(--white);padding:16px 18px}
 .fact dt{
-  font:700 11px/1.4 var(--font-ui);letter-spacing:.12em;text-transform:uppercase;
+  font:600 12.5px/1.4 var(--font-ui);letter-spacing:.01em;
   color:var(--muted);margin-bottom:7px;
 }
 .fact dd{margin:0}
@@ -229,7 +297,7 @@
   padding-top:22px;border-top:1px solid var(--line);
 }
 .d-sources h2{
-  font:700 12px/1.4 var(--font-ui);letter-spacing:.13em;text-transform:uppercase;
+  font:700 13px/1.4 var(--font-ui);letter-spacing:.005em;
   color:var(--muted);margin:0 0 14px;
 }
 .d-sources ul{list-style:none;margin:0;padding:0}

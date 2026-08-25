@@ -214,6 +214,29 @@ for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
     if f'rel="icon"' not in text:
         fail(f"{rel}: wears the shared shell but declares no favicon")
 
+# Nothing on these two surfaces is set in capitals.
+#
+# Headings, section titles, category names, buttons, navigation and card titles
+# all read in the case they were written in. The only capitals that belong on a
+# page are the ones inside a name or an official mark — FMB, DENR, a wordmark in
+# a supplied logo — and those are in the text or the artwork, not applied by a
+# stylesheet.
+#
+# This is scoped to the two stylesheets that own Discover and the Marketplace
+# rather than to every sheet in the repository. The older surfaces still set
+# labels and buttons in caps, and converting them is a redesign of pages nobody
+# asked to change; listing the files explicitly means this check says what it
+# actually guarantees instead of quietly excluding half the site.
+SENTENCE_CASE_CSS = ["discover.css", "marketplace.css"]
+for name in SENTENCE_CASE_CSS:
+    path = ROOT / name
+    if not path.is_file():
+        continue
+    for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        if re.search(r"text-transform\s*:\s*uppercase", line):
+            fail(f"{name}:{number}: sets text in capitals. Discover and the "
+                 f"Marketplace read in the case the words were written in.")
+
 if errors:
     print("DESIGN CONSISTENCY CHECK FAILED")
     for error in errors:

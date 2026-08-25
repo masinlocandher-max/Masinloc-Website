@@ -18,9 +18,23 @@
       "blurb": "Eight of them, photographed where they actually are."
     },
     {
+      "id": "food",
+      "name": "Food and local flavors",
+      "blurb": "What Masinloc grows, gathers and eats, and why a shellfish most visitors have never heard of matters more here than any restaurant list.",
+      "shape": "cluster",
+      "feature": "the-sweetest-mango-came-from-where-exactly"
+    },
+    {
       "id": "history",
       "name": "History and culture",
       "blurb": "Including the parts that are not settled."
+    },
+    {
+      "id": "festivals",
+      "name": "Festivals and traditions",
+      "blurb": "What the town performs, celebrates and keeps doing every year, and what those practices are actually for.",
+      "shape": "feature",
+      "feature": "every-november-masinloc-stages-a-battle"
     },
     {
       "id": "sea",
@@ -29,8 +43,10 @@
     },
     {
       "id": "economy",
-      "name": "How the town makes a living",
-      "blurb": "Power, fruit, fish, and the people who leave."
+      "name": "Industry and local economy",
+      "blurb": "A power station, a protected bay, mango season and the people who left. Masinloc is shaped by work as much as by scenery.",
+      "shape": "wide",
+      "feature": "the-giant-in-bani"
     }
   ],
   "articles": [
@@ -338,7 +354,12 @@
       "deck": "Three units, more than a thousand megawatts, and a set of facts about the power station in Barangay Bani that are worth knowing precisely rather than approximately.",
       "published": "2026-08-23",
       "updated": "2026-08-23",
-      "hero": null,
+      "hero": {
+        "family": "discover",
+        "name": "powerplant-bani",
+        "alt": "Aerial view of the Masinloc power station in Barangay Bani: four stacks, the plant buildings, the coal jetty reaching into the bay, and the mountains of Zambales behind",
+        "caption": "The power station in Barangay Bani, on the coast it shares with the bay. Supplied to this project with the location labelled. Nothing here is a claim that the site is open to visitors."
+      },
       "body": [
         {
           "type": "p",
@@ -393,7 +414,7 @@
     },
     {
       "slug": "the-sweetest-mango-came-from-where-exactly",
-      "theme": "economy",
+      "theme": "food",
       "title": "The Sweetest Mango in the World Came From… Where Exactly?",
       "deck": "Zambales holds a Guinness citation for the world's sweetest mango. Which town inside Zambales gets to say so is a genuinely open question, and the confident answers you will find online do not survive checking.",
       "published": "2026-08-23",
@@ -465,6 +486,10 @@
           "type": "links",
           "items": [
             {
+              "label": "The other half of the plate",
+              "href": "suman-and-mango.html"
+            },
+            {
               "label": "What else the town grows, catches and eats",
               "href": "come-hungry.html"
             }
@@ -484,14 +509,98 @@
         }
       ],
       "related": [
+        "suman-and-mango",
         "come-hungry",
-        "masinloc-actually",
-        "the-giant-in-bani"
+        "masinloc-actually"
+      ]
+    },
+    {
+      "slug": "suman-and-mango",
+      "theme": "food",
+      "title": "The Pairing Nobody Here Has to Explain",
+      "deck": "Sticky rice in a leaf, ripe mango beside it. It is the one plate that needs no introduction in Masinloc — which is exactly why so little about the local version has ever been written down.",
+      "published": "2026-08-25",
+      "updated": "2026-08-25",
+      "hero": {
+        "family": "discover",
+        "name": "suman-and-mango",
+        "alt": "Leaf-wrapped suman bundles served with slices of ripe mango",
+        "caption": "Suman and mangga. Masinloc, Zambales."
+      },
+      "body": [
+        {
+          "type": "p",
+          "text": "Nobody in Masinloc introduces this. It arrives at breakfast, or in the middle of the afternoon when somebody has been to the market, and the correct response is to eat it. The bundles are untied at the table, the leaf peeled back like paper, and a slice of mango goes on top or beside depending on how you were raised."
+        },
+        {
+          "type": "h2",
+          "text": "What suman is"
+        },
+        {
+          "type": "p",
+          "text": "Suman is glutinous rice cooked with coconut milk, wrapped in leaves and steamed or boiled in the wrapper. It is eaten across the Philippines and it is not one recipe — the wrapping leaf, the shape of the bundle, the sweetness and what it is served with all change from province to province, sometimes from town to town. What holds across all of it is the method: the rice is cooked inside the leaf, and the leaf is part of how it tastes."
+        },
+        {
+          "type": "p",
+          "text": "Left plain, it is barely sweet. That is the point. Suman is built to be eaten with something, and the something is usually sugar, or coconut, or fruit."
+        },
+        {
+          "type": "h2",
+          "text": "Why mango"
+        },
+        {
+          "type": "p",
+          "text": "Ripe carabao mango — dinamulag, in the local name — is acidic and perfumed in a way that coconut rice is not. One is soft, warm and flat; the other is cold, sharp and loud. Eaten together they do the work that a sauce would do in another cuisine, without anybody having to make a sauce."
+        },
+        {
+          "type": "p",
+          "text": "This is a recognised pairing across the country, not an invention of this town. What makes it worth a page here is that Masinloc has both halves of it locally: the mangoes are grown in the province, and the suman is made in the kitchens that hand it to you."
+        },
+        {
+          "type": "pull",
+          "text": "It is not a delicacy here. It is a Tuesday."
+        },
+        {
+          "type": "h2",
+          "text": "What this page is not claiming"
+        },
+        {
+          "type": "p",
+          "text": "Every town with suman will tell you theirs is different, and most of them are right — but this project has not yet documented what specifically distinguishes the Masinloc version from the ones made an hour up or down the coast. The photograph above was supplied to this project labelled as Masinloc suman and mangga. That is a description of the plate, not a claim about a distinct local style, and it is not going to be turned into one here."
+        },
+        {
+          "type": "p",
+          "text": "The mango half comes with its own unsettled question, which has its own page: Zambales holds a 1995 Guinness citation for the world's sweetest mango, and which town inside the province gets to claim it is genuinely open."
+        },
+        {
+          "type": "note",
+          "label": "Still open",
+          "text": "What would finish this page: which leaf is used locally and where it is gathered, whether the wrapping shape differs from neighbouring towns, who the known suman makers in Masinloc are and where they sell, whether it is tied to any particular season, fiesta or occasion, and what it is called in Sambal. If you make suman here, or your family does, this page should be rewritten around what you know."
+        },
+        {
+          "type": "links",
+          "items": [
+            {
+              "label": "The mango question, unresolved on purpose",
+              "href": "the-sweetest-mango-came-from-where-exactly.html"
+            },
+            {
+              "label": "What else the town eats",
+              "href": "come-hungry.html"
+            }
+          ]
+        }
+      ],
+      "sources": [],
+      "related": [
+        "the-sweetest-mango-came-from-where-exactly",
+        "come-hungry",
+        "thirteen-ways-to-be-masinloc"
       ]
     },
     {
       "slug": "come-hungry",
-      "theme": "places",
+      "theme": "food",
       "title": "Come Hungry",
       "deck": "What Masinloc actually eats, starting with a shellfish most visitors have never heard of and locals do not think is remarkable at all.",
       "published": "2026-08-23",
@@ -560,9 +669,9 @@
       ],
       "sources": [],
       "related": [
+        "suman-and-mango",
         "the-sweetest-mango-came-from-where-exactly",
-        "eight-reasons-to-turn-off-the-highway",
-        "the-sambal-words-we-refuse-to-lose"
+        "eight-reasons-to-turn-off-the-highway"
       ]
     },
     {
@@ -1241,7 +1350,7 @@
     },
     {
       "slug": "every-november-masinloc-stages-a-battle",
-      "theme": "history",
+      "theme": "festivals",
       "title": "Every November, Masinloc Stages a Battle",
       "deck": "Binabayani is a war dance performed in connection with the feast of San Andres. It is genuinely old, genuinely alive, and the date everybody prints for its origin cannot be found in any located source.",
       "published": "2026-08-23",

@@ -74,8 +74,16 @@ def available(family: str, name: str, ext: str) -> list[int]:
     return sorted(found)
 
 
-def picture(hero: dict, *, eager: bool, classes: str = "d-hero-img") -> str:
-    """A hero at its own native ratio. Never cropped, never letterboxed."""
+def picture(hero: dict, *, eager: bool, classes: str = "d-hero-img",
+            sizes: str = "(min-width: 900px) 860px, 100vw") -> str:
+    """A hero at its own native ratio. Never cropped, never letterboxed.
+
+    `sizes` is a parameter because the hub no longer draws every image at one
+    width. A card in a three-up row and a feature spanning the whole measure
+    are an order of magnitude apart, and a single hint would either send a
+    thumbnail-sized file to a full-width photograph or a full-width file to a
+    thumbnail. The shapes below pass their own.
+    """
     family, name = hero["family"], hero["name"]
     directory, _ = FAMILY[family]
 
@@ -89,7 +97,6 @@ def picture(hero: dict, *, eager: bool, classes: str = "d-hero-img") -> str:
     jpgs = available(family, name, "jpg")
     if not jpgs:
         return ""
-    sizes = "(min-width: 900px) 860px, 100vw"
 
     def srcset(ext: str) -> str:
         widths = available(family, name, ext)
@@ -173,7 +180,7 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-1">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-1">
-<link rel="stylesheet" href="../discover.css?v=20260823-1">
+<link rel="stylesheet" href="../discover.css?v=20260825-1">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
@@ -375,6 +382,76 @@ def article_page(article: dict) -> str:
 """
 
 
+# How each shape draws its promoted article, and the width hint that goes with
+# it. The hub is 1180px at most: a feature takes a little over half of that
+# beside its copy, a wide one takes the whole measure, and an ordinary card
+# takes a third of it in the widest layout.
+SHAPES = {
+    "cluster": ("d-card-lead", "(min-width: 900px) 58vw, 100vw"),
+    "feature": ("d-card-feature", "(min-width: 860px) 56vw, 100vw"),
+    "wide": ("d-card-wide", "(min-width: 1220px) 1100px, 100vw"),
+}
+CARD_SIZES = "(min-width: 1000px) 33vw, (min-width: 620px) 48vw, 100vw"
+
+
+def card(article: dict, *, promoted: str = "", sizes: str = CARD_SIZES) -> str:
+    thumb = ""
+    if article.get("hero"):
+        built = picture(article["hero"], eager=False, classes="d-card-img",
+                        sizes=sizes)
+        if built:
+            thumb = f'<span class="d-card-media">{built}</span>'
+    classes = " ".join(c for c in ("d-card", promoted,
+                                   "" if thumb else "d-card-text") if c)
+    return (f'<li class="{classes}">'
+            f'<a href="{article["slug"]}.html">{thumb}'
+            f'<span class="d-card-body">'
+            f'<span class="d-card-title">{esc(article["title"])}</span>'
+            f'<span class="d-card-deck">{esc(article["deck"])}</span>'
+            f'</span></a></li>')
+
+
+def theme_section(theme: dict, members: list[dict]) -> str:
+    """One theme, drawn in the shape it asks for.
+
+    A theme may name a `shape` and the `feature` article that carries it. The
+    shape is honoured only if that article is present in the theme and has a
+    photograph actually built for it: every shape here is built around an
+    image, so promoting a text card into one would produce a large empty frame
+    rather than a feature. Falling back to the plain grid is silent on purpose
+    — the hub stays correct while an asset is still being prepared, and picks
+    the composition up the moment the file lands.
+    """
+    shape = theme.get("shape", "grid")
+    promoted = None
+    if shape in SHAPES:
+        wanted = theme.get("feature")
+        candidate = next((a for a in members if a["slug"] == wanted), None)
+        if candidate and candidate.get("hero") \
+                and picture(candidate["hero"], eager=False):
+            promoted = candidate
+        else:
+            shape = "grid"
+
+    if promoted is None:
+        cards = [card(a) for a in members]
+        grid_class = "d-grid"
+    else:
+        css_class, sizes = SHAPES[shape]
+        rest = [a for a in members if a is not promoted]
+        cards = [card(promoted, promoted=css_class, sizes=sizes)] \
+            + [card(a) for a in rest]
+        grid_class = f"d-grid d-grid--{shape}"
+
+    return (f'  <section class="d-theme" aria-labelledby="theme-{theme["id"]}">\n'
+            f'    <div class="d-theme-head">\n'
+            f'      <h2 id="theme-{theme["id"]}">{esc(theme["name"])}</h2>\n'
+            f'      <p>{esc(theme["blurb"])}</p>\n'
+            f'    </div>\n'
+            f'    <ul class="{grid_class}">{"".join(cards)}</ul>\n'
+            f'  </section>')
+
+
 def hub_page() -> str:
     url = f"{SITE}/discover/"
     lead = BY_SLUG[SECTION["lead"]]
@@ -413,28 +490,7 @@ def hub_page() -> str:
         members = [a for a in rest if a["theme"] == theme["id"]]
         if not members:
             continue
-        cards = []
-        for article in members:
-            thumb = ""
-            if article.get("hero"):
-                built = picture(article["hero"], eager=False, classes="d-card-img")
-                if built:
-                    thumb = f'<span class="d-card-media">{built}</span>'
-            cards.append(
-                f'<li class="d-card{" d-card-text" if not thumb else ""}">'
-                f'<a href="{article["slug"]}.html">{thumb}'
-                f'<span class="d-card-body">'
-                f'<span class="d-card-title">{esc(article["title"])}</span>'
-                f'<span class="d-card-deck">{esc(article["deck"])}</span>'
-                f'</span></a></li>')
-        sections.append(
-            f'  <section class="d-theme" aria-labelledby="theme-{theme["id"]}">\n'
-            f'    <div class="d-theme-head">\n'
-            f'      <h2 id="theme-{theme["id"]}">{esc(theme["name"])}</h2>\n'
-            f'      <p>{esc(theme["blurb"])}</p>\n'
-            f'    </div>\n'
-            f'    <ul class="d-grid">{"".join(cards)}</ul>\n'
-            f'  </section>')
+        sections.append(theme_section(theme, members))
 
     return f"""{head(title="Discover Masinloc | Masinloc, Zambales",
                      description=SECTION["intro"], url=url,
@@ -475,6 +531,29 @@ def hub_page() -> str:
 
 def main() -> int:
     OUT.mkdir(exist_ok=True)
+
+    # A shape names the article that carries it. A missing photograph is
+    # handled gracefully at render time, but a misspelled slug, an article
+    # filed under a different theme, or a feature that is also the section
+    # lead — and therefore never appears in any theme — are all typos, and a
+    # typo that silently downgrades the composition is a typo nobody finds.
+    for theme in DATA["themes"]:
+        shape = theme.get("shape", "grid")
+        if shape == "grid":
+            if theme.get("feature"):
+                sys.exit(f"theme {theme['id']}: names a feature but no shape")
+            continue
+        if shape not in SHAPES:
+            sys.exit(f"theme {theme['id']}: unknown shape {shape!r}")
+        slug = theme.get("feature")
+        if slug not in BY_SLUG:
+            sys.exit(f"theme {theme['id']}: feature {slug!r} does not exist")
+        if BY_SLUG[slug]["theme"] != theme["id"]:
+            sys.exit(f"theme {theme['id']}: feature {slug!r} is filed under "
+                     f"{BY_SLUG[slug]['theme']!r}")
+        if slug == SECTION["lead"]:
+            sys.exit(f"theme {theme['id']}: feature {slug!r} is the section "
+                     f"lead, so it never appears in a theme")
 
     # A theme with no articles would render an empty heading.
     for article in ARTICLES:

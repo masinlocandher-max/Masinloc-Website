@@ -112,6 +112,60 @@
       }
     },
     {
+      "page": "discover/index.html",
+      "section": "Discover hub — the food cluster",
+      "selector": ".d-grid--cluster",
+      "note": "the hub is composed rather than tiled: this theme promotes one article to reading size with its companions stacked beside it. Losing the shape rules puts it back to an undifferentiated row.",
+      "minChildren": 3,
+      "desktop": {
+        "display": "grid",
+        "columns": 2,
+        "childrenSideBySide": true
+      },
+      "phone": {
+        "display": "grid",
+        "columns": 1
+      }
+    },
+    {
+      "page": "discover/index.html",
+      "section": "Discover hub — the Binabayani cultural feature",
+      "selector": ".d-card-feature > a",
+      "note": "a single-article theme drawn as image beside copy. If this ever reports one column at desktop the feature has collapsed into an ordinary card and the theme is a lonely tile again.",
+      "desktop": {
+        "display": "grid",
+        "columns": 2,
+        "childrenSideBySide": true
+      },
+      "phone": {
+        "display": "grid",
+        "columns": 1
+      }
+    },
+    {
+      "page": "discover/index.html",
+      "section": "Discover hub — the power plant wide feature",
+      "selector": ".d-grid--wide",
+      "desktop": {
+        "display": "grid",
+        "columns": 3
+      },
+      "phone": {
+        "display": "grid",
+        "columns": 1
+      }
+    },
+    {
+      "page": "discover/index.html",
+      "section": "Discover hub — the power plant photograph at full measure",
+      "selector": ".d-grid--wide > .d-card-wide",
+      "note": "this subject is physically large and the picture is the argument, so it takes the whole measure. Dropping to one grid track would shrink it to a third and nothing else here would notice.",
+      "desktop": {
+        "minWidth": 900
+      },
+      "phone": {}
+    },
+    {
       "page": "leadership.html",
       "section": "Municipal leadership portraits",
       "selector": ".leader-grid",

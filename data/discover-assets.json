@@ -2,14 +2,15 @@
   "pamislat": {
     "source": "Pamislat.png",
     "native": {
-      "width": 1290,
-      "height": 761
+      "width": 1920,
+      "height": 1080
     },
-    "ratio": 1.6951,
+    "ratio": 1.7778,
     "widths": [
       640,
       960,
-      1280
+      1280,
+      1672
     ]
   },
   "mangoes-masinloc": {
@@ -29,10 +30,10 @@
   "dinamulag-mango": {
     "source": "Dinamulag Mango.png",
     "native": {
-      "width": 1691,
-      "height": 930
+      "width": 1920,
+      "height": 1080
     },
-    "ratio": 1.8183,
+    "ratio": 1.7778,
     "widths": [
       640,
       960,
@@ -47,6 +48,48 @@
       "height": 941
     },
     "ratio": 1.7768,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
+  },
+  "binabayani-festival": {
+    "source": "Binabayani Feastival.png",
+    "native": {
+      "width": 1920,
+      "height": 1080
+    },
+    "ratio": 1.7778,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
+  },
+  "suman-and-mango": {
+    "source": "Suman and Mango.png",
+    "native": {
+      "width": 1920,
+      "height": 1080
+    },
+    "ratio": 1.7778,
+    "widths": [
+      640,
+      960,
+      1280,
+      1672
+    ]
+  },
+  "powerplant-bani": {
+    "source": "Powerplant in bani.png",
+    "native": {
+      "width": 1920,
+      "height": 1080
+    },
+    "ratio": 1.7778,
     "widths": [
       640,
       960,

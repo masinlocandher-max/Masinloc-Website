@@ -213,7 +213,7 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
 <link rel="stylesheet" href="{up}site.css?v=20260825-1">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260825-1">
-<link rel="stylesheet" href="{up}marketplace.css?v=20260825-4">
+<link rel="stylesheet" href="{up}marketplace.css?v=20260825-5">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
