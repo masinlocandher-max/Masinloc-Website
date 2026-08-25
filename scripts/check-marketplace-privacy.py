@@ -40,6 +40,7 @@ Usage: python3 scripts/check-marketplace-privacy.py
 """
 from __future__ import annotations
 
+import html
 import json
 import re
 import sys
@@ -134,9 +135,12 @@ def main() -> int:
             if not heading:
                 problems.append(f"{rel}: no H1, so the business it describes cannot be identified")
             else:
-                name = TAG.sub("", heading.group(1)).strip()
-                # The page carries the escaped form; compare on the same footing.
-                if name and name not in {b.replace("'", "&#x27;") for b in approved} | approved:
+                # Decode HTML entities before comparing the rendered business
+                # name with canonical data. Brand names containing '&' are
+                # correctly emitted as '&amp;' by the generator and must not be
+                # mistaken for an unapproved business.
+                name = html.unescape(TAG.sub("", heading.group(1))).strip()
+                if name and name not in approved:
                     problems.append(
                         f"{rel}: describes {name!r}, which is not in data/marketplace.json "
                         f"— only approved businesses may be published")
