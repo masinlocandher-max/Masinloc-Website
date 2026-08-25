@@ -106,65 +106,57 @@ html{scroll-padding-top:96px}
 
 /* ------------------------------------------------------------- 01 · hero -- */
 
-.hero{
-  position:relative;min-height:100svh;
-  display:grid;align-items:center;
-  padding:clamp(96px,14vh,150px) var(--gutter) clamp(84px,13vh,132px);
-  background:var(--navy-deep);
-  overflow:clip;
-}
-/* The photograph occupies about two thirds of the composition and is pinned
-   to the right, leaving the left as deliberate negative space for type. It
-   bleeds past the gutter rather than sitting in a container. */
-.hero-media{
-  /* Full bleed, not the right 82%. Insetting the frame left a hard vertical
-     edge where the photograph stopped and the navy field began — measured as a
-     258-value single-pixel step at 18% of the viewport width. The aerial
-     photograph this replaced was dark along that line so the seam never showed;
-     the Binabayani photograph has bright sky and white costumes there, and the
-     cut was obvious. The scrim below already carries the left side to solid
-     navy for the type, so the frame has no reason to stop early. */
-  position:absolute;inset:0;
-  z-index:0;
-}
-.hero-media::after{
-  /* Scrim reads as light falling across the frame, not a flat overlay: it is
-     strongest at the lower left where the type sits. */
-  content:"";position:absolute;inset:0;
-  background:
-    /* The 38-58% band is where the headline's second line reaches. Measured
-       against the photograph behind the actual glyphs, white there was 4.03:1
-       — clear of the 3:1 the type's size requires, but the thinnest margin in
-       the hero, and on the one line everybody reads. Two stops carry a little
-       further right; the frame keeps its fall of light. */
-    linear-gradient(100deg,var(--navy-deep) 0%,rgba(3,17,47,.96) 18%,rgba(3,17,47,.90) 38%,
-      rgba(3,17,47,.84) 58%,rgba(3,17,47,.58) 78%,rgba(3,17,47,.10) 94%),
-    linear-gradient(to top,rgba(3,17,47,.78),transparent 42%),
-    /* A band under the navigation. Over the hero the links are white on the
-       photograph, and the 100deg scrim above has faded to nothing by the time
-       it reaches the right-hand end of the bar — "Contact", the last item,
-       measured 2.43:1 against open sky. The logo already carries a drop-shadow
-       for this reason; the links had nothing. */
-    linear-gradient(to bottom,rgba(3,17,47,.62),rgba(3,17,47,.24) 8%,transparent 15%);
-}
-.hero-media img{
-  width:100%;height:100%;object-fit:cover;object-position:52% 46%;
-  transform:scale(1.06) translate3d(0,var(--hero-drift,0px),0);
-  transition:transform 1600ms var(--ease-out);
-}
-.hero.is-ready .hero-media img{transform:scale(1.01) translate3d(0,var(--hero-drift,0px),0)}
-/* The frame keeps moving after it settles, slowly enough that it reads as air
-   rather than animation: 40s out and back, no cut on repeat. Composited on the
-   wrapper so it layers under the settle above without fighting it. */
-@media (prefers-reduced-motion:no-preference){
-  .hero.is-ready .hero-media{animation:hero-breathe 40s ease-in-out infinite alternate}
-}
-@keyframes hero-breathe{
-  from{transform:scale(1) translate3d(0,0,0)}
-  to{transform:scale(1.045) translate3d(-0.8%,-1.1%,0)}
-}
+/* THE HERO SHOWS THE WHOLE PHOTOGRAPH.
 
-.hero-inner{position:relative;z-index:2;max-width:min(100%,1560px);width:100%;margin-inline:auto}
+   It used to fill the viewport: the frame was pinned to the inset, cropped
+   with object-fit:cover, held at scale(1.06), and drifted on scroll — and the
+   headline sat on top of it behind a scrim built to keep white type legible
+   over whatever the crop happened to expose.
+
+   That composition decides for the viewer which two thirds of a photograph
+   they are allowed to see, and it decides differently at every window size.
+   The Binabayani frame is a photograph of people: dancers crossing the plaza
+   in front of San Andres. Cropping it to a letterbox and then scaling in cut
+   performers out of their own picture.
+
+   So the photograph is now shown whole, at its own ratio, and the type has
+   moved below it into the navy field. Nothing is cropped, nothing is scaled,
+   and the hero is as tall as the picture is — which is the honest height. */
+.hero{
+  position:relative;
+  /* site.css sets height:100svh, max-height:980px and overflow:hidden on .hero
+     for connect.html, which still wants a viewport-height band. Those are
+     reset here rather than there: the homepage's height now comes from the
+     photograph, and connect.html's hero is not part of this change. */
+  height:auto;min-height:0;max-height:none;overflow:visible;
+  /* The top padding is the navigation's own band. The bar is fixed and
+     transparent until it scrolls, so it used to sit on the photograph and
+     needed a scrim dark enough to carry white links — which meant darkening
+     the top of the very picture this change exists to show. Starting the
+     photograph below the bar costs one strip of navy and buys back the whole
+     frame: the links land on solid --navy-deep at roughly 15:1, and nothing
+     is painted over the photograph at all. */
+  padding:clamp(78px,9vh,94px) 0 clamp(56px,8vh,96px);
+  background:var(--navy-deep);
+}
+.hero-media{position:relative;inset:auto;z-index:0;display:block}
+.hero-media::after{
+  /* One gradient, and it only touches the bottom edge. The photograph meets
+     the navy field below it, and without this the join is a hard horizontal
+     rule across the page. Nothing sits over the picture, so there is no scrim
+     over the picture. */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,var(--navy-deep),rgba(3,17,47,.55) 7%,transparent 18%);
+}
+/* Whole frame, native ratio. No object-fit, no aspect-ratio, no transform:
+   each of those is a decision about what to hide. */
+.hero-media img{width:100%;height:auto;display:block;object-fit:fill}
+
+.hero-inner{
+  position:relative;z-index:2;max-width:min(100%,1560px);width:100%;
+  margin-inline:auto;padding-inline:var(--gutter);
+  margin-top:clamp(30px,4.5vh,58px);
+}
 .hero-mark{height:52px;width:auto;display:block;margin-bottom:clamp(22px,4vh,44px);
   opacity:0;transform:translate3d(0,14px,0);
   transition:opacity 700ms var(--ease-out) 260ms,transform 700ms var(--ease-out) 260ms}
@@ -822,11 +814,34 @@ html{scroll-padding-top:96px}
 }
 
 @media (max-width:820px){
+  /* The homepage carries its own navigation, so it carries its own menu
+     button. It is drawn to match the shared one in site.css — same plate, same
+     radius, same third bar from ::before — because a visitor moving between
+     the front page and any other page should not meet two different controls
+     doing the same job. */
   .nav-toggle{
-    display:grid;place-items:center;margin-left:auto;
-    width:42px;height:42px;border:0;background:none;cursor:pointer;gap:5px;
+    display:block;position:relative;margin-left:auto;
+    width:46px;height:46px;padding:0;cursor:pointer;
+    border:1px solid rgba(255,255,255,.32);border-radius:14px;
+    background:rgba(255,255,255,.10);
+    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+    transition:background 260ms var(--ease-standard),
+               border-color 260ms var(--ease-standard),
+               transform 260ms var(--ease-standard);
   }
-  .nav-toggle span{display:block;width:20px;height:1.5px;background:currentColor;transition:transform 260ms var(--ease-standard)}
+  .nav-toggle:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.52)}
+  .nav-toggle:active{transform:scale(.94)}
+  .nav-toggle:focus-visible{outline:3px solid rgba(255,255,255,.85);outline-offset:3px}
+  .nav-toggle span,.nav-toggle::before{
+    content:"";position:absolute;left:13px;right:13px;height:2px;border-radius:2px;
+    background:currentColor;width:auto;
+    transition:transform 260ms var(--ease-standard),
+               top 260ms var(--ease-standard),
+               opacity 260ms var(--ease-standard);
+  }
+  .nav-toggle span:first-child{top:15px}
+  .nav-toggle::before{top:22px}
+  .nav-toggle span:last-child{top:29px}
   .home-links{
     position:fixed;inset:0 0 auto;top:0;padding:84px var(--gutter) 30px;
     flex-direction:column;align-items:flex-start;gap:4px;
@@ -837,32 +852,20 @@ html{scroll-padding-top:96px}
   }
   .home-links a{color:var(--white)!important;font-size:19px;padding-block:12px;width:100%}
   .home-nav .home-links.open{transform:none}
-  .home-nav .home-links.open ~ .nav-toggle span:first-child{transform:translateY(3.25px) rotate(45deg)}
-  .home-nav .home-links.open ~ .nav-toggle span:last-child{transform:translateY(-3.25px) rotate(-45deg)}
+  .home-nav .home-links.open ~ .nav-toggle::before{opacity:0;transform:scaleX(.2)}
+  .home-nav .home-links.open ~ .nav-toggle span:first-child{top:22px;transform:rotate(45deg)}
+  .home-nav .home-links.open ~ .nav-toggle span:last-child{top:22px;transform:rotate(-45deg)}
+  /* Open, the panel behind it is solid navy, so the plate stops competing. */
+  .home-nav .home-links.open ~ .nav-toggle{
+    background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.44);
+  }
   
 
-  .hero{align-items:end;min-height:100svh}
-  .hero-media{width:100%}
-  .hero-media::after{
-    /* Two scrims, because the phone crop is a different photograph from the
-       desktop one. The desktop gradient is left-weighted for type sitting in
-       negative space; at 390px the image is full-bleed and the crop brings
-       pale rooftops up behind the logo and open sky up behind the menu
-       button — white bars on a 255-luminance sky. The top scrim gives the
-       fixed navigation a ground to sit on, and the lower one is carried
-       further up so the mark and the headline keep a dark field under them.
-       Both stay gradients: this is still light falling across the frame,
-       not a flat wash over the photograph. */
-    background:
-      linear-gradient(to bottom,rgba(3,17,47,.74),rgba(3,17,47,.30) 11%,transparent 21%),
-      linear-gradient(to top,var(--navy-deep) 15%,rgba(3,17,47,.82) 45%,
-        rgba(3,17,47,.38) 70%,rgba(3,17,47,.12));
-  }
+  .hero{padding:clamp(70px,11vh,80px) 0 clamp(44px,7vh,72px)}
   .hero h1{max-width:100%}
   .hero-note{position:relative;right:auto;bottom:auto;text-align:left;
     border-right:0;border-left:2px solid var(--yellow);padding:0 0 0 12px;
     margin-top:26px;max-width:34ch}
-  .hero-cue{display:none}
   .campaign-head{flex-direction:column;gap:6px}
   .rail-arrow{display:none}
   .routes a{flex-direction:column;gap:6px}
@@ -880,7 +883,7 @@ html{scroll-padding-top:96px}
   .rise{opacity:1;transform:none}
   .mask>span{transform:none}
   .entry{opacity:1;transform:none;filter:none}
-  .hero-mark,.hero-cue{opacity:1;transform:none}
+  .hero-mark{opacity:1;transform:none}
   .discover-shot.is-live{transform:none}
   .place-what{opacity:1;max-height:none}
   .rail-track.is-animating{transition:none}

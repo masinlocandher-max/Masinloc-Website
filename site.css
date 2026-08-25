@@ -24,9 +24,36 @@ button{font:inherit}
 .primary-nav a:hover::after,.primary-nav a.active::after{right:0}
 .primary-nav .connect-link{padding:12px 18px;border:1px solid rgba(255,255,255,.72);border-radius:999px;background:rgba(3,17,47,.12);backdrop-filter:blur(8px);transition:background var(--ease),color var(--ease),transform var(--ease)}
 .primary-nav .connect-link:hover{background:#fff;color:var(--navy);text-shadow:none;transform:translateY(-1px)}
-.menu-toggle{display:none;border:0;background:transparent;width:44px;height:44px;padding:10px;position:relative;color:#fff}
-.menu-toggle span{position:absolute;left:10px;right:10px;height:2px;background:currentColor;transition:transform var(--ease),top var(--ease)}
-.menu-toggle span:first-child{top:16px}.menu-toggle span:last-child{top:26px}
+/* The menu button.
+   Three bars, but only two of them are in the markup: the middle one is drawn
+   with ::before. That is deliberate. The button appears on forty-three pages
+   and is emitted by five generators, so adding a third <span> would mean
+   editing every one of them to change how a control is painted. The pseudo-
+   element gives the familiar three-line mark and costs nothing.
+
+   It also sits on a rounded, translucent plate rather than floating loose over
+   the page. Over the homepage photograph two bare white lines had nothing to
+   hold them; the plate gives the control an edge, a hit area you can see, and
+   somewhere for hover and focus to land. */
+.menu-toggle{
+  display:none;position:relative;width:46px;height:46px;padding:0;
+  border:1px solid rgba(255,255,255,.32);border-radius:14px;
+  background:rgba(255,255,255,.10);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  color:#fff;
+  transition:background var(--ease),border-color var(--ease),transform var(--ease);
+}
+.menu-toggle:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.52)}
+.menu-toggle:active{transform:scale(.94)}
+.menu-toggle:focus-visible{outline:3px solid rgba(255,255,255,.85);outline-offset:3px}
+.menu-toggle span,.menu-toggle::before{
+  content:"";position:absolute;left:13px;right:13px;height:2px;border-radius:2px;
+  background:currentColor;
+  transition:transform var(--ease),top var(--ease),opacity var(--ease);
+}
+.menu-toggle span:first-child{top:15px}
+.menu-toggle::before{top:22px}
+.menu-toggle span:last-child{top:29px}
 
 /* Hero: one real image, HTML branding above it. */
 .hero{position:relative;min-height:760px;height:100svh;max-height:980px;overflow:hidden;background:var(--navy-deep);color:#fff}
@@ -97,12 +124,29 @@ button{font:inherit}
 .about-page .primary-nav a{color:var(--ink);text-shadow:none}
 .about-page .primary-nav a:not(.connect-link)::after{background:var(--blue)}
 .about-page .primary-nav .connect-link{color:#fff;background:var(--blue);border-color:var(--blue)}
-.about-page .menu-toggle{color:var(--navy)}
+.about-page .menu-toggle{
+  color:var(--navy);
+  border-color:rgba(6,26,70,.16);background:rgba(6,26,70,.04);
+}
+.about-page .menu-toggle:hover{border-color:rgba(6,26,70,.30);background:rgba(6,26,70,.08)}
+.about-page .menu-toggle:focus-visible{outline-color:rgba(13,59,158,.55)}
 .about-hero{width:var(--content);margin:0 auto;padding:clamp(82px,9vw,138px) 0 68px}
 .about-hero h1{margin:0;max-width:1090px;color:var(--navy);font-family:var(--font-editorial);font-size:clamp(56px,7vw,108px);font-weight:400;line-height:.94;letter-spacing:-.05em;text-wrap:balance}
 .about-hero .lead{margin:31px 0 0;max-width:770px;color:var(--text);font-size:clamp(18px,1.5vw,23px);line-height:1.58}
-.about-photo{width:var(--wide);margin:0 auto;aspect-ratio:16/9;max-height:800px;overflow:hidden;background:#DCE7F4}
-.about-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 52%}
+/* The whole photograph, at its own shape.
+   This was a 16:9 band with the picture cropped to fill it — and the picture
+   is 798x883, a portrait frame of San Andres at sunset, so more than half of
+   it was being thrown away to make a letterbox. There is no type over it and
+   nothing below depends on its height, so there was never anything for the
+   crop to buy.
+
+   The cap is the file's own width. Uncropped, the figure would otherwise
+   stretch to the full wide container and paint a 798px image at half again
+   its size — trading a crop for a blur, which is not a better answer. It is
+   centred at native size instead, and the cap lifts on its own the day a
+   larger export arrives. */
+.about-photo{width:var(--wide);max-width:798px;margin:0 auto;background:#DCE7F4}
+.about-photo img{width:100%;height:auto;display:block}
 .about-body{max-width:1060px;margin:0 auto;padding:88px 28px 114px}
 .about-intro{font-family:var(--font-editorial);font-size:clamp(22px,2.1vw,31px);line-height:1.55;color:var(--ink);max-width:940px;margin:0 0 76px;letter-spacing:-.018em}
 .about-section{display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px;padding:46px 0;border-top:1px solid var(--line)}
@@ -127,8 +171,14 @@ button{font:inherit}
   .primary-nav a{color:var(--ink);padding:15px 0;text-shadow:none;border-bottom:1px solid #EFF1F5}
   .primary-nav a::after{display:none}
   .primary-nav .connect-link{margin-top:12px;text-align:center;border:0;padding:14px 20px;background:var(--blue);color:#fff}
-  .menu-toggle[aria-expanded="true"] span:first-child{top:21px;transform:rotate(45deg)}
-  .menu-toggle[aria-expanded="true"] span:last-child{top:21px;transform:rotate(-45deg)}
+  .menu-toggle[aria-expanded="true"]::before{opacity:0;transform:scaleX(.2)}
+  .menu-toggle[aria-expanded="true"] span:first-child{top:22px;transform:rotate(45deg)}
+  .menu-toggle[aria-expanded="true"] span:last-child{top:22px;transform:rotate(-45deg)}
+  /* Open, the button belongs to the white panel below it rather than the page
+     behind it, so it takes that panel's colours. */
+  .menu-toggle[aria-expanded="true"]{
+    color:var(--ink);border-color:var(--line);background:#fff;
+  }
   .hero{min-height:680px;height:100svh;max-height:none}
   .hero-media img{object-position:54% 50%}
   .hero-shade{background:linear-gradient(180deg,rgba(1,9,26,.34) 0%,rgba(1,9,26,.04) 31%,rgba(1,9,26,.08) 48%,rgba(1,9,26,.78) 100%)}
@@ -152,7 +202,6 @@ button{font:inherit}
   .about-page .primary-nav{top:76px}
   .about-hero{padding:68px 0 52px}
   .about-hero h1{font-size:clamp(49px,13vw,72px)}
-  .about-photo{aspect-ratio:4/3}
   .about-section{grid-template-columns:1fr;gap:17px;padding:38px 0}
   .about-body{padding:68px 24px 88px}
   .about-intro{margin-bottom:58px}
@@ -164,7 +213,6 @@ button{font:inherit}
   .hero-actions{gap:8px}
   .hero-actions .button{flex:0 1 auto}
   .editorial-link small{font-size:11px}
-  .about-photo{aspect-ratio:1/1}
   .footer-nav{grid-template-columns:1fr}
 }
 

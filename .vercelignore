@@ -1,0 +1,21 @@
+# What never reaches the website.
+#
+# This is a static deployment: with no build step, Vercel uploads the
+# repository and serves it, so any file left here is a public URL whether or
+# not a page links to it. That is fine for pages, stylesheets and /data/, and
+# wrong for everything below.
+#
+# supabase/ is the reason this file exists. It holds edge-function source, the
+# deployment notes, and supabase/seed/sambal-tina-uncertain.json — the
+# dictionary readings deliberately withheld from the published collection.
+# Withholding them from data/ and then serving them from another path would
+# achieve nothing.
+supabase/
+
+# Build and verification tooling. Nothing here is fetched by a browser, and the
+# QA scripts describe how the checks can be defeated.
+scripts/
+
+# Working notes, not site content. BUILD-NOTES.md carries the internal
+# provenance of the source archive; none of these is linked from any page.
+*.md

@@ -55,31 +55,20 @@
   }, { passive: true });
   revealPassed();
 
-  /* --- hero drift ------------------------------------------------------- */
+  /* --- hero ------------------------------------------------------------- */
   /* The navigation's scrolled and open states belong to site.js, which every
      page shares. Duplicating them here would mean two handlers racing for
-     the same class. */
+     the same class.
+
+     There was a parallax here: the photograph was held slightly larger than
+     its frame and translated on scroll so it lagged the page. That only works
+     while the frame is cropping — the drift is hidden by the overflow. The
+     hero now shows the whole photograph at its own height with nothing
+     clipped, so the same translate would drag the picture off its own edge and
+     open a gap. The frame stays where it is; `is-ready` still runs, because
+     the logo and headline fade in on it. */
 
   const hero = document.querySelector('.hero');
-  const heroImg = document.querySelector('.hero-media img');
-  let ticking = false;
-
-  function onScroll() {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY;
-      if (heroImg && !calm.matches && y < window.innerHeight * 1.2) {
-        /* The photograph lags the page slightly. Capped so it can never drift
-           far enough to expose an edge. */
-        heroImg.style.setProperty('--hero-drift', `${Math.min(y * 0.12, 90)}px`);
-      }
-      ticking = false;
-    });
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
   requestAnimationFrame(() => hero?.classList.add('is-ready'));
 
   /* --- campaign carousel ------------------------------------------------ */

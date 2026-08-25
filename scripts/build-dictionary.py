@@ -43,6 +43,10 @@ COMPILATION_YEAR = 2026
 
 COLUMNS = ["tina", "pos", "en", "fil", "pages", "status", "conf", "notes"]
 
+# Confidence at or below this has not been confirmed against the printed page,
+# so it is not published. Kept in step with scripts/withhold-uncertain.py.
+UNCERTAIN_AT_OR_BELOW = 2
+
 # A provenance tail is ",pages,status,confidence,note". Anything beyond this
 # belongs to the next row or the next worksheet.
 TAIL_LIMIT = 300
@@ -274,6 +278,25 @@ def build(export_path: Path, skeleton_path: Path, output_path: Path) -> dict:
 
         entries.append([tina, pos, english, pilipino, pages,
                         status_index[status], confidence, notes])
+
+    # An unconfirmed reading does not go on the public site.
+    #
+    # These are the entries whose glyphs the transcription could not resolve —
+    # confidence 2 or below, status "NEEDS VISUAL SOURCE CHECK". A dictionary is
+    # quoted, so a damaged reading left in public long enough gets cited back as
+    # the real spelling. They are withheld until somebody reads the archive page
+    # and says what the word actually is.
+    #
+    # This is applied here as well as in withhold-uncertain.py because a rebuild
+    # from the workbook would otherwise put every one of them straight back.
+    # Nothing is lost: withhold-uncertain.py writes the withheld set out for the
+    # admin review queue, and a corrected entry is published from there.
+    withheld = [e for e in entries if e[6] <= UNCERTAIN_AT_OR_BELOW]
+    entries = [e for e in entries if e[6] > UNCERTAIN_AT_OR_BELOW]
+    if withheld:
+        print(f"withheld {len(withheld)} unconfirmed reading(s) from the published "
+              f"dictionary; run scripts/withhold-uncertain.py to refresh the "
+              f"review queue")
 
     phrasebook = build_phrasebook(entries)
 

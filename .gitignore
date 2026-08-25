@@ -8,3 +8,6 @@ artifacts/
 package-lock.json
 # Supabase CLI scratch, written on any npx supabase invocation.
 supabase/.temp/
+
+# Python bytecode from the build and check scripts.
+__pycache__/

@@ -184,8 +184,8 @@ def head(*, title: str, description: str, url: str, image: str | None,
 {extra}<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
-<link rel="stylesheet" href="../site.css?v=20260825-1">
-<link rel="stylesheet" href="../site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="../site.css?v=20260825-2">
+<link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../discover.css?v=20260825-1">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
@@ -381,7 +381,7 @@ def article_page(article: dict) -> str:
   </div>
 {sources_block(article)}{related_block(article)}</main>
 {FOOTER}
-<script src="../site.js?v=20260820-2"></script>
+<script src="../site.js?v=20260825-1"></script>
 <script type="application/ld+json">
 {ld}
 </script>
@@ -528,7 +528,7 @@ def hub_page() -> str:
 {chr(10).join(sections)}
 </main>
 {FOOTER}
-<script src="../site.js?v=20260820-2"></script>
+<script src="../site.js?v=20260825-1"></script>
 <script type="application/ld+json">
 {ld}
 </script>

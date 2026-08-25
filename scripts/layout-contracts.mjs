@@ -113,6 +113,17 @@ async function measure(label, width) {
     if (expected.minWidth != null && found.width < expected.minWidth) {
       fail(`${where}: renders ${found.width}px wide, expected at least ${expected.minWidth}px`);
     }
+    /* A photograph shown whole reports its own ratio. A fixed height, an
+       aspect-ratio, or object-fit:cover would all change it — and every one of
+       those is a decision to hide part of the picture. Tolerance is 2%, which
+       is wider than sub-pixel rounding and far narrower than any crop. */
+    if (expected.aspectRatio != null) {
+      const actual = found.width / found.height;
+      if (Math.abs(actual - expected.aspectRatio) / expected.aspectRatio > 0.02) {
+        fail(`${where}: renders at ${actual.toFixed(3)}:1, expected its native `
+          + `${expected.aspectRatio}:1 — the frame is being cropped or stretched`);
+      }
+    }
     if (expected.columns != null && found.columns !== expected.columns) {
       fail(`${where}: resolves to ${found.columns} column(s), expected ${expected.columns}`);
     }

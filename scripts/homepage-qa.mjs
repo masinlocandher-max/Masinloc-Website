@@ -111,8 +111,13 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
 
     const runs = await page.evaluate(() => {
       const out = [];
-      for (const selector of ['.hero-mark', '.hero h1', '.hero-note',
-        '.cta-secondary', '#menuToggle']) {
+      /* Only what actually sits over the photograph is sampled here.
+         The headline, the mark, the note and the buttons used to be laid over
+         the frame behind a scrim; they now sit below it on solid --navy-deep,
+         where the question is settled by the token rather than by whichever
+         part of a photograph a crop happened to expose. contrast-qa measures
+         them there. What remains over the picture is the fixed navigation. */
+      for (const selector of ['.home-nav a', '.home-nav .brand img', '#menuToggle']) {
         const el = document.querySelector(selector);
         if (!el || !el.getClientRects().length) continue;
         const size = parseFloat(getComputedStyle(el).fontSize);
@@ -134,8 +139,8 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
       return out;
     });
 
-    // Hide everything in front of the photograph, so only the scrim is sampled.
-    await page.addStyleTag({ content: '.hero-inner,header{visibility:hidden !important}' });
+    // Hide the navigation itself, so what is sampled is the ground behind it.
+    await page.addStyleTag({ content: '.home-nav{visibility:hidden !important}' });
     await page.waitForTimeout(150);
 
     const worst = new Map();
@@ -396,9 +401,22 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
     if (!slip.status) fail(`archive specimen ${i + 1} carries no source status`);
   });
 
-  /* The unsettled reading is the point of the stage; it must survive. */
+  /* The archive stage used to showcase an unsettled reading — `ab6h`, a word
+     whose glyphs could not be read off the printed page — as proof that the
+     project publishes its uncertainty rather than tidying it away.
+
+     That specimen is now withheld along with the other ninety-six, because a
+     dictionary is quoted and a damaged reading left in public long enough gets
+     cited back as the real spelling. Showing one on the front page was the
+     loudest version of that problem. So the assertion is inverted: the stage
+     must NOT put an unconfirmed reading in front of a visitor. The honesty it
+     was demonstrating is still on the page — every specimen cites the archive
+     page it came from, which is checked above. */
   const unsettled = await page.$$eval('.slip-check', (els) => els.length);
-  if (unsettled < 1) fail('the archive no longer shows an unsettled reading');
+  if (unsettled > 0) {
+    fail(`the archive stage shows ${unsettled} unconfirmed reading(s); those are `
+      + 'withheld until somebody confirms them against the printed page');
+  }
 
   /* No invented archival imagery, ever. */
   const imgs = await page.$$eval('.archive img', (els) => els.map((el) => el.src));

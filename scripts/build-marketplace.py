@@ -211,8 +211,8 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
-<link rel="stylesheet" href="{up}site.css?v=20260825-1">
-<link rel="stylesheet" href="{up}site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="{up}site.css?v=20260825-2">
+<link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="{up}marketplace.css?v=20260825-5">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 </head>
@@ -488,7 +488,7 @@ def hub_page() -> str:
   </section>
 </main>
 {footer(0)}
-<script src="site.js?v=20260820-2"></script>
+<script src="site.js?v=20260825-1"></script>
 <script src="marketplace.js?v=20260825-1"></script>
 <script type="application/ld+json">
 {ld}
@@ -580,7 +580,7 @@ def detail_page(business: dict) -> str:
   </article>
 </main>
 {footer(1)}
-<script src="../site.js?v=20260820-2"></script>
+<script src="../site.js?v=20260825-1"></script>
 <script type="application/ld+json">
 {ld}
 </script>

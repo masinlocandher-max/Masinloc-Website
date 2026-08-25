@@ -49,8 +49,8 @@ HEAD = """<!doctype html>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
-<link rel="stylesheet" href="site.css?v=20260825-1">
-<link rel="stylesheet" href="site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="site.css?v=20260825-2">
+<link rel="stylesheet" href="site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="destinations.css?v=20260823-1">
 <link rel="stylesheet" href="site-stability.css?v=20260825-1">
 </head>
@@ -114,7 +114,7 @@ FOOT = """</main>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>
 {jsonld}
-<script src="site.js?v=20260820-2"></script>
+<script src="site.js?v=20260825-1"></script>
 <script src="destinations.js?v=20260821-4"></script>
 </body>
 </html>

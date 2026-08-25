@@ -135,15 +135,57 @@ if PAGE.is_file():
 else:
     fail("missing sambal-tina.html")
 
+# NO UNCONFIRMED READING IS PUBLISHED.
+#
+# Some entries came off the printed page with glyphs the transcription could
+# not resolve — `ab6h`, `aspil6`, `alagaw6n` — carrying confidence 2 and the
+# status "NEEDS VISUAL SOURCE CHECK". They are held out of the published
+# collection until somebody confirms them against the archive page, because a
+# dictionary is quoted: a damaged reading left in public long enough starts
+# being cited back as the real spelling.
+#
+# This is checked on the DATA FILE rather than on the page, because
+# data/sambal-tina.json is fetched by the browser and vercel.json gives /data/
+# its own Cache-Control header — it is a public URL that anybody can open.
+# Filtering these out in JavaScript would leave them one view-source away,
+# which is not hiding anything.
+UNCERTAIN_AT_OR_BELOW = 2
+uncertain = [entry for entry in entries if entry[CONF] <= UNCERTAIN_AT_OR_BELOW]
+for entry in uncertain[:5]:
+    fail(f"unconfirmed reading {entry[0]!r} is in the published dictionary "
+         f"({entry[NOTES] or 'no note'}); data/sambal-tina.json is a public URL. "
+         f"Run: python3 scripts/withhold-uncertain.py")
+if len(uncertain) > 5:
+    fail(f"…and {len(uncertain) - 5} more unconfirmed readings are published")
+
+# The withheld set is kept, not deleted: it seeds the editors' review queue.
+withheld_file = ROOT / "supabase" / "seed" / "sambal-tina-uncertain.json"
+withheld_count = 0
+if withheld_file.is_file():
+    withheld_count = len(json.loads(withheld_file.read_text(encoding="utf-8"))["entries"])
+    ignore = ROOT / ".vercelignore"
+    ignored = ignore.read_text(encoding="utf-8") if ignore.is_file() else ""
+    if "supabase/" not in ignored:
+        fail("supabase/seed/sambal-tina-uncertain.json holds the withheld readings "
+             "but .vercelignore does not exclude supabase/ — taking them out of "
+             "data/ and then serving them from another path achieves nothing")
+
+# The public page must not offer a filter for entries it no longer carries.
+if PAGE.is_file() and 'data-filter="check"' in PAGE.read_text(encoding="utf-8"):
+    fail('sambal-tina.html still offers the "Review in progress" filter, but no '
+         'entry below confidence 3 is published for it to show')
+
 if errors:
     print("DICTIONARY CHECK FAILED")
     for error in errors:
         print(f"- {error}")
     sys.exit(1)
 
-flagged = sum(1 for entry in entries if entry[CONF] <= 2)
 words = sum(len(group["words"]) for group in phrasebook)
 print("DICTIONARY CHECK PASSED")
-print(f"{len(entries)} core entries retain internal confidence and provenance metadata.")
-print(f"{flagged} internally flagged entries retain the data needed for verification.")
+print(f"{len(entries)} published entries retain their confidence and provenance metadata.")
+print(f"No unconfirmed reading is published: nothing below confidence "
+      f"{UNCERTAIN_AT_OR_BELOW + 1} is in data/sambal-tina.json, which is a public URL.")
+print(f"{withheld_count} withheld reading(s) wait in the editors' review queue, "
+      f"outside the deployment.")
 print(f"{words} phrasebook words across {len(phrasebook)} groups remain publication-safe.")

@@ -316,16 +316,31 @@
     },
     {
       "page": "index.html",
-      "section": "Homepage hero frame",
+      "section": "Homepage hero frame — the whole photograph, in flow",
       "selector": ".hero-media",
-      "note": "full bleed via position:absolute — an inset frame put a hard seam down the photograph",
+      "note": "the frame used to be position:absolute and inset over a viewport-height band, which is what cropped the picture. It is now in normal flow at the photograph's own height. Absolute here again would mean the crop is back.",
       "desktop": {
         "display": "block",
-        "position": "absolute"
+        "position": "relative"
       },
       "phone": {
         "display": "block",
-        "position": "absolute"
+        "position": "relative"
+      }
+    },
+    {
+      "page": "index.html",
+      "section": "Homepage hero photograph — native ratio, nothing cut",
+      "selector": ".hero-media img",
+      "note": "the source is 1672x941. Rendered at its own ratio the width is about 1.777 times the height; anything else means a fixed height or an aspect-ratio has been reintroduced and the frame is being cropped again.",
+      "desktop": {
+        "display": "block",
+        "minWidth": 900,
+        "aspectRatio": 1.777
+      },
+      "phone": {
+        "display": "block",
+        "aspectRatio": 1.777
       }
     }
   ]

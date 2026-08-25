@@ -58,14 +58,14 @@ body:not(.about-page) .site-nav.is-scrolled .primary-nav .connect-link{color:#ff
   box-shadow:0 1px 0 rgba(17,24,39,.04);
 }
 
-/* Hero motion is restrained: the source photograph itself is never altered. */
-.hero-media{overflow:hidden}
-.hero-media img{
-  transform:translate3d(0,var(--hero-shift,0px),0) scale(1.025);
-  transform-origin:center center;
-  will-change:transform;
-}
-html.js .hero-media img{transition:transform 1.25s var(--ease-out),opacity .7s ease;opacity:.92}
+/* The hero photograph is shown whole.
+   There was a second motion layer here on top of the one in homepage.css: the
+   frame clipped, the image was held at scale(1.025) and translated on scroll.
+   Both were only possible because the picture was larger than its frame. It is
+   now sized to its own ratio with nothing hidden, so the scale and the shift
+   are gone and .hero-media has nothing to clip. The fade-in stays — it costs
+   the photograph nothing. */
+html.js .hero-media img{transition:opacity .7s ease;opacity:.92}
 html.js body.is-ready .hero-media img{opacity:1}
 .hero-shade{background:linear-gradient(90deg,rgba(1,9,26,.58) 0%,rgba(1,9,26,.28) 31%,rgba(1,9,26,.035) 59%,rgba(1,9,26,0) 75%),linear-gradient(0deg,rgba(1,9,26,.46) 0%,rgba(1,9,26,0) 35%)}
 
@@ -149,7 +149,6 @@ html.js [data-reveal][data-delay="5"]{transition-delay:275ms}
   .primary-nav a{min-height:48px;display:flex;align-items:center;font-size:13px}
   .primary-nav .connect-link{display:flex;justify-content:center;border-radius:999px}
   @keyframes mobile-nav-in{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-  .hero-media img{transform:translate3d(0,var(--hero-shift,0px),0) scale(1.018)}
   .hero-shade{background:linear-gradient(180deg,rgba(1,9,26,.25) 0%,rgba(1,9,26,.02) 34%,rgba(1,9,26,.06) 51%,rgba(1,9,26,.72) 100%)}
   .about-photo{border-radius:16px}
   .community-statement:hover .brand-rule{width:146px}
@@ -171,5 +170,4 @@ html.js [data-reveal][data-delay="5"]{transition-delay:275ms}
   ::view-transition-old(root),::view-transition-new(root){animation:none}
   html.js body,html.js [data-reveal],html.js .hero-copy>*,html.js .hero-media img,.primary-nav.open{transition:none!important;animation:none!important;transform:none!important}
   html.js [data-reveal],html.js .hero-copy>*{opacity:1!important}
-  .hero-media img{transform:none!important}
 }

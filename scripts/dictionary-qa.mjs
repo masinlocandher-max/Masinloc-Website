@@ -66,12 +66,28 @@ async function run(label, viewport) {
 
   await page.fill('#dictQuery', '');
   await page.waitForTimeout(300);
-  await page.click('.chip[data-filter="check"]');
-  await page.waitForTimeout(400);
-  const flagged = await page.locator('.dict-entry').count();
-  if (flagged === 0) fail(`${label}: review-in-progress filter returned nothing`);
-  const verifiedInFiltered = await page.locator('.dict-entry .badge-strong').count();
-  if (verifiedInFiltered > 0) fail(`${label}: review-in-progress filter leaked ${verifiedInFiltered} verified entries`);
+
+  /* No unconfirmed reading is published, so there is no filter for them and
+     no badge for them. This used to click a "Review in progress" chip and
+     assert it returned entries; those entries are now withheld until somebody
+     confirms them against the archive page, so the assertion is the opposite:
+     nothing on the page offers them, and none of them is reachable. */
+  if (await page.locator('.chip[data-filter="check"]').count() > 0) {
+    fail(`${label}: the page still offers a "Review in progress" filter`);
+  }
+  if (await page.locator('.dict-entry .badge-check').count() > 0) {
+    fail(`${label}: a "Review in progress" badge is rendered, so an unconfirmed reading is published`);
+  }
+  const damaged = await page.evaluate(async () => {
+    /* Read the file the browser actually fetches. Filtering in JavaScript
+       would leave these one view-source away, so the check is on the data. */
+    const response = await fetch('data/sambal-tina.json');
+    const data = await response.json();
+    return data.entries.filter((entry) => entry[6] <= 2).length;
+  });
+  if (damaged > 0) {
+    fail(`${label}: data/sambal-tina.json carries ${damaged} unconfirmed reading(s), and it is a public URL`);
+  }
 
   const chipCount = await page.locator('.chip[data-filter="all"] .chip-count').textContent();
   if (!/[0-9]/.test(chipCount || '')) fail(`${label}: filter chips show no counts`);

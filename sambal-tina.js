@@ -45,10 +45,14 @@
       .replace(/[̀-ͯ]/g, '');
   }
 
+  /* Two badges, because the published collection now holds two kinds of entry.
+     There used to be a third, "Review in progress", for readings whose glyphs
+     the transcription could not resolve. Those are no longer published at all —
+     they wait in the editors' review queue until somebody confirms them against
+     the archive page — so nothing on this page needs that label. */
   function badgeFor(confidence) {
     if (confidence >= 4) return { className: 'badge-strong', label: 'Verified' };
-    if (confidence === 3) return { className: 'badge-ok', label: 'Reviewed' };
-    return { className: 'badge-check', label: 'Review in progress' };
+    return { className: 'badge-ok', label: 'Reviewed' };
   }
 
   function isCommunityConfirmed(entry) {
@@ -58,7 +62,6 @@
 
   function passesFilter(entry) {
     if (filter === 'supported' && entry[CONF] < 4) return false;
-    if (filter === 'check' && entry[CONF] > 2) return false;
     if (letter && fold(entry[TINA]).charAt(0) !== letter) return false;
     return true;
   }
@@ -231,7 +234,7 @@
 
   function refreshCounts() {
     const term = fold(query.value).trim();
-    const counts = { all: 0, supported: 0, check: 0 };
+    const counts = { all: 0, supported: 0 };
 
     for (let i = 0; i < entries.length; i += 1) {
       const entry = entries[i];
@@ -239,7 +242,6 @@
       if (term && haystack[i].indexOf(term) < 0) continue;
       counts.all += 1;
       if (entry[CONF] >= 4) counts.supported += 1;
-      else if (entry[CONF] <= 2) counts.check += 1;
     }
 
     chips.forEach((chip) => {
@@ -287,7 +289,7 @@
     const initial = params.get('letter');
 
     if (term) query.value = term;
-    if (wanted && ['all', 'supported', 'check'].includes(wanted)) filter = wanted;
+    if (wanted && ['all', 'supported'].includes(wanted)) filter = wanted;
     if (initial) letter = fold(initial).charAt(0);
 
     chips.forEach((chip) => {

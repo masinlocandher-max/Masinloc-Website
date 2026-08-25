@@ -87,22 +87,11 @@
     uniqueTargets.forEach((element) => observer.observe(element));
   }
 
-  /* Very light hero parallax; the image file itself is untouched. */
-  const heroMedia = document.querySelector('.hero-media');
-  if (heroMedia && !reduceMotion.matches) {
-    let heroFrame = 0;
-    const syncHero = () => {
-      heroFrame = 0;
-      const shift = Math.min(Math.max(window.scrollY * 0.035, 0), 24);
-      heroMedia.style.setProperty('--hero-shift', `${shift}px`);
-    };
-    const requestHeroSync = () => {
-      if (heroFrame) return;
-      heroFrame = window.requestAnimationFrame(syncHero);
-    };
-    syncHero();
-    window.addEventListener('scroll', requestHeroSync, { passive: true });
-  }
+  /* The hero parallax is gone with the crop it depended on.
+     It nudged the photograph on scroll while the frame held it slightly
+     oversized, so the movement was absorbed by the overflow. The homepage now
+     shows the whole photograph at its own height with nothing clipped, and the
+     same nudge would drag the picture off its own edge. */
 
   /* Fast same-origin fade for browsers without useful cross-document transitions. */
   document.addEventListener('click', (event) => {

@@ -265,8 +265,8 @@ def page() -> str:
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
-<link rel="stylesheet" href="site.css?v=20260825-1">
-<link rel="stylesheet" href="site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="site.css?v=20260825-2">
+<link rel="stylesheet" href="site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="site-stability.css?v=20260825-1">
 <link rel="stylesheet" href="leadership.css?v=20260825-1">
 </head>
@@ -337,7 +337,7 @@ def page() -> str:
   <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">A Closer Look</a><a href="leadership.html">Municipal Leadership</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>
-{jsonld}<script src="site.js?v=20260820-2"></script>
+{jsonld}<script src="site.js?v=20260825-1"></script>
 <script src="leadership.js?v=20260822-1"></script>
 </body>
 </html>

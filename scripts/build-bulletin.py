@@ -134,8 +134,8 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 {extra}<link rel="icon" href="{up}assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{up}assets/apple-touch-icon.png">
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
-<link rel="stylesheet" href="{up}site.css?v=20260825-1">
-<link rel="stylesheet" href="{up}site-polish.css?v=20260825-1">
+<link rel="stylesheet" href="{up}site.css?v=20260825-2">
+<link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 <link rel="stylesheet" href="{up}bulletin.css?v=20260822-2">
 </head>
@@ -166,7 +166,7 @@ def shell_foot(depth: int, jsonld: str = "", scripts: str = "") -> str:
   <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">A Closer Look</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}sources.html">Sources &amp; References</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>
-{jsonld}<script src="{up}site.js?v=20260820-2"></script>
+{jsonld}<script src="{up}site.js?v=20260825-1"></script>
 {scripts}</body>
 </html>
 """
