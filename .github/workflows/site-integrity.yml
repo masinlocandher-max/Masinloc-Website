@@ -76,6 +76,7 @@ jobs:
           node --check scripts/contrast-qa.mjs
           node --check scripts/layout-contracts.mjs
           node --check scripts/marketplace-qa.mjs
+          node --check scripts/wordscapes-qa.mjs
           node --check marketplace.js
       - name: Validate locations mapping and photography
         run: python3 scripts/check-locations.py

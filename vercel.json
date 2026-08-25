@@ -6,6 +6,10 @@
       "claude/*": false
     }
   },
+  "rewrites": [
+    { "source": "/wordscapes", "destination": "/wordscapes/index.html" },
+    { "source": "/wordscapes/", "destination": "/wordscapes/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -21,6 +25,17 @@
       "source": "/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/wordscapes",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    },
+    {
+      "source": "/wordscapes/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
     },
     {

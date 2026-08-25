@@ -152,7 +152,16 @@ def uncommitted_pages() -> list[str]:
                              timeout=20, check=False)
     except (OSError, subprocess.SubprocessError):
         return []
-    return [line[3:].strip() for line in out.stdout.splitlines() if line[3:].strip()]
+    publishable = {
+        path.relative_to(ROOT).as_posix()
+        for path in pages()
+        if not NOINDEX.search(path.read_text(encoding="utf-8"))
+    }
+    return [
+        rel
+        for line in out.stdout.splitlines()
+        if (rel := line[3:].strip()) and rel in publishable
+    ]
 
 
 def cosmetic_only(commit: str, rel: str) -> bool:
