@@ -19,16 +19,17 @@ const pages = [
   ['not-found', '/404.html'],
 ];
 
-/* Seven items. Verified History came out of the bar for the same reason Sambal
-   Tina was never in it: eight was crowded, and it is a section of A Closer Look
-   rather than a peer of it. It stays in every footer and A Closer Look carries
-   three links to it, so nothing became harder to reach. */
+/* Six items. Verified History came out of the bar for the same reason Sambal
+   Tina was never in it: the bar was crowded. The Bulletin followed it out once
+   Discover became the home of every article on the site — the Bulletin is one
+   collection inside that library rather than a peer of it, and the library is
+   what belongs in the bar. All three stay in every footer, and Discover links
+   to each of them, so nothing became harder to reach. */
 const expectedNavText = [
   'Home',
   'Discover',
   'Marketplace',
   'A Closer Look',
-  'Masinloc Bulletin',
   'Masinloc Connect',
   'Contact',
 ];
@@ -39,9 +40,10 @@ const expectedCurrentHref = {
   /* A sub-page of A Closer Look: the parent keeps the current-page state. */
   'sambal-tina': 'a-closer-look.html',
   leadership: 'a-closer-look.html',
-  'verified-history': 'a-closer-look.html',
-  founder: 'a-closer-look.html',
-  bulletin: 'masinloc-bulletin.html',
+  /* Articles live under Discover, so Discover holds the current-page state. */
+  'verified-history': 'discover/index.html',
+  founder: 'discover/index.html',
+  bulletin: 'discover/index.html',
   connect: 'connect.html',
 };
 

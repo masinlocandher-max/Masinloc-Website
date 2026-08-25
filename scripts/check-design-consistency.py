@@ -24,13 +24,13 @@ SUBPAGES = {
     "sambal-tina.html": "a-closer-look.html",
     "destinations.html": "a-closer-look.html",
     "leadership.html": "a-closer-look.html",
-    # Verified History came out of the top bar for the same reason Sambal Tina
-    # was never in it: eight items crowded the row, and this one is a section
-    # of A Closer Look rather than a peer of it. A Closer Look already carries
-    # three links to it, including a card, and it stays in every footer — the
-    # bar was trimmed, the page was not hidden.
-    "verified-history.html": "a-closer-look.html",
-    "founder-of-masinloc.html": "a-closer-look.html",
+    # Discover is the home of every article on this site. Verified History,
+    # the founder profile and the MABAYANI Bulletin are all reached from it,
+    # so the current-page state belongs to Discover rather than to each of
+    # them holding its own place in a bar that would then need ten items.
+    "verified-history.html": "discover/index.html",
+    "founder-of-masinloc.html": "discover/index.html",
+    "masinloc-bulletin.html": "discover/index.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.
@@ -40,7 +40,6 @@ EXPECTED_NAV = [
     ("discover/index.html", "Discover"),
     ("marketplace.html", "Marketplace"),
     ("a-closer-look.html", "A Closer Look"),
-    ("masinloc-bulletin.html", "Masinloc Bulletin"),
     ("connect.html", "Masinloc Connect"),
     ("contact.html", "Contact"),
 ]
@@ -220,6 +219,30 @@ for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
         fail(f"{rel}: {TOKENS_CSS} must be the first stylesheet")
     if f'rel="icon"' not in text:
         fail(f"{rel}: wears the shared shell but declares no favicon")
+
+# The navigation check above reads a curated list of nine pages, and the site is
+# far larger than that: the Discover articles, the Bulletin articles and the
+# Marketplace vendor pages are all generated into subdirectories that the list
+# never named. When the bar dropped to six items, two generators kept emitting
+# the old seven and nothing failed — every page they produce wears the shell and
+# carries a nav, and none of them was being read. So the bar is verified
+# wherever it appears, discovered from the filesystem the same way the
+# stylesheet check above already is. A page either carries the shared bar or it
+# does not, and the page itself says which.
+EXPECTED_NAV_LABELS = [label for _, label in EXPECTED_NAV]
+for path in (sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
+             + sorted(ROOT.glob("discover/*.html"))
+             + sorted(ROOT.glob("marketplace/*.html"))):
+    text = path.read_text(encoding="utf-8")
+    if SHELL_MARKER not in text:
+        continue
+    rel = path.relative_to(ROOT).as_posix()
+    parser = ShellParser()
+    parser.feed(text)
+    labels = [item["text"] for item in parser.nav_items]
+    if labels != EXPECTED_NAV_LABELS:
+        fail(f"{rel}: primary navigation differs from the shared Masinloc "
+             f"order/labels: {labels}")
 
 # Nothing on these two surfaces is set in capitals.
 #

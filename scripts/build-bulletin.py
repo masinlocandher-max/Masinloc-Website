@@ -146,10 +146,9 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
     <a href="{up}index.html">Home</a>
-    <a href="{up}discover/index.html">Discover</a>
+    <a class="active" href="{up}discover/index.html" aria-current="page">Discover</a>
     <a href="{up}marketplace.html">Marketplace</a>
     <a href="{up}a-closer-look.html">A Closer Look</a>
-    <a class="active" href="{up}masinloc-bulletin.html" aria-current="page">Masinloc Bulletin</a>
     <a class="connect-link" href="{up}connect.html">Masinloc Connect</a>
     <a href="{up}contact.html">Contact</a>
   </nav>

@@ -94,14 +94,24 @@ REQUIRED = [
 ]
 # Reachability, expressed as the navigation actually is.
 #
-# This used to require verified-history.html on every public page, which was
-# true while it sat in the top bar. It is a section of A Closer Look now — the
-# bar was down to eight items and crowded, and this one is not a peer of the
-# others — so the page every visitor must be able to reach from anywhere is its
-# parent. VERIFIED_HISTORY_PARENT below keeps the child itself from being
-# orphaned by the same change.
-MENU_LINKS = ["a-closer-look.html", "masinloc-bulletin.html"]
-VERIFIED_HISTORY_PARENT = "a-closer-look.html"
+# The articles on this site used to live in three places a visitor had to know
+# about separately: Discover, the MABAYANI Bulletin, and Verified History. They
+# are one library now, and Discover is its home — so the page every visitor
+# must be able to reach from anywhere is Discover, and Discover is what has to
+# carry the links onward.
+#
+# ARTICLE_HOME_CARRIES below is the other half. Requiring a link on every page
+# is how you keep a section reachable; requiring the home to link to its
+# children is how you keep the children from being orphaned when the bar is
+# trimmed. Both are needed: without the second, removing an item from the
+# navigation would silently strand everything under it.
+MENU_LINKS = ["a-closer-look.html", "discover/index.html"]
+ARTICLE_HOME = "discover/index.html"
+ARTICLE_HOME_CARRIES = [
+    "masinloc-bulletin.html",
+    "verified-history.html",
+    "founder-of-masinloc.html",
+]
 FORBIDDEN_FILES = [
     "hero-loader.js",
     "hero-single.css",
@@ -269,13 +279,7 @@ for html in ROOT.glob("*.html"):
         for menu_link in MENU_LINKS:
             if menu_link not in parser.refs:
                 fail(f"{html.name}: missing required public menu link to {menu_link}")
-        # The parent carries the child. Trimming the top bar moved Verified
-        # History under A Closer Look; if that link ever goes, the page is
-        # reachable from nothing but the footer and this should say so.
-        if html.name == VERIFIED_HISTORY_PARENT and "verified-history.html" not in parser.refs:
-            fail(f"{html.name}: no longer links to verified-history.html, which was "
-                 f"moved under it when the top navigation was trimmed — the page "
-                 f"would be orphaned from the primary navigation entirely")
+        # (the article home is checked once, below, rather than per page)
         if "admin.html" in {urlsplit(ref).path for ref in parser.refs}:
             fail(f"{html.name}: public navigation must not expose admin.html")
         for marker in PLACEHOLDER_MARKERS:
@@ -488,6 +492,24 @@ if vercel.is_file():
             fail("vercel.json must keep agent/* preview deployments disabled during staged development")
     except json.JSONDecodeError as exc:
         fail(f"vercel.json is invalid JSON: {exc}")
+
+# The home carries its children.
+#
+# Discover is now the only article destination in the navigation, so every
+# other collection is reached through it. If one of these links goes, that
+# collection is reachable from nothing but a footer — which is exactly the kind
+# of quiet orphaning that trimming a navigation causes, and exactly what
+# nothing else here would catch.
+_home = ROOT / ARTICLE_HOME
+if not _home.is_file():
+    fail(f"the article home {ARTICLE_HOME} does not exist")
+else:
+    _home_text = _home.read_text(encoding="utf-8")
+    for child in ARTICLE_HOME_CARRIES:
+        if child not in _home_text:
+            fail(f"{ARTICLE_HOME}: does not link to {child}. Discover is the home of "
+                 f"every article on this site, so a collection it does not link to is "
+                 f"reachable from nothing but the footer.")
 
 if errors:
     print("SITE INTEGRITY CHECK FAILED")

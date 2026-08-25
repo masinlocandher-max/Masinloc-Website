@@ -58,6 +58,21 @@ ARTICLES = DATA["articles"]
 BY_SLUG = {a["slug"]: a for a in ARTICLES}
 FACTS = DATA["currentFacts"]
 
+# The other two collections. Discover is the home of every article on this
+# site, so the hub has to be able to list them — but it lists them, it does not
+# absorb them.
+#
+# MABAYANI is a SEQUENCE, not a set. Every article carries `order` and `next`,
+# and the tenth one is a reveal that only lands if you arrived through the nine
+# before it. Flattening that into a filterable grid would not be tidying, it
+# would be deleting the argument. So it keeps its own renderer, its own URLs
+# and its own reading order, and appears here as what it is.
+#
+# Verified History is the settled record: the conclusions the sequence argues
+# for. It keeps its own page for the same reason.
+BULLETIN = json.loads((ROOT / "data" / "bulletin.json").read_text(encoding="utf-8"))
+HISTORY = json.loads((ROOT / "data" / "history.json").read_text(encoding="utf-8"))
+
 # Where each hero family lives, and the widths built for it.
 FAMILY = {
     "discover": ("assets/discover", [640, 960, 1280, 1672]),
@@ -143,7 +158,6 @@ def nav(active: str) -> str:
     {item("index.html", "Discover")}
     {item("../marketplace.html", "Marketplace")}
     {item("../a-closer-look.html", "A Closer Look")}
-    {item("../masinloc-bulletin.html", "Masinloc Bulletin")}
     {item("../connect.html", "Masinloc Connect", "connect-link")}
     {item("../contact.html", "Contact")}
   </nav>
@@ -185,7 +199,7 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="../discover.css?v=20260825-1">
+<link rel="stylesheet" href="../discover.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
@@ -459,6 +473,95 @@ def theme_section(theme: dict, members: list[dict]) -> str:
             f'  </section>')
 
 
+def sequence_section() -> str:
+    """MABAYANI, listed in the order it was written to be read."""
+    published = [a for a in BULLETIN["articles"] if a.get("status") == "published"]
+    parts = sorted(published, key=lambda a: a["order"])
+    entry = BULLETIN.get("entryStory")
+    pub = BULLETIN.get("publication", {})
+
+    items = []
+    for n, article in enumerate(parts, 1):
+        first = ' d-seq-entry' if article["slug"] == entry else ""
+        mins = article.get("readingMinutes")
+        meta = f'<span class="d-seq-mins">{mins} min</span>' if mins else ""
+        items.append(
+            f'<li class="d-seq-item{first}">'
+            f'<a href="../bulletin/{article["slug"]}.html">'
+            f'<span class="d-seq-n">{n}</span>'
+            f'<span class="d-seq-body">'
+            f'<span class="d-seq-title">{esc(article["title"])}</span>'
+            f'<span class="d-seq-stand">{esc(article.get("standfirst", ""))}</span>'
+            f'</span>{meta}</a></li>')
+
+    return (
+        f'  <section class="d-seq" aria-labelledby="seq-title">\n'
+        f'    <div class="d-theme-head">\n'
+        f'      <h2 id="seq-title">{esc(pub.get("name", "MABAYANI"))}</h2>\n'
+        f'      <p>{esc(pub.get("kicker", ""))}</p>\n'
+        f'    </div>\n'
+        f'    <p class="d-seq-lead">{esc(pub.get("blurb", ""))}</p>\n'
+        f'    <p class="d-seq-note">Ten parts, written to be read in order. '
+        f'Each one hands you the question the next one answers.</p>\n'
+        f'    <ol class="d-seq-list">{"".join(items)}</ol>\n'
+        f'    <p class="d-seq-more"><a href="../masinloc-bulletin.html">'
+        f'Open the Bulletin, with its sources and open questions</a></p>\n'
+        f'  </section>')
+
+
+def deck(text: str, limit: int = 260) -> str:
+    """A card deck ends on a sentence, not in the middle of a clause.
+
+    Cutting at a fixed character count left the Verified History card reading
+    "...founded the mission town, a" — a sentence abandoned partway through a
+    list. The unit here is one whole sentence, however long it runs. Only a
+    sentence longer than the limit falls back to a word boundary, and that one
+    says so with an ellipsis instead of just stopping.
+    """
+    text = " ".join(str(text).split())
+    match = re.search(r"(?<=[.!?])\s", text)
+    first = text[:match.start()] if match else text
+    if len(first) <= limit:
+        return first
+    return f"{first[:limit].rsplit(' ', 1)[0]}…"
+
+
+def record_section() -> str:
+    """The settled record: what the research concluded."""
+    founding = HISTORY.get("founding", {})
+    founder = HISTORY.get("founder", {})
+    timeline = HISTORY.get("timeline", []) or []
+    cards = [
+        ('../verified-history.html', 'Verified History',
+         founding.get("summary") or founding.get("statement")
+         or "The dates, names and events the evidence actually supports.",
+         f'{len(timeline)} dated entries' if timeline else ""),
+        ('../founder-of-masinloc.html',
+         founder.get("name", "The founder of Masinloc"),
+         founder.get("summary") or founder.get("role")
+         or "The friar named in the founding record.",
+         founder.get("years", "")),
+    ]
+    pieces = []
+    for href, title, blurb, meta in cards:
+        tail = f'<span class="d-rec-meta">{esc(meta)}</span>' if meta else ""
+        pieces.append(
+            f'<li class="d-card d-card-text"><a href="{href}">'
+            f'<span class="d-card-body">'
+            f'<span class="d-card-title">{esc(title)}</span>'
+            f'<span class="d-card-deck">{esc(deck(blurb))}</span>'
+            f'{tail}</span></a></li>')
+    items = "".join(pieces)
+    return (
+        '  <section class="d-theme" aria-labelledby="record-title">\n'
+        '    <div class="d-theme-head">\n'
+        '      <h2 id="record-title">The verified record</h2>\n'
+        '      <p>What the research settled, kept apart from the stories.</p>\n'
+        '    </div>\n'
+        f'    <ul class="d-grid">{items}</ul>\n'
+        '  </section>')
+
+
 def hub_page() -> str:
     url = f"{SITE}/discover/"
     lead = BY_SLUG[SECTION["lead"]]
@@ -525,6 +628,10 @@ def hub_page() -> str:
   </section>
 
 {chr(10).join(sections)}
+
+{sequence_section()}
+
+{record_section()}
 </main>
 {FOOTER}
 <script src="../site.js?v=20260825-1"></script>

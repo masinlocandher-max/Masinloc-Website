@@ -166,7 +166,6 @@ def nav(depth: int) -> str:
     {item(f"{up}discover/index.html", "Discover")}
     {item(f"{up}marketplace.html", "Marketplace")}
     {item(f"{up}a-closer-look.html", "A Closer Look")}
-    {item(f"{up}masinloc-bulletin.html", "Masinloc Bulletin")}
     {item(f"{up}connect.html", "Masinloc Connect", "connect-link")}
     {item(f"{up}contact.html", "Contact")}
   </nav>
