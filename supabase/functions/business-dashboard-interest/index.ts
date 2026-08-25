@@ -90,7 +90,7 @@ async function logSecurityEvent(req: Request, eventType: string, severity: "low"
 
 Deno.serve(async (req: Request) => {
   const h = headers(req);
-  if (req.method === "OPTIONS") return new Response("", { status: 204, headers: h });
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: h });
   if (req.method !== "POST") {
     await logSecurityEvent(req, "unsupported_method", "medium", { method: req.method });
     return new Response(JSON.stringify({ ok: false }), { status: 405, headers: h });

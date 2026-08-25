@@ -65,6 +65,20 @@ function_source = "\n".join(
     path.read_text(encoding="utf-8") for path in sorted(FUNCTIONS.rglob("*.ts"))
 )
 
+# A 204 response is required to have no body. Deno's Response constructor
+# rejects even an empty string for a no-content status, which turns an otherwise
+# correct CORS preflight into a production 500 before any headers are returned.
+for function_path in sorted(FUNCTIONS.rglob("*.ts")):
+    source = function_path.read_text(encoding="utf-8")
+    for response in re.finditer(
+        r"new\s+Response\(\s*([^,]+),\s*\{\s*status\s*:\s*204\b", source
+    ):
+        if response.group(1).strip() != "null":
+            fail(
+                f"{function_path.relative_to(ROOT)} gives a 204 response a body; "
+                "use new Response(null, ...) so the Edge runtime can serve the preflight"
+            )
+
 # configs = { name:{table:"...", ... }, ... }
 implemented: dict[str, str] = dict(
     re.findall(r"""(\w+)\s*:\s*\{\s*table\s*:\s*["'](\w+)["']""", function_source)
