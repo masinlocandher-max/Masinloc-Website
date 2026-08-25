@@ -28,7 +28,7 @@ jobs:
         # Two commits is all the diff needs, and it keeps the checkout cheap.
         # A force-push or a first commit can leave `before` unusable; the step
         # below falls back to the previous commit rather than guessing.
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 2
 
