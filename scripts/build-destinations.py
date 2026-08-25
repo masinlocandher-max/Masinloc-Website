@@ -33,19 +33,19 @@ HEAD = """<!doctype html>
 <meta name="theme-color" content="#03112F">
 <title>Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage</title>
 <meta name="description" content="Eight places in Masinloc, Zambales: Hamat River, San Salvador Island, Coto Kidz Pool, San Andres Church, Bunga Cave, Bacala Sandbar, Sitio Buri and the Baywalk.">
-<link rel="canonical" href="https://masinloc-zambales.com/destinations.html">
+<link rel="canonical" href="https://www.masinloc-zambales.com/destinations.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Masinloc, Zambales">
 <meta property="og:locale" content="en_PH">
 <meta property="og:title" content="Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage">
 <meta property="og:description" content="Eight documented places in Masinloc, Zambales: the river, the island, the cave, the church, the sandbar and the baywalk.">
-<meta property="og:url" content="https://masinloc-zambales.com/destinations.html">
-<meta property="og:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
+<meta property="og:url" content="https://www.masinloc-zambales.com/destinations.html">
+<meta property="og:image" content="https://www.masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
 <meta property="og:image:alt" content="Masinloc, Zambales from the air">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Places in Masinloc, Zambales | Rivers, Coast &amp; Heritage">
 <meta name="twitter:description" content="Eight documented places in Masinloc, Zambales: the river, the island, the cave, the church, the sandbar and the baywalk.">
-<meta name="twitter:image" content="https://masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
+<meta name="twitter:image" content="https://www.masinloc-zambales.com/assets/stage1/masinloc-hero.avif">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
@@ -176,6 +176,7 @@ def section(location: dict, position: int, total: int) -> str:
         <source type="image/avif" srcset="{srcset(slug, 'avif')}" sizes="{SIZES}">
         <source type="image/webp" srcset="{srcset(slug, 'webp')}" sizes="{SIZES}">
         <img src="assets/locations/{slug}-{largest(slug, 'jpg')}.jpg" srcset="{srcset(slug, 'jpg')}" sizes="{SIZES}"
+             width="{location['native']['width']}" height="{location['native']['height']}"
              alt="{esc['alt']}" {loading}>
       </picture>
       <span class="place-scrim" aria-hidden="true"></span>
@@ -207,7 +208,7 @@ def section(location: dict, position: int, total: int) -> str:
 
 def structured_data(locations: list[dict]) -> str:
     """BreadcrumbList plus a Place for each documented location."""
-    site = "https://masinloc-zambales.com"
+    site = "https://www.masinloc-zambales.com"
     places = []
     for loc in locations:
         slug = loc["slug"]

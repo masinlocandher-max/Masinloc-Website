@@ -2,11 +2,8 @@
 
    WHY THIS IS A SCRIPT AND NOT A CI JOB
 
-   It has to run from somewhere that can actually reach masinloc-zambales.com
-   and the Supabase function. The agent sandbox this was written in cannot: its
-   egress proxy answers 403 to CONNECT for both hosts, so every request from
-   there fails at the tunnel before a single byte of the site is fetched. Run
-   this from a laptop, or anywhere with ordinary outbound HTTPS.
+   It has to run from somewhere that can reach the public domains and Supabase
+   function. It verifies responses, not merely repository or deployment state.
 
    WHAT IT CHECKS
 
@@ -37,7 +34,7 @@
    -----
      npm install --no-save playwright
      node scripts/verify-production.mjs
-     node scripts/verify-production.mjs --base https://masinloc-zambales.com
+     node scripts/verify-production.mjs --base https://www.masinloc-zambales.com
      node scripts/verify-production.mjs --submit
 */
 import { chromium } from 'playwright';
@@ -49,17 +46,31 @@ const value = (name, fallback) => {
   return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
 };
 
-const BASE = value('base', 'https://masinloc-zambales.com').replace(/\/$/, '');
+const BASE = value('base', 'https://www.masinloc-zambales.com').replace(/\/$/, '');
+const CANONICAL_ORIGIN = 'https://www.masinloc-zambales.com';
+const CANONICAL_HOST = 'www.masinloc-zambales.com';
 const FUNCTION = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-masinloc';
 
 const PAGES = [
   '/', '/a-closer-look.html', '/connect.html', '/contact.html', '/destinations.html',
   '/leadership.html', '/masinloc-bulletin.html', '/sambal-tina.html', '/sources.html',
-  '/trust.html', '/verified-history.html', '/privacy.html',
+  '/trust.html', '/verified-history.html', '/privacy.html', '/marketplace.html',
+  '/marketplace/diwan-coffee.html',
   '/discover/index.html', '/discover/masinloc-actually.html',
+  '/discover/the-church-masinloquenos-walk-past.html',
+  '/discover/the-sambal-words-we-refuse-to-lose.html',
   '/discover/every-november-masinloc-stages-a-battle.html',
   '/bulletin/why-mabayani-exists.html',
+  '/bulletin/san-andres-church-across-the-centuries.html',
 ];
+
+const expectedCanonical = (path) => {
+  if (path === '/') return `${CANONICAL_ORIGIN}/`;
+  if (path.endsWith('/index.html')) {
+    return `${CANONICAL_ORIGIN}${path.slice(0, -'index.html'.length)}`;
+  }
+  return `${CANONICAL_ORIGIN}${path}`;
+};
 
 const failures = [];
 const notes = [];
@@ -73,43 +84,73 @@ const section = (t) => console.log(`\n=== ${t} ===`);
 
 section('Transport and redirects');
 
-/* The canonical host is the apex. Every canonical tag, the sitemap and
-   robots.txt all say masinloc-zambales.com with no www, so a www request that
-   served a 200 instead of redirecting would put the whole site at two
+/* The canonical host is www. Every canonical tag, the sitemap and robots.txt
+   agree on it, so an apex request that served a 200 instead of redirecting
+   would put the whole site at two
    addresses — which is the duplicate-content problem canonical tags exist to
    avoid, arriving through the front door.
 
-   Both the final host AND the redirect's own status code are checked. A 302
-   works for a visitor but tells a crawler the move is temporary, so the www
-   host keeps being crawled and keeps competing. */
-const canonicalHost = new URL(BASE).host;
-for (const from of [
-  BASE.replace('https://', 'http://'),
-  `https://www.${canonicalHost}`,
-  `http://www.${canonicalHost}`,
+   Every hop is inspected. Vercel's CDN performs an automatic HTTP-to-HTTPS
+   308 on the requested hostname before a project-domain redirect is applied,
+   so HTTP apex necessarily takes two permanent hops; HTTPS apex and HTTP www
+   must reach the canonical origin in one. The probe carries a query string so
+   no hop can silently discard either path or parameters. */
+const probe = '/discover/masinloc-actually.html?verify=canonical-host';
+const expectedTarget = `${CANONICAL_ORIGIN}${probe}`;
+for (const [from, allowedHops] of [
+  [`http://masinloc-zambales.com${probe}`, 2],
+  [`https://masinloc-zambales.com${probe}`, 1],
+  [`http://${CANONICAL_HOST}${probe}`, 1],
 ]) {
   try {
-    const hop = await fetch(from, { redirect: 'manual' });
-    const location = hop.headers.get('location');
-    const followed = await fetch(from, { redirect: 'follow' });
-
-    if (!followed.ok) {
-      fail(`${from} -> HTTP ${followed.status}`);
+    let current = from;
+    let hops = 0;
+    let broken = '';
+    while (hops <= allowedHops) {
+      const response = await fetch(current, { redirect: 'manual' });
+      if (response.status >= 200 && response.status < 300) break;
+      const location = response.headers.get('location');
+      if (![301, 308].includes(response.status)) {
+        broken = `${current} returned non-permanent HTTP ${response.status}`;
+        break;
+      }
+      if (!location) {
+        broken = `${current} returned ${response.status} with no Location`;
+        break;
+      }
+      const next = new URL(location, current);
+      const expected = new URL(probe, CANONICAL_ORIGIN);
+      if (next.pathname !== expected.pathname || next.search !== expected.search) {
+        broken = `${current} lost path or query in Location ${next.href}`;
+        break;
+      }
+      current = next.href;
+      hops += 1;
+    }
+    if (broken) {
+      fail(`${from}: ${broken}`);
       continue;
     }
-    const landedHost = new URL(followed.url).host;
-    if (landedHost !== canonicalHost) {
-      fail(`${from} landed on ${landedHost}, expected the canonical ${canonicalHost}`);
-    } else if (!followed.url.startsWith('https://')) {
-      fail(`${from} did not end on https (${followed.url})`);
-    } else if (hop.status >= 300 && hop.status < 400 && ![301, 308].includes(hop.status)) {
-      fail(`${from} redirects with ${hop.status}; a permanent 301 or 308 is what tells `
-        + `a crawler to stop indexing the other host (Location: ${location})`);
-    } else {
-      ok(`${from} -> ${followed.url} (${hop.status === 200 ? 'direct' : hop.status + ' permanent'})`);
+    if (current !== expectedTarget || hops > allowedHops) {
+      fail(`${from} reached ${current} in ${hops} hop(s); expected ${expectedTarget} `
+        + `within ${allowedHops}`);
+      continue;
+    }
+    ok(`${from} -> ${current} (${hops} permanent hop${hops === 1 ? '' : 's'}, path and query preserved)`);
+    if (hops > 1) {
+      note('Vercel applies its automatic HTTP-to-HTTPS 308 before the apex-to-www '
+        + 'domain redirect; HTTPS apex itself remains a one-hop redirect');
     }
   } catch (e) { fail(`${from}: ${e.message}`); }
 }
+
+try {
+  const direct = await fetch(expectedTarget, { redirect: 'manual' });
+  direct.ok && direct.status < 300
+    ? ok(`${expectedTarget} is served directly (${direct.status})`)
+    : fail(`${expectedTarget} should be direct, got HTTP ${direct.status} and `
+      + `Location ${direct.headers.get('location')}`);
+} catch (e) { fail(`${expectedTarget}: ${e.message}`); }
 
 /* --- 2. crawler surface --------------------------------------------------- */
 
@@ -120,7 +161,7 @@ try {
   for (const [needle, label] of [
     ['User-agent: OAI-SearchBot', 'OAI-SearchBot has its own group'],
     ['User-agent: GPTBot', 'GPTBot has its own group'],
-    ['Sitemap: https://masinloc-zambales.com/sitemap.xml', 'sitemap is declared'],
+    ['Sitemap: https://www.masinloc-zambales.com/sitemap.xml', 'sitemap is declared'],
     ['Disallow: /admin.html', 'admin is disallowed'],
   ]) robots.includes(needle) ? ok(label) : fail(`robots.txt: missing "${needle}"`);
 
@@ -134,6 +175,18 @@ try {
   const xml = await (await fetch(`${BASE}/sitemap.xml`)).text();
   sitemapUrls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   sitemapUrls.length ? ok(`sitemap parses, ${sitemapUrls.length} URLs`) : fail('sitemap has no URLs');
+  const wrongHosts = sitemapUrls.filter((url) => {
+    try {
+      const parsed = new URL(url);
+      return parsed.protocol !== 'https:' || parsed.host !== CANONICAL_HOST;
+    } catch { return true; }
+  });
+  wrongHosts.length
+    ? fail(`sitemap has ${wrongHosts.length} URL(s) off the canonical HTTPS host: ${wrongHosts[0]}`)
+    : ok('every sitemap URL uses the canonical www HTTPS host');
+  new Set(sitemapUrls).size === sitemapUrls.length
+    ? ok('every sitemap URL appears once')
+    : fail('sitemap contains duplicate URLs');
   const dates = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
   const unique = new Set(dates);
   if (dates.length && unique.size === 1) {
@@ -289,11 +342,14 @@ for (const [label, width, height] of [['desktop', 1280, 900], ['phone', 390, 844
       }));
 
       const problems = [];
+      if (new URL(response.url()).host !== CANONICAL_HOST) {
+        problems.push(`served from ${new URL(response.url()).host}, expected ${CANONICAL_HOST}`);
+      }
       if (meta.h1 !== 1 && path !== '/privacy.html') problems.push(`${meta.h1} H1`);
       if (!meta.title) problems.push('no title');
       if (!meta.canonical) problems.push('no canonical');
-      else if (!meta.canonical.startsWith('https://masinloc-zambales.com')) {
-        problems.push(`canonical off-site: ${meta.canonical}`);
+      else if (meta.canonical !== expectedCanonical(path)) {
+        problems.push(`canonical ${meta.canonical}, expected ${expectedCanonical(path)}`);
       }
       if (meta.overflow > 1) problems.push(`horizontal overflow ${meta.overflow}px`);
       if (meta.images) problems.push(`${meta.images} image(s) failed to decode`);

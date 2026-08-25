@@ -71,6 +71,10 @@ for (const [label, viewport] of VIEWPORTS) {
         document.querySelectorAll(selector).forEach((el) => {
           // Leaf nodes only: a wrapper's rects cover its children's too.
           if (!el.textContent.trim() || el.children.length) return;
+          /* aria-hidden content is not painted for a reader. This includes the
+             off-screen Website honeypot on Connect: it is deliberately kept
+             in the DOM for bots and hidden as one inherited subtree. */
+          if (el.closest('[aria-hidden="true"]')) return;
           const style = getComputedStyle(el);
           if (style.visibility === 'hidden' || style.display === 'none') return;
           if (Number(style.opacity) === 0) return;

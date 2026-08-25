@@ -137,8 +137,8 @@ html{scroll-padding-top:96px}
        — clear of the 3:1 the type's size requires, but the thinnest margin in
        the hero, and on the one line everybody reads. Two stops carry a little
        further right; the frame keeps its fall of light. */
-    linear-gradient(100deg,var(--navy-deep) 0%,rgba(3,17,47,.94) 18%,rgba(3,17,47,.80) 38%,
-      rgba(3,17,47,.54) 58%,rgba(3,17,47,.16) 78%,transparent 94%),
+    linear-gradient(100deg,var(--navy-deep) 0%,rgba(3,17,47,.96) 18%,rgba(3,17,47,.90) 38%,
+      rgba(3,17,47,.84) 58%,rgba(3,17,47,.58) 78%,rgba(3,17,47,.10) 94%),
     linear-gradient(to top,rgba(3,17,47,.78),transparent 42%),
     /* A band under the navigation. Over the hero the links are white on the
        photograph, and the 100deg scrim above has faded to nothing by the time

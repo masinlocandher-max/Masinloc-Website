@@ -30,13 +30,14 @@ How it decides
   uncommitted file falls back to its modification time, which is the honest
   answer for something that is not in the history yet.
 
-  "Content" excludes one thing deliberately: a commit whose only change to the
+  "Content" excludes site furniture deliberately: a commit whose only change to the
   page is a stylesheet cache-buster (`site.css?v=20260825-1`). Those stamps are
   bumped across all forty-odd pages whenever a shared stylesheet changes, and
   counting that as a modification would republish the whole sitemap with one
   date — a deployment wearing a content change's clothes, which is the exact
   thing this script was written to stop. A commit that touches a stamp AND real
-  markup still counts, because the markup changed.
+  markup still counts, because the markup changed. Pure apex-to-www hostname
+  normalization is also furniture; accompanying prose still advances the date.
 
 Usage
 -----
@@ -46,6 +47,7 @@ Usage
 from __future__ import annotations
 
 import re
+from collections import Counter
 import subprocess
 import sys
 from datetime import date, timezone, datetime
@@ -53,7 +55,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SITEMAP = ROOT / "sitemap.xml"
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
 
 CANONICAL = re.compile(r'<link\s+rel="canonical"\s+href="([^"]+)"', re.I)
 NOINDEX = re.compile(r'<meta\s+name="robots"[^>]*content="[^"]*noindex', re.I)
@@ -140,7 +142,7 @@ def uncommitted_pages() -> list[str]:
 def cosmetic_only(commit: str, rel: str) -> bool:
     """True when this commit changed only this page's furniture.
 
-    Two things reach every page at once and neither is content.
+    Three things can reach every page at once and none is content.
 
     Bumping `site.css?v=...` across all forty-odd pages is a real edit and a
     real commit, but it changes how the page is painted, not what it says. The
@@ -154,6 +156,12 @@ def cosmetic_only(commit: str, rel: str) -> bool:
     that thirty-nine articles had been rewritten. They had not. The page that
     genuinely changed — the article whose text now points at the Marketplace —
     has an edit outside the footer, so it still counts.
+
+    A canonical host migration is compared even more narrowly. Removed and
+    added lines are compared after stripping only the exact `www.` token from
+    this site's hostname. If those normalized multisets match, the commit was
+    pure hostname normalization. Any accompanying prose edit keeps the sets
+    different and remains a genuine content change.
     """
     try:
         out = subprocess.run(
@@ -163,6 +171,14 @@ def cosmetic_only(commit: str, rel: str) -> bool:
         return False
     edits = [line for line in out.stdout.splitlines()
              if line[:1] in "+-" and not line.startswith(("+++", "---"))]
+    removed = [line[1:].replace("www.masinloc-zambales.com",
+                                "masinloc-zambales.com")
+               for line in edits if line.startswith("-")]
+    added = [line[1:].replace("www.masinloc-zambales.com",
+                              "masinloc-zambales.com")
+             for line in edits if line.startswith("+")]
+    if removed and added and Counter(removed) == Counter(added):
+        return True
     return bool(edits) and all(
         any(pattern.match(line) for pattern in FURNITURE) for line in edits)
 

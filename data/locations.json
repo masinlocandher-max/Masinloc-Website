@@ -23,6 +23,7 @@
       "photo": "BE5B5014-0F5A-4A81-93BA-08A9B690681A.png",
       "card": "456EBF0C-43D9-4526-B815-9B56AE003EE6.jpg",
       "focus": "50% 58%",
+      "native": {"width": 1536, "height": 1024},
       "caption": "A river crossed by a suspension bridge in Sta. Rita, and part of Masinloc's inland freshwater landscape."
     },
     {
@@ -45,6 +46,7 @@
       "photo": "IMG_9138.JPG",
       "card": "F9BD1F30-806E-4D32-B709-D2A92810F8AD.jpg",
       "focus": "50% 50%",
+      "native": {"width": 2048, "height": 1536},
       "caption": "An island on the Masinloc coast, and part of the town's marine and coastal environment.",
       "reads": {
         "href": "bulletin/1649-when-six-caracoas-came.html",
@@ -71,6 +73,7 @@
       "photo": "841DD78B-2DB4-4184-9220-E92C746CA3FD.png",
       "card": "CC917370-85F4-455D-B1CF-EDF82DF4782B.jpg",
       "focus": "50% 66%",
+      "native": {"width": 1120, "height": 1400},
       "caption": "A river pool in Taltal used for swimming, in Masinloc's inland uplands."
     },
     {
@@ -94,6 +97,7 @@
       "card": "B04AD6A0-1250-437C-A78A-442DBADF8C7C.jpg",
       "note": "The raw photograph is the front elevation at sunset. The pubmat uses an aerial of the church complex, which is not in Regular Images.",
       "focus": "50% 46%",
+      "native": {"width": 768, "height": 850},
       "caption": "A stone church in the Masinloc town centre, and the town's best known heritage landmark.",
       "reads": {
         "href": "bulletin/san-andres-church-across-the-centuries.html",
@@ -120,6 +124,7 @@
       "photo": "8EA195F1-E6EB-416B-B886-55104D2EB5F3.png",
       "card": "4475E3A1-35E8-4274-A9E8-F50B21337B51.jpg",
       "focus": "50% 50%",
+      "native": {"width": 1536, "height": 864},
       "caption": "A cave with flowstone formations in Sta. Rita, in Masinloc's inland uplands."
     },
     {
@@ -142,6 +147,7 @@
       "photo": "159B6390-3E2E-4E23-9D23-B87D5E153155.png",
       "card": "77ABD272-187D-420D-A135-A17F7962D504.jpg",
       "focus": "50% 42%",
+      "native": {"width": 1120, "height": 1400},
       "caption": "A sandbar with a stilt guesthouse on the Masinloc coast, and a place to stay by the water."
     },
     {
@@ -164,6 +170,7 @@
       "photo": "D18D1651-5C13-4E26-90C3-863E3549FE2F.png",
       "card": "7C0E040D-7009-4E42-9E0C-B5E4AF39C4B4.jpg",
       "focus": "50% 60%",
+      "native": {"width": 1536, "height": 864},
       "caption": "Open grass hills in Inhobol, and part of Masinloc's inland upland country."
     },
     {
@@ -186,6 +193,7 @@
       "photo": "32FB1D9E-23A6-4AF5-A730-49B843DDD671.png",
       "card": "16967159-8517-4F18-9B9C-FA1338724144.jpg",
       "focus": "50% 46%",
+      "native": {"width": 1120, "height": 1400},
       "caption": "A public seafront walk in the Masinloc town centre, and the site of the town's MASINLOC sign.",
       "reads": {
         "href": "marketplace/diwan-coffee.html",

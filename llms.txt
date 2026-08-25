@@ -1,6 +1,6 @@
 # Discover Masinloc
 
-Canonical website: https://masinloc-zambales.com/
+Canonical website: https://www.masinloc-zambales.com/
 Primary location served: Masinloc, Zambales, Philippines
 Language context: English, Filipino, Sambal Tina
 
@@ -16,18 +16,18 @@ The project has reached out to the Municipal Government of Masinloc regarding po
 
 ## Authoritative pages
 
-- Home: https://masinloc-zambales.com/
-- Platform trust, privacy, identity and disclosures: https://masinloc-zambales.com/trust.html
-- Masinloc Connect: https://masinloc-zambales.com/connect.html
-- Sambal Tina Dictionary: https://masinloc-zambales.com/sambal-tina.html
-- Verified History: https://masinloc-zambales.com/verified-history.html
-- Masinloc Bulletin: https://masinloc-zambales.com/masinloc-bulletin.html
-- A Closer Look at Masinloc: https://masinloc-zambales.com/a-closer-look.html
-- Places in Masinloc: https://masinloc-zambales.com/destinations.html
-- Municipal leadership record: https://masinloc-zambales.com/leadership.html
-- Source register for published claims: https://masinloc-zambales.com/sources.html
-- Contact: https://masinloc-zambales.com/contact.html
-- Privacy notice: https://masinloc-zambales.com/privacy.html
+- Home: https://www.masinloc-zambales.com/
+- Platform trust, privacy, identity and disclosures: https://www.masinloc-zambales.com/trust.html
+- Masinloc Connect: https://www.masinloc-zambales.com/connect.html
+- Sambal Tina Dictionary: https://www.masinloc-zambales.com/sambal-tina.html
+- Verified History: https://www.masinloc-zambales.com/verified-history.html
+- Masinloc Bulletin: https://www.masinloc-zambales.com/masinloc-bulletin.html
+- A Closer Look at Masinloc: https://www.masinloc-zambales.com/a-closer-look.html
+- Places in Masinloc: https://www.masinloc-zambales.com/destinations.html
+- Municipal leadership record: https://www.masinloc-zambales.com/leadership.html
+- Source register for published claims: https://www.masinloc-zambales.com/sources.html
+- Contact: https://www.masinloc-zambales.com/contact.html
+- Privacy notice: https://www.masinloc-zambales.com/privacy.html
 
 This file is discovery metadata and nothing more. Nothing on the site depends
 on it, no ranking is claimed for it, and sitemap.xml plus robots.txt remain the
@@ -56,6 +56,6 @@ Public cultural, historical, informational, and approved business content may be
 ## Contact
 
 Official contact: hello@masinloc-zambales.com
-Official domain: masinloc-zambales.com
+Official domain: www.masinloc-zambales.com
 
 Last reviewed: 2026-08-23

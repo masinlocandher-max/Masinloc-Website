@@ -1,4 +1,4 @@
-# Masinloc, Zambales — https://masinloc-zambales.com
+# Masinloc, Zambales — https://www.masinloc-zambales.com
 #
 # Search discovery and model training are two different permissions, and this
 # file grants them separately. Being findable and citable is the point of
@@ -25,4 +25,4 @@ Disallow: /admin.html
 User-agent: GPTBot
 Disallow: /
 
-Sitemap: https://masinloc-zambales.com/sitemap.xml
+Sitemap: https://www.masinloc-zambales.com/sitemap.xml

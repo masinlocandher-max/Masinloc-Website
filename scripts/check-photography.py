@@ -12,6 +12,7 @@ mapping in data/locations.json. Anything else fails the build.
 from __future__ import annotations
 
 import json
+import posixpath
 import re
 import sys
 from html.parser import HTMLParser
@@ -23,6 +24,8 @@ MANIFEST = ROOT / "data" / "photography.json"
 LOCATIONS = ROOT / "data" / "locations.json"
 CAMPAIGNS = ROOT / "data" / "campaigns.json"
 LEADERSHIP = ROOT / "data" / "leadership.json"
+DISCOVER_ASSETS = ROOT / "data" / "discover-assets.json"
+MARKETPLACE = ROOT / "data" / "marketplace.json"
 
 IMAGE_SUFFIXES = {".avif", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
 
@@ -88,10 +91,20 @@ campaign_slugs = {campaign["slug"] for campaign in campaigns}
 leaders = json.loads(LEADERSHIP.read_text(encoding="utf-8"))["leaders"]
 leader_slugs = {leader["slug"] for leader in leaders}
 
-pages = sorted(ROOT.glob("*.html"))
+discover_slugs = set(json.loads(DISCOVER_ASSETS.read_text(encoding="utf-8")))
+marketplace_slugs = {
+    business["slug"]
+    for business in json.loads(MARKETPLACE.read_text(encoding="utf-8"))["businesses"]
+}
+
+pages = (sorted(ROOT.glob("*.html"))
+         + sorted(ROOT.glob("bulletin/*.html"))
+         + sorted(ROOT.glob("discover/*.html"))
+         + sorted(ROOT.glob("marketplace/*.html")))
 seen: dict[str, list[str]] = {}
 
 for page in pages:
+    page_name = page.relative_to(ROOT).as_posix()
     text = page.read_text(encoding="utf-8")
     parser = ImageParser()
     parser.feed(text)
@@ -102,18 +115,25 @@ for page in pages:
 
         for banned in BANNED_SOURCES:
             if banned in lowered:
-                fail(f"{page.name}: image from a banned source: {source}")
+                fail(f"{page_name}: image from a banned source: {source}")
 
         parsed = urlsplit(source)
         if parsed.scheme or parsed.netloc:
-            fail(f"{page.name}: image loaded from an external host: {source}")
+            fail(f"{page_name}: image loaded from an external host: {source}")
             continue
 
-        path = parsed.path.split("?", 1)[0].lstrip("/")
+        if parsed.path.startswith("/"):
+            path = posixpath.normpath(parsed.path.lstrip("/"))
+        else:
+            parent = page.parent.relative_to(ROOT).as_posix()
+            path = posixpath.normpath(posixpath.join(parent, parsed.path))
         if not path:
             continue
+        if path.startswith("../"):
+            fail(f"{page_name}: image escapes the site root: {source}")
+            continue
 
-        seen.setdefault(path, []).append(page.name)
+        seen.setdefault(path, []).append(page_name)
 
         if path in approved:
             continue
@@ -125,7 +145,7 @@ for page in pages:
             match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)(?:-mobile)?"
                                  r"(?:-(?P<width>\d+)|-ambient)", name)
             if not match or match.group("slug") not in campaign_slugs:
-                fail(f"{page.name}: {path} is not one of the approved campaigns "
+                fail(f"{page_name}: {path} is not one of the approved campaigns "
                      f"listed in data/campaigns.json")
             continue
 
@@ -136,7 +156,7 @@ for page in pages:
             name = Path(path).stem
             match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)-(?P<width>\d+)", name)
             if not match or match.group("slug") not in leader_slugs:
-                fail(f"{page.name}: {path} is not one of the approved portraits "
+                fail(f"{page_name}: {path} is not one of the approved portraits "
                      f"listed in data/leadership.json")
             continue
 
@@ -146,7 +166,7 @@ for page in pages:
             match = re.fullmatch(r"(?P<slug>[a-z0-9-]+?)(?P<card>-card)?-(?P<width>\d+)",
                                  name)
             if not match or match.group("slug") not in location_slugs:
-                fail(f"{page.name}: {path} is not one of the approved location "
+                fail(f"{page_name}: {path} is not one of the approved location "
                      f"photographs listed in data/locations.json")
             continue
 
@@ -157,7 +177,7 @@ for page in pages:
         if path.startswith(connect_dir):
             name = Path(path).stem
             if not re.fullmatch(r"connect-hero(?:-portrait)?-\d+", name):
-                fail(f"{page.name}: {path} is not a build product of "
+                fail(f"{page_name}: {path} is not a build product of "
                      f"scripts/build-connect-hero.py")
             continue
 
@@ -165,8 +185,10 @@ for page in pages:
         # by scripts/build-discover-assets.py from the approved originals.
         if path.startswith(discover_dir):
             name = Path(path).stem
-            if not re.fullmatch(r"[a-z0-9-]+-\d+", name):
-                fail(f"{page.name}: {path} is not a build product of "
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+)-\d+", name)
+            if not match or match.group("slug") not in discover_slugs:
+                fail(f"{page_name}: {path} is not one of the approved Discover "
+                     f"assets in data/discover-assets.json or a build product of "
                      f"scripts/build-discover-assets.py")
             continue
 
@@ -174,8 +196,10 @@ for page in pages:
         # built by scripts/build-marketplace-logos.py from the supplied files.
         if path.startswith(marketplace_dir):
             name = Path(path).stem
-            if not re.fullmatch(r"[a-z0-9-]+-\d+", name):
-                fail(f"{page.name}: {path} is not a build product of "
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+)-\d+", name)
+            if not match or match.group("slug") not in marketplace_slugs:
+                fail(f"{page_name}: {path} is not one of the approved businesses "
+                     f"in data/marketplace.json or a build product of "
                      f"scripts/build-marketplace-logos.py")
             continue
 
@@ -183,7 +207,7 @@ for page in pages:
         if path.startswith(notfound_dir):
             name = Path(path).stem
             if not re.fullmatch(r"notfound-\d+", name):
-                fail(f"{page.name}: {path} is not a build product of "
+                fail(f"{page_name}: {path} is not a build product of "
                      f"scripts/build-404-hero.py")
             continue
 
@@ -191,11 +215,11 @@ for page in pages:
         if path.startswith(landing_dir):
             name = Path(path).stem
             if not re.fullmatch(r"landing-hero-\d+", name):
-                fail(f"{page.name}: {path} is not a build product of "
+                fail(f"{page_name}: {path} is not a build product of "
                      f"scripts/build-landing-hero.py")
             continue
 
-        fail(f"{page.name}: {path} is not listed in data/photography.json")
+        fail(f"{page_name}: {path} is not listed in data/photography.json")
 
 # Every approved photograph should actually exist.
 for path, entry in approved.items():

@@ -14,13 +14,16 @@ that make a page read as generated rather than written.
 from __future__ import annotations
 
 import json
+import posixpath
 import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
+CANONICAL_HOST = "www.masinloc-zambales.com"
 
 # Private surfaces are not part of the public index and are checked only for
 # staying out of it.
@@ -57,7 +60,9 @@ class PageParser(HTMLParser):
         self.title = ""
         self._in_title = False
         self.meta: dict[str, str] = {}
+        self.meta_values: dict[str, list[str]] = {}
         self.canonical = ""
+        self.canonicals: list[str] = []
         self.robots = ""
         self.headings: list[tuple[int, str]] = []
         self._heading = 0
@@ -85,9 +90,12 @@ class PageParser(HTMLParser):
         elif tag == "meta":
             key = (a.get("name") or a.get("property") or "").lower()
             if key:
-                self.meta[key] = a.get("content", "")
+                value = a.get("content", "")
+                self.meta[key] = value
+                self.meta_values.setdefault(key, []).append(value)
         elif tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href", "")
+            self.canonicals.append(self.canonical)
         elif tag in {"h1", "h2", "h3", "h4"}:
             self._heading = int(tag[1])
             self.headings.append((self._heading, ""))
@@ -132,11 +140,84 @@ def visible_text(markup: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body))
 
 
-pages = (sorted(p for p in ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
+pages = (sorted(p for p in ROOT.glob("*.html"))
+         + sorted(ROOT.glob("bulletin/*.html"))
+         + sorted(ROOT.glob("discover/*.html"))
          + sorted(ROOT.glob("marketplace/*.html")))
 titles: dict[str, str] = {}
 descriptions: dict[str, str] = {}
 inbound: dict[str, set[str]] = {p.relative_to(ROOT).as_posix(): set() for p in pages}
+
+
+def expected_canonical(name: str) -> str:
+    """The one public URL that corresponds to a built file.
+
+    Section indexes publish at their directory URL. Everything else keeps its
+    explicit .html path; silently treating those as interchangeable would let
+    a page canonicalize to a duplicate route that does not exist in the build.
+    """
+    if name == "index.html":
+        return f"{SITE}/"
+    if name.endswith("/index.html"):
+        return f"{SITE}/{name[:-len('index.html')]}"
+    return f"{SITE}/{name}"
+
+
+def site_urls(node) -> list[str]:
+    """Return every absolute URL owned by this site in a JSON-LD graph."""
+    found: list[str] = []
+    if isinstance(node, dict):
+        for value in node.values():
+            found += site_urls(value)
+    elif isinstance(node, list):
+        for value in node:
+            found += site_urls(value)
+    elif isinstance(node, str):
+        parsed = urlsplit(node)
+        if parsed.hostname in {"masinloc-zambales.com", CANONICAL_HOST}:
+            found.append(node)
+    return found
+
+
+def page_entities(graph) -> list[dict]:
+    """Return page-level entities, without mistaking listed items for the page.
+
+    A Discover hub legitimately embeds nineteen BlogPosting summaries. Those
+    URLs identify the listed articles, not the hub, so recursively treating
+    every typed node as the current page would reject truthful Blog markup.
+    Page entities live at the JSON-LD root or directly in @graph.
+    """
+    if not isinstance(graph, dict):
+        return []
+    candidates = graph.get("@graph")
+    if not isinstance(candidates, list):
+        candidates = [graph]
+    page_kinds = {
+        "WebPage", "CollectionPage", "Article", "NewsArticle",
+        "BlogPosting", "LocalBusiness", "CafeOrCoffeeShop",
+        "FoodEstablishment",
+    }
+    found = []
+    for node in candidates:
+        if not isinstance(node, dict):
+            continue
+        kinds = node.get("@type", [])
+        if isinstance(kinds, str):
+            kinds = [kinds]
+        if any(kind in page_kinds for kind in kinds):
+            found.append(node)
+    return found
+
+
+sitemap_raw = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+sitemap_urls = re.findall(r"<loc>([^<]+)</loc>", sitemap_raw)
+sitemap_set = set(sitemap_urls)
+if len(sitemap_urls) != len(sitemap_set):
+    fail("sitemap.xml: a canonical URL is listed more than once")
+for url in sitemap_urls:
+    parsed = urlsplit(url)
+    if parsed.scheme != "https" or parsed.netloc != CANONICAL_HOST:
+        fail(f"sitemap.xml: URL is not on the canonical HTTPS host: {url}")
 
 for page in pages:
     name = page.relative_to(ROOT).as_posix()
@@ -145,9 +226,13 @@ for page in pages:
     parser.feed(markup)
     text = visible_text(markup)
 
+    noindex = "noindex" in parser.meta.get("robots", "").lower()
+
     if name in PRIVATE:
         if "noindex" not in parser.meta.get("robots", "").lower():
             fail(f"{name}: a private surface must carry meta robots noindex")
+        if parser.canonical and parser.canonical in sitemap_set:
+            fail(f"{name}: a private surface is listed in sitemap.xml")
         continue
 
     # --- stock phrasing --------------------------------------------------
@@ -170,10 +255,22 @@ for page in pages:
             fail(f"{name}: the title does not name Masinloc")
 
     # --- canonical -------------------------------------------------------
-    if not parser.canonical:
-        fail(f"{name}: missing canonical link")
-    elif not parser.canonical.startswith(SITE):
-        fail(f"{name}: canonical does not point at {SITE}: {parser.canonical}")
+    if len(parser.canonicals) != 1:
+        fail(f"{name}: expected exactly one canonical link, found "
+             f"{len(parser.canonicals)}")
+    elif parser.canonical != expected_canonical(name):
+        fail(f"{name}: canonical is {parser.canonical}; expected "
+             f"{expected_canonical(name)}")
+    else:
+        parsed = urlsplit(parser.canonical)
+        if parsed.scheme != "https" or parsed.netloc != CANONICAL_HOST:
+            fail(f"{name}: canonical is not on the canonical HTTPS host: "
+                 f"{parser.canonical}")
+    if noindex:
+        if parser.canonical in sitemap_set:
+            fail(f"{name}: noindex page is listed in sitemap.xml")
+    elif parser.canonical not in sitemap_set:
+        fail(f"{name}: canonical is missing from sitemap.xml")
 
     # --- one H1, in order ------------------------------------------------
     # A MINIMAL page is one whose entire content is a single supplied artwork
@@ -249,6 +346,12 @@ for page in pages:
     og_image = parser.meta.get("og:image", "")
     if og_image and not og_image.startswith("http"):
         fail(f"{name}: og:image must be an absolute URL: {og_image}")
+    og_urls = parser.meta_values.get("og:url", [])
+    if len(og_urls) != 1:
+        fail(f"{name}: expected exactly one og:url, found {len(og_urls)}")
+    elif og_urls[0] != parser.canonical:
+        fail(f"{name}: og:url disagrees with canonical ({og_urls[0]} vs "
+             f"{parser.canonical})")
 
     # --- internal linking -------------------------------------------------
     internal = [href for href in parser.links
@@ -256,9 +359,7 @@ for page in pages:
     here = Path(name).parent
     for href in internal:
         target = href.split("#")[0].split("?")[0]
-        resolved = (here / target).as_posix().replace("./", "")
-        while resolved.startswith("../"):
-            resolved = resolved[3:]
+        resolved = posixpath.normpath((here / target).as_posix()).lstrip("/")
         if resolved in inbound:
             inbound[resolved].add(name)
     if len(set(internal)) < 3:
@@ -285,9 +386,39 @@ for page in pages:
     # --- structured data --------------------------------------------------
     for block in parser.jsonld:
         try:
-            json.loads(block)
+            graph = json.loads(block)
         except json.JSONDecodeError as error:
             fail(f"{name}: structured data is not valid JSON: {error}")
+            continue
+
+        for url in site_urls(graph):
+            parsed = urlsplit(url)
+            if parsed.scheme != "https" or parsed.netloc != CANONICAL_HOST:
+                fail(f"{name}: structured data uses a non-canonical site URL: "
+                     f"{url}")
+
+        for entity in page_entities(graph):
+            entity_url = entity.get("url")
+            if isinstance(entity_url, str) and entity_url != parser.canonical:
+                fail(f"{name}: {entity.get('@type')} schema URL disagrees with "
+                     f"canonical ({entity_url} vs {parser.canonical})")
+
+            entity_id = entity.get("@id")
+            if (isinstance(entity_id, str)
+                    and urlsplit(entity_id).hostname in {
+                        "masinloc-zambales.com", CANONICAL_HOST}
+                    and not (entity_id == parser.canonical
+                             or entity_id.startswith(parser.canonical + "#"))):
+                fail(f"{name}: {entity.get('@type')} schema @id disagrees with "
+                     f"canonical ({entity_id} vs {parser.canonical})")
+
+            main = entity.get("mainEntityOfPage")
+            if isinstance(main, dict):
+                main = main.get("@id")
+            if isinstance(main, str) and not (main == parser.canonical
+                                              or main.startswith(parser.canonical + "#")):
+                fail(f"{name}: mainEntityOfPage disagrees with canonical "
+                     f"({main} vs {parser.canonical})")
 
 # Every public page should be reachable from somewhere else on the site.
 for name, sources in inbound.items():
@@ -347,11 +478,18 @@ if errors:
         print(f"- {error}")
     sys.exit(1)
 
-public = [p.name for p in pages if p.name not in PRIVATE]
+public = [p.relative_to(ROOT).as_posix() for p in pages
+          if p.relative_to(ROOT).as_posix() not in PRIVATE]
+public_noindex = [name for name in public
+                  if re.search(r'<meta\s+name="robots"[^>]*content="[^"]*noindex',
+                               (ROOT / name).read_text(encoding="utf-8"), re.I)]
 print("SEO CHECK PASSED")
-print(f"{len(public)} public pages: unique titles and descriptions, one H1 each, "
-      f"canonical, Open Graph and Twitter card, described alt text, and internal "
-      f"links with meaningful anchors.")
+print(f"{len(public) - len(public_noindex)} indexable pages plus "
+      f"{len(public_noindex)} public noindex error surface: unique "
+      f"titles and descriptions, one H1 each, "
+      f"exact www canonicals, sitemap agreement, Open Graph and Twitter card, "
+      f"valid site-owned schema URLs, described alt text, and internal links "
+      f"with meaningful anchors.")
 if notes:
     print()
     print("For review:")

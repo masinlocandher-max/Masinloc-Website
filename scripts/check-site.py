@@ -432,7 +432,7 @@ else:
     for agent, rules in groups.items():
         if agent == "*" and ("disallow", "/") in rules:
             fail("robots.txt: the wildcard group disallows the whole site")
-    if "Sitemap: https://masinloc-zambales.com/sitemap.xml" not in robots_text:
+    if "Sitemap: https://www.masinloc-zambales.com/sitemap.xml" not in robots_text:
         fail("robots.txt does not point at the sitemap")
 
 # The sitemap is generated. If it is stale, the deploy would publish dates and

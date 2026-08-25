@@ -38,7 +38,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "leadership.json"
 OUT = ROOT / "assets" / "leadership"
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
 
 # Every portrait is shown at 4:5. Four of the five originals are already very
 # close to it; the fifth is cropped to match rather than being shown at a
@@ -268,7 +268,7 @@ def page() -> str:
 <link rel="stylesheet" href="site.css?v=20260825-1">
 <link rel="stylesheet" href="site-polish.css?v=20260825-1">
 <link rel="stylesheet" href="site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="leadership.css?v=20260823-1">
+<link rel="stylesheet" href="leadership.css?v=20260825-1">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -335,7 +335,7 @@ def page() -> str:
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
   <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">A Closer Look</a><a href="leadership.html">Municipal Leadership</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
-  <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>masinloc-zambales.com</span></div>
+  <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>
 {jsonld}<script src="site.js?v=20260820-2"></script>
 <script src="leadership.js?v=20260822-1"></script>

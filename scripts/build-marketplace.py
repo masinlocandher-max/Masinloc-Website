@@ -53,7 +53,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "marketplace.json"
 OUT_DIR = ROOT / "marketplace"
 HUB = ROOT / "marketplace.html"
-SITE = "https://masinloc-zambales.com"
+SITE = "https://www.masinloc-zambales.com"
 
 # The only keys a business may carry. Anything else is either private data that
 # has no business being in a public file, or a typo that would silently not
@@ -423,7 +423,7 @@ def hub_page() -> str:
     url = f"{SITE}/marketplace.html"
     used = [c for c in CATEGORIES if any(b["category"] == c["id"] for b in BUSINESSES)]
 
-    title = "Marketplace | Local businesses in Masinloc, Zambales"
+    title = "Local Businesses in Masinloc, Zambales | Marketplace"
     description = ("A directory of businesses in Masinloc, Zambales — food, services and "
                    "local enterprises, with the details you need to contact them directly.")
 
