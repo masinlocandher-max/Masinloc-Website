@@ -8,17 +8,18 @@ This repository is built deliberately by stages. Each stage must remain stable, 
 - A Closer Look
   - Sambal Tina Dictionary
   - Municipal Leadership
-- Verified History
+  - Verified History
+  - Founder of Masinloc
 - Masinloc Bulletin
 - Masinloc Connect
 - Contact
 
-`Verified History` and `Masinloc Bulletin` are intentionally live first as purpose pages. They establish the permanent editorial sections without publishing placeholder articles or invented content.
+`Verified History` is now a source-led history hub with a dedicated founder profile. `Masinloc Bulletin` publishes reviewed, source-controlled web articles. Neither section may reproduce unpublished manuscript prose.
 
 ## Stage plan
 
-- Stage 1: stable public shell, A Closer Look, Verified History purpose page, Masinloc Bulletin purpose page, Masinloc Connect, Contact
-- Stage 2: Discover Masinloc, destinations, and the first verified history releases
+- Stage 1: stable public shell, A Closer Look, Masinloc Connect, and Contact
+- Stage 2: Discover Masinloc, destinations, Verified History, the founder profile, and reviewed MABAYANI web releases
 - Stage 3: Sambal Tina, people of Masinloc, and community stories
 - Stage 4: Local businesses, professionals, Eat / Stay / Find
 - Stage 5: Deeper community features, search, archives, and directory capabilities
@@ -28,6 +29,13 @@ This repository is built deliberately by stages. Each stage must remain stable, 
 ### Verified History
 
 A source-led archive for the documented history of Masinloc. Material belongs here only when it can be supported by records, credible references, archival material, or properly attributed evidence. Documented history must remain clearly separated from oral accounts, local memory, interpretation, and claims still being checked.
+
+`data/history.json` is the canonical web claim register. `scripts/build-history.py`
+generates `verified-history.html` and `founder-of-masinloc.html` from it. The
+founder portrait remains an intentional pending state until an attributable,
+approved historical image is available. MABAYANI research may guide the facts,
+but website copy must be newly written and must not reproduce the unpublished
+book manuscript, its chapter structure, or signature passages.
 
 ### Municipal Leadership
 
@@ -265,7 +273,7 @@ exist rather than from a fixed list.
 4. **Facts need provenance.** Do not identify a landmark, church, barangay, destination, person, historical detail or cultural claim more specifically than verified sources support.
 5. **Masinloc Connect is a stable boundary.** Do not refactor its submission flows, data contract, Supabase behavior or admin backend during unrelated public-site work. Backend changes require their own tested change set.
 6. **No fake population.** Empty editorial sections stay intentionally empty until real, reviewed material is ready. Do not add sample headlines, fake dates, placeholder articles, invented authors, or synthetic history just to make a page look populated.
-7. **No unfinished navigation.** Apart from the intentionally complete purpose pages above, do not add navigation, cards, links or promises for unfinished routes. A new stage becomes public only when its page, content, responsive behavior and QA land together.
+7. **No unfinished navigation.** Do not add navigation, cards, links or promises for unfinished routes. A new stage becomes public only when its page, content, responsive behavior and QA land together.
 8. **One palette, defined once.** `tokens.css` is the only file that may define an identity colour, and it loads first on every surface. Do not restate a brand hex in a page stylesheet, and never hardcode one in JavaScript — inline styles beat every stylesheet, which is how Masinloc Connect drifted onto a superseded palette. `Design consistency` fails on any identity hex found outside `tokens.css`.
 
 9. **Use the shared public design system.** `site.css`, `site-polish.css`, `site-stability.css`, and `site.js` are the shared shell for public editorial pages. Do not create another homepage/hero stylesheet to override them. Masinloc Connect keeps `styles.css`, `connect-polish.css`, and `connect-shell.css` for its functional submission experience, plus the shared stability layer for brand/mobile consistency. Presentation changes must not silently rewrite its data contract.
@@ -284,7 +292,7 @@ exist rather than from a fixed list.
 2. Build and polish there without using the production host as a design preview.
 3. Run Site Integrity and Design Consistency after meaningful changes.
 4. Run Browser QA and any feature-specific QA before review.
-5. Keep Verified History and Masinloc Bulletin empty until reviewed material exists.
+5. Publish history only from reviewed canonical data, and regenerate all affected pages before review.
 6. Do not merge solely to preview a design.
 7. When a stage is complete, review the diff, confirm all required checks are green, then merge once.
 8. Verify the production deployment/domain after merge as a separate release check.
@@ -303,6 +311,7 @@ exist rather than from a fixed list.
 - `/a-closer-look.html`
 - `/sambal-tina.html`
 - `/verified-history.html`
+- `/founder-of-masinloc.html`
 - `/masinloc-bulletin.html`
 - `/connect.html`
 
@@ -311,7 +320,7 @@ Only current public routes belong in `sitemap.xml`.
 ## Future checkpoints
 
 - Before moving `a-closer-look.html` to a cleaner URL: add the redirect and canonical update in the same release.
-- Before publishing Verified History entries: record source/provenance, verification status, author/editor, and any unresolved conflict between sources.
+- Before publishing or revising Verified History: record source/provenance, verification status, precision limits, and any unresolved conflict in `data/history.json`.
 - Before publishing Bulletin entries: define article type, date, byline, source/credit rules, correction policy, and social-sharing image requirements.
 - Before Stage 2 navigation expands: complete the actual Stage 2 pages, verify facts/assets, update sitemap, and pass desktop/mobile QA.
 - Before adding local listings/directories: define source, review, update and removal rules so outdated or unverified listings do not accumulate.

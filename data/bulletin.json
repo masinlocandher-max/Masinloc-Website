@@ -41,18 +41,19 @@
       "slug": "was-masinloc-founded-in-1572",
       "status": "published",
       "category": "myth-vs-record",
-      "title": "Was Masinloc founded in 1572? What the record actually supports",
-      "metaTitle": "Was Masinloc Founded in 1572? | Masinloc History",
-      "description": "The year 1572 is repeated online as Masinloc's founding date. It belongs to Spanish exploration of Zambales, and the record does not support it as a founding.",
-      "standfirst": "A date repeated often enough starts to feel official. This one has never carried the evidence people assume it does.",
+      "title": "1607 is Masinloc's documented founding year",
+      "metaTitle": "Masinloc Was Founded in 1607, Not 1572",
+      "description": "The record separates two dates clearly: 1572 belongs to Spanish exploration in Zambales, while 1607 is the documented founding year of Masinloc.",
+      "standfirst": "1572 tells us when a Spanish expedition entered the wider Zambales story. It does not tell us when Masinloc was founded.",
       "published": "2026-08-22",
-      "modified": "2026-08-22",
-      "readingMinutes": 5,
+      "modified": "2026-08-25",
+      "readingMinutes": 4,
       "hero": {
         "kind": "none"
       },
       "sources": [
-        "romanillos-masinloc-recollect-mission"
+        "romanillos-masinloc-recollect-mission",
+        "dilg-zambales-history"
       ],
       "related": [
         "1607-and-the-first-mission-church",
@@ -67,69 +68,56 @@
       "body": [
         {
           "type": "p",
-          "text": "I went looking for the year Masinloc was founded. The answer arrived in seconds and it was everywhere: 1572. It sits on websites, in captions, in slide decks, and in speeches. It has been copied often enough that it now reads as settled."
+          "text": "Masinloc is often assigned a founding date in 1572. That year is important to the history of Zambales because it is associated with Spanish exploration under Juan de Salcedo. The sources reviewed do not connect that expedition to the establishment of a town called Masinloc."
         },
         {
           "type": "p",
-          "text": "It is not settled, and I could not make it hold. The year belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is real context, and it is useful for placing the western coast within the early movement of Spanish expeditions through Luzon. But an expedition passing through a region is not the founding of a town."
+          "text": "Exploration and founding are different events. Passing through a coastline can place a region in a colonial account, but it does not create a municipality, a mission town, or a parish."
         },
         {
           "type": "h2",
-          "text": "What the record does support"
+          "text": "Why 1607 is the correct documented year"
         },
         {
           "type": "p",
-          "text": "The stronger documented beginning of Masinloc as a mission town is 1607. That is the year the Recollect historical literature places Fray Andres del Espiritu Santo and Fray Jeronimo de Cristo in Masinloc, with Andres treated as the founder of the mission town and the builder of its first church."
+          "text": "The academic history of the Augustinian Recollect mission states that Fray Andrés del Espíritu Santo reached Masinloc by sea with Fray Jerónimo de Cristo in 1607. It identifies Andrés as founder of the new pueblo and builder of its first church."
         },
         {
           "type": "p",
-          "text": "That gives a clear sequence. People were living in the area long before either date. 1572 belongs to exploration context. 1607 anchors the Recollect mission and the first church. Each of those statements can be supported; none of them is a founding certificate."
+          "text": "DILG Zambales gives the same sequence at provincial level: Spanish exploration in 1572, followed by Masinloc among the earliest towns established in 1607. Two independent public-facing sources therefore point to the same correction."
         },
         {
           "type": "note",
           "label": "Where the evidence stands",
-          "text": "1572 is context only. No located source establishes it as the formal founding of Masinloc."
+          "text": "1607 is the documented founding year. The reviewed sources do not supply a verified month and day, so the year should not be expanded into a more exact date without new evidence."
         },
         {
           "type": "h2",
-          "text": "Why the correction matters"
+          "text": "What founding means here"
         },
         {
           "type": "p",
-          "text": "A founding date carries authority. It shapes anniversaries, official identity, school lessons, heritage claims, and civic pride. When the date is wrong, the error spreads into everything built on top of it, and each repetition makes it harder to correct."
+          "text": "The word founding refers to the documented colonial mission town. It does not mean the coast was empty before 1607. Sambal and Aeta communities belong to the history that came before the surviving mission record."
         },
         {
           "type": "p",
-          "text": "There is a second problem, and it is the more serious one. Treating 1572 or 1607 as the beginning of Masinloc makes colonial attention look like the birth of the community. It quietly says that the town began when outsiders started writing about it."
+          "text": "That distinction allows both claims to remain true: Masinloc's documented founding year is 1607, and human life and local culture on this coast are older than the colonial town."
         },
         {
           "type": "pull",
-          "text": "We are not making Masinloc younger. We are making its history more precise."
-        },
-        {
-          "type": "p",
-          "text": "Correcting a date felt, at first, like losing something. It is worth seeing it the other way. The town is not less old because we decline to use an unsupported year, and it is not less important because its earliest centuries were never written down by anyone who kept records."
+          "text": "For the documented town, use 1607. For the people who lived here before it, do not invent a date the record cannot carry."
         },
         {
           "type": "h2",
-          "text": "The line worth teaching"
+          "text": "The classroom version"
         },
         {
           "type": "p",
-          "text": "For classroom use the safest formulation is short: 1572 is Spanish exploration context for Zambales, not the proven founding of Masinloc. The 1607 Recollect mission is the stronger documented town and church anchor. Native life came before both."
-        },
-        {
-          "type": "p",
-          "text": "That sentence will never fit on a commemorative seal. It is still the better history."
-        },
-        {
-          "type": "note",
-          "label": "Still open",
-          "text": "A final account should cite the best available primary or provincial source for Salcedo's 1572 movement through Zambales, while keeping the correction that it is not a founding date."
+          "text": "Masinloc was founded as a documented mission town in 1607 by Fray Andrés del Espíritu Santo. The year 1572 refers to Spanish exploration in Zambales, not to Masinloc's founding. Communities already lived on this coast before either colonial date."
         }
       ],
       "pathway": "before-the-record",
-      "nextQuestion": "If 1572 is not where Masinloc begins, what does 1607 actually change?",
+      "nextQuestion": "Who founded the documented town in 1607, and what did the first Masinloc church look like?",
       "order": 0,
       "next": "1607-and-the-first-mission-church",
       "revealsCreator": false
@@ -138,25 +126,29 @@
       "slug": "1607-and-the-first-mission-church",
       "status": "published",
       "category": "history",
-      "title": "1607: the year Masinloc enters a stronger written record",
-      "metaTitle": "1607 and the First Mission Church | Masinloc History",
-      "description": "In 1607 two Recollect missionaries reached Masinloc and built its first church from light materials. What that year established, and what it did not.",
-      "standfirst": "It did not begin Masinloc. It began the paperwork — and the first church was nothing like the one standing today.",
+      "title": "1607: the founding of Masinloc and its first church",
+      "metaTitle": "1607: The Founding of Masinloc and Its First Church",
+      "description": "Fray Andrés del Espíritu Santo founded Masinloc's documented mission town in 1607 and built its first light-material church.",
+      "standfirst": "The town's first documented church was modest, temporary, and completely different from the stone landmark Masinloqueños know today.",
       "published": "2026-08-22",
-      "modified": "2026-08-22",
-      "readingMinutes": 6,
+      "modified": "2026-08-25",
+      "readingMinutes": 5,
       "hero": {
         "kind": "none"
       },
       "sources": [
         "romanillos-masinloc-recollect-mission",
-        "san-miguel-zambal-grammar"
+        "dilg-zambales-history"
       ],
       "related": [
         "was-masinloc-founded-in-1572",
         "the-first-church-was-not-todays-church"
       ],
       "internalLinks": [
+        {
+          "href": "../founder-of-masinloc.html",
+          "text": "the dedicated profile of Fray Andrés del Espíritu Santo"
+        },
         {
           "href": "../destinations.html#san-andres-church",
           "text": "San Andres Church as it stands today"
@@ -165,64 +157,56 @@
       "body": [
         {
           "type": "p",
-          "text": "The first year I found that will take any weight is 1607. The Recollect historical account describes Fray Andres del Espiritu Santo travelling north by sea and reaching Masinloc with Fray Jeronimo de Cristo. Andres is treated as the founder of the mission town and the builder of the first house of God in the new pueblo. The two missionaries lived for months on root crops and vegetables."
+          "text": "In 1607, Fray Andrés del Espíritu Santo travelled north from Manila by sea and reached Masinloc with Fray Jerónimo de Cristo. The historical study of the Recollect mission identifies Andrés as founder of the new pueblo and builder of its first church."
         },
         {
           "type": "p",
-          "text": "The details are small and I kept coming back to them. The mission did not begin with the coral-stone church people photograph today. It began with sea travel, scarcity, temporary materials, and a place that already had people living in it."
+          "text": "The same account records a difficult beginning. The two missionaries spent months living on root crops and vegetables. Masinloc's documented founding was not a ceremonial scene in front of a finished stone church; it began with sea travel, scarcity, and a small mission in an inhabited coastal community."
         },
         {
           "type": "h2",
-          "text": "A church of light materials"
+          "text": "The church that disappeared"
         },
         {
           "type": "p",
-          "text": "The same account states plainly that the first church was ordinarily made of light materials and did not last long. That single line corrects one of the most persistent errors in local storytelling. A scene set in 1607 should not show the present San Andres Church: not its stone walls, not the belfry, not the cupola, not the facade anyone would recognise now."
+          "text": "Fray Andrés built the first house of worship from light materials. It did not last. The coral-stone San Andres Church seen today belongs to a much later construction history, traditionally beginning in 1745."
         },
         {
           "type": "note",
           "label": "Where the evidence stands",
-          "text": "Documented, with interpretive caution. The 1607 arrival and the first church of light materials are recorded in the Recollect historical literature. What local people experienced is largely absent from it."
+          "text": "The 1607 arrival, the identity of Fray Andrés as founder, and the first church of light materials are documented in the historical study. No verified month and day for the founding have been located."
         },
         {
           "type": "h2",
-          "text": "What a mission actually brought"
+          "text": "From one town to a northern network"
         },
         {
           "type": "p",
-          "text": "A mission was not only prayer. It brought new systems of settlement, teaching, conversion, record-keeping, authority, and daily organisation. The word pueblo in a missionary account cannot be separated from the Spanish policy of gathering communities into more centralised settlements. The church became a religious centre and also a place through which people were counted, instructed, married, baptised, disciplined, and connected to colonial government."
+          "text": "Masinloc later became a Recollect center for northern Zambales, described in the study as reaching from Iba to Anda. Four or more missionaries commonly resided here, and one chronicler praised Masinloc as having the province's best church and convent."
         },
         {
           "type": "p",
-          "text": "Read from Masinloc rather than from the mission, the questions I most wanted answered are the ones the source answers least well. Who helped build the first structure? Who supplied the food those two missionaries lived on? Who translated? Who accepted the teaching, who resisted, who moved, who stayed? The surviving account names the missionaries far more easily than it names the local labour and decisions that made a mission possible at all."
+          "text": "The founder's work continued north. The study credits Fray Andrés and Fray Jerónimo with establishing Casborran, now Alaminos, and Bolinao in 1609, then Balincaguin, now Mabini, and Agno in 1610. Masinloc was the first documented base in that sequence."
         },
         {
           "type": "h2",
-          "text": "The grammar that has not been found"
+          "text": "What the source does not name"
         },
         {
           "type": "p",
-          "text": "Fray Rodrigo de San Miguel belongs in this story. The Recollect literature connects him to the wider Zambales mission and to work on Zambal grammar and glossary. That reputation shows missionaries understood early that language was necessary for conversion."
-        },
-        {
-          "type": "p",
-          "text": "Those manuscripts have not been located. If they are ever recovered they would be the earliest known documentation of the language of this coast, and they would need careful reading: a grammar written to enable conversion is still a record of how the language sounded to someone trying to learn it."
+          "text": "The colonial record preserves the names of the missionaries more readily than the names of local builders, translators, food providers, guides, and families who made the settlement function. Their work should not be replaced with invented names, but neither should it disappear from the interpretation."
         },
         {
           "type": "pull",
-          "text": "A building can disappear while a date remains. A later building can inherit the identity of an earlier one."
+          "text": "1607 founded the documented mission town. It did not begin human life on the Masinloc coast."
         },
         {
           "type": "p",
-          "text": "Masinloc became a base for expansion further north, described in the Recollect account as a centre of evangelisation for northern Zambales, from Iba to Anda. That administrative weight is real. It should not be allowed to erase the world that was already there."
-        },
-        {
-          "type": "p",
-          "text": "The most useful image of 1607 is not a grand facade. It is a modest structure made of materials that could rot. The church did not last. The story did."
+          "text": "That is why the founder profile on this site uses precise language. Fray Andrés is identified as founder of the documented colonial mission town, while the older presence of Sambal and Aeta communities remains part of the history before the surviving written record."
         }
       ],
       "pathway": "faith-conflict-power",
-      "nextQuestion": "If the record starts getting stronger in 1607, what was here before it?",
+      "nextQuestion": "What can we responsibly say about the Masinloc coast before the mission record?",
       "order": 1,
       "next": "before-the-written-record",
       "revealsCreator": false
@@ -428,13 +412,13 @@
       "slug": "1649-when-six-caracoas-came",
       "status": "published",
       "category": "history",
-      "title": "1649: when six caracoas came to Masinloc",
-      "metaTitle": "1649: The Defence of the Masinloc Coast | Masinloc History",
-      "description": "In 1649 six war vessels landed on the Masinloc shore. The defence that followed is the town's strongest documented episode of collective courage.",
-      "standfirst": "The sea that fed Masinloc also carried danger. What the record preserves, and the names it did not.",
+      "title": "1649: Masinloc fought back",
+      "metaTitle": "1649: The Pirate Battle Masinloc Won",
+      "description": "Six caracoas and more than six hundred raiders reached Masinloc in 1649. Local defenders repelled the landing and captured the vessels.",
+      "standfirst": "Six war vessels reached the shore. By the following day, Masinloc's defenders had taken the fight to Pulo San Salvador.",
       "published": "2026-08-22",
-      "modified": "2026-08-22",
-      "readingMinutes": 7,
+      "modified": "2026-08-25",
+      "readingMinutes": 5,
       "hero": {
         "kind": "none"
       },
@@ -454,64 +438,56 @@
       "body": [
         {
           "type": "p",
-          "text": "The most vivid thing I found anywhere in the record happens in 1649. According to the Recollect history, six caracoas landed on the shore of Masinloc. The account identifies the raiding forces as Moros from Jolo and Borneo, and says more than six hundred fighters began to disembark."
+          "text": "In 1649, six caracoas reached the Masinloc coast. The Recollect study describes them as raiding vessels from Jolo and Borneo and reports that more than six hundred fighters began to disembark."
         },
         {
           "type": "p",
-          "text": "The number is hard to picture. Masinloc had no standing police force, no paved roads, no communication system and no immediate military support. Six war vessels and hundreds of armed men would have turned a familiar shoreline into something else entirely."
+          "text": "Many residents moved toward the nearby mountains for safety. Others organized a defense. The source names Fray Francisco de San José as the leader and identifies the defenders collectively as Zambaleños."
         },
         {
           "type": "h2",
-          "text": "What the account describes"
+          "text": "The battle moved from shore to island"
         },
         {
           "type": "p",
-          "text": "A great majority of residents fled toward the neighbouring mountain fastness. That is not cowardice; moving families away from a landing force is a rational decision, and the geography of this coast makes it an obvious one. The shore was exposed. The mountains offered refuge."
+          "text": "The Masinloc defenders repelled the first landing. The surviving raiders withdrew to an adjacent island identified in the account as Pulo San Salvador."
         },
         {
           "type": "p",
-          "text": "The record then names Fray Francisco de San Jose, who led the Zambaleños in the defence of their town. The defenders fought, repelled the landing force, and drove the survivors to withdraw to an adjacent islet called Pulo San Salvador. The next day Francisco led a large number of emboldened Zambaleños in attacking the hideout. The account ends with the capture of the caracoas and war material."
+          "text": "The next day, a larger group crossed to the island and attacked the raiders' position. The account ends with a decisive result: the defenders captured the caracoas and the war material they carried."
         },
         {
           "type": "note",
           "label": "Where the evidence stands",
-          "text": "Documented in a Recollect historical account. The event is strongly traceable; the wording and viewpoint of the source require critical reading."
+          "text": "The 1649 attack, the six caracoas, the reported force of more than six hundred, the retreat to Pulo San Salvador, and the capture of the vessels appear in the Recollect historical account summarized by Romanillos."
         },
         {
           "type": "h2",
-          "text": "Who is named, and who is not"
+          "text": "A victory without a surviving roster"
         },
         {
           "type": "p",
-          "text": "This is the strongest documented episode of collective bravery in the Masinloc story, and it is also where the record failed me most completely. It is written through a Recollect lens. The friar is named. The local fighters are praised as Zambaleños, but not one of them is named individually."
+          "text": "The source gives the friar's name but not the individual names of the local defenders. That imbalance matters. The victory belonged to a collective defense, even though the surviving account preserves only one leader by name."
         },
         {
           "type": "p",
-          "text": "The questions I most wanted to answer are the ones the source answers least. How many of the defenders were local Sambal Christians? Were there people from nearby settlements? What did they fight with? Who carried information? Who protected the elderly and the children? Were women involved in supplies, warning and care? The account does not say."
+          "text": "The weapons, formation, casualty count, and roles of residents who carried warnings, protected families, supplied fighters, or treated the wounded are also missing. Those details should remain open rather than be completed with spectacle."
         },
         {
           "type": "pull",
-          "text": "The names of the Masinloc defenders are a research gap. Their absence should not be hidden behind a single heroic portrait of the friar."
+          "text": "Masinloc did not only survive the landing. Its defenders pursued the raiders and captured their fleet."
         },
         {
           "type": "h2",
-          "text": "Honouring defenders without producing prejudice"
+          "text": "Why the source calls them pirates"
         },
         {
           "type": "p",
-          "text": "The raiding forces belonged to a seventeenth-century world of maritime warfare, slave raiding, colonial expansion, sultanates, local rivalries and religious conflict. The colonial label Moro was applied broadly to Muslim peoples, and it cannot be used as though every Muslim community across time were a single enemy."
+          "text": "Romanillos summarizes the older account as a defense against Moro pirates. This page uses pirate for the documented raiding force in that seventeenth-century event. It is not a label for Muslim communities today, and the broad colonial word Moro should be understood as the source's terminology."
         },
         {
           "type": "p",
-          "text": "The bravery of Masinloc and the bravery of Muslim communities who resisted Spanish conquest belong in the same national history. One local victory does not make one people superior. It tells us that coastal communities defended themselves in a violent period."
-        },
-        {
-          "type": "p",
-          "text": "The word pirate needs the same care. Colonial and church accounts used it for maritime raiders who attacked settlements, captured people and seized goods. Written now, the accurate phrasing is the one the source itself supports: raiding forces identified as Moros from Jolo and Borneo."
-        },
-        {
-          "type": "p",
-          "text": "Told for a school reader, the event works as a sequence rather than a spectacle: arrival, alarm, movement to safety, organisation, defence, withdrawal, pursuit, capture of vessels. The combat formation, shoreline positions, weapons, clothing and casualties are not in the record and should not be invented to fill it."
+          "text": "The episode belongs in Masinloc's public history because the documented sequence is already compelling: landing, evacuation, organized resistance, retreat, pursuit, and capture. It does not need invented dialogue or battle scenes to become memorable."
         },
         {
           "type": "note",
@@ -529,17 +505,18 @@
       "slug": "what-binabayani-remembers",
       "status": "published",
       "category": "oral-history",
-      "title": "What Binabayani remembers, and what the record can confirm",
-      "metaTitle": "What Binabayani Remembers | Masinloc Oral History",
-      "description": "Binabayani is a living Masinloc tradition. The year 1621, the bell story and the first performance are not established by any located seventeenth-century source.",
-      "standfirst": "A ritual does not need a false date to be old. Calling oral tradition by its name is how you protect it.",
+      "title": "Binabayani: Kristiyano and Aeta",
+      "metaTitle": "Binabayani: Kristiyano and Aeta in Masinloc",
+      "description": "Binabayani depicts Kristiyano and Aeta. The Kristiyano side includes Christian Masinloqueños; Masinloqueños are not a separate third group.",
+      "standfirst": "The performance has two represented sides, not three: Kristiyano and Aeta.",
       "published": "2026-08-22",
-      "modified": "2026-08-22",
-      "readingMinutes": 6,
+      "modified": "2026-08-25",
+      "readingMinutes": 5,
       "hero": {
         "kind": "none"
       },
       "sources": [
+        "dot-binabayani-festival",
         "romanillos-masinloc-recollect-mission"
       ],
       "related": [
@@ -555,60 +532,60 @@
       "body": [
         {
           "type": "p",
-          "text": "Binabayani is not a small part of Masinloc's identity. It carries movement, sound, combat, devotion, costume, fear, courage and public memory. It is performed in connection with the feast of San Andres, and it has been described as a war dance between Aetas and Christians. Around it sits a story of an image, a bell, the shore, and a dance that made the sacred object light enough to move."
+          "text": "Binabayani is a living Masinloc tradition performed in connection with the feast of San Andres. The Department of Tourism recognizes it as Masinloc's conflict portrayal during the feast."
         },
         {
           "type": "p",
-          "text": "The tradition matters. The problem starts when every part of it is printed as though it were a verified seventeenth-century record."
+          "text": "The community framing is more precise: the represented sides are Kristiyano and Aeta. The Kristiyano side includes Christian Masinloqueños. Masinloqueños are not a third side standing apart from the Kristiyano."
         },
         {
           "type": "h2",
-          "text": "The 1621 problem"
+          "text": "Why Kristiyano is not Spanish-only"
         },
         {
           "type": "p",
-          "text": "Many modern accounts repeat the year 1621, and I could not find the document underneath it. Some attribute an early telling to Capt. Florentino Elicano and connect it to Municipal Judge Gerardo Elicano. The research behind this project flags the date as a likely chronological error, possibly connected to a 1921 reference rather than 1621. No authenticated seventeenth-century manuscript proving the date, the first teller or the exact sequence has been located."
+          "text": "The Kristiyano role should not be reduced to Spaniards. It represents the Christian side of Masinloc's local tradition, including Masinloqueño performers and the Christian community associated with the feast. Changing that side into a purely Spanish force changes the meaning of the performance."
         },
         {
           "type": "p",
-          "text": "So the honest sentence is not \"Binabayani began in 1621.\" It is that Binabayani is a living Masinloc tradition, commonly interpreted as a conflict between Aetas and Christians, joined to devotion to San Andres and to local stories about an image or bell from the sea — and that its exact origin date and earliest written account are still being researched."
+          "text": "The Aeta role must likewise be described as part of a living people's representation, not as a costume category detached from Aeta history and descendants. Accurate naming protects both sides from a simplified colonial reading."
+        },
+        {
+          "type": "pull",
+          "text": "In Binabayani, Masinloqueños are represented within the Kristiyano side. The two sides are Kristiyano and Aeta."
+        },
+        {
+          "type": "h2",
+          "text": "What the record can and cannot date"
+        },
+        {
+          "type": "p",
+          "text": "Binabayani is publicly documented as a continuing festival performance held with the feast of San Andres on 30 November. Its current existence, public setting, performers, and choreography can be observed and photographed."
+        },
+        {
+          "type": "p",
+          "text": "Its exact first performance is another question. The frequently repeated year 1621, the Elicano attribution, and stories about an image or bell from the sea have not been tied to a located seventeenth-century primary source. They should be presented as community tradition while the documentary trail remains open."
         },
         {
           "type": "note",
           "label": "Where the evidence stands",
-          "text": "Living tradition and oral memory. The performance is real and continuing. The 1621 origin, the Elicano attribution, the bell narrative and the first performance are not established in any located primary source."
+          "text": "The Kristiyano and Aeta performance is a living tradition. The exact origin year, first performance, and earliest surviving written explanation remain unverified."
         },
         {
           "type": "h2",
-          "text": "Why this does not weaken the festival"
+          "text": "Binabayani is not the 1649 pirate battle"
         },
         {
           "type": "p",
-          "text": "Some readers will feel that removing the date takes something away. I felt it too. The opposite is closer to the truth. When oral tradition is called oral tradition, it is protected — valued for what it actually does in the life of the community: carrying identity, teaching memory, dramatising conflict, expressing devotion, and gathering generations into one public act."
-        },
-        {
-          "type": "pull",
-          "text": "A ritual does not need a false date to be old. A story does not need to become an archive document to be meaningful."
-        },
-        {
-          "type": "h2",
-          "text": "The conflict itself"
+          "text": "Masinloc also has a separate, documented battle in 1649, when local defenders repelled raiders who arrived in six caracoas and later captured the vessels at Pulo San Salvador. That event involved coastal raiders, not the Kristiyano and Aeta sides represented in Binabayani."
         },
         {
           "type": "p",
-          "text": "This is the part I have rewritten most often. Missionary records describe violence between new Christian settlements and upland Aeta groups across parts of Zambales and Pangasinan. Those records show conflict existed, but they come from the missionary side and often use prejudiced language."
+          "text": "Keeping the two accounts separate makes both stronger. The 1649 defense can be taught from a traceable historical source. Binabayani can be honored as a living ritual whose deeper origin still depends on oral history and further research."
         },
         {
           "type": "p",
-          "text": "Binabayani may preserve a cultural memory of lowland–upland conflict and eventual reconciliation. The current evidence does not prove a single Aeta–Christian war in Masinloc in 1621. There is also a distinction that gets flattened constantly: the Christian side in this memory is not simply the Spanish. Local Christian lowlanders are not the same as colonial actors, and collapsing them changes what the performance is about."
-        },
-        {
-          "type": "p",
-          "text": "That changes how the dance is best taught. Not as an exact battle on an exact date with named leaders and fixed costumes, but as a living performance through which Masinloc remembers conflict, bravery, faith and reconciliation — a performance with its own history, which has changed as generations changed the choreography, the costume and the explanation."
-        },
-        {
-          "type": "p",
-          "text": "The belief that calamity may follow if the dance is not performed belongs in the same category: recorded as belief, valuable for what it shows about how seriously earlier generations took the ritual, not presented as a demonstrated cause of events."
+          "text": "For labels, captions, and classroom material, the clearest wording is: Binabayani depicts Kristiyano and Aeta; Christian Masinloqueños are included in the Kristiyano side."
         },
         {
           "type": "note",

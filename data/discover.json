@@ -872,60 +872,64 @@
     {
       "slug": "masinloc-history-has-more-than-one-starting-date",
       "theme": "history",
-      "title": "Masinloc's History Has More Than One Starting Date",
-      "deck": "1572 is everywhere. 1607 is better documented. Neither is a founding certificate, and people were living here before both.",
-      "metaTitle": "Masinloc History: What 1572 and 1607 Actually Mean",
-      "metaDescription": "Why 1572 is exploration context, 1607 is the stronger documented mission-town anchor, and neither date marks the beginning of life in Masinloc.",
+      "title": "Masinloc Was Founded in 1607",
+      "deck": "1572 belongs to Spanish exploration in Zambales. The documented founding of Masinloc's mission town came in 1607 under Fray Andrés del Espíritu Santo.",
+      "metaTitle": "The 1607 Founding of Masinloc, Explained",
+      "metaDescription": "Why 1607 is the documented founding year of Masinloc, what 1572 actually refers to, and who the historical record identifies as founder.",
       "published": "2026-08-23",
       "updated": "2026-08-25",
       "hero": {
         "family": "locations",
         "name": "san-andres-church",
         "alt": "Stone facade of San Andres Church in Masinloc, Zambales, at sunset",
-        "caption": "The church stands where the mission town was established, though not in its first form."
+        "caption": "San Andres Church stands in the town founded as a documented mission in 1607, though the present stone building came later."
       },
       "body": [
         {
           "type": "p",
-          "text": "Search for the founding date of Masinloc and you will get 1572, quickly and from many places. It is on websites, in captions, in presentations and in speeches, and it has been repeated often enough to sound settled. It is not settled, and the reason is worth understanding because the same pattern affects the founding dates of a great many Philippine towns."
+          "text": "The strongest sources reviewed for this project identify 1607 as Masinloc's founding year. Emmanuel Luis A. Romanillos's study of the Recollect mission states that Fray Andrés del Espíritu Santo founded Masinloc that year. DILG Zambales also lists Masinloc among the province's earliest towns and gives 1607 as its establishment year."
         },
         {
           "type": "p",
-          "text": "The year 1572 belongs to the wider story of Spanish exploration along the Zambales coast under Juan de Salcedo. That is genuine historical context and it usefully places this coastline within the early movement of Spanish expeditions through Luzon. What it is not is a record of the establishment of a town called Masinloc. An expedition passing along a coast is not a founding."
+          "text": "The frequently repeated year 1572 belongs to an earlier and different event: Spanish exploration in the wider Zambales region under Juan de Salcedo. No source reviewed connects that expedition with the establishment of the town of Masinloc."
         },
         {
           "type": "h2",
-          "text": "The date that holds more weight"
+          "text": "What happened in 1607"
         },
         {
           "type": "p",
-          "text": "The stronger documented beginning of Masinloc as a mission town is 1607, the year Recollect historical literature places Fray Andres del Espiritu Santo and Fray Jeronimo de Cristo in Masinloc, with Andres treated as founder of the mission town and builder of its first church. It is also the date used in current DILG Zambales historical material. That gives a sequence rather than a certificate: people living here long before either year, 1572 as exploration context, 1607 as the anchor for the mission and the first church."
+          "text": "Fray Andrés reached Masinloc by sea with Fray Jerónimo de Cristo. The historical study identifies Andrés as founder of the new pueblo and builder of its first church, a light-material structure that did not survive. The stone San Andres Church now associated with the town belongs to a later building period."
         },
         {
           "type": "pull",
-          "text": "We are not making Masinloc younger. We are making its history more precise."
+          "text": "For the documented town, the correct year is 1607."
         },
         {
           "type": "p",
-          "text": "There is a second problem with founding dates, and it is the more serious one. Treating either 1572 or 1607 as the beginning of Masinloc makes colonial attention look like the birth of the community. It quietly says the town began when outsiders started writing about it. The Sambal communities on this coast did not begin in the seventeenth century; they began being written down in the seventeenth century, which is an entirely different claim."
+          "text": "The reviewed sources establish the year but do not provide a verified month and day. Publishing 1607 without inventing greater precision is therefore the responsible choice."
         },
         {
           "type": "h2",
-          "text": "The line worth teaching"
+          "text": "A founding date is not the beginning of a people"
         },
         {
           "type": "p",
-          "text": "For classroom use the safest formulation is short: 1572 is Spanish exploration context for Zambales, not the proven founding of Masinloc; the 1607 Recollect mission is the stronger documented town and church anchor; and native life came before both. That sentence will never fit on a commemorative seal. It is still the better history."
+          "text": "Calling 1607 the founding year refers to the documented colonial mission town. Sambal and Aeta communities were already part of the Zambales landscape. Correcting 1572 does not erase that older presence; it prevents colonial exploration from being mistaken for the birth of Masinloc."
         },
         {
           "type": "links",
           "items": [
             {
-              "label": "The full research behind the 1572 correction",
+              "label": "Why the founding year is 1607, not 1572",
               "href": "../bulletin/was-masinloc-founded-in-1572.html"
             },
             {
-              "label": "1607 and the first mission church",
+              "label": "Fray Andrés del Espíritu Santo, founder of Masinloc",
+              "href": "../founder-of-masinloc.html"
+            },
+            {
+              "label": "1607 and Masinloc's first church",
               "href": "../bulletin/1607-and-the-first-mission-church.html"
             },
             {
@@ -1552,60 +1556,60 @@
     {
       "slug": "every-november-masinloc-stages-a-battle",
       "theme": "festivals",
-      "title": "Binabayani: The Battle Masinloc Performs Every November",
-      "deck": "The war dance is publicly documented with the feast of San Andres on 30 November. Its living performance is clear; the often-repeated 1621 origin is not established by a located primary source.",
-      "metaTitle": "Binabayani Festival in Masinloc: Dance, Faith and Evidence",
-      "metaDescription": "Understand Masinloc's Binabayani war dance, its link to San Andres on November 30, and why the often-repeated 1621 origin remains unverified.",
+      "title": "Binabayani: Kristiyano and Aeta",
+      "deck": "Binabayani has two represented sides: Kristiyano and Aeta. Christian Masinloqueños belong to the Kristiyano side; they are not a separate third group.",
+      "metaTitle": "Binabayani Festival: Kristiyano and Aeta in Masinloc",
+      "metaDescription": "Understand the two sides represented in Masinloc's Binabayani Festival, its connection to San Andres, and what remains unknown about its origin.",
       "published": "2026-08-23",
       "updated": "2026-08-25",
       "hero": {
         "family": "discover",
         "name": "binabayani-festival",
-        "alt": "Binabayani performers in Masinloc, Zambales",
-        "caption": "Binabayani, performed in connection with the feast of San Andres. Masinloc, Zambales."
+        "alt": "Kristiyano and Aeta performers during Binabayani in Masinloc, Zambales",
+        "caption": "Binabayani represents Kristiyano and Aeta and is performed in connection with the feast of San Andres."
       },
       "body": [
         {
           "type": "p",
-          "text": "The Department of Tourism describes Binabayani as Masinloc's depiction of a war between Christians and Aetas, held with the feast of San Andres on 30 November. Project-approved photography from the 2025 performance records costume, movement and staged confrontation. Those are observable facts about a living public event."
+          "text": "The Department of Tourism recognizes Binabayani as Masinloc's conflict portrayal held with the feast of San Andres on 30 November. In the town's own wording, the represented sides are Kristiyano and Aeta."
         },
         {
           "type": "p",
-          "text": "The performance joins civic festival, Catholic devotion and a local narrative of conflict. That combination gives Binabayani cultural weight, but it does not grant every printed origin story equal evidence. A tradition can be alive in the present while the date of its first performance remains unknown."
+          "text": "The Kristiyano side includes Christian Masinloqueños. Masinloqueños should not be listed as a third side separate from the Kristiyano, and the Kristiyano role should not be rewritten as if it represented only Spaniards."
         },
         {
           "type": "h2",
-          "text": "The date problem"
+          "text": "Two sides, one Masinloc tradition"
         },
         {
           "type": "p",
-          "text": "Modern accounts very often give 1621 as the year Binabayani began, sometimes attaching an early telling to Capt. Florentino Elicano and a connection to Municipal Judge Gerardo Elicano, and sometimes attaching a narrative about an image or bell recovered from the sea. The research behind this project went looking for the document under the date and could not find one."
+          "text": "The performance combines staged confrontation, devotion to San Andres, community memory, music, costume, and public ritual. It remains a living expression of Masinloc even when its earliest historical details cannot yet be fixed to a date."
         },
         {
           "type": "p",
-          "text": "So the accurate sentence is not that Binabayani began in 1621. It is that Binabayani is a living Masinloc tradition, commonly interpreted as a conflict between Aetas and Christians, joined to devotion to San Andres and to local stories about something arriving from the sea — and that the 1621 origin, the attribution, the bell narrative and the first performance are not established by any located primary source."
+          "text": "That clarity also respects Aeta identity. The Aeta side represents a living people with descendants and history, not simply a visual category inside a festival costume."
         },
         {
           "type": "pull",
-          "text": "Calling oral tradition oral tradition does not demote it. It protects it from being checked and found wanting against a standard it never claimed."
+          "text": "Binabayani represents Kristiyano and Aeta. Christian Masinloqueños are included in the Kristiyano side."
         },
         {
           "type": "h2",
-          "text": "Why removing the date is not a loss"
+          "text": "The origin date remains open"
         },
         {
           "type": "p",
-          "text": "It feels like one. The instinct is that a tradition with a date is more serious than a tradition without one, and that giving up the date gives up standing. The opposite is closer to the truth. A date that collapses the first time a researcher checks it takes the rest of the account down with it. A tradition described accurately as a living practice, with its origins openly unresolved, is not vulnerable in that way."
+          "text": "Many modern accounts assign the festival an origin in 1621 and connect it with an Elicano account or a story about an image or bell from the sea. No located seventeenth-century primary source yet establishes that year, the first performance, or the earliest version of the story."
         },
         {
           "type": "p",
-          "text": "There is also a question worth sitting with about what the dance depicts. A performance built around a conflict between Aetas and Christians is a performance about this coast's own history of encounter, and the people on one side of that encounter are not an abstraction. They have descendants. How the tradition is described matters for that reason as well as for the documentary one."
+          "text": "This uncertainty does not weaken the festival. It simply separates what can be observed and publicly documented today from the deeper origin account that remains part of oral tradition and continuing research."
         },
         {
           "type": "links",
           "items": [
             {
-              "label": "The full research: what Binabayani remembers",
+              "label": "The evidence note on Kristiyano and Aeta",
               "href": "../bulletin/what-binabayani-remembers.html"
             },
             {

@@ -54,13 +54,16 @@ const FUNCTION = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/submit-m
 const PAGES = [
   '/', '/a-closer-look.html', '/connect.html', '/contact.html', '/destinations.html',
   '/leadership.html', '/masinloc-bulletin.html', '/sambal-tina.html', '/sources.html',
-  '/trust.html', '/verified-history.html', '/privacy.html', '/marketplace.html',
+  '/trust.html', '/verified-history.html', '/founder-of-masinloc.html', '/privacy.html', '/marketplace.html',
   '/marketplace/diwan-coffee.html',
   '/discover/index.html', '/discover/masinloc-actually.html',
   '/discover/the-church-masinloquenos-walk-past.html',
   '/discover/the-sambal-words-we-refuse-to-lose.html',
   '/discover/every-november-masinloc-stages-a-battle.html',
   '/bulletin/why-mabayani-exists.html',
+  '/bulletin/was-masinloc-founded-in-1572.html',
+  '/bulletin/1649-when-six-caracoas-came.html',
+  '/bulletin/what-binabayani-remembers.html',
   '/bulletin/san-andres-church-across-the-centuries.html',
 ];
 

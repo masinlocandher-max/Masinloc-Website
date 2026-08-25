@@ -15,7 +15,7 @@ const WIDTHS = [320, 360, 390, 414, 480, 520, 600, 768, 800, 801, 834, 900,
 
 const PAGES = [
   'index.html', 'a-closer-look.html', 'sambal-tina.html', 'destinations.html', 'leadership.html',
-  'verified-history.html', 'masinloc-bulletin.html', 'connect.html', 'contact.html', 'sources.html', 'bulletin/was-masinloc-founded-in-1572.html', '404.html',
+  'verified-history.html', 'founder-of-masinloc.html', 'masinloc-bulletin.html', 'connect.html', 'contact.html', 'sources.html', 'bulletin/was-masinloc-founded-in-1572.html', 'bulletin/what-binabayani-remembers.html', '404.html',
 ];
 
 /* Below this, body text stops being comfortably readable on a phone. */

@@ -12,6 +12,7 @@ const pages = [
   ['sambal-tina', '/sambal-tina.html'],
   ['leadership', '/leadership.html'],
   ['verified-history', '/verified-history.html'],
+  ['founder', '/founder-of-masinloc.html'],
   ['bulletin', '/masinloc-bulletin.html'],
   ['connect', '/connect.html'],
   ['admin', '/admin.html'],
@@ -39,6 +40,7 @@ const expectedCurrentHref = {
   'sambal-tina': 'a-closer-look.html',
   leadership: 'a-closer-look.html',
   'verified-history': 'a-closer-look.html',
+  founder: 'a-closer-look.html',
   bulletin: 'masinloc-bulletin.html',
   connect: 'connect.html',
 };
@@ -359,13 +361,37 @@ for (const [viewportName, viewport] of viewports) {
         }
       }
 
-      // Verified History stays purpose-only until sourced event history exists.
-      // The Bulletin has passed that point and is checked the other way round:
-      // it must actually list stories, and each must carry a date and route to
-      // the evidence directory.
+      // History is generated from a reviewed claim register. Check the visible
+      // meaning, not merely the presence of a page, so 1572 or a third
+      // Binabayani side cannot slip back into the public wording.
       if (pageName === 'verified-history') {
-        const entryCount = await page.locator('time, .article-card, .article-list, .post-card, .story-card').count();
-        if (entryCount !== 0) failures.push(`${viewportName}/${pageName}: purpose page is not empty`);
+        const foundingYear = (await page.locator('[data-fact="documented-founding-year"]').textContent())?.trim();
+        if (foundingYear !== '1607') failures.push(`${viewportName}/${pageName}: documented founding year is ${foundingYear}`);
+        const timelineEntries = await page.locator('.history-timeline-item').count();
+        if (timelineEntries !== 8) failures.push(`${viewportName}/${pageName}: expected 8 history moments, found ${timelineEntries}`);
+        if (!(await page.locator('.history-san-vicente').isVisible())) {
+          failures.push(`${viewportName}/${pageName}: dedicated Barrio San Vicente history is missing`);
+        }
+        if (!(await page.locator('a[href="founder-of-masinloc.html"]').count())) {
+          failures.push(`${viewportName}/${pageName}: founder profile is not linked`);
+        }
+        const historyText = await page.locator('body').innerText();
+        if (!historyText.includes('Kristiyano') || !historyText.includes('Aeta')) {
+          failures.push(`${viewportName}/${pageName}: Binabayani does not name Kristiyano and Aeta`);
+        }
+        if (!historyText.includes('not a separate third side')) {
+          failures.push(`${viewportName}/${pageName}: Masinloqueños are not clearly included in the Kristiyano side`);
+        }
+      }
+
+      if (pageName === 'founder') {
+        const name = (await page.locator('h1').textContent())?.trim();
+        if (name !== 'Fray Andrés del Espíritu Santo') {
+          failures.push(`${viewportName}/${pageName}: founder name is ${name}`);
+        }
+        if (!(await page.locator('[data-photo-status="pending"]').isVisible())) {
+          failures.push(`${viewportName}/${pageName}: approved portrait-pending state is missing`);
+        }
       }
 
       if (pageName === 'bulletin') {
