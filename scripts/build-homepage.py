@@ -326,7 +326,6 @@ def render() -> str:
     <a href="discover/index.html">Discover</a>
     <a href="marketplace.html">Marketplace</a>
     <a href="a-closer-look.html">A Closer Look</a>
-    <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
     <a href="connect.html">Masinloc Connect</a>
     <a href="contact.html">Contact</a>

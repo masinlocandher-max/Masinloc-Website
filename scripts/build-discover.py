@@ -143,7 +143,6 @@ def nav(active: str) -> str:
     {item("index.html", "Discover")}
     {item("../marketplace.html", "Marketplace")}
     {item("../a-closer-look.html", "A Closer Look")}
-    {item("../verified-history.html", "Verified History")}
     {item("../masinloc-bulletin.html", "Masinloc Bulletin")}
     {item("../connect.html", "Masinloc Connect", "connect-link")}
     {item("../contact.html", "Contact")}

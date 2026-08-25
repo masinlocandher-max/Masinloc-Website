@@ -149,7 +149,6 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
     <a href="{up}discover/index.html">Discover</a>
     <a href="{up}marketplace.html">Marketplace</a>
     <a href="{up}a-closer-look.html">A Closer Look</a>
-    <a href="{up}verified-history.html">Verified History</a>
     <a class="active" href="{up}masinloc-bulletin.html" aria-current="page">Masinloc Bulletin</a>
     <a class="connect-link" href="{up}connect.html">Masinloc Connect</a>
     <a href="{up}contact.html">Contact</a>

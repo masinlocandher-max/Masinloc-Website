@@ -18,12 +18,15 @@ const pages = [
   ['not-found', '/404.html'],
 ];
 
+/* Seven items. Verified History came out of the bar for the same reason Sambal
+   Tina was never in it: eight was crowded, and it is a section of A Closer Look
+   rather than a peer of it. It stays in every footer and A Closer Look carries
+   three links to it, so nothing became harder to reach. */
 const expectedNavText = [
   'Home',
   'Discover',
   'Marketplace',
   'A Closer Look',
-  'Verified History',
   'Masinloc Bulletin',
   'Masinloc Connect',
   'Contact',
@@ -35,7 +38,7 @@ const expectedCurrentHref = {
   /* A sub-page of A Closer Look: the parent keeps the current-page state. */
   'sambal-tina': 'a-closer-look.html',
   leadership: 'a-closer-look.html',
-  'verified-history': 'verified-history.html',
+  'verified-history': 'a-closer-look.html',
   bulletin: 'masinloc-bulletin.html',
   connect: 'connect.html',
 };

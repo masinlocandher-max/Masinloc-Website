@@ -86,7 +86,16 @@ REQUIRED = [
     "assets/masinloc-logo.webp",
     "assets/stage1/masinloc-hero.avif",
 ]
-MENU_LINKS = ["verified-history.html", "masinloc-bulletin.html"]
+# Reachability, expressed as the navigation actually is.
+#
+# This used to require verified-history.html on every public page, which was
+# true while it sat in the top bar. It is a section of A Closer Look now — the
+# bar was down to eight items and crowded, and this one is not a peer of the
+# others — so the page every visitor must be able to reach from anywhere is its
+# parent. VERIFIED_HISTORY_PARENT below keeps the child itself from being
+# orphaned by the same change.
+MENU_LINKS = ["a-closer-look.html", "masinloc-bulletin.html"]
+VERIFIED_HISTORY_PARENT = "a-closer-look.html"
 FORBIDDEN_FILES = [
     "hero-loader.js",
     "hero-single.css",
@@ -254,6 +263,13 @@ for html in ROOT.glob("*.html"):
         for menu_link in MENU_LINKS:
             if menu_link not in parser.refs:
                 fail(f"{html.name}: missing required public menu link to {menu_link}")
+        # The parent carries the child. Trimming the top bar moved Verified
+        # History under A Closer Look; if that link ever goes, the page is
+        # reachable from nothing but the footer and this should say so.
+        if html.name == VERIFIED_HISTORY_PARENT and "verified-history.html" not in parser.refs:
+            fail(f"{html.name}: no longer links to verified-history.html, which was "
+                 f"moved under it when the top navigation was trimmed — the page "
+                 f"would be orphaned from the primary navigation entirely")
         if "admin.html" in {urlsplit(ref).path for ref in parser.refs}:
             fail(f"{html.name}: public navigation must not expose admin.html")
         for marker in PLACEHOLDER_MARKERS:

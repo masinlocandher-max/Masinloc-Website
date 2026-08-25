@@ -23,6 +23,12 @@ SUBPAGES = {
     "sambal-tina.html": "a-closer-look.html",
     "destinations.html": "a-closer-look.html",
     "leadership.html": "a-closer-look.html",
+    # Verified History came out of the top bar for the same reason Sambal Tina
+    # was never in it: eight items crowded the row, and this one is a section
+    # of A Closer Look rather than a peer of it. A Closer Look already carries
+    # three links to it, including a card, and it stays in every footer — the
+    # bar was trimmed, the page was not hidden.
+    "verified-history.html": "a-closer-look.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.
@@ -32,7 +38,6 @@ EXPECTED_NAV = [
     ("discover/index.html", "Discover"),
     ("marketplace.html", "Marketplace"),
     ("a-closer-look.html", "A Closer Look"),
-    ("verified-history.html", "Verified History"),
     ("masinloc-bulletin.html", "Masinloc Bulletin"),
     ("connect.html", "Masinloc Connect"),
     ("contact.html", "Contact"),

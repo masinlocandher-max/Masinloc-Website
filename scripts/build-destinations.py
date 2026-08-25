@@ -62,7 +62,6 @@ HEAD = """<!doctype html>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
     <a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a>
     <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
-    <a href="verified-history.html">Verified History</a>
     <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
     <a class="connect-link" href="connect.html">Masinloc Connect</a>
     <a href="contact.html">Contact</a>
