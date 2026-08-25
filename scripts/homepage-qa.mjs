@@ -118,11 +118,32 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
          photograph, and a scrim over it is still the only thing making white
          type legible. The navigation is included because it is fixed over the
          frame's top edge. */
+      /* `.home-nav a` used to be the selector here, and querySelector returned
+         the brand anchor rather than a navigation link — so the links were
+         never actually measured and the brand's box was measured as if it were
+         16px text. The links are named directly now, and every one is sampled
+         rather than only the first.
+
+         The menu button is sampled by its bars rather than by its box. The
+         button is a rounded plate, so the corners of its bounding rectangle
+         fall outside the plate and show bare photograph — sampling the box
+         reports the worst pixel from a corner no part of the control is
+         painted on, and no amount of darkening the plate can move it. The bars
+         are the ink; what is behind them is what matters. */
+      const targets = [];
       for (const selector of ['.hero-mark', '.hero h1', '.hero-note',
-        '.cta-secondary', '.home-nav a', '#menuToggle']) {
-        const el = document.querySelector(selector);
-        if (!el || !el.getClientRects().length) continue;
-        const size = parseFloat(getComputedStyle(el).fontSize);
+        '.cta-secondary', '.home-links a', '#menuToggle span']) {
+        for (const node of document.querySelectorAll(selector)) {
+          targets.push([selector, node]);
+        }
+      }
+      for (const [selector, el] of targets) {
+        if (!el.getClientRects().length) continue;
+        const style = getComputedStyle(el);
+        // Faded out is not on the photograph either: the brand mark and the
+        // drawer links sit at opacity 0 until the bar scrolls or opens.
+        if (style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
+        const size = parseFloat(style.fontSize);
         let rects;
         if (el.tagName === 'IMG' || !el.textContent.trim()) {
           rects = [el.getBoundingClientRect()];
@@ -132,17 +153,35 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
           rects = [...range.getClientRects()];
         }
         for (const r of rects) {
-          if (r.width > 2 && r.height > 2) {
-            out.push({ selector, size, x: Math.round(r.x), y: Math.round(r.y),
-              w: Math.round(r.width), h: Math.round(r.height) });
-          }
+          if (r.width <= 2 || r.height <= 2) continue;
+          /* Only what a visitor can actually see. On a phone the navigation
+             links live in a drawer that is closed by default and translated
+             fully above the viewport; they still report rects, and clamping
+             those to the top of the page samples open sky behind links nobody
+             is looking at. An element outside the viewport is not sitting on
+             the photograph. */
+          if (r.bottom <= 0 || r.top >= window.innerHeight) continue;
+          if (r.right <= 0 || r.left >= window.innerWidth) continue;
+          out.push({ selector, size, x: Math.round(r.x), y: Math.round(r.y),
+            w: Math.round(r.width), h: Math.round(r.height) });
         }
       }
       return out;
     });
 
-    // Hide everything in front of the photograph, so only the scrim is sampled.
-    await page.addStyleTag({ content: '.hero-inner,.home-nav{visibility:hidden !important}' });
+    /* Hide the ink, keep the grounds.
+       This used to hide .home-nav outright, which was right when the bar was
+       bare and the only scrim lived on .hero-media. The bar now carries its own
+       gradient and the menu button its own plate, and both are real painted
+       layers between the glyphs and the photograph — hiding them would measure
+       a background that is not the one behind the text. So each foreground is
+       hidden individually and everything it sits on stays painted. */
+    await page.addStyleTag({ content: `
+      .hero-inner{visibility:hidden !important}
+      .home-nav a{visibility:hidden !important}
+      .home-nav .brand img{visibility:hidden !important}
+      .nav-toggle span,.nav-toggle::before{visibility:hidden !important}
+    ` });
     await page.waitForTimeout(150);
 
     const worst = new Map();

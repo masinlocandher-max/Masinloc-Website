@@ -73,7 +73,33 @@ html{scroll-padding-top:96px}
              padding 420ms var(--ease-standard);
   border-bottom:1px solid transparent;
 }
-/* Over the hero the navigation is part of the photograph. */
+/* Over the hero the navigation is part of the photograph, and it stays
+   transparent: no bar, no block of colour, the picture visible through it.
+
+   White links still need something behind them — the top of this frame is open
+   sky and pale cloud, where white type measured 2.4:1 on its own. So the bar
+   carries a gradient of its own that is opaque enough at the links and gone by
+   its lower edge. Putting it on the navigation rather than on .hero-media
+   matters: it belongs to the chrome, it disappears with the chrome when the
+   white scrolled bar takes over, and the photograph itself is left unpainted.
+
+   Only the top of the bar's own height is affected — about seventy pixels of
+   an eight-hundred-pixel frame — and it fades rather than ends, so it reads as
+   light falling off the top edge instead of a band sitting on the picture. */
+.home-nav::before{
+  /* Overhangs the bar rather than stopping at it. A gradient confined to the
+     bar's own box finishes at its lower edge, and that edge is a tonal step
+     straight across the photograph — a seam where there should be none. Half
+     again the bar's height lets the fade finish on the picture instead. */
+  content:"";position:absolute;left:0;right:0;top:0;height:190%;
+  z-index:-1;pointer-events:none;
+  background:linear-gradient(to bottom,
+    rgba(3,17,47,.90) 0%,rgba(3,17,47,.72) 26%,
+    rgba(3,17,47,.42) 52%,rgba(3,17,47,.14) 76%,rgba(3,17,47,0) 100%);
+  transition:opacity 420ms var(--ease-standard);
+}
+/* The scrolled bar brings its own ground; two would show as a dark lip. */
+.home-nav.is-scrolled::before{opacity:0}
 .home-nav a,.home-nav .nav-toggle{color:var(--white)}
 .home-nav .brand img{height:34px;width:auto;display:block;
   filter:drop-shadow(0 2px 12px rgba(0,0,0,.45));
@@ -81,6 +107,7 @@ html{scroll-padding-top:96px}
   transition:opacity 380ms var(--ease-standard),transform 380ms var(--ease-standard)}
 .home-nav.is-scrolled .brand img,.home-nav.is-open .brand img{opacity:1;transform:none}
 .home-nav.is-scrolled{
+  /* Replaces the gradient above outright — one ground at a time. */
   background:rgba(255,255,255,.92);
   backdrop-filter:saturate(150%) blur(14px);
   border-bottom-color:var(--line);
@@ -135,13 +162,10 @@ html{scroll-padding-top:96px}
      reset here rather than there: the homepage's height now comes from the
      photograph, and connect.html's hero is not part of this change. */
   height:auto;min-height:0;max-height:none;overflow:visible;
-  /* The top padding is the navigation's own band. The bar is fixed and
-     transparent until it scrolls, so it used to sit on the photograph and
-     needed a scrim dark enough to carry white links over open sky — which
-     meant darkening the top of the very picture this change exists to show.
-     Starting the frame below the bar costs one strip of navy and keeps the
-     scrim off the top of the photograph entirely. */
-  padding:clamp(78px,9vh,94px) 0 0;
+  /* The photograph runs to the top edge and the navigation floats on it. The
+     scrim the white links need is carried by the bar itself rather than
+     painted onto the frame — see .home-nav below. */
+  padding:0;
   background:var(--navy-deep);
 }
 .hero-media{position:relative;inset:auto;z-index:0;display:block}
@@ -832,14 +856,20 @@ html{scroll-padding-top:96px}
   .nav-toggle{
     display:block;position:relative;margin-left:auto;
     width:46px;height:46px;padding:0;cursor:pointer;
-    border:1px solid rgba(255,255,255,.32);border-radius:14px;
-    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.34);border-radius:14px;
+    /* Tinted dark, not light. The shared button in site.css sits on white
+       pages, where a white-tinted plate is right. This one sits on a
+       photograph whose top corner is open sky, and a light plate lifts the
+       ground under white bars exactly where it is already brightest — it
+       measured 2.76:1. Navy behind it does the opposite and still lets the
+       picture through. */
+    background:rgba(3,17,47,.48);
     -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     transition:background 260ms var(--ease-standard),
                border-color 260ms var(--ease-standard),
                transform 260ms var(--ease-standard);
   }
-  .nav-toggle:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.52)}
+  .nav-toggle:hover{background:rgba(3,17,47,.62);border-color:rgba(255,255,255,.56)}
   .nav-toggle:active{transform:scale(.94)}
   .nav-toggle:focus-visible{outline:3px solid rgba(255,255,255,.85);outline-offset:3px}
   .nav-toggle span,.nav-toggle::before{
@@ -867,7 +897,7 @@ html{scroll-padding-top:96px}
   .home-nav .home-links.open ~ .nav-toggle span:last-child{top:22px;transform:rotate(-45deg)}
   /* Open, the panel behind it is solid navy, so the plate stops competing. */
   .home-nav .home-links.open ~ .nav-toggle{
-    background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.44);
+    background:rgba(3,17,47,.66);border-color:rgba(255,255,255,.48);
   }
   
 
@@ -876,7 +906,7 @@ html{scroll-padding-top:96px}
      fill it, so the copy comes off the picture and sits beneath it on the navy
      field. The photograph stays whole — cropping it to manufacture the height
      an overlay needs is exactly what this change undid. */
-  .hero{padding:clamp(70px,11vh,80px) 0 clamp(44px,7vh,72px)}
+  .hero{padding:0 0 clamp(44px,7vh,72px)}
   .hero-inner{position:relative;left:auto;right:auto;bottom:auto;
     margin-top:clamp(26px,4vh,40px)}
   .hero-media::after{
