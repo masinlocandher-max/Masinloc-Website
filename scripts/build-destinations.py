@@ -60,10 +60,11 @@ HEAD = """<!doctype html>
   <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    <a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a>
-    <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
+    <a href="discover/index.html">Discover</a>
+    <a href="sambal-tina.html">Sambal Tina</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a class="active" href="a-closer-look.html" aria-current="page">About Masinloc</a>
     <a class="connect-link" href="connect.html">Masinloc Connect</a>
-    <a href="contact.html">Contact</a>
   </nav>
 </header>
 
@@ -71,13 +72,13 @@ HEAD = """<!doctype html>
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="index.html">Masinloc, Zambales</a></li>
-      <li><a href="a-closer-look.html">A Closer Look</a></li>
+      <li><a href="a-closer-look.html">About Masinloc</a></li>
       <li><span aria-current="page">Places</span></li>
     </ol>
   </nav>
 
   <section class="places-hero">
-    <p class="section-label">A Closer Look · Places</p>
+    <p class="section-label">About Masinloc · Places</p>
     <h1>The places we<br>grew up in.</h1>
     <p class="lead">{count_word} places in Masinloc, Zambales, each photographed where it actually is and written down with the barangay it belongs to. Most of us grew up in them; nobody had put them in one place before.</p>
     <a class="places-scroll" href="#{first}">Start at {first_name}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M7 13l5 5 5-5"/></svg></a>
@@ -108,7 +109,7 @@ FOOT = """</main>
 
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">A Closer Look</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="sambal-tina.html">Sambal Tina</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">About Masinloc</a><a href="connect.html">Masinloc Connect</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="sources.html">Sources &amp; References</a><a href="contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>
 {jsonld}
@@ -232,7 +233,7 @@ def structured_data(locations: list[dict]) -> str:
                 "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Masinloc, Zambales",
                      "item": f"{site}/"},
-                    {"@type": "ListItem", "position": 2, "name": "A Closer Look",
+                    {"@type": "ListItem", "position": 2, "name": "About Masinloc",
                      "item": f"{site}/a-closer-look.html"},
                     {"@type": "ListItem", "position": 3, "name": "Places",
                      "item": f"{site}/destinations.html"},

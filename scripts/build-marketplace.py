@@ -162,12 +162,11 @@ def nav(depth: int) -> str:
   <a class="brand" href="{up}index.html" aria-label="Masinloc, Zambales home"><img src="{up}assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    {item(f"{up}index.html", "Home")}
     {item(f"{up}discover/index.html", "Discover")}
+    {item(f"{up}sambal-tina.html", "Sambal Tina")}
     {item(f"{up}marketplace.html", "Marketplace")}
-    {item(f"{up}a-closer-look.html", "A Closer Look")}
+    {item(f"{up}a-closer-look.html", "About Masinloc")}
     {item(f"{up}connect.html", "Masinloc Connect", "connect-link")}
-    {item(f"{up}contact.html", "Contact")}
   </nav>
 </header>"""
 
@@ -176,7 +175,7 @@ def footer(depth: int) -> str:
     up = "../" if depth else ""
     return f"""<footer class="home-footer">
   <div class="footer-brand"><img src="{up}assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">A Closer Look</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}sambal-tina.html">Sambal Tina</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">About Masinloc</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}sources.html">Sources &amp; References</a><a href="{up}contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>"""
 
@@ -452,7 +451,7 @@ def hub_page() -> str:
   {crumbs([("Masinloc, Zambales", "index.html"), ("Marketplace", None)])}
 
   <section class="mk-hero">
-    <p class="section-label">Masinloc Connect</p>
+    <p class="section-label">Marketplace</p>
     <h1>Local businesses. Easy to find.</h1>
     <p class="mk-lead">Businesses, food, services and local enterprises across Masinloc —
       listed by the people who run them, with the details you need to get in touch.</p>

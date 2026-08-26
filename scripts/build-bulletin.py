@@ -107,8 +107,17 @@ def by_date(articles: list[dict]) -> list[dict]:
 # --- shared shell -------------------------------------------------------------
 
 def shell_head(title: str, description: str, canonical: str, *, depth: int,
-               extra: str = "", og_type: str = "website") -> str:
+               extra: str = "", og_type: str = "website",
+               active: str = "Discover") -> str:
+    """`active` names which of the five destinations owns this page.
+
+    The articles and the sources directory are reading material, so Discover
+    holds the current-page state for them. The Bulletin's own front page is the
+    editorial publication and is not one of the five, so it passes active=""
+    and highlights nothing rather than borrowing a highlight it has no claim to.
+    """
     up = "../" if depth else ""
+    disc_cur = ' class="active" aria-current="page"' if active == "Discover" else ""
     ogtype = f'<meta property="og:type" content="{og_type}">\n'
     return f"""<!doctype html>
 <html lang="en">
@@ -145,12 +154,11 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
   <a class="brand" href="{up}index.html" aria-label="Masinloc, Zambales home"><img src="{up}assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    <a href="{up}index.html">Home</a>
-    <a class="active" href="{up}discover/index.html" aria-current="page">Discover</a>
+    <a href="{up}discover/index.html"{disc_cur}>Discover</a>
+    <a href="{up}sambal-tina.html">Sambal Tina</a>
     <a href="{up}marketplace.html">Marketplace</a>
-    <a href="{up}a-closer-look.html">A Closer Look</a>
+    <a href="{up}a-closer-look.html">About Masinloc</a>
     <a class="connect-link" href="{up}connect.html">Masinloc Connect</a>
-    <a href="{up}contact.html">Contact</a>
   </nav>
 </header>
 """
@@ -161,7 +169,7 @@ def shell_foot(depth: int, jsonld: str = "", scripts: str = "") -> str:
     return f"""
 <footer class="home-footer">
   <div class="footer-brand"><img src="{up}assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">A Closer Look</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}sources.html">Sources &amp; References</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}sambal-tina.html">Sambal Tina</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">About Masinloc</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}sources.html">Sources &amp; References</a><a href="{up}contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>
 {jsonld}<script src="{up}site.js?v=20260825-1"></script>
@@ -432,7 +440,7 @@ def publication_page(articles: list[dict]) -> str:
     return shell_head(
         "Masinloc Bulletin | Announcements & News",
         "Announcements, notices and news from Masinloc, Zambales. The reading \u2014 history, heritage and language \u2014 lives in Discover.",
-        url, depth=0) + f"""
+        url, depth=0, active="") + f"""
 <main id="main">
   <section class="bulletin-hero">
     <p class="section-label">Masinloc Bulletin</p>

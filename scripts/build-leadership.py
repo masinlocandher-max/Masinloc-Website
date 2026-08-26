@@ -204,7 +204,7 @@ def page() -> str:
                 "@type": "BreadcrumbList",
                 "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Masinloc, Zambales", "item": f"{SITE}/"},
-                    {"@type": "ListItem", "position": 2, "name": "A Closer Look", "item": f"{SITE}/a-closer-look.html"},
+                    {"@type": "ListItem", "position": 2, "name": "About Masinloc", "item": f"{SITE}/a-closer-look.html"},
                     {"@type": "ListItem", "position": 3, "name": "Municipal Leadership", "item": url},
                 ],
             },
@@ -276,10 +276,11 @@ def page() -> str:
   <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    <a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a>
-    <a class="active" href="a-closer-look.html" aria-current="page">A Closer Look</a>
+    <a href="discover/index.html">Discover</a>
+    <a href="sambal-tina.html">Sambal Tina</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a class="active" href="a-closer-look.html" aria-current="page">About Masinloc</a>
     <a class="connect-link" href="connect.html">Masinloc Connect</a>
-    <a href="contact.html">Contact</a>
   </nav>
 </header>
 
@@ -287,7 +288,7 @@ def page() -> str:
   <nav class="crumbs" aria-label="Breadcrumb">
     <ol>
       <li><a href="index.html">Masinloc, Zambales</a></li>
-      <li><a href="a-closer-look.html">A Closer Look</a></li>
+      <li><a href="a-closer-look.html">About Masinloc</a></li>
       <li><span aria-current="page">Municipal Leadership</span></li>
     </ol>
   </nav>
@@ -332,7 +333,7 @@ def page() -> str:
 
 <footer class="home-footer">
   <div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">A Closer Look</a><a href="leadership.html">Municipal Leadership</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="connect.html">Masinloc Connect</a><a href="contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="sambal-tina.html">Sambal Tina</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">About Masinloc</a><a href="connect.html">Masinloc Connect</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="sources.html">Sources &amp; References</a><a href="contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>
 {jsonld}<script src="site.js?v=20260825-1"></script>

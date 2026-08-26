@@ -156,19 +156,18 @@ def nav(active: str) -> str:
   <a class="brand" href="../index.html" aria-label="Masinloc, Zambales home"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
   <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
   <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
-    {item("../index.html", "Home")}
     {item("index.html", "Discover")}
+    {item("../sambal-tina.html", "Sambal Tina")}
     {item("../marketplace.html", "Marketplace")}
-    {item("../a-closer-look.html", "A Closer Look")}
+    {item("../a-closer-look.html", "About Masinloc")}
     {item("../connect.html", "Masinloc Connect", "connect-link")}
-    {item("../contact.html", "Contact")}
   </nav>
 </header>"""
 
 
 FOOTER = """<footer class="home-footer">
   <div class="footer-brand"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
-  <div class="footer-nav"><a href="../index.html">Home</a><a href="index.html">Discover</a><a href="../marketplace.html">Marketplace</a><a href="../a-closer-look.html">A Closer Look</a><a href="../verified-history.html">Verified History</a><a href="../masinloc-bulletin.html">Masinloc Bulletin</a><a href="../connect.html">Masinloc Connect</a><a href="../contact.html">Contact</a></div>
+  <div class="footer-nav"><a href="../index.html">Home</a><a href="index.html">Discover</a><a href="../sambal-tina.html">Sambal Tina</a><a href="../marketplace.html">Marketplace</a><a href="../a-closer-look.html">About Masinloc</a><a href="../connect.html">Masinloc Connect</a><a href="../verified-history.html">Verified History</a><a href="../masinloc-bulletin.html">Masinloc Bulletin</a><a href="../sources.html">Sources &amp; References</a><a href="../contact.html">Contact</a></div>
   <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
 </footer>"""
 

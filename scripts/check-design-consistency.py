@@ -20,8 +20,12 @@ PUBLIC_PAGES = [
 # the same shared shell, but the current-page state belongs to their parent, so
 # the locked six-item navigation does not grow every time a section gains a
 # detail page.
+# A page's value here is the nav href that holds its current-page state, or
+# None for a page that is reachable but is not one of the five and must not
+# borrow a highlight it has no claim to.
 SUBPAGES = {
-    "sambal-tina.html": "a-closer-look.html",
+    "index.html": None,          # the logo is the home link
+    "masinloc-bulletin.html": None,  # the publication, not a destination
     "destinations.html": "a-closer-look.html",
     "leadership.html": "a-closer-look.html",
     # Discover is the home of every article on this site. Verified History,
@@ -30,18 +34,26 @@ SUBPAGES = {
     # them holding its own place in a bar that would then need ten items.
     "verified-history.html": "discover/index.html",
     "founder-of-masinloc.html": "discover/index.html",
-    "masinloc-bulletin.html": "discover/index.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.
 
+# Five destinations, and the site promises exactly these five: read about
+# Masinloc, learn its language, find a local business, understand the town,
+# take part. Home left the bar because the logo is the home link on every
+# page, and Contact left it because it is a footer concern — spending two of
+# six slots on them was what pushed Sambal Tina, the most distinctive thing
+# here, out of the navigation entirely.
+#
+# "About Masinloc" is the label; a-closer-look.html is still the URL. Renaming
+# an indexed route to match a label change would cost the ranking that route
+# has and gain nothing a reader can see.
 EXPECTED_NAV = [
-    ("index.html", "Home"),
     ("discover/index.html", "Discover"),
+    ("sambal-tina.html", "Sambal Tina"),
     ("marketplace.html", "Marketplace"),
-    ("a-closer-look.html", "A Closer Look"),
+    ("a-closer-look.html", "About Masinloc"),
     ("connect.html", "Masinloc Connect"),
-    ("contact.html", "Contact"),
 ]
 EXPECTED_LOGO = "assets/masinloc-logo.webp"
 STABILITY_CSS = "site-stability.css"
@@ -120,8 +132,12 @@ for page_name in PUBLIC_PAGES:
         fail(f"{page_name}: header must use the shared Masinloc logo asset")
 
     current = [item for item in parser.nav_items if item["current"]]
-    expected_current = SUBPAGES.get(page_name, page_name)
-    if len(current) != 1 or current[0]["href"] != expected_current:
+    expected_current = SUBPAGES[page_name] if page_name in SUBPAGES else page_name
+    if expected_current is None:
+        if current:
+            fail(f"{page_name}: is not one of the five destinations, so it must not "
+                 f"mark one as the current page (marks {current[0]['href']})")
+    elif len(current) != 1 or current[0]["href"] != expected_current:
         fail(f"{page_name}: expected exactly one aria-current=page link for {expected_current}")
 
     if STABILITY_CSS not in parser.stylesheets:

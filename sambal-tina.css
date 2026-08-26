@@ -758,3 +758,48 @@ mark{background:rgba(255,199,0,.34);color:inherit;border-radius:2px;padding:0 1p
   .dict-primer{padding-top:52px}
   .primer-grid{grid-template-columns:1fr;gap:26px}
 }
+
+
+/* ------------------------------------------------------------------------
+   What happens when you send a word.
+
+   This block was on the homepage, where it ran 672px and carried no links at
+   all. It is dictionary process — what a submission goes through before it is
+   published — so it now sits with the dictionary it describes, beside the
+   invitation to contribute.
+
+   The archive-transcription block that sat next to it on the homepage did NOT
+   come with it: check-dictionary.py and check-living-sambal.py both forbid
+   archive mechanics ("printed index", "archive p.") on this page, and that is
+   a deliberate decision about what a dictionary reader should be shown.
+   ------------------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------- 07 · community --- */
+
+.community{background:var(--navy-deep);color:var(--white);padding-block:var(--stage-pad)}
+.community-inner{
+  max-width:1560px;margin-inline:auto;padding-inline:var(--gutter);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+  gap:clamp(28px,5vw,80px);align-items:center;
+}
+.community h2{
+  margin:0;font:400 clamp(30px,4.4vw,60px)/1.05 var(--font-editorial);
+  letter-spacing:-.02em;max-width:15ch;
+}
+.community p{margin:20px 0 0;font:400 15.5px/1.65 var(--font-ui);color:rgba(255,255,255,.72);max-width:44ch}
+/* One contribution shown properly, rather than a wall of faces. */
+.thread{display:grid;gap:0}
+.thread-step{
+  display:grid;grid-template-columns:auto 1fr;gap:18px;
+  padding-block:20px;
+}
+.thread-rail{display:grid;justify-items:center;gap:6px}
+.thread-dot{
+  width:11px;height:11px;border-radius:50%;background:var(--yellow);
+  box-shadow:0 0 0 5px rgba(255,199,0,.14);
+}
+.thread-line{width:1px;flex:1;min-height:26px;background:rgba(255,255,255,.18)}
+.thread-step:last-child .thread-line{display:none}
+.thread-step h3{margin:0;font:600 14.5px/1.3 var(--font-ui);color:var(--white)}
+.thread-step p{margin:7px 0 0;font:400 13.5px/1.55 var(--font-ui);color:rgba(255,255,255,.62);max-width:40ch}

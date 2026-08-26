@@ -19,31 +19,35 @@ const pages = [
   ['not-found', '/404.html'],
 ];
 
-/* Six items. Verified History came out of the bar for the same reason Sambal
-   Tina was never in it: the bar was crowded. The Bulletin followed it out once
-   Discover became the home of every article on the site — the Bulletin is one
-   collection inside that library rather than a peer of it, and the library is
-   what belongs in the bar. All three stay in every footer, and Discover links
-   to each of them, so nothing became harder to reach. */
+/* Five destinations, and the site promises exactly these five: read about
+   Masinloc, learn its language, find a local business, understand the town,
+   take part. Home left the bar because the logo is the home link on every
+   page, and Contact left it because it is a footer concern — two of six slots
+   were going to them while Sambal Tina, the most distinctive thing here, was
+   not in the navigation at all.
+
+   "About Masinloc" is the label. a-closer-look.html is still the URL: renaming
+   an indexed route to match a label costs the ranking that route has and gains
+   a reader nothing. */
 const expectedNavText = [
-  'Home',
   'Discover',
+  'Sambal Tina',
   'Marketplace',
-  'A Closer Look',
+  'About Masinloc',
   'Masinloc Connect',
-  'Contact',
 ];
 
+/* null means the page is reachable but is not one of the five, so it must not
+   light one up: the homepage (the logo is its link) and the Bulletin (the
+   editorial publication, reached from the footer and from Discover). */
 const expectedCurrentHref = {
-  home: 'index.html',
+  home: null,
   'closer-look': 'a-closer-look.html',
-  /* A sub-page of A Closer Look: the parent keeps the current-page state. */
-  'sambal-tina': 'a-closer-look.html',
+  'sambal-tina': 'sambal-tina.html',
   leadership: 'a-closer-look.html',
-  /* Articles live under Discover, so Discover holds the current-page state. */
   'verified-history': 'discover/index.html',
   founder: 'discover/index.html',
-  bulletin: 'discover/index.html',
+  bulletin: null,
   connect: 'connect.html',
 };
 
@@ -208,12 +212,19 @@ async function assertSharedNavigation(page, pageName, viewportName) {
   }
 
   const current = nav.locator('a[aria-current="page"]');
-  if (await current.count() !== 1) {
-    failures.push(`${viewportName}/${pageName}: expected one current navigation item`);
+  const want = expectedCurrentHref[pageName];
+  const count = await current.count();
+  if (want === null) {
+    if (count !== 0) {
+      failures.push(`${viewportName}/${pageName}: is not one of the five destinations, `
+        + `so it must not mark one as current (marks ${await current.first().getAttribute('href')})`);
+    }
+  } else if (count !== 1) {
+    failures.push(`${viewportName}/${pageName}: expected one current navigation item, got ${count}`);
   } else {
     const href = await current.getAttribute('href');
-    if (href !== expectedCurrentHref[pageName]) {
-      failures.push(`${viewportName}/${pageName}: current navigation href ${href} != ${expectedCurrentHref[pageName]}`);
+    if (href !== want) {
+      failures.push(`${viewportName}/${pageName}: current navigation href ${href} != ${want}`);
     }
   }
 }

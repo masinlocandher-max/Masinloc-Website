@@ -260,7 +260,13 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
           const range = document.createRange();
           range.selectNodeContents(el);
           for (const r of range.getClientRects()) {
-            if (r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= window.innerHeight) {
+            const masthead = document.querySelector('.home-nav, .site-nav');
+          const mb = masthead ? masthead.getBoundingClientRect().bottom : 0;
+          const underMasthead = masthead
+            && getComputedStyle(masthead).position === 'fixed'
+            && r.top < mb;
+          if (r.width > 2 && r.height > 2 && r.top >= 0 && r.bottom <= window.innerHeight
+              && !underMasthead) {
               out.push({ selector, rgb, alpha, size: parseFloat(style.fontSize),
                 x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width), h: Math.round(r.height) });
             }
@@ -406,11 +412,25 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   }
 
   const routes = await page.$$eval('.routes a', els => els.map(a => a.getAttribute('href')));
-  for (const section of ['destinations.html', 'sambal-tina.html', 'leadership.html',
-    'verified-history.html', 'masinloc-bulletin.html', 'sources.html', 'connect.html']) {
+  for (const section of ['destinations.html', 'leadership.html',
+    'verified-history.html', 'masinloc-bulletin.html', 'sources.html']) {
     if (!routes.includes(section)) {
       fail(`the closing index does not reach ${section}`);
     }
+  }
+  /* The five destinations belong to the doors and the footer. Repeating them
+     here made the closing block a third site index and a third "start here". */
+  for (const dupe of ['discover/index.html', 'sambal-tina.html', 'marketplace.html',
+    'a-closer-look.html', 'connect.html']) {
+    if (routes.includes(dupe)) {
+      fail(`the closing index repeats the destination ${dupe}`);
+    }
+  }
+  /* Reachable from the page as a whole is the claim that matters. */
+  const all = await page.$$eval('a', els => els.map(a => a.getAttribute('href')));
+  for (const must of ['discover/index.html', 'sambal-tina.html', 'marketplace.html',
+    'a-closer-look.html', 'connect.html']) {
+    if (!all.includes(must)) fail(`the homepage does not reach ${must}`);
   }
   await page.close();
 }
@@ -426,21 +446,18 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
      type alone. Every specimen must still carry the apparatus that makes it
      evidence rather than decoration: the page it came from, and how settled
      the reading is. */
-  const slips = await page.$$eval('.slip', (els) => els.map((el) => ({
-    page: el.querySelector('.slip-page')?.textContent.trim() || '',
-    word: el.querySelector('.slip-word')?.textContent.trim() || '',
-    gloss: el.querySelector('.slip-gloss')?.textContent.trim() || '',
-    band: el.querySelector('.slip-band')?.textContent.trim() || '',
-    status: el.querySelector('.slip-status')?.textContent.trim() || '',
-  })));
-  if (slips.length < 3) fail(`the archive shows only ${slips.length} specimens`);
-  slips.forEach((slip, i) => {
-    if (!/p\.\s*\d/.test(slip.page)) fail(`archive specimen ${i + 1} cites no archive page`);
-    if (!slip.word) fail(`archive specimen ${i + 1} has no headword`);
-    if (!slip.gloss) fail(`archive specimen ${i + 1} has no gloss`);
-    if (!slip.band) fail(`archive specimen ${i + 1} carries no confidence rating`);
-    if (!slip.status) fail(`archive specimen ${i + 1} carries no source status`);
-  });
+  /* The archive specimens are gone from the homepage. They were stamped with
+     internal status codes ("INTERNAL DUAL-LAYER SUPPORT — READABLE BETA") of
+     exactly the kind check-dictionary.py and check-living-sambal.py already
+     forbid on the dictionary page. What the homepage keeps is the claim and
+     the route to the record. */
+  if (await page.$$eval('.slip', els => els.length)) {
+    fail('the homepage is showing archive specimens with internal status codes again');
+  }
+  if (!(await page.$('.archive-note a[href="verified-history.html"]'))) {
+    fail('the record block no longer routes to the verified timeline');
+  }
+
 
   /* The archive stage used to showcase an unsettled reading — `ab6h`, a word
      whose glyphs could not be read off the printed page — as proof that the
@@ -473,7 +490,7 @@ for (const [label, width, height] of [['desktop', 1440, 900], ['phone', 390, 844
   /* Copy that establishes the page must exist in the HTML, not appear later. */
   const text = (await page.textContent('main')) || '';
   for (const needed of ['The world finds us here', 'Discover Masinloc', 'Sambal Tina',
-    'Hamat River', 'History &amp; Stories'.replace('&amp;','&')]) {
+    'Hamat River', 'About Masinloc']) {
     if (!text.includes(needed)) fail(`with JavaScript off, "${needed}" is missing from the page`);
   }
   const slides = await page.$$eval('.slide-art', (els) => els.length);

@@ -224,3 +224,20 @@
     animation:none!important;
   }
 }
+
+/* Masinloc Connect had no site navigation in its footer — only a Facebook
+   line, an email and the legal row. A visitor who arrived here from a shared
+   link could reach the rest of Masinloc only through the masthead, and on a
+   phone that meant opening the menu. The same ten links every other footer
+   carries now sit here too, in the same order, so the site ends the same way
+   wherever you are standing. */
+.footer-links{
+  display:flex;flex-wrap:wrap;gap:10px 22px;
+  padding:22px 0 6px;margin:0 0 4px;
+  border-top:1px solid rgba(255,255,255,.14);
+}
+.footer-links a{
+  color:rgba(255,255,255,.72);text-decoration:none;
+  font:500 13.5px/1.5 var(--font-ui,system-ui,sans-serif);
+}
+.footer-links a:hover,.footer-links a:focus-visible{color:#fff;text-decoration:underline}
