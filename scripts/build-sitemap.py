@@ -242,7 +242,7 @@ def last_content_change(path: Path) -> str:
     return datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).date().isoformat()
 
 
-def collect() -> tuple[list[tuple[str, str]], list[str]]:
+def collect() -> tuple[list[tuple[str, str]], list[str], list[tuple[str, str]]]:
     entries: list[tuple[str, str]] = []
     problems: list[str] = []
     seen: dict[str, str] = {}
@@ -286,7 +286,7 @@ def collect() -> tuple[list[tuple[str, str]], list[str]]:
 
     # Deterministic and stable: the homepage, then everything else by URL.
     entries.sort(key=lambda e: ("" if e[0].rstrip("/") == SITE else e[0]))
-    return entries, problems
+    return entries, problems, skipped
 
 
 def render(entries: list[tuple[str, str]]) -> str:
@@ -301,7 +301,7 @@ def render(entries: list[tuple[str, str]]) -> str:
 
 def main() -> int:
     shallow = shallow_repository()
-    entries, problems = collect()
+    entries, problems, skipped = collect()
     if problems:
         print("SITEMAP BUILD FAILED")
         for problem in problems:

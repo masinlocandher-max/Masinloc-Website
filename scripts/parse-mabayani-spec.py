@@ -64,8 +64,12 @@ INTERNAL_FIELDS = {
 
 # Inside a source drawer, the tabs a reader gets (§35) versus the notes to the
 # writer. The second set never leaves this script.
-DRAWER_PUBLIC = {"WHAT WE KNOW", "EVIDENCE STATUS", "WHAT REMAINS UNCERTAIN", "SOURCES"}
-DRAWER_INTERNAL = {"CAUTION", "RESEARCH NOTE", "IMPLEMENTATION RULE"}
+# Ordered, not a set. Iterating a set to build the output made the key order in
+# data/mabayani.json depend on Python's per-process string hashing, so two runs
+# over an unchanged spec produced two different files. The order here is the
+# order §35 gives the drawer tabs, with the evidence state first.
+DRAWER_PUBLIC = ("EVIDENCE STATUS", "WHAT WE KNOW", "WHAT REMAINS UNCERTAIN", "SOURCES")
+DRAWER_INTERNAL = ("CAUTION", "RESEARCH NOTE", "IMPLEMENTATION RULE")
 
 # Sentences inside otherwise-public prose that address the builder rather than
 # the reader. They are dropped and reported, so removing one is a visible act
@@ -156,7 +160,7 @@ def drawer(text: str) -> dict:
     """A source drawer, split into the tabs §35 defines. Notes are dropped."""
     out: dict[str, list[str]] = {}
     current = None
-    known = DRAWER_PUBLIC | DRAWER_INTERNAL
+    known = set(DRAWER_PUBLIC) | set(DRAWER_INTERNAL)
     for line in text.split("\n"):
         stripped = line.strip()
         # Labels appear as "SOURCES:" and, in one section, as a bare "CAUTION"

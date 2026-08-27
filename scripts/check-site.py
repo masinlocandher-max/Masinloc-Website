@@ -489,12 +489,25 @@ if sitemap.is_file():
     for rel in ("a-closer-look.html", "verified-history.html", "founder-of-masinloc.html", "masinloc-bulletin.html", "connect.html"):
         if rel not in sitemap_text:
             fail(f"sitemap.xml missing current public route: {rel}")
-    # Every built Bulletin story must be listed. scripts/build-bulletin.py keeps
-    # this block in sync; the check is here so a story published some other way
-    # cannot go live unindexed and unnoticed.
+    # The ten research articles are deliberately absent from the sitemap: they
+    # name /mabayani/ as their canonical, and a sitemap lists canonicals. What
+    # must hold instead is that each one is still REACHABLE — the risk of
+    # retiring a page from the index is that it quietly becomes unreachable
+    # too, and then the research is gone in practice whatever the file says.
+    #
+    # Reachability is checked against /mabayani/ further up (RESEARCH_HOME), so
+    # here we only assert the two halves agree: a story is either in the
+    # sitemap or it has named another page as canonical, never neither.
     for story in sorted((ROOT / "bulletin").glob("*.html")):
-        if f"/bulletin/{story.name}" not in sitemap_text:
-            fail(f"sitemap.xml missing published story: bulletin/{story.name}")
+        if f"/bulletin/{story.name}" in sitemap_text:
+            continue
+        page_text = (ROOT / "bulletin" / story.name).read_text(encoding="utf-8")
+        match = re.search(r'<link\s+rel="canonical"\s+href="([^"]+)"', page_text)
+        own = f"https://www.masinloc-zambales.com/bulletin/{story.name}"
+        if not match or match.group(1) == own:
+            fail(f"sitemap.xml missing published story bulletin/{story.name}, and it "
+                 f"does not name another page as its canonical — so it is neither "
+                 f"indexed nor deliberately retired")
 
 vercel = ROOT / "vercel.json"
 if vercel.is_file():
