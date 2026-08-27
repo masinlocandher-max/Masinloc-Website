@@ -191,7 +191,7 @@ def build_daily_pool(phrasebook: list[dict]) -> list[str]:
     """Headwords eligible for the featured "entry of the day".
 
     Drawn from the curated vocabulary rather than the whole dictionary. Picking
-    by date across all 5,222 entries eventually features something crude or
+    by date across all 5,125 entries eventually features something crude or
     obscure, which is the wrong face for a language record.
     """
     seen: list[str] = []

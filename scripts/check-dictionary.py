@@ -170,6 +170,39 @@ if withheld_file.is_file():
              "but .vercelignore does not exclude supabase/ — taking them out of "
              "data/ and then serving them from another path achieves nothing")
 
+# EVERY COUNT ON THE SITE IS THE DATASET'S COUNT.
+#
+# Two totals are true at once and they are easy to confuse. The transcription
+# off the printed pages produced 5,222 readings; 97 of those are unresolved and
+# withheld above, so the collection the site actually serves is 5,125. A page
+# may say the archive holds the larger number — it does — but no page may
+# claim the site publishes, exposes or offers it, and the figure printed on
+# the dictionary's own stat row is the dataset's length or it is wrong.
+PUBLISHED = f"{len(entries):,}"
+MASTER = f"{len(entries) + withheld_count:,}"
+
+if PAGE.is_file():
+    stat = re.search(r"<dt>Entries</dt><dd>([^<]+)</dd>", PAGE.read_text(encoding="utf-8"))
+    if not stat:
+        fail("sambal-tina.html no longer prints an entry count in its stat row")
+    elif stat.group(1) != PUBLISHED:
+        fail(f"sambal-tina.html states {stat.group(1)} entries; "
+             f"data/sambal-tina.json holds {PUBLISHED}")
+
+# A count is a claim about what a reader can open, so the verb decides whether
+# it is honest. "holds" describes the archive; the rest describe this website.
+PUBLISHING_VERB = re.compile(
+    rf"\b(publishes|published|exposes|offers|serves|carries|contains|keeps|has|with)\b"
+    rf"[^.<]{{0,40}}{re.escape(MASTER)}")
+if withheld_count:
+    for page in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("discover/*.html")) \
+            + sorted(ROOT.glob("bulletin/*.html")) + sorted(ROOT.glob("mabayani/*.html")):
+        hit = PUBLISHING_VERB.search(page.read_text(encoding="utf-8"))
+        if hit:
+            fail(f"{page.relative_to(ROOT)} says the site {hit.group(0)!r}, but "
+                 f"{MASTER} is the transcription total and only {PUBLISHED} are "
+                 f"published — {withheld_count} readings are withheld for review")
+
 # The public page must not offer a filter for entries it no longer carries.
 if PAGE.is_file() and 'data-filter="check"' in PAGE.read_text(encoding="utf-8"):
     fail('sambal-tina.html still offers the "Review in progress" filter, but no '

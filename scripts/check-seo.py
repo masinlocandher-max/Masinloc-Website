@@ -28,6 +28,10 @@ CANONICAL_HOST = "www.masinloc-zambales.com"
 # Private surfaces are not part of the public index and are checked only for
 # staying out of it.
 PRIVATE = {"admin.html"}
+# The single robots directive every indexable page states. Large image
+# previews and unlimited snippets are granted deliberately: the point of
+# publishing this research is to be findable and quotable.
+ROBOTS = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
 # A recovery screen needs no description or social card.
 MINIMAL = {"404.html"}
 
@@ -255,6 +259,20 @@ for page in pages:
     text = visible_text(markup)
 
     noindex = "noindex" in parser.meta.get("robots", "").lower()
+
+    # ONE ROBOTS DIRECTIVE FOR THE WHOLE PUBLIC SITE.
+    #
+    # Four spellings of "index, follow" were live at once, each from whichever
+    # generation of the project wrote that page: some granted large image
+    # previews, some granted full snippets, one granted neither. The grants are
+    # additive and harmless individually, so nothing ever failed — the pages
+    # simply disagreed about what a search engine may show, which is exactly
+    # the kind of drift a reader never sees and an audit always does.
+    if not noindex and name not in PRIVATE:
+        directive = parser.meta.get("robots", "")
+        if directive != ROBOTS:
+            fail(f"{name}: meta robots reads {directive!r}; every indexable "
+                 f"page on the site states {ROBOTS!r}")
 
     if name in PRIVATE:
         if "noindex" not in parser.meta.get("robots", "").lower():

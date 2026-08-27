@@ -285,6 +285,42 @@ for name in SENTENCE_CASE_CSS:
             fail(f"{name}:{number}: sets text in capitals. Discover and the "
                  f"Marketplace read in the case the words were written in.")
 
+# ONE SITE, ONE COPYRIGHT HOLDER.
+#
+# The site grew in generations and the footer recorded which generation a page
+# came from: the older pages credit Mabayani Project by FMB, the generators
+# written later emitted "© 2026 Masinloc". Both were on screen at once, which
+# reads as two organisations rather than one. Mabayani Project by FMB is the
+# publisher named in every page's structured data, so it is the one the footer
+# states too.
+#
+# privacy.html is the declared exception and stays one: it is the Masinloc
+# Connect privacy notice, and SENZ Strategic Communications and Digital
+# Solutions is the Personal Information Controller named in it. Changing that
+# line would misstate who is legally answerable for the data.
+COPYRIGHT = "2026 Mabayani Project by FMB. All rights reserved."
+#
+# 404.html and admin.html carry no footer at all — one is a bare error page and
+# the other is the private console. Neither is a published surface.
+COPYRIGHT_EXEMPT = {"privacy.html", "404.html", "admin.html"}
+# The homepage's footer is its own component and names the strip .foot-base;
+# every other page uses the shared .footer-bottom. Both are accepted here
+# because the class name is layout, and this check is about who is credited.
+FOOTER_LINE = re.compile(r"<div class=\"(?:footer-bottom|foot-base)\">(.*?)</div>", re.S)
+
+for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("discover/*.html")) \
+        + sorted(ROOT.glob("bulletin/*.html")) + sorted(ROOT.glob("marketplace/*.html")) \
+        + sorted(ROOT.glob("mabayani/*.html")):
+    relative = path.relative_to(ROOT).as_posix()
+    if relative in COPYRIGHT_EXEMPT:
+        continue
+    found = FOOTER_LINE.search(path.read_text(encoding="utf-8"))
+    if not found:
+        fail(f"{relative}: has no footer-bottom line")
+    elif COPYRIGHT not in found.group(1).replace("&copy;", "©"):
+        fail(f"{relative}: the footer credits somebody other than the publisher "
+             f"named in its structured data. Expected '© {COPYRIGHT}'.")
+
 if errors:
     print("DESIGN CONSISTENCY CHECK FAILED")
     for error in errors:

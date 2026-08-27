@@ -483,7 +483,7 @@ def render() -> str:
       <div class="archive-head rise">
         <p class="stage-label">The record</p>
         <h2 id="archiveTitle">We would rather show you the page.</h2>
-        <p class="stage-lead">Masinloc&rsquo;s written history is mostly a language, and that language is mostly one damaged archive. Here is what we hold, and exactly how sure we are of it.</p>
+        <p class="stage-lead">Much of what survives of Masinloc&rsquo;s written record reaches us through documents that time has not been kind to, and through a language carried further by speech than by paper. Here is what we hold, and exactly how sure we are of each part of it.</p>
       </div>
       <div class="archive-close rise">
         <p class="archive-note">Verified History now brings together Masinloc&rsquo;s documented 1607 founding, its founder, the 1649 defense of the coast, Barrio San Vicente, and the evidence behind each claim. Oral tradition remains clearly marked. <a href="verified-history.html">Read the verified timeline</a>.</p>

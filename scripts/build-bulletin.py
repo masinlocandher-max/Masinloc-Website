@@ -127,7 +127,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 <meta name="theme-color" content="#ffffff">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="{canonical}">
 {ogtype}<meta property="og:site_name" content="Masinloc, Zambales">
 <meta property="og:locale" content="en_PH">

@@ -176,7 +176,7 @@ def footer(depth: int) -> str:
     return f"""<footer class="home-footer">
   <div class="footer-brand"><img src="{up}assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
   <div class="footer-nav"><a href="{up}index.html">Home</a><a href="{up}discover/index.html">Discover</a><a href="{up}sambal-tina.html">Sambal Tina</a><a href="{up}marketplace.html">Marketplace</a><a href="{up}a-closer-look.html">About Masinloc</a><a href="{up}connect.html">Masinloc Connect</a><a href="{up}verified-history.html">Verified History</a><a href="{up}masinloc-bulletin.html">Masinloc Bulletin</a><a href="{up}sources.html">Sources &amp; References</a><a href="{up}contact.html">Contact</a></div>
-  <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
+  <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>"""
 
 
@@ -193,7 +193,7 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <meta name="theme-color" content="#ffffff">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Discover Masinloc">
@@ -210,7 +210,7 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <link rel="stylesheet" href="{up}tokens.css?v=20260823-1">
 <link rel="stylesheet" href="{up}site.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="{up}marketplace.css?v=20260825-5">
+<link rel="stylesheet" href="{up}marketplace.css?v=20260827-1">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
@@ -390,8 +390,14 @@ def row(business: dict) -> str:
     if mark:
         media = f'<span class="mk-logo">{mark.replace("../assets/", "assets/")}</span>'
     else:
-        media = (f'<span class="mk-logo mk-logo-none" aria-hidden="true">'
-                 f'{esc(initials(business["name"]))}</span>')
+        # The initials ride in an attribute and are drawn by CSS, not written
+        # as a text node. As text they sat immediately before the business
+        # name in the DOM, so anything reading the document rather than the
+        # rendered page — crawlers, previews, plain-text extraction — read
+        # "ZZamgyup 199". aria-hidden already handled screen readers; this
+        # handles everything that never looks at aria.
+        media = (f'<span class="mk-logo mk-logo-none" aria-hidden="true" '
+                 f'data-mono="{esc(initials(business["name"]))}"></span>')
 
     meta = f'<span class="mk-meta-cat">{esc(label)}</span>'
     if location:

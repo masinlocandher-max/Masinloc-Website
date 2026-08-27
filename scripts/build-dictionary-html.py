@@ -13,7 +13,7 @@ crawler is served and what a visitor sees. That is the whole point: this is
 not a crawler-only block, it is the page finally containing its own content.
 
 Only the curated layers go in — the everyday phrasebook and the
-speaker-confirmed living usage. The full 5,222-entry archive stays a fetch,
+speaker-confirmed living usage. The full 5,125-entry archive stays a fetch,
 because inlining it would make the page several hundred kilobytes for no
 reader benefit.
 

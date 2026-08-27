@@ -168,7 +168,7 @@ def nav(active: str) -> str:
 FOOTER = """<footer class="home-footer">
   <div class="footer-brand"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div>
   <div class="footer-nav"><a href="../index.html">Home</a><a href="index.html">Discover</a><a href="../sambal-tina.html">Sambal Tina</a><a href="../marketplace.html">Marketplace</a><a href="../a-closer-look.html">About Masinloc</a><a href="../connect.html">Masinloc Connect</a><a href="../verified-history.html">Verified History</a><a href="../masinloc-bulletin.html">Masinloc Bulletin</a><a href="../sources.html">Sources &amp; References</a><a href="../contact.html">Contact</a></div>
-  <div class="footer-bottom"><span>© 2026 Masinloc. All rights reserved.</span><span>Photography · Mabayani Project by FMB</span></div>
+  <div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span>www.masinloc-zambales.com</span></div>
 </footer>"""
 
 
@@ -183,7 +183,7 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <meta name="theme-color" content="#ffffff">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="{'article' if extra else 'website'}">
 <meta property="og:site_name" content="Discover Masinloc">

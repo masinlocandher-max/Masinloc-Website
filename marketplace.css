@@ -166,6 +166,9 @@
   font:400 clamp(46px,5vw,62px)/1 var(--font-editorial);
   letter-spacing:.02em;
 }
+/* Drawn, not written: the initials live in data-mono so they never appear in
+   the document text next to the business name. */
+.mk-logo-none::before{content:attr(data-mono)}
 
 .mk-ident{display:block;min-width:0;padding-top:6px}
 .mk-name{
