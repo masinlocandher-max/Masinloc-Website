@@ -38,6 +38,7 @@ Usage: python3 scripts/check-stylesheets.py
 from __future__ import annotations
 
 import re
+import datetime
 import subprocess
 import sys
 from pathlib import Path
@@ -78,8 +79,21 @@ def shallow_repository() -> bool:
 
 
 def last_change(name: str) -> str:
-    """YYYYMMDD of the last commit to touch this stylesheet."""
+    """YYYYMMDD the stylesheet's content last changed.
+
+    Uncommitted edits count as today. Reading only `git log` made this check
+    blind to the working tree, so a sheet edited and not yet committed reported
+    its PREVIOUS date and the stale stamp passed — then failed on the next run,
+    after the commit, when it was too late to be part of the same change. That
+    happened twice in one day here. An edit is an edit whether or not it has
+    been committed yet.
+    """
     try:
+        dirty = subprocess.run(["git", "status", "--porcelain", "--", name],
+                               cwd=ROOT, capture_output=True, text=True,
+                               timeout=20, check=False)
+        if dirty.stdout.strip():
+            return datetime.date.today().strftime("%Y%m%d")
         out = subprocess.run(["git", "log", "-1", "--format=%cs", "--", name],
                              cwd=ROOT, capture_output=True, text=True,
                              timeout=20, check=False)
