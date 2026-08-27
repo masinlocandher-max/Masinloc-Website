@@ -200,7 +200,7 @@ def head(*, title: str, description: str, url: str, image: str | None,
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="../discover.css?v=20260827-1">
+<link rel="stylesheet" href="../discover.css?v=20260827-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
 </head>
 <!-- The shared navigation paints white links on a transparent bar, which works
@@ -306,6 +306,47 @@ def sources_block(article: dict) -> str:
             f'      <ul>{"".join(items)}</ul>\n    </section>\n')
 
 
+# Where a Discover article and a MABAYANI chapter cover the same subject.
+#
+# They are not competing: a Discover article answers "what is this, and what
+# will I see" — visiting, architecture, what is on the plate, where the beach
+# is. The MABAYANI chapter answers "who did this, what does the evidence say,
+# and what is still missing". Different questions, different search intent, and
+# each says where the other one is so neither has to restate it.
+MABAYANI_CHAPTER = {
+    "the-church-masinloquenos-walk-past": (
+        "17", "Read how generations built, damaged and rebuilt this church"),
+    "every-november-masinloc-stages-a-battle": (
+        "19", "Read what Binabayani remembers, and what is still unverified"),
+    "the-sambal-words-we-refuse-to-lose": (
+        "20", "Read how a language disappears quietly, and what holds it"),
+    "san-salvador-has-a-better-story": (
+        "13", "Read what happened here in 1649, and whose names are missing"),
+    "masinloc-history-has-more-than-one-starting-date": (
+        "05", "Read what 18 November 1607 does and does not prove"),
+    "masinloc-masingloc-and-the-origin-story": (
+        "03", "Read why 1572 is a date we inherited rather than one we can prove"),
+    "the-giant-in-bani": (
+        "24", "Read how Masinloc came to hold industry and a protected sea at once"),
+    "how-masinloc-makes-a-living": (
+        "23", "Read how the mountain became an industrial landscape"),
+}
+
+
+def mabayani_link(article: dict) -> str:
+    """The chapter of MABAYANI that carries the same subject as people."""
+    pick = MABAYANI_CHAPTER.get(article["slug"])
+    if not pick:
+        return ""
+    number, label = pick
+    return (
+        '    <aside class="d-mab-cross">\n'
+        '      <p class="d-mab-cross-mark">MABAYANI</p>\n'
+        f'      <p class="d-mab-cross-line"><a href="../mabayani/#s{number}">'
+        f'{esc(label)}</a></p>\n'
+        "    </aside>\n")
+
+
 def related_block(article: dict) -> str:
     related = [BY_SLUG[s] for s in article.get("related", []) if s in BY_SLUG]
     if not related:
@@ -393,7 +434,7 @@ def article_page(article: dict) -> str:
 {hero_markup}  <div class="d-body">
 {render_body(article)}
   </div>
-{sources_block(article)}{related_block(article)}</main>
+{sources_block(article)}{mabayani_link(article)}{related_block(article)}</main>
 {FOOTER}
 <script src="../site.js?v=20260825-1"></script>
 <script type="application/ld+json">
@@ -474,28 +515,29 @@ def theme_section(theme: dict, members: list[dict]) -> str:
             f'  </section>')
 
 
-def sequence_section() -> str:
-    """MABAYANI, which is a page of its own now rather than a list here.
+def mabayani_feature() -> str:
+    """The one door from Discover into MABAYANI.
 
-    Discover listed the ten research articles as "the MABAYANI sequence" while
-    that was what MABAYANI was. It is now the immersive reading at /mabayani/,
-    whose conceptual home is About Masinloc, and the ten articles are the
-    worked research behind it — gathered there, beside the sections they
-    support, rather than restated here. Discover points at the story; it does
-    not hold a second copy of its contents.
+    MABAYANI outgrew being a Discover article; it is the immersive reading of
+    the town's history and its home is About Masinloc. Discover keeps the
+    doorway, and keeps it as one of the strongest things on the page — this is
+    a promotion, not a place to tuck it away. What Discover no longer holds is
+    a copy of its contents.
     """
-    pub = BULLETIN.get("publication", {})
     return (
-        '  <section class="d-seq" aria-labelledby="seq-title">\n'
-        '    <div class="d-theme-head">\n'
-        f'      <h2 id="seq-title">{esc(pub.get("name", "MABAYANI"))}</h2>\n'
-        f'      <p>{esc(pub.get("kicker", ""))}</p>\n'
+        '  <section class="d-mab" aria-labelledby="mab-title">\n'
+        '    <div class="d-mab-inner">\n'
+        '      <p class="d-mab-mark">MABAYANI</p>\n'
+        '      <h2 id="mab-title" class="d-mab-line">They called them fierce.<br>'
+        'We call them MABAYANI.</h2>\n'
+        '      <p class="d-mab-what">The story of the people who built, defended, '
+        'endured and carried Masinloc forward.</p>\n'
+        '      <p class="d-mab-teaser">Long before Masinloc entered the written '
+        'record, there were already people here. Centuries later, their courage '
+        'survives in battles, buildings, language, faith and names we are still '
+        'trying to recover.</p>\n'
+        '      <p class="d-mab-go"><a href="../mabayani/">Enter the story</a></p>\n'
         '    </div>\n'
-        f'    <p class="d-seq-lead">{esc(pub.get("blurb", ""))}</p>\n'
-        '    <p class="d-seq-note">The people who lived here, what the evidence '
-        'supports, and what it does not. Thirty parts, with the record open '
-        'beside each one.</p>\n'
-        '    <p class="d-seq-more"><a href="../mabayani/">Read MABAYANI</a></p>\n'
         '  </section>')
 
 
@@ -657,7 +699,7 @@ def hub_page() -> str:
 
 {chr(10).join(sections)}
 
-{sequence_section()}
+{mabayani_feature()}
 
 {record_section()}
 

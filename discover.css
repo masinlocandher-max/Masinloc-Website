@@ -356,43 +356,8 @@
   font:400 clamp(16px,1.5vw,18.5px)/1.62 var(--font-ui);
   color:var(--text);margin:0 0 10px;max-width:62ch;
 }
-.d-seq-note{
-  font:400 13.5px/1.6 var(--font-ui);color:var(--muted);margin:0 0 24px;
-  max-width:58ch;padding-left:14px;border-left:2px solid var(--yellow);
-}
-.d-seq-list{list-style:none;margin:0;padding:0;counter-reset:none}
-.d-seq-item{border-top:1px solid var(--line)}
-.d-seq-item:last-child{border-bottom:1px solid var(--line)}
-.d-seq-item>a{
-  display:grid;grid-template-columns:44px minmax(0,1fr) auto;
-  gap:clamp(12px,2vw,22px);align-items:baseline;
-  padding:16px 0;text-decoration:none;color:inherit;
-}
-.d-seq-n{
-  font:400 15px/1.4 var(--font-editorial);color:var(--muted);
-  font-variant-numeric:tabular-nums;
-}
-.d-seq-body{display:block;min-width:0}
-.d-seq-title{
-  display:block;font:400 clamp(17px,1.7vw,20px)/1.28 var(--font-editorial);
-  color:var(--navy);letter-spacing:-.012em;margin-bottom:4px;
-  transition:color var(--ease);
-}
-.d-seq-stand{display:block;font:400 13.5px/1.55 var(--font-ui);color:var(--text)}
-.d-seq-mins{font:400 12.5px/1.4 var(--font-ui);color:var(--muted);white-space:nowrap}
 .d-seq-item>a:hover .d-seq-title,
-.d-seq-item>a:focus-visible .d-seq-title{color:var(--blue)}
 /* The way in. */
-.d-seq-entry .d-seq-n{color:var(--blue);font-weight:700}
-.d-seq-entry .d-seq-title{font-size:clamp(19px,2vw,23px)}
-.d-seq-more{margin:24px 0 0;font:400 16px/1.5 var(--font-ui)}
-.d-seq-more a{
-  display:inline-flex;align-items:center;min-height:44px;
-  color:var(--blue);text-decoration:none;font-weight:600;
-  border-bottom:1px solid rgba(13,59,158,.28);padding-bottom:2px;
-}
-.d-seq-more a::after{content:" \2192";margin-left:6px;opacity:.7}
-.d-seq-more a:hover,.d-seq-more a:focus-visible{border-bottom-color:var(--blue)}
 
 .d-rec-meta{
   display:block;margin-top:8px;
@@ -404,18 +369,6 @@
    opened is stated quietly rather than struck through: this is a bookmark, not
    a checklist, and a reader who wants to read one again should not feel they
    are going backwards. */
-.d-seq-progress{
-  margin:14px 0 0;font:400 13.5px/1.5 var(--font-ui);color:var(--muted);
-}
-.d-seq-item.is-read .d-seq-n{color:var(--muted)}
-.d-seq-item.is-read .d-seq-title{color:var(--muted)}
-.d-seq-item.is-read>a::after{
-  content:"Read";
-  position:absolute;top:18px;right:0;
-  font:400 11.5px/1 var(--font-ui);letter-spacing:.04em;
-  color:var(--muted);opacity:.75;
-}
-.d-seq-item>a{position:relative}
 
 /* Still open: the questions the research has not closed. */
 .d-open{padding:56px 0 8px;border-top:1px solid var(--rule)}
@@ -438,7 +391,64 @@
 .d-open-more a:hover,.d-open-more a:focus-visible{border-bottom-color:var(--blue)}
 
 @media (max-width:560px){
-  .d-seq-item>a{grid-template-columns:32px minmax(0,1fr);gap:12px}
-  .d-seq-mins{display:none}
-  .d-seq-item.is-read>a::after{display:none}
 }
+
+/* --- the way into MABAYANI ----------------------------------------------- */
+
+/* Discover is the doorway now, not the home. This is deliberately the most
+   emphatic block on the page: MABAYANI moved out because it grew past being
+   one article among nineteen, and a quiet link would read as the opposite. */
+.d-mab{
+  margin:clamp(48px,7vw,84px) 0;
+  background:var(--navy);color:var(--white);
+  border-radius:20px;overflow:hidden;
+}
+.d-mab-inner{
+  max-width:760px;
+  padding:clamp(38px,6vw,72px) clamp(24px,5vw,56px);
+}
+.d-mab-mark{
+  margin:0 0 20px;
+  font:700 13px/1 var(--font-ui);letter-spacing:.34em;
+  color:var(--yellow);
+}
+.d-mab-line{
+  margin:0 0 20px;
+  font:400 clamp(28px,4.4vw,50px)/1.1 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--white);
+}
+.d-mab-what{
+  margin:0 0 18px;max-width:44ch;
+  font:400 clamp(17px,1.9vw,20px)/1.5 var(--font-ui);
+  color:rgba(255,255,255,.92);
+}
+.d-mab-teaser{
+  margin:0;max-width:58ch;
+  font:400 clamp(15px,1.5vw,16.5px)/1.7 var(--font-ui);
+  color:rgba(255,255,255,.72);
+}
+.d-mab-go{margin:28px 0 0}
+.d-mab-go a{
+  display:inline-flex;align-items:center;min-height:48px;
+  padding:13px 26px;border-radius:999px;
+  background:var(--yellow);color:var(--navy);
+  font:700 15.5px/1 var(--font-ui);text-decoration:none;
+}
+.d-mab-go a::after{content:" \2192";margin-left:10px}
+.d-mab-go a:hover,.d-mab-go a:focus-visible{background:var(--white)}
+
+/* A Discover article and its MABAYANI chapter answer different questions about
+   the same subject. This says where the other one is, without restating it. */
+.d-mab-cross{
+  max-width:var(--d-measure);margin:clamp(34px,5vw,52px) auto 0;
+  padding:22px 24px;border-radius:14px;
+  background:var(--navy);color:var(--white);
+}
+.d-mab-cross-mark{
+  margin:0 0 8px;font:700 11px/1 var(--font-ui);
+  letter-spacing:.3em;color:var(--yellow);
+}
+.d-mab-cross-line{margin:0;font:400 clamp(17px,1.9vw,20px)/1.4 var(--font-editorial)}
+.d-mab-cross-line a{color:var(--white);text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4)}
+.d-mab-cross-line a::after{content:" \2192";opacity:.7}
+.d-mab-cross-line a:hover,.d-mab-cross-line a:focus-visible{border-bottom-color:var(--yellow)}

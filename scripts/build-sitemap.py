@@ -247,6 +247,7 @@ def collect() -> tuple[list[tuple[str, str]], list[str]]:
     problems: list[str] = []
     seen: dict[str, str] = {}
 
+    skipped: list[tuple[str, str]] = []
     for path in pages():
         rel = path.relative_to(ROOT).as_posix()
         raw = path.read_text(encoding="utf-8")
@@ -263,6 +264,18 @@ def collect() -> tuple[list[tuple[str, str]], list[str]]:
         if not url.startswith(SITE):
             problems.append(f"{rel}: canonical points off-site ({url})")
             continue
+
+        # A page that names another page as its canonical is not a canonical
+        # URL, and a sitemap lists canonicals. The ten MABAYANI research
+        # articles do exactly this: they keep their URLs and their content and
+        # stay crawlable through the links to them, but MABAYANI is the
+        # authoritative reading and they say so. Listing them here would ask
+        # search engines to index a page that has just told them not to.
+        own = f"{SITE}/{rel}"
+        if url not in (own, own.replace("/index.html", "/")):
+            skipped.append((rel, url))
+            continue
+
         if url in seen:
             problems.append(f"{rel}: shares a canonical URL with {seen[url]} ({url}) "
                             f"— two pages competing for one address")
@@ -349,6 +362,11 @@ def main() -> int:
     SITEMAP.write_text(rendered, encoding="utf-8")
     newest = max(e[1] for e in entries)
     print(f"sitemap.xml: {len(entries)} URLs")
+    if skipped:
+        print(f"{len(skipped)} page(s) name another page as canonical and are "
+              f"deliberately not listed:")
+        for rel, url in skipped:
+            print(f"  {rel} -> {url}")
     print(f"most recent content change: {newest}")
     print(f"today: {date.today().isoformat()} "
           f"(only a page that actually changed carries today's date)")

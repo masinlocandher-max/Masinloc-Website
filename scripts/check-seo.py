@@ -150,6 +150,31 @@ descriptions: dict[str, str] = {}
 inbound: dict[str, set[str]] = {p.relative_to(ROOT).as_posix(): set() for p in pages}
 
 
+# Pages that deliberately name another page as their canonical.
+#
+# The ten MABAYANI research articles are the case. They keep their URLs and
+# their content — nothing here deletes them, and they stay crawlable through
+# the links from /mabayani/ and from each other — but MABAYANI is the
+# authoritative reading of that history and they say so rather than competing
+# with it for the same searches.
+#
+# Listed explicitly so that a page canonicalizing elsewhere is always a
+# decision somebody made, never a build accident. A cross-page canonical is
+# advisory: search engines weigh it against the content and may keep indexing
+# a page that differs substantially from its target. If these need to leave
+# the index for certain, robots noindex is the reliable lever, not this.
+CANONICAL_ELSEWHERE = {
+    f"bulletin/{slug}.html": f"{SITE}/mabayani/"
+    for slug in (
+        "was-masinloc-founded-in-1572", "1607-and-the-first-mission-church",
+        "before-the-written-record", "the-first-church-was-not-todays-church",
+        "san-andres-church-across-the-centuries", "1649-when-six-caracoas-came",
+        "what-binabayani-remembers", "what-is-sambal-tina",
+        "why-older-sources-say-tina", "why-mabayani-exists",
+    )
+}
+
+
 def expected_canonical(name: str) -> str:
     """The one public URL that corresponds to a built file.
 
@@ -157,6 +182,8 @@ def expected_canonical(name: str) -> str:
     explicit .html path; silently treating those as interchangeable would let
     a page canonicalize to a duplicate route that does not exist in the build.
     """
+    if name in CANONICAL_ELSEWHERE:
+        return CANONICAL_ELSEWHERE[name]
     if name == "index.html":
         return f"{SITE}/"
     if name.endswith("/index.html"):
@@ -355,11 +382,18 @@ for page in pages:
              f"{parser.canonical})")
 
     # --- internal linking -------------------------------------------------
+    # A section index is linked at its directory URL, not at index.html —
+    # "../mabayani/" is how every link to it is written. Counting only hrefs
+    # ending in .html made those links invisible, so a page reached solely that
+    # way was reported as orphaned when it was linked from two places.
     internal = [href for href in parser.links
-                if href.endswith(".html") and not href.startswith("http")]
+                if not href.startswith(("http", "//", "mailto:", "tel:", "#"))
+                and (href.endswith(".html") or href.endswith("/"))]
     here = Path(name).parent
     for href in internal:
         target = href.split("#")[0].split("?")[0]
+        if target.endswith("/"):
+            target += "index.html"
         resolved = posixpath.normpath((here / target).as_posix()).lstrip("/")
         if resolved in inbound:
             inbound[resolved].add(name)
@@ -398,28 +432,37 @@ for page in pages:
                 fail(f"{name}: structured data uses a non-canonical site URL: "
                      f"{url}")
 
+        # Structured data identifies the page it is on. On a page that
+        # canonicalizes elsewhere those are different URLs, and the schema must
+        # keep describing this page rather than adopting the other one's
+        # identity — two documents claiming one @id is worse than a page whose
+        # canonical and @id differ on purpose.
+        _self = (f"{SITE}/" if name == "index.html"
+                 else f"{SITE}/{name[:-len('index.html')]}" if name.endswith("/index.html")
+                 else f"{SITE}/{name}")
+
         for entity in page_entities(graph):
             entity_url = entity.get("url")
-            if isinstance(entity_url, str) and entity_url != parser.canonical:
+            if isinstance(entity_url, str) and entity_url != _self:
                 fail(f"{name}: {entity.get('@type')} schema URL disagrees with "
-                     f"canonical ({entity_url} vs {parser.canonical})")
+                     f"the page's own URL ({entity_url} vs {_self})")
 
             entity_id = entity.get("@id")
             if (isinstance(entity_id, str)
                     and urlsplit(entity_id).hostname in {
                         "masinloc-zambales.com", CANONICAL_HOST}
-                    and not (entity_id == parser.canonical
-                             or entity_id.startswith(parser.canonical + "#"))):
+                    and not (entity_id == _self
+                             or entity_id.startswith(_self + "#"))):
                 fail(f"{name}: {entity.get('@type')} schema @id disagrees with "
                      f"canonical ({entity_id} vs {parser.canonical})")
 
             main = entity.get("mainEntityOfPage")
             if isinstance(main, dict):
                 main = main.get("@id")
-            if isinstance(main, str) and not (main == parser.canonical
-                                              or main.startswith(parser.canonical + "#")):
-                fail(f"{name}: mainEntityOfPage disagrees with canonical "
-                     f"({main} vs {parser.canonical})")
+            if isinstance(main, str) and not (main == _self
+                                              or main.startswith(_self + "#")):
+                fail(f"{name}: mainEntityOfPage disagrees with the page's own URL "
+                     f"({main} vs {_self})")
 
 # Every public page should be reachable from somewhere else on the site.
 for name, sources in inbound.items():

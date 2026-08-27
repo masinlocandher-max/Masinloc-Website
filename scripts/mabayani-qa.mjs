@@ -119,13 +119,39 @@ for (const [label, viewport] of [
 {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(`${baseURL}/discover/index.html`, { waitUntil: 'networkidle' });
-  const links = await page.locator('.d-seq a').evaluateAll(
+  const links = await page.locator('.d-mab a').evaluateAll(
     els => els.map(a => a.getAttribute('href')));
   if (!links.includes('../mabayani/')) {
-    fail('discover: the MABAYANI block does not link to /mabayani/');
+    fail('discover: the MABAYANI feature does not link to /mabayani/');
   }
-  if (await page.locator('.d-seq [data-slug]').count()) {
-    fail('discover: still lists the research articles as a sequence');
+  if (await page.locator('.d-seq, .d-seq-list').count()) {
+    fail('discover: still carries the old MABAYANI sequence block');
+  }
+  /* The feature is a promotion, not a footnote: it carries the identity, the
+     line and one way in. */
+  for (const [sel, what] of [['.d-mab-mark', 'the MABAYANI mark'],
+                             ['.d-mab-line', 'the headline'],
+                             ['.d-mab-teaser', 'the teaser'],
+                             ['.d-mab-go a', 'the way in']]) {
+    if (!(await page.locator(sel).count())) fail(`discover: the feature is missing ${what}`);
+  }
+
+  /* Discover articles that share a subject with a chapter say where it is. */
+  const crossed = [];
+  for (const slug of ['the-church-masinloquenos-walk-past',
+                      'every-november-masinloc-stages-a-battle',
+                      'the-sambal-words-we-refuse-to-lose',
+                      'san-salvador-has-a-better-story']) {
+    await page.goto(`${baseURL}/discover/${slug}.html`, { waitUntil: 'domcontentloaded' });
+    const href = await page.locator('.d-mab-cross a').getAttribute('href').catch(() => null);
+    if (!href || !href.startsWith('../mabayani/#s')) {
+      fail(`discover/${slug}: does not point at its MABAYANI chapter`);
+    } else {
+      crossed.push(href);
+    }
+  }
+  if (new Set(crossed).size !== crossed.length) {
+    fail('discover: two articles point at the same MABAYANI chapter');
   }
   await page.close();
 }

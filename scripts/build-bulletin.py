@@ -146,7 +146,7 @@ def shell_head(title: str, description: str, canonical: str, *, depth: int,
 <link rel="stylesheet" href="{up}site.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="{up}bulletin.css?v=20260825-2">
+<link rel="stylesheet" href="{up}bulletin.css?v=20260827-1">
 </head>
 <body class="about-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -231,9 +231,45 @@ def continue_block(article: dict, by_slug: dict, total: int) -> str:
       </nav>"""
 
 
+# Which MABAYANI chapter each research article stands behind. The reader
+# arrives here from a search or an old link; this is how they find the story it
+# belongs to rather than reading a fragment and leaving.
+MABAYANI_CHAPTER = {
+    "was-masinloc-founded-in-1572": ("03", "1572: ang petsa na minana natin"),
+    "1607-and-the-first-mission-church": ("05", "18 November 1607"),
+    "before-the-written-record": ("02", "Bago isulat ang pangalan natin"),
+    "the-first-church-was-not-todays-church": ("09", "Ang unang simbahan ay hindi bato"),
+    "san-andres-church-across-the-centuries": ("17", "Ang simbahang paulit-ulit na inalagaan"),
+    "1649-when-six-caracoas-came": ("13", "1649: anim na caracoa"),
+    "what-binabayani-remembers": ("19", "Binabayani: alaala, pananampalataya, at pagwawasto"),
+    "what-is-sambal-tina": ("20", "Sambal Tina: ang wikang maaaring mawala nang tahimik"),
+    "why-older-sources-say-tina": ("20", "Sambal Tina: ang wikang maaaring mawala nang tahimik"),
+    "why-mabayani-exists": ("30", "Continue the work"),
+}
+
+
+def chapter_note(slug: str) -> str:
+    """The MABAYANI chapter this research supports, said at the top."""
+    pick = MABAYANI_CHAPTER.get(slug)
+    if not pick:
+        return ""
+    number, label = pick
+    return (
+        '      <aside class="research-of">\n'
+        '        <p class="research-of-mark">Research behind MABAYANI</p>\n'
+        f'        <p class="research-of-line"><a href="../mabayani/#s{number}">'
+        f'{esc(label)}</a></p>\n'
+        "      </aside>\n")
+
+
 def article_page(article: dict, everything: list[dict]) -> str:
     slug = article["slug"]
     url = f"{SITE}/bulletin/{slug}.html"
+    # These ten were the MABAYANI sequence. MABAYANI is now the reading at
+    # /mabayani/, and they are the research behind its chapters. The page stays
+    # and keeps its URL; what it gives up is the claim to be the canonical
+    # MABAYANI, so there is one authoritative experience rather than two.
+    canonical = f"{SITE}/mabayani/"
     category = CATEGORIES[article["category"]]
     reveals = bool(article.get("revealsCreator"))
     creator = PUBLICATION["creator"]
@@ -328,7 +364,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
                 "@type": "Blog",
                 "@id": PUBLICATION["id"],
                 "name": PUBLICATION["name"],
-                "url": f"{SITE}/discover/",
+                "url": f"{SITE}/mabayani/",
                 "inLanguage": "en-PH",
                 "publisher": {"@id": f"{SITE}/#publisher"},
             },
@@ -338,7 +374,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
     jsonld = ('<script type="application/ld+json">\n'
               + json.dumps(graph, indent=2, ensure_ascii=False) + "\n</script>\n")
 
-    head = shell_head(article["metaTitle"], article["description"], url, depth=1,
+    head = shell_head(article["metaTitle"], article["description"], canonical, depth=1,
                       og_type="article",
                       extra=f'<meta property="article:published_time" content="{article["published"]}">\n'
                             f'<meta property="article:modified_time" content="{article["modified"]}">\n'
@@ -356,7 +392,7 @@ def article_page(article: dict, everything: list[dict]) -> str:
   </nav>
 
   <article class="article">
-    <header class="article-head">
+{chapter_note(slug)}    <header class="article-head">
       <p class="article-cat">{esc(category)}</p>
       <h1>{esc(article['title'])}</h1>
       <p class="article-stand">{esc(article['standfirst'])}</p>
