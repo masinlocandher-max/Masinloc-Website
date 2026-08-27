@@ -40,6 +40,11 @@ CREATOR = BULLETIN["publication"]["creator"]["name"]
 # so that moving the reveal moves the exemption with it.
 REVEAL = next(a["slug"] for a in BULLETIN["articles"] if a.get("revealsCreator"))
 REVEAL_PAGE = f"bulletin/{REVEAL}.html"
+# MABAYANI's closing section credits the research direction, which the page's
+# brief asks for. That is the one other place the name belongs, and naming it
+# here means the exemption is a decision on the record rather than a directory
+# this guard happens not to look at.
+CREDIT_PAGE = "mabayani/index.html"
 
 # Names to look for. The surname alone is included because "Bautista" on a page
 # is a reveal even without the first name.
@@ -109,6 +114,7 @@ def pages() -> list[Path]:
     """Every built HTML page on the site, not only the Bulletin's."""
     found = sorted(ROOT.glob("*.html"))
     found += sorted((ROOT / "bulletin").glob("*.html"))
+    found += sorted((ROOT / "mabayani").glob("*.html"))
     return found
 
 
@@ -121,8 +127,19 @@ def main() -> int:
         raw = page.read_text(encoding="utf-8")
         low = raw.lower()
 
+        if rel == CREDIT_PAGE:
+            # Once, in the closing credit. More than once would mean the name
+            # had spread into the narrative, which is what this guard protects.
+            shown = low.count(CREATOR.lower())
+            if shown == 0:
+                problems.append(f"{rel}: the closing section must credit the "
+                                f"research direction, and does not")
+            elif shown > 1:
+                problems.append(f"{rel}: names the creator {shown} times; the "
+                                f"credit belongs once, in the closing section")
+
         hits = [n for n in NEEDLES if n in low]
-        if hits and rel != REVEAL_PAGE:
+        if hits and rel not in (REVEAL_PAGE, CREDIT_PAGE):
             # Report where, so a real leak is fixable without a manual hunt.
             where = []
             for needle in hits:
@@ -176,8 +193,15 @@ def main() -> int:
     if not named:
         problems.append(f"the reveal page {REVEAL_PAGE} does not name the creator — "
                         f"the closing story is supposed to be where it happens")
-    elif named != [REVEAL_PAGE]:
-        problems.append(f"more than one page names the creator: {named}")
+    elif sorted(named) != sorted({REVEAL_PAGE, CREDIT_PAGE}):
+        # Exactly two pages may carry the name: the closing story, where the
+        # reveal happens, and MABAYANI's credit line. A third is a leak.
+        extra = [p for p in named if p not in (REVEAL_PAGE, CREDIT_PAGE)]
+        if extra:
+            problems.append(f"pages naming the creator that should not: {extra}")
+        else:
+            problems.append(f"the creator should be named on both {REVEAL_PAGE} and "
+                            f"{CREDIT_PAGE}; found only {named}")
 
     css = (ROOT / "bulletin.css").read_text(encoding="utf-8")
     if STREAMING_RED.search(css):
@@ -195,7 +219,7 @@ def main() -> int:
 
     print("MABAYANI GUARD PASSED")
     print(f"{len(pages())} pages checked; the creator is named on "
-          f"{REVEAL_PAGE} and nowhere else.")
+          f"{REVEAL_PAGE}, and as the research credit on {CREDIT_PAGE}.")
     print("No streaming-platform language in the Bulletin interface.")
     return 0
 

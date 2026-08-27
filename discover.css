@@ -385,6 +385,15 @@
 /* The way in. */
 .d-seq-entry .d-seq-n{color:var(--blue);font-weight:700}
 .d-seq-entry .d-seq-title{font-size:clamp(19px,2vw,23px)}
+.d-seq-more{margin:24px 0 0;font:400 16px/1.5 var(--font-ui)}
+.d-seq-more a{
+  display:inline-flex;align-items:center;min-height:44px;
+  color:var(--blue);text-decoration:none;font-weight:600;
+  border-bottom:1px solid rgba(13,59,158,.28);padding-bottom:2px;
+}
+.d-seq-more a::after{content:" \2192";margin-left:6px;opacity:.7}
+.d-seq-more a:hover,.d-seq-more a:focus-visible{border-bottom-color:var(--blue)}
+
 .d-rec-meta{
   display:block;margin-top:8px;
   font:400 12.5px/1.4 var(--font-ui);color:var(--muted);

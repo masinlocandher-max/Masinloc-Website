@@ -117,8 +117,14 @@ ARTICLE_HOME_CARRIES = [
     "verified-history.html",
     "founder-of-masinloc.html",
     "sources.html",
-    "../bulletin/was-masinloc-founded-in-1572.html",
+    "../mabayani/",
 ]
+
+# The ten research articles are no longer listed on Discover; they are the
+# worked research behind MABAYANI and are gathered there, beside the sections
+# they support. That makes /mabayani/ the page that must not lose them, so it
+# is checked directly rather than trusting the link that replaced the list.
+RESEARCH_HOME = "mabayani/index.html"
 FORBIDDEN_FILES = [
     "hero-loader.js",
     "hero-single.css",
@@ -517,6 +523,18 @@ else:
             fail(f"{ARTICLE_HOME}: does not link to {child}. Discover is the home of "
                  f"every article on this site, so a collection it does not link to is "
                  f"reachable from nothing but the footer.")
+
+_research = ROOT / RESEARCH_HOME
+if not _research.is_file():
+    fail(f"{RESEARCH_HOME} does not exist")
+else:
+    _research_text = _research.read_text(encoding="utf-8")
+    _stories = sorted(p.name for p in (ROOT / "bulletin").glob("*.html"))
+    for story in _stories:
+        if f"../bulletin/{story}" not in _research_text:
+            fail(f"{RESEARCH_HOME}: does not link to bulletin/{story}. The research "
+                 f"articles are reached from here now that Discover links to the "
+                 f"story rather than listing them, so one missing here is orphaned.")
 
 if errors:
     print("SITE INTEGRITY CHECK FAILED")

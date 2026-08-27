@@ -205,7 +205,8 @@ for script in ("app-base.js", "app.js", "admin.js", "site.js", "sambal-tina.js",
 # Inline <style> blocks are stylesheets too, and they were not being read. The
 # 404 page carried the navy identity colour as a literal there for exactly that
 # reason.
-for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
+for path in (sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
+             + sorted(ROOT.glob("mabayani/*.html"))):
     text = path.read_text(encoding="utf-8")
     rel = path.relative_to(ROOT).as_posix()
     for style in re.findall(r"<style[^>]*>(.*?)</style>", text, re.S):
@@ -248,7 +249,8 @@ for path in sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html")):
 EXPECTED_NAV_LABELS = [label for _, label in EXPECTED_NAV]
 for path in (sorted(ROOT.glob("*.html")) + sorted(ROOT.glob("bulletin/*.html"))
              + sorted(ROOT.glob("discover/*.html"))
-             + sorted(ROOT.glob("marketplace/*.html"))):
+             + sorted(ROOT.glob("marketplace/*.html"))
+             + sorted(ROOT.glob("mabayani/*.html"))):
     text = path.read_text(encoding="utf-8")
     if SHELL_MARKER not in text:
         continue

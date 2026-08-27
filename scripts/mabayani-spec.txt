@@ -1,0 +1,2441 @@
+MABAYANI COMPLETE PAGE CONTENT
+Production source of truth for www.masinloc-zambales.com/mabayani/
+Prepared for implementation. Plain text intentionally used to reduce token overhead.
+
+============================================================
+0. PURPOSE AND NON-NEGOTIABLES
+============================================================
+
+MABAYANI means the MABAYANI: the brave people.
+Use MABAYANI consistently as the identity word. Do not rename the experience into “Brave Masinloqueños,” “Heroic Masinloc,” or another substitute.
+
+MABAYANI is the immersive human reading of Masinloc history.
+Verified History is the inspectable factual and chronological layer.
+Same history. Different reading mode.
+
+The page must feel like a true story with the receipts beside it.
+The emotional rhythm is:
+STORY -> FACT -> HUMAN CONSEQUENCE -> REFLECTION.
+
+Evidence states:
+DOCUMENTED = supported directly by strong evidence.
+RECONSTRUCTED = careful synthesis/inference from multiple pieces of evidence; not directly stated as a complete event in one source.
+REMEMBERED = oral tradition, local memory, ritual memory, or later community telling.
+STILL OPEN = evidence is insufficient, conflicting, untraced, or unresolved.
+
+Never invent dialogue, names, motives, clothing, battle choreography, local chiefs, women as named characters, casualties, exact movements, religious explanations, founding dates, or visual reconstructions.
+
+If the record stops, the story stops.
+“Hindi pa natin alam” is an acceptable historical answer.
+
+MABAYANI must not make Muslim Filipinos today into inherited enemies. “Moro” appears only as historical colonial terminology when necessary and must be contextualized.
+
+MABAYANI must not turn Aeta communities into permanent antagonists, costumes, caricatures, or a racialized “other.” Christian is a religious identity. Spanish is a colonial/national identity. A local Sambal person could be Christian without being Spanish. Aeta is an Indigenous identity and is not the opposite of Filipino or automatically the opposite of Christian.
+
+The flagship opening does not use “DID YOU KNOW?” trivia framing.
+
+The final question must be earned:
+MABAYANI pa rin ba tayo?
+
+============================================================
+1. STORY MAP / NAVIGATION LABELS
+============================================================
+
+00 Enter MABAYANI
+01 Ganito Nila Tayo Nakita
+02 Bago Isulat ang Pangalan Natin
+03 1572: Ang Petsa na Minana Natin
+04 Bakit March 16?
+05 18 November 1607
+06 Fr. Andrés at ang mga Pangalan na Naiwan
+07 Sa Pagitan ng Dagat at Bundok
+08 Nang Dumating ang mga Recollect
+09 Ang Unang Simbahan ay Hindi Bato
+10 Sino ang Nagbuhat ng mga Bato?
+11 Nagpalit ang Namamahala. Nagpatuloy ang Bayan.
+12 Ang Dagat: Daan, Kabuhayan, Panganib
+13 1649: Anim na Caracoa
+14 Ang Tapang ay Hindi Nangangailangan ng Habambuhay na Kaaway
+15 1660–1661: Tatlong Pangalan na Hindi Pa Natin Nababawi
+16 Ang Archive ay Hindi Pantay Mag-alala
+17 Ang Simbahang Paulit-ulit na Inalagaan
+18 Rebolusyon at ang Pagtatapos ng Panahong Recollect
+19 Binabayani: Alaala, Pananampalataya, at Pagwawasto
+20 Sambal Tina: Ang Wikang Maaaring Mawala nang Tahimik
+21 Hindi Lahat ng MABAYANI ay Lumaban sa Digmaan
+22 World War II: Kabanatang Kulang pa sa mga Pangalan
+23 Coto: Trabaho, Bundok, at Pagbabago
+24 Oyon Bay, Kuryente, at Isang Mas Masalimuot na Bayan
+25 Dumami ang Tao. Nagbago ang Masinloc.
+26 Wala Nang Anim na Caracoa sa Baybayin
+27 Proud Tayo. Pero Sapat Ba Iyon?
+28 MABAYANI Pa Rin Ba Tayo?
+29 Panata ng MABAYANI
+30 Continue the Work
+
+Story map is hidden by default. Show a discreet progress indicator and an optional “Story Map” control.
+
+============================================================
+2. SECTION 00 | ENTER MABAYANI
+============================================================
+
+PUBLIC COPY
+
+MABAYANI
+
+May kasaysayang nakasulat sa mga libro.
+May kasaysayang nakatayo sa bato.
+May kasaysayang nananatili sa wika, sayaw, pangalan ng lugar, at alaala ng pamilya.
+At may kasaysayang halos nawala dahil walang nakapagsulat ng pangalan ng mga taong gumawa nito.
+
+Ito ang kuwento ng Masinloc sa pamamagitan ng mga taong nabuhay rito, nagbago rito, nagtiis rito, nagtanggol rito, nagdasal rito, nagtrabaho rito, at nagpatuloy rito.
+
+Hindi sila kailangang gawing alamat para maging mahalaga.
+Ang tunay na nangyari ay sapat nang makapangyarihan.
+
+MABAYANI.
+
+PRIMARY CTA
+Pumasok sa kuwento
+
+SECONDARY CTA
+Tingnan agad ang Verified History
+
+IMPLEMENTATION NOTE
+Entry should be quiet. No fake historical battle. No autoplay audio. Use real Masinloc landscape/sea texture or restrained dark background. MABAYANI wordmark may appear alone before the first text reveal.
+
+============================================================
+3. SECTION 01 | GANITO NILA TAYO NAKITA
+============================================================
+
+EYEBROW
+Isang salitang iniwan ng lumang tala
+
+TITLE
+Ganito nila tayo nakita.
+
+PUBLIC COPY
+
+Bago natin ikuwento kung paano natin gustong alalahanin ang mga nauna sa atin, pakinggan muna natin kung paano sila nakita ng isang taong nasa kabilang panig ng kuwento.
+
+Noong 1788, isinulat ng Augustinian Recollect historian na si Fray Juan de la Concepción ang isang paglalarawan sa mga mamamayan ng Zambales:
+
+“Los habitantes de Zambales distinguíanse por su fiereza.”
+
+Ang mga naninirahan sa Zambales, aniya, ay nakikilala dahil sa kanilang fiereza.
+
+Fierceness.
+
+Hindi neutral ang salitang iyon. Galing iyon sa isang kolonyal at misyonerong pananaw. Ang parehong lumang teksto ay nagsasalita tungkol sa katutubong pananampalataya gamit ang mapanghusgang wika ng panahon nito. Kaya hindi natin tatanggapin ang bawat paglalarawan bilang walang kinikilingang katotohanan.
+
+Pero may isang bagay na hindi natin kailangang burahin.
+
+Nakita nila ang isang bayang hindi madaling yumuko.
+
+May mga naunang Augustino at Dominikong misyon na umurong sa harap ng hirap ng kanilang gawain sa Zambales. Sa mga sumunod na Recollect account, paulit-ulit lumilitaw ang larawan ng mga mamamayang mahirap pasunurin, mahirap ilayo sa sariling paniniwala, at sanay mabuhay sa isang lupain na sila mismo ang nakakaalam.
+
+Ang tawag nila: fiereza.
+
+Ang salitang gagamitin natin para tingnan ang tapang sa loob ng kasaysayang ito:
+
+MABAYANI.
+
+Hindi dahil perpekto ang ating mga ninuno.
+Hindi dahil tama sila sa bawat tunggalian.
+Hindi dahil lahat ng ginawa nila ay kailangang tawaging kabayanihan.
+
+MABAYANI dahil may tapang sa pagtatanggol, sa pag-angkop, sa pagbuo, sa pagbalik, sa pagtanggap ng pagbabago, sa pagpapanatili ng wika, at maging sa pag-amin kapag hindi pa natin alam ang buong katotohanan.
+
+TRANSITION
+Bago sila tinawag na mabangis ng isang dayuhan, may buhay na rito.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Fray Juan de la Concepción, an Augustinian Recollect historian, described the inhabitants of Zambales with the phrase “Los habitantes de Zambales distinguíanse por su fiereza.” Licinio Ruiz later quoted the passage and explicitly cited Juan de la Concepción, Historia General de Philipinas, Tome IV, p. 255.
+
+EVIDENCE STATUS:
+DOCUMENTED.
+
+WHAT REMAINS UNCERTAIN:
+The sentence describes inhabitants of Zambales broadly, not a statistically defined population and not only Masinloc. It should not be presented as an exact statement about every person in Masinloc.
+
+SOURCES:
+Juan de la Concepción, Historia general de Philipinas, Tome IV. Manila: Imprenta del Seminario Conciliar y Real de San Carlos, 1788, p. 255.
+Licinio Ruiz, Sinopsis histórica de la Provincia de San Nicolás de Tolentino de las Islas Filipinas, Vol. I. Manila, 1925, p. 20.
+A later Recollect biographical inscription on Fr. Andrés del Espíritu Santo repeats the idea with the wording “cuyos naturales, por su fiereza...” Treat that inscription as supporting institutional memory, not as Fr. Andrés speaking in his own voice.
+
+VISUAL
+Use a scan/facsimile of the historical text if licensing permits. Show “por su fiereza” large. Do not lead with the founder portrait yet. If the portrait appears here at all, it is secondary and clearly labeled as a later portrait, not eyewitness imagery.
+
+============================================================
+4. SECTION 02 | BAGO ISULAT ANG PANGALAN NATIN
+============================================================
+
+TITLE
+Bago ang 1572.
+Bago ang 1607.
+May mga tao na rito.
+
+PUBLIC COPY
+
+Hindi nagsimula ang Masinloc nang mapansin ito ng Espanya.
+
+Hindi rin nagsimula ang isang bayan sa araw na unang isinulat ng isang prayle ang pangalan nito.
+
+Bago naging dokumento ang lugar, tahanan na ito.
+
+Sa kanlurang baybayin ng Gitnang Luzon, ang dagat, kapatagan, ilog, kagubatan, at Zambales mountain range ay hindi dekorasyon sa kasaysayan. Sila ang kondisyon ng buhay. Sa mas malawak na kasaysayan ng mga Sambal, makikita ang pangangaso, pangangalap, pagsasaka, palay, pakikipagpalitan, paglalakbay at mga katutubong paniniwalang nakaugnay sa lupa, ani, sakit, pangangaso at mga espiritu.
+
+May mga Aeta ring komunidad sa kabundukan ng Zambales na may sariling kasaysayan, kaalaman sa kapaligiran, galaw, kabuhayan at pagkakakilanlan. Hindi sila background character sa kuwento ng mga taga-kapatagan.
+
+Pero kailangan nating maging maingat.
+
+Hindi lahat ng alam natin tungkol sa sinaunang Sambal at Aeta sa Zambales ay direktang dokumento tungkol sa mismong lugar na tinatawag nating Masinloc ngayon. May mga datos na panlalawigan, panrehiyon, at mula sa mas huling panahon.
+
+Kaya hindi tayo gagawa ng pekeng eksena na parang alam natin kung ano ang almusal ng isang pamilyang Masinloqueño noong 1500, kung saan eksaktong nakatayo ang bahay nila, o ano ang pangalan ng kanilang pinuno.
+
+Ang masasabi natin nang ligtas ay mas simple at mas mahalaga:
+
+May mga pamayanang may buhay, wika, paniniwala, ugnayan, trabaho at alaala bago naging sentro ng kolonyal na tala ang Masinloc.
+
+Ang unang petsang nakasulat ay hindi unang araw ng isang tao.
+
+REFLECTION
+Kung ang unang dokumento ay hindi birth certificate ng isang bayan, paano natin dapat ikuwento ang simula?
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Sambal-speaking communities inhabited western Central Luzon before Spanish mission records. Late-sixteenth- and seventeenth-century sources document Zambal communities, beliefs, hunting, agriculture and social practices. Aeta communities also have long-standing presence in Zambales.
+
+EVIDENCE STATUS:
+DOCUMENTED at regional/Zambales level; RECONSTRUCTED when applied to everyday life in pre-1607 Masinloc specifically.
+
+WHAT REMAINS UNCERTAIN:
+Exact settlement layout, household composition, individual leaders, and daily routines in pre-1607 Masinloc are not sufficiently documented in the current source set.
+
+SOURCES:
+Juan de la Concepción, Historia general de Philipinas, Tome IV, 1788.
+William Henry Scott, Barangay: Sixteenth-Century Philippine Culture and Society, 1994, Central Luzon/Zambal discussion.
+Late-sixteenth-century Boxer Codex illustrations and descriptions of Zambal and Aeta subjects, used as regional evidence only.
+Early/late-seventeenth-century Zambales religious records summarized in modern scholarship on Indigenous knowledge; interpret colonial descriptions critically.
+University of the Philippines Department of Linguistics, Sambal language capsule, for current linguistic classification and distribution.
+
+VISUAL
+Real present-day Masinloc sea, river, lowland and mountain photography. Optional historical map of western Luzon with clear date. Do not use an AI “precolonial village” as evidence.
+
+============================================================
+5. SECTION 03 | 1572: ANG PETSA NA MINANA NATIN
+============================================================
+
+TITLE
+1572
+
+SUBTITLE
+Mahalagang petsa. Pero ano ba talaga ang pinatutunayan nito?
+
+PUBLIC COPY
+
+Maraming Masinloqueño ang lumaki na may petsang March 16, 1572.
+
+Kapag paulit-ulit na nakikita ang isang petsa sa profile, souvenir, program at website, natural na isipin nating matagal na itong napatunayan.
+
+Pero may pagkakaiba ang “matagal nang inuulit” at “may dokumentong nagpapatunay.”
+
+Ang 1572 ay may tunay na lugar sa kasaysayan ng Zambales. Ito ang panahon ng paglawak ng ekspedisyong Espanyol sa kanlurang Luzon at ng mga paglalakbay na kaugnay ni Juan de Salcedo sa rehiyon.
+
+Ibig sabihin, mahalaga ang 1572 bilang context ng Spanish contact at exploration.
+
+Pero sa kasalukuyang ebidensiyang hawak natin, hindi pa nito pinatutunayan na March 16, 1572 ang pormal na pagkakatatag ng Masinloc bilang pueblo, munisipalidad, parokya, o unang pamayanan.
+
+Contact is not automatically founding.
+Exploration is not automatically municipal creation.
+At ang unang pagdating ng isang kolonyal na kapangyarihan ay hindi simula ng buhay ng mga taong naroon na.
+
+Hindi natin kailangang gawing mas matanda ang Masinloc para maging mahalaga ang Masinloc.
+
+Mas malakas ang kasaysayan kapag hindi nito kailangang pilitin ang isang petsa.
+
+FACT STRIP
+1572 = Spanish contact/exploration context in Zambales.
+NOT YET PROVEN = formal founding of Masinloc on March 16, 1572.
+
+TRANSITION
+At dito nagsisimula ang isang tanong na hindi natin dapat takasan.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Spanish expeditions reached and operated in the Zambales/Pangasinan coast in the 1570s. Juan de Salcedo is part of that regional contact history.
+
+EVIDENCE STATUS:
+DOCUMENTED for regional contact context.
+STILL OPEN for March 16, 1572 as Masinloc’s formal founding date.
+
+WHAT REMAINS UNCERTAIN:
+No primary or authoritative founding instrument has yet been pinned that establishes March 16, 1572 as the formal founding date of Masinloc.
+
+SOURCES:
+Regional Spanish-era histories of Zambales and Salcedo’s northern Luzon expeditions.
+Modern references that repeat March 16, 1572 are treated as derivative until their source chain reaches an authoritative document.
+
+VISUAL
+Simple split date treatment. No celebratory “founded 1572” seal.
+
+============================================================
+6. SECTION 04 | BAKIT MARCH 16?
+============================================================
+
+TITLE
+Bakit March 16?
+
+PUBLIC COPY
+
+Hindi namin gustong burahin ang March 16.
+
+Gusto naming malaman kung ano talaga ang inaalala nito.
+
+Sa ngayon, ang petsang March 16, 1572 ay malawak na inuulit bilang founding date ng Masinloc. Pero sa mga sangguniang nasuri para sa pahinang ito, hindi pa natutunton ang isang primary document na nagsasabing sa araw na iyon pormal na itinatag ang Masinloc.
+
+May ilang posibleng paliwanag:
+
+Baka galing ito sa mas huling civic commemoration.
+Baka may administratibong tala na hindi pa natin nakikita.
+Baka may relihiyoso o lokal na tradisyong nagdikit sa petsa sa kuwento ng bayan.
+Baka may lumang historical claim na paulit-ulit na nakopya hanggang mawala ang unang citation.
+
+Pero posibilidad lamang ang mga iyon.
+
+Hindi natin gagawing sagot ang isang hypothesis dahil lang maganda itong pakinggan.
+
+May isa pang mahalagang clue: ang pangunahing kapistahan ni San Andrés Apostol ay November 30, hindi March 16. Kaya hindi sapat ang patronal feast para ipaliwanag ang March 16.
+
+Ang tamang label sa ngayon:
+
+STILL OPEN.
+
+Ang isang bayang MABAYANI ay hindi natatakot sa tanong na wala pang sagot.
+
+CTA
+May lumang programa, resolusyon, marker, fiesta booklet, municipal document o family archive ba kayong may March 16? Ibahagi sa research contribution form.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+March 16, 1572 is widely repeated in modern references.
+
+EVIDENCE STATUS:
+STILL OPEN.
+
+WHAT REMAINS UNCERTAIN:
+The origin, first recorded use, and historical basis of March 16 as Masinloc’s commemorative/founding date.
+
+RESEARCH NOTE:
+Do not publish “March 16 came from religious beliefs” as fact unless a source is found. It may be a research hypothesis only.
+
+VISUAL
+Use a date card with an open-question symbol, not a red “false” stamp. The page is correcting confidence, not humiliating local memory.
+
+============================================================
+7. SECTION 05 | 18 NOVEMBER 1607
+============================================================
+
+EYEBROW
+Ang mas matibay na mission-town anchor
+
+TITLE
+18 November 1607
+
+PUBLIC COPY
+
+Dito nagiging mas malinaw ang nakasulat na kuwento ng Masinloc.
+
+Sa isang Recollect history na inilathala noong 1879, isinulat ni Fray Patricio Marcellán ang isang napakalinaw na detalye tungkol kay Fray Andrés del Espíritu Santo. Ayon sa tala, sa Masinloc siya nangaral noong 1607 at doon siya nakapagbuo ng pueblo, tirahan at simbahan sa ilalim ng patronahe ni San Andrés Apostol:
+
+“...fundar pueblo, levantar habitación é iglesia con la advocación de S. Andrés Apóstol, dia diez y ocho de Noviembre de mil seiscientos y siete.”
+
+18 November 1607.
+
+Ito ang pinakamalinaw na eksaktong petsang kasalukuyang natutunton natin para sa Recollect account ng pagkakatatag ng pueblo at simbahan.
+
+Pero kailangan pa ring linawin kung ano ang ibig sabihin ng “founding.”
+
+Hindi ibig sabihin nito na walang tao sa Masinloc bago ang araw na iyon.
+Hindi ibig sabihin nito na si Fr. Andrés ang lumikha ng komunidad mula sa wala.
+Hindi ibig sabihin nito na November 18 ang awtomatikong katumbas ng modernong legal incorporation ng munisipalidad.
+
+Ang pinatutunayan ng tala ay mas tiyak:
+
+Noong 1607, pumasok ang Masinloc sa mas malinaw na Recollect mission-pueblo record. At sa Recollect historical tradition ni Marcellán, 18 November 1607 ang araw na iniuugnay sa pagtatayo ng pueblo, tirahan at simbahan ni San Andrés.
+
+May buhay bago ang petsa.
+Pero simula rito, mas marami nang pangalang, gusali, tungkulin at dokumentong sinusundan ng archive.
+
+FACT BOX
+18 NOVEMBER 1607
+DOCUMENTED IN A 1879 RECOLLECT HISTORY
+Fr. Andrés del Espíritu Santo associated with the founding of the pueblo and a church dedicated to San Andrés Apostol.
+Masinloc already had inhabitants before the Recollect mission-town record.
+This is not evidence that human settlement began in 1607.
+
+REFLECTION
+Hindi naging totoo ang Masinloc noong 1607.
+Mas naging visible lamang ito sa uri ng dokumentong kadalasang pinapaboran ng history books.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Patricio Marcellán gives the exact date 18 November 1607 and says Fr. Andrés founded a pueblo, dwelling and church dedicated to St. Andrew. Romanillos independently establishes Fr. Andrés and Fr. Jerónimo de Cristo in Masinloc in 1607 and describes Andrés as founder of Masinloc in the mission-pueblo tradition and builder of the first church.
+
+EVIDENCE STATUS:
+DOCUMENTED as a Recollect historical claim with a precise 1879 citation.
+
+WHAT REMAINS UNCERTAIN:
+Whether Marcellán copied the exact date from an earlier document now not yet pinned in this project; the precise civil/legal status represented by “fundar pueblo” in 1607; how local inhabitants themselves understood the reorganization.
+
+SOURCES:
+Patricio Marcellán de San José, Provincia de San Nicolás de Tolentino de Agustinos Descalzos de la Congregación de España e Indias. Manila: Colegio de Santo Tomás, 1879, p. 78.
+Marcellán, “Pueblo de Masinloc,” pp. 61–63 for the 1607 mission context.
+Emmanuel Luis A. Romanillos, “Masinloc, Zambales: Augustinian Recollect Mission (1607–1902),” Philippine Social Science Journal 2(2), 2019, pp. 151–171; later reprinted/expanded in the Recollect historical volume used in this project.
+
+VISUAL
+Use a scan of Marcellán p. 78 if rights/access permit. Highlight only the date line. Then reveal the real founder portrait supplied by the user in the next section.
+
+============================================================
+8. SECTION 06 | FR. ANDRÉS AT ANG MGA PANGALAN NA NAIWAN
+============================================================
+
+TITLE
+Fr. Andrés del Espíritu Santo
+
+SUBTITLE
+Isang pangalang naingatan ng institusyon. Isang kuwento na hindi niya kayang punuin mag-isa.
+
+PUBLIC COPY
+
+Ipinanganak si Andrés del Espíritu Santo sa Valladolid, Spain, noong 1585. Kasama siya sa unang yugto ng Augustinian Recollect mission sa Pilipinas. Noong 1607, nakarating siya sa Masinloc kasama si Fray Jerónimo de Cristo.
+
+Sa Recollect historical tradition, si Andrés ang tinatawag na founder ng Masinloc mission-pueblo at builder ng unang church of God sa bagong pueblo.
+
+Mahalaga ang pangalan niya.
+
+Pero hindi siya ang buong kuwento.
+
+Kung may dalawang prayleng dumating sa isang bayang may mga tao na, kailangan nilang matutunan kung paano mabuhay sa isang bagong kapaligiran. Kailangan nila ng pagkain. Kailangan nilang makipag-usap. Kailangan nilang makaalam ng daan, ilog, baybayin at mga pamayanang hindi nila kilala.
+
+May tala na ilang buwan silang nabuhay sa root crops at gulay. May tala ng kanilang paglalakbay. May tala ng simbahan.
+
+Ang hindi malinaw sa archive ay ang mga pangalan ng mga lokal na taong naging bahagi ng araw-araw na prosesong iyon.
+
+Sino ang nagsalin?
+Sino ang nagpakita ng daan?
+Sino ang nagdala ng pagkain?
+Sino ang pumili na makinig?
+Sino ang tumanggi?
+Sino ang tumanggap ng bagong pananampalataya?
+Sino ang tumulong magtayo ng unang istruktura?
+
+Hindi natin alam ang karamihan sa kanilang pangalan.
+
+At hindi natin sila bibigyan ng pekeng pangalan para lang maging mas dramatic ang page.
+
+We know his name because an institution preserved it.
+
+The people beside him are much harder to recover.
+
+That imbalance is part of the history.
+
+PROFILE FACTS
+FR. ANDRÉS DEL ESPÍRITU SANTO
+Born: Valladolid, Spain, January 1585, according to Recollect biographical records.
+Masinloc: 1607.
+With: Fr. Jerónimo de Cristo.
+Role in Recollect sources: founder of the mission-pueblo tradition and builder of the first light-material church.
+Important limitation: “founder” here does not mean founder of the first human community in Masinloc.
+
+CTA
+Open Founder of Masinloc profile
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Andrés reached Masinloc in 1607 with Jerónimo de Cristo. Romanillos cites Sádaba and Recollect sources. Marcellán gives 18 November 1607 for pueblo/church foundation.
+
+EVIDENCE STATUS:
+DOCUMENTED.
+
+WHAT REMAINS UNCERTAIN:
+Most local names participating in the mission’s establishment and early daily life.
+
+SOURCES:
+Francisco Sádaba, Catálogo de los Religiosos Agustinos Recoletos... Madrid, 1906, pp. 42–43 for Andrés biography.
+Patricio Marcellán, 1879, pp. 61–63, 78.
+Emmanuel Luis A. Romanillos, 2019/2021 Masinloc study.
+
+VISUAL
+PRIMARY: user-supplied historic founder portrait / Founder Masinloc Google Drive folder.
+Drive folder: Founder Masinloc, folder id 1lzaZrIMyV1Ro4ZsIrUJm8O0iYVe3sZl2.
+Known files in folder: 8BFBC90E-B67F-49E1-8D1D-20303A441C1C.png (restored portrait); additional MABAYANI layout graphics may be used only as design references, not documentary evidence.
+User also supplied IMG_9836.jpeg showing the framed portrait. Preserve full frame/inscription in evidence view.
+Do not label a digitally restored version as an untouched original. Caption the provenance honestly.
+
+============================================================
+9. SECTION 07 | SA PAGITAN NG DAGAT AT BUNDOK
+============================================================
+
+TITLE
+Masinloc was never only a point on a map.
+
+PUBLIC COPY
+
+Dagat sa kanluran.
+Kabundukan sa silangan.
+Mga ilog at kapatagan sa pagitan.
+
+Ang heograpiya ang isa sa pinakamatagal na tauhan sa kasaysayan ng Masinloc.
+
+Sa mga Recollect account, inilarawan ang lupa bilang produktibo, may palay, halamang-gamot, maiinom na tubig, mga ilog na dumadaloy mula silangan patungong kanluran, at kagubatang pinagmumulan ng kahoy. Sa mas huling ika-19 na siglong paglalarawan, ang mga tao ng Masinloc ay nakaugnay sa pagsasaka, produktong agrikultural, kahoy, hayop, at kalakalan.
+
+Hindi natin dapat ibalik lahat ng mas huling detalye sa 1607 na parang walang nagbago sa loob ng mga siglo.
+
+Pero malinaw ang mas malaking pattern:
+
+Ang bundok ay kabuhayan at kanlungan.
+Ang kapatagan ay tirahan at taniman.
+Ang ilog ay tubig at galaw.
+Ang dagat ay pagkain, daan, kalakalan, pagdating at panganib.
+
+Sa kasaysayan ng mga MABAYANI, hindi puwedeng ihiwalay ang tao sa landscape.
+
+Dito sila nabuhay.
+Dito sila nag-adjust.
+Dito rin sila tatakbo kapag dumating ang panganib mula sa dagat.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Romanillos, drawing from Recollect sources, records fertile land, potable water, rivers Baliti and Vavandui, medicinal plants and timber. Nineteenth-century descriptions document agricultural products and trade in Masinloc.
+
+EVIDENCE STATUS:
+DOCUMENTED for cited periods; RECONSTRUCTED when used as a long-term environmental frame.
+
+WHAT REMAINS UNCERTAIN:
+Exact continuity of river names, settlement locations and livelihood proportions across centuries.
+
+SOURCES:
+Romanillos, Masinloc study, climate/agricultural products section.
+Patricio Marcellán, 1879, “Pueblo de Masinloc.”
+Late-nineteenth-century Monografía de Zambales for period-specific economy.
+
+VISUAL
+Real sea/river/mountain sequence. Consider a simple elevation/coast map. Avoid generic tropical stock.
+
+============================================================
+10. SECTION 08 | NANG DUMATING ANG MGA RECOLLECT
+============================================================
+
+TITLE
+Conversion was not one moment.
+
+PUBLIC COPY
+
+Madaling gawing simple ang salitang “conversion.”
+
+Parang may dumating, nangaral, naniwala ang lahat, at natapos ang kuwento.
+
+Hindi ganoon kalinis ang kasaysayan.
+
+Sa mas malawak na Recollect practice, bahagi ng misyon ang pag-aaral ng lokal na wika, pagtuturo ng doktrinang Kristiyano, pagbibinyag, sakramento, pagtatatag o pag-aayos ng mga pueblo, pagbuo ng simbahan, plaza, daan at iba pang istruktura. Kasama rin dito ang reducción: ang pagtipon o paglipat ng mga nakakalat na pamayanan tungo sa mas sentralisadong settlement na mas madaling pangasiwaan ng simbahan at kolonyal na pamahalaan.
+
+Ang prosesong iyon ay may pananampalataya.
+May pakikipagtulungan.
+May lokal na pagpili.
+May pakinabang para sa ilan.
+May pagkawala at disruption para sa iba.
+May pagtutol.
+May pressure.
+May bagong authority.
+May bagong records.
+
+At hindi pare-pareho ang naging tugon ng lahat.
+
+May mga lokal na taong naging Kristiyano.
+May mga pamayanang nagpatuloy sa dating paniniwala.
+May mga Aeta at Sambal na nakaranas ng kolonyal na paglawak sa magkaibang paraan.
+May mga ulat ng tunggalian sa upland at lowland communities, pero ang mga ulat na iyon ay isinulat kadalasan mula sa missionary perspective.
+
+Kaya hindi natin tatawaging “civilized” ang isang tao dahil nabinyagan siya.
+Hindi natin tatawaging “savage” ang isang tao dahil tumanggi siya.
+
+Ang mas mahalagang tanong ay:
+Ano ang nangyari sa isang komunidad kapag pumasok ang bagong pananampalataya, bagong pamahalaan, bagong settlement pattern, at bagong paraan ng pag-record ng buhay?
+
+One answer is visible around us today.
+
+Christianity became deeply rooted in Masinloc.
+
+But the path toward that reality was made by real people making choices inside unequal historical conditions.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Recollect mission practice involved language learning, catechesis, sacraments, settlement consolidation and infrastructure. Masinloc became an important mission center in northern Zambales.
+
+EVIDENCE STATUS:
+DOCUMENTED regionally and institutionally; RECONSTRUCTED for unnamed individual choices in early Masinloc.
+
+WHAT REMAINS UNCERTAIN:
+Exact identities and motives of early local translators, guides, converts, resisters and builders.
+
+SOURCES:
+Romanillos, 2019/2021.
+Patricio Marcellán, 1879.
+Andrés del Espíritu Santo, Relación de la fundación y progresos de esta santa Provincia de San Nicolás de Tolentino, later published in BPSN 55 (1965), pp. 66–179.
+Ángel Martínez Cuesta, histories of the Augustinian Recollect mission.
+
+VISUAL
+Archival mission map / real church detail / language-document fragment. Avoid triumphalist conversion imagery.
+
+============================================================
+11. SECTION 09 | ANG UNANG SIMBAHAN AY HINDI BATO
+============================================================
+
+TITLE
+Hindi ito ang simbahang nakita nila noong 1607.
+
+PUBLIC COPY
+
+Kapag tinitingnan natin ang San Andrés Church ngayon, madaling isipin na iyon din ang gusaling nakita noong panahon ni Fr. Andrés.
+
+Hindi.
+
+Ayon sa Recollect historical account, ang unang house of God na itinayo ni Fr. Andrés ay gawa sa karaniwang light materials ng panahon. Hindi ito nagtagal.
+
+Wala pa ang coral-stone façade na kinukunan natin ngayon.
+Wala pa ang kasalukuyang massing ng simbahan.
+Wala pa ang mga bahagi ng gusaling nabuo at nabago sa sumunod na mga siglo.
+
+Mahalaga ang correction na ito dahil ang heritage ay hindi magic object na biglang lumitaw noong 1607 at nanatiling pareho hanggang ngayon.
+
+Ang simbahan ay layer upon layer of work.
+
+Isang unang istrukturang nawala.
+Isang mas matibay na simbahan na itinayo kalaunan.
+Mga lindol.
+Mga nasirang dokumento.
+Mga pagkukumpuni.
+Mga pari at manggagawang nagpalit-palit.
+Mga henerasyong tumingin sa sirang bahagi at nagpasiyang ayusin ito.
+
+Ang nakikita natin ngayon ay hindi patunay na walang nagbago.
+
+Patunay ito na may mga taong paulit-ulit na tumugon kapag may nasisira.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The first church built under Fr. Andrés in Masinloc was of light materials and did not last. The present stone church belongs to later centuries.
+
+EVIDENCE STATUS:
+DOCUMENTED.
+
+SOURCES:
+Romanillos, Masinloc study, church section.
+Marcellán, 1879, for 1607 church foundation.
+
+VISUAL
+Current church photography paired with a restrained text card: “THIS IS NOT THE CHURCH OF 1607.” Do not create a fake 1607 church rendering and label it accurate.
+
+============================================================
+12. SECTION 10 | SINO ANG NAGBUHAT NG MGA BATO?
+============================================================
+
+TITLE
+We know many administrators.
+Do we know the hands?
+
+PUBLIC COPY
+
+Sa mga lumang tala, napakahusay nating makasunod sa mga pangalan ng pari.
+
+May listahan ng mga cura.
+May petsa ng assignment.
+May pangalan ng provincial.
+May archive reference.
+May sulat.
+
+Pero ang isang malaking simbahan ay hindi binubuo ng pangalan sa margin ng libro.
+
+Kailangan ng bato.
+Kailangan ng apog.
+Kailangan ng kahoy.
+Kailangan ng transportasyon.
+Kailangan ng scaffolding.
+Kailangan ng pagkain para sa mga nagtatrabaho.
+Kailangan ng mga taong bubuhat, huhubog, magkakabit, mag-aayos, magpapalit ng bubong, at babalik pagkatapos ng pinsala.
+
+Sa kasaysayan ng kolonyal na simbahan sa Pilipinas, ang paggawa ng malalaking istruktura ay laging nangangailangan ng local labor at material knowledge. Pero hindi sapat ang kasalukuyang tala para pangalanan ang bawat Masinloqueñong gumawa sa San Andrés o para ideklara kung anong labor arrangement ang ginamit sa bawat yugto.
+
+Kaya hindi natin sasabihing alam natin ang hindi natin alam.
+
+Ang masasabi natin:
+
+Hindi kayang buuin ng isang pangalan ang isang simbahan.
+
+May mga MABAYANI na ang naiwan sa atin ay hindi pirma, kundi bato.
+
+REFLECTION
+Ilang beses na tayong dumaan sa harap ng simbahan nang hindi naiisip ang mga kamay na wala nang pangalan?
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The stone church was a multi-generational construction and restoration project. Recollect and diocesan administrators are often named; local laborers generally are not individually preserved in the sources currently available.
+
+EVIDENCE STATUS:
+DOCUMENTED for multi-stage construction; STILL OPEN for identities and exact labor arrangements of most local workers.
+
+CAUTION:
+Do not repeat sweeping claims that all work was forced labor or, conversely, that forced labor was categorically absent. Those questions require period- and document-specific evidence.
+
+VISUAL
+Extreme close-ups of coral stone, joints, old wood, doorway, choir-loft carving. If hands are photographed, use contemporary conservation/work only and label as present day.
+
+============================================================
+13. SECTION 11 | NAGPALIT ANG NAMAMAHALA. NAGPATULOY ANG BAYAN.
+============================================================
+
+TITLE
+Orders changed.
+Priests changed.
+Governments changed.
+The people remained.
+
+PUBLIC COPY
+
+Hindi iisang religious order ang humawak sa lahat ng yugto ng kasaysayan ng Zambales.
+
+Nagkaroon ng Augustino.
+Dominikano.
+Recollect.
+Secular clergy.
+Nagbago rin ang kolonyal na pamahalaan at kalaunan ang mismong political order ng bansa.
+
+Pero hindi nagre-reset ang buhay tuwing nagbabago ang namamahala.
+
+May ipinapanganak.
+May nag-aasawa.
+May namamatay.
+May nagtatanim.
+May nangingisda.
+May nag-aayos ng bahay.
+May nag-aaral ng bagong dasal.
+May patuloy na gumagamit ng lumang salita.
+May lumilipat.
+May bumabalik.
+
+Ang parish books mismo, kapag nabubuhay, ay nag-iiwan ng bakas ng ganitong ordinaryong continuity: baptism, marriage, death, population, tributes, ministers.
+
+Ang bayan ay hindi lang kuwento ng taong nakaupo sa pinakamataas na posisyon.
+
+Ang bayan ay ang libu-libong buhay na kailangang magpatuloy kahit sino pa ang nakaupo roon.
+
+REFLECTION
+Sino ba talaga ang nagdadala ng bayan kapag nagbabago ang namumuno?
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Masinloc passed through changes in ecclesiastical administration while parish and community records continued unevenly.
+
+EVIDENCE STATUS:
+DOCUMENTED at institutional level; RECONSTRUCTED in the ordinary-life framing.
+
+VISUAL
+Historical names/timeline fade behind real present-day town life. Do not imply exact continuity of individual families unless genealogically documented.
+
+============================================================
+14. SECTION 12 | ANG DAGAT: DAAN, KABUHAYAN, PANGANIB
+============================================================
+
+TITLE
+The same sea can feed a town and expose it.
+
+PUBLIC COPY
+
+Bago maging eksena ng labanan ang dagat, daan muna ito.
+
+Dito dumaan ang mga misyonero.
+Dito dumaan ang kalakalan.
+Dito nakaugnay ang mga pulo at baybayin.
+Dito rin nakadepende ang kabuhayan ng maraming henerasyon.
+
+Sa Masinloc, hindi puwedeng paghiwalayin ang history at sea.
+
+Ang coast ang nagbukas sa bayan sa labas.
+At dahil bukas ito sa labas, bukas din ito sa panganib.
+
+Noong 1649, nagbago ang tanawin ng dagat.
+
+Hindi dahil tumigil itong maging dagat.
+
+Kundi dahil may anim na caracoa na lumitaw sa kuwento.
+
+TRANSITION
+1649.
+Six caracoas.
+More than six hundred reported fighters.
+And a town forced to decide how to survive the day.
+
+SOURCE DRAWER
+EVIDENCE STATUS:
+DOCUMENTED as maritime setting and 1649 attack context; broader “sea as road/resource/border/threat” is an interpretive synthesis grounded in geography and records.
+
+VISUAL
+Real Masinloc waterline, slow horizon, map trace from coast to Pulô San Salvador. No fake ships needed before the factual reveal.
+
+============================================================
+15. SECTION 13 | 1649: ANIM NA CARACOA
+============================================================
+
+TITLE
+1649
+
+SUBTITLE
+The day the sea brought a raiding force to Masinloc.
+
+PUBLIC COPY
+
+Ayon sa Recollect historical account, anim na caracoa ang dumaong sa baybayin ng Masinloc noong 1649.
+
+Mahigit animnaraang mandirigma ang iniulat na nagsimulang bumaba mula sa mga sasakyang-dagat.
+
+Ang source ay gumagamit ng kolonyal na katawagang “Moros” at iniuugnay ang raiding expeditions sa Jolo at Borneo.
+
+Sa harap ng banta, malaking bahagi ng mga residente ang umatras patungo sa kalapit na kabundukan para sa kaligtasan.
+
+Huwag nating gawing kahihiyan ang survival.
+
+Ang tala ay hindi nagsasabi kung sino ang unang tumakbo, sino ang may kasamang bata, sino ang nagbantay sa matanda, o sino ang nagsabing pumunta sa bundok. Hindi natin pupunan ang mga detalyeng iyon ng eksenang gawa-gawa.
+
+Ang alam natin ay ito:
+
+Nasa Masinloc noon si Fray Francisco de San José.
+
+Pinamunuan niya, ayon sa Recollect account, ang mga Zambaleño sa pagtatanggol sa bayan. Napaatras ang attacking force at ang mga nakaligtas ay pumunta sa kalapit na Pulô San Salvador.
+
+Kinabukasan, sinundan sila ni Fray Francisco at ng maraming Zambaleño fighters. Iniulat ng source na nakuha ng mga taga-Masinloc ang mga caracoa at war materiel.
+
+Malakas ang dokumentasyon ng pangyayaring ito kung ikukumpara sa maraming bahagi ng maagang lokal na kasaysayan.
+
+Pero may malaking butas.
+
+Alam natin ang pangalan ng prayle.
+
+Hindi natin alam ang pangalan ng karamihan sa mga taong kasama niyang nagtanggol sa Masinloc.
+
+Hindi ibig sabihin na wala silang pangalan.
+
+Ibig sabihin, hindi naingatan ng mga dokumentong hawak natin ang mga pangalang iyon.
+
+May mga mukha.
+May mga pamilya.
+May mga taong tumayo sa lupang ito bago pa nila alam na apat na siglo pagkatapos, babalikan natin ang araw na iyon.
+
+Hindi natin sila bibigyan ng pekeng pangalan.
+
+Pero hindi rin natin hahayaang maging footnote lang sila.
+
+They were MABAYANI.
+
+FACT BOX
+1649
+DOCUMENTED
+- Six caracoas landed at Masinloc.
+- More than 600 fighters were reported to have begun disembarking.
+- A great majority of residents withdrew toward nearby mountain fastness for safety.
+- Fray Francisco de San José is named in the surviving Recollect account.
+- Local defenders are identified collectively as Zambaleños / Masinloc fighters.
+- The landing force was repelled.
+- Survivors withdrew toward Pulô San Salvador.
+- The following day, Fray Francisco and Zambaleño fighters pursued them.
+- The Recollect account reports capture of the caracoas and war materiel.
+- Individual names of most local defenders remain unrecovered.
+
+WHAT WE WILL NOT DO
+Invent names.
+Invent speeches.
+Invent uniforms.
+Invent exact positions on the beach.
+Invent family scenes.
+Invent casualties beyond what the source explicitly supports.
+
+WHAT WE WILL DO
+Keep looking.
+
+REFLECTION
+We already know they could defend the town.
+The question will come later:
+What does defending Masinloc mean in our time?
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The details above are recorded by Emmanuel Luis A. Romanillos using Recollect sources. Romanillos cites Francisco Sádaba for Fray Francisco de San José.
+
+EVIDENCE STATUS:
+DOCUMENTED, with the normal caution that the surviving narrative is a Recollect account and includes period rhetoric.
+
+WHAT REMAINS UNCERTAIN:
+Names of most local defenders; exact casualty counts and individual actions; full perspective of the attacking force; exact tactical sequence beyond the written account.
+
+SOURCES:
+Emmanuel Luis A. Romanillos, “Masinloc, Zambales: Augustinian Recollect Mission (1607–1902),” 2019/2021, pp. corresponding to the 1649 section (reprint pp. 75–76).
+Francisco Sádaba, Catálogo de los Religiosos Agustinos Recoletos..., Madrid, 1906, pp. 92–93, cited for Fray Francisco de San José.
+
+VISUAL
+Use map, coast, Pulô San Salvador and source excerpt. Do not use a photoreal AI battle as documentary imagery. A black/empty screen after “Alam natin ang pangalan ng prayle” and before “Hindi natin alam ang pangalan ng karamihan...” is encouraged.
+
+============================================================
+16. SECTION 14 | ANG TAPANG AY HINDI NANGANGAILANGAN NG HABAMBUHAY NA KAAWAY
+============================================================
+
+TITLE
+Bravery does not require a permanent enemy.
+
+PUBLIC COPY
+
+May salitang kailangang hawakan nang maingat sa 1649 account: “Moro.”
+
+Ito ang katawagang ginamit sa maraming Spanish colonial records para sa mga Muslim maritime communities at forces mula sa iba’t ibang bahagi ng katimugang Pilipinas at karatig na rehiyon.
+
+Sa 1649 Masinloc account, ang raiding force ay iniuugnay sa Jolo at Borneo.
+
+Hindi nito ibig sabihin na ang mga Muslim na Pilipino ngayon ay kaaway ng Masinloc.
+
+Hindi rin nito ibig sabihin na iisang kuwento lamang ang mayroon ang mga maritime communities sa timog. Ang mas malawak na kasaysayan ay may Spanish conquest, sultanates, trade, slavery, raiding, retaliation, political resistance at digmaan sa maraming panig.
+
+Puwedeng parangalan ang pagtatanggol ng mga taga-Masinloc nang hindi gumagawa ng bagong galit laban sa kapwa Pilipino.
+
+MABAYANI does not need an inherited enemy.
+
+It needs historical truth.
+
+SOURCE DRAWER
+EVIDENCE STATUS:
+DOCUMENTED for terminology used in the source; interpretive contextualization follows modern historical ethics.
+
+IMPLEMENTATION RULE
+Never use “Muslim invaders” as a timeless label. When “Moro” is quoted, mark it as period/colonial terminology. Prefer “raiding force” in narrative after the first explanation.
+
+VISUAL
+No stereotyped Muslim costume imagery. Use text/source/context.
+
+============================================================
+17. SECTION 15 | 1660–1661: TATLONG PANGALAN NA HINDI PA NATIN NABABAWI
+============================================================
+
+TITLE
+Three chiefs.
+Three missing names.
+
+PUBLIC COPY
+
+Labing-isang taon lamang matapos ang 1649 defense, muling napasok ang northern Luzon sa isang malawak na krisis.
+
+Ang Malong Rebellion ng 1660–1661 ay nagsimula sa Pangasinan sa ilalim ni Andrés Malong at kumalat sa mas malaking rehiyon. Ang mas malawak na rebellion ay bahagi ng kasaysayan ng pagtutol sa Spanish colonial authority, kasama ang mga grievance tungkol sa tribute, labor at local power.
+
+Sa working source trail para sa Masinloc, may isang reconstruction na nag-uugnay sa bayan sa siege, pag-alis sa dagat, pakikipag-ugnayan sa Bagác, at pagbabalik ng tatlong local chiefs na tumulong sa pag-recover ng Masinloc.
+
+May isa ring pangalang lumilitaw sa working trail: Bernardino de la Concepción, kaugnay ng dispatches at local response.
+
+Pero hindi pareho ang lakas ng ebidensiya nito sa 1649 episode.
+
+Hindi pa natin natutunton nang sapat ang source chain para ikuwento ang bawat galaw bilang settled fact.
+
+At higit sa lahat:
+
+Hindi pa natin nababawi ang pangalan ng tatlong chiefs.
+
+NAME NOT YET RECOVERED
+NAME NOT YET RECOVERED
+NAME NOT YET RECOVERED
+
+Hindi natin alam ang barangay nila.
+Hindi natin alam ang lineage nila.
+Hindi natin alam ang descendants nila.
+Hindi natin alam kung anong eksaktong title ang ginamit nila sa sariling wika.
+
+Ang temptation ay punan ang mga puwang.
+
+Hindi natin gagawin iyon.
+
+Ang nawawalang pangalan ay hindi permission para mag-imbento.
+
+It is a reason to keep searching.
+
+FACT BOX
+1660–1661
+RECONSTRUCTED / STILL OPEN
+- The Malong Rebellion is a documented northern Luzon rebellion.
+- A Masinloc reconstruction places the town within the crisis.
+- Working notes mention Bernardino de la Concepción and three local native chiefs.
+- The chiefs are said to have carried dispatches and later helped recover Masinloc.
+- The exact primary source chain is not yet complete in the current research file.
+- Names, titles, communities and lineages of the three chiefs remain unrecovered.
+
+CTA
+May family record ba kayong nagbabanggit sa tatlong pinuno o sa Malong period? Ibahagi para ma-verify.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The wider Malong Rebellion is documented. Masinloc-specific details survive in a working reconstruction that requires further source tracing.
+
+EVIDENCE STATUS:
+RECONSTRUCTED / STILL OPEN.
+
+WHAT REMAINS UNCERTAIN:
+Exact sequence of siege/escape/return; identities of three chiefs; complete primary citation.
+
+IMPLEMENTATION RULE
+Do not promote these three chiefs to fully documented historical profiles until the source chain is pinned.
+
+VISUAL
+Three empty name fields. No invented faces.
+
+============================================================
+18. SECTION 16 | ANG ARCHIVE AY HINDI PANTAY MAG-ALALA
+============================================================
+
+TITLE
+The archive remembers unevenly.
+
+PUBLIC COPY
+
+Bakit ang dami nating pangalan ng pari, pero kulang ang pangalan ng mga lokal na nagtanggol, nagtayo at nagpatuloy?
+
+Hindi dahil mas kaunti ang ginawa ng ordinaryong tao.
+
+Dahil hindi pantay ang paglikha at pagpreserba ng records.
+
+Ang institusyon ay may dahilan para isulat kung sino ang kura.
+May dahilan para itala ang bautismo.
+May dahilan para magtago ng order, sulat at assignment.
+
+Ang isang mangingisda, tagabuhat ng bato, ina, bata, tagasalin o tagapaghatid ay maaaring mabuhay nang buong buhay nang hindi kailanman maisulat ang pangalan sa dokumentong tatagal ng apat na siglo.
+
+At kahit ang institutional record ay nawawala rin.
+
+Sa Masinloc, nawala ang ikalawang baptismal book na sana’y sumaklaw mula March 1726 hanggang December 1784.
+
+Fifty-eight years.
+
+Isang 58-year silence sa documentary trail.
+
+Maaaring anay.
+Maaaring bokbok.
+Maaaring ulan, bagyo, lindol, kalidad ng papel, pagkasira sa paglipas ng panahon.
+
+Hindi natin alam ang eksaktong dahilan.
+
+Pero alam natin ang epekto:
+
+Kapag nawala ang libro, may mga pangalan at detalye ring nawawala kasama nito.
+
+History is not only what happened.
+It is also what survived long enough to be read.
+
+REFLECTION
+Ano ang nasa bahay natin ngayon na magiging mahalagang source isang daang taon mula ngayon?
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The baptismal volume covering March 1726–December 1784 was no longer available when later clergy reconstructed parish history, creating a 58-year gap.
+
+EVIDENCE STATUS:
+DOCUMENTED.
+
+WHAT REMAINS UNCERTAIN:
+Why the volume disappeared.
+
+SOURCES:
+Vicente Pascual, Breve reseña histórica..., AHPN, Legajo 50b, Folder 4.
+Romanillos, Masinloc study, p. 79 in the 2021 reprint.
+
+VISUAL
+Real archive/page textures. A timeline with an intentional blank band labeled 1726–1784. Do not fabricate missing pages.
+
+============================================================
+19. SECTION 17 | ANG SIMBAHANG PAULIT-ULIT NA INALAGAAN
+============================================================
+
+TITLE
+Stone survives because people keep responding.
+
+PUBLIC COPY
+
+Ang kasaysayan ng San Andrés Church ay hindi isang petsa.
+
+Ito ay chronology ng pagtatayo, pagkawala, pinsala, uncertainty at repair.
+
+1607
+Ang unang church under Fr. Andrés ay light materials. Hindi ito ang stone church ngayon.
+
+1745
+Sa 1891 historical account ni Vicente Pascual, na kumukuha rin sa isang mas lumang local record/tradition, 1745 ang iniulat na simula ng construction ng present stone church. Hindi natin alam ang eksaktong completion date. Hindi rin ligtas na pangalanan ang isang tao bilang sole builder dahil kulang ang records sa critical period.
+
+1726–1784
+Nawala ang baptismal volume na sumasaklaw sa panahong ito, dahilan para maging mas mahirap tukuyin ang chronology at mga taong responsable sa ilang yugto.
+
+1754 / 1766
+May mga lindol na dokumentado sa relevant period. May oral tradition na kalaunan nagsabing 1798 natapos at nawasak ang simbahan sa parehong taon, pero kinuwestiyon ito ni Vicente Pascual. Sa review ni Romanillos, walang nahanap na earthquake noong 1798. Hindi matiyak kung alin sa 1754 o 1766 tremors ang may pinakamalaking epekto sa Masinloc church.
+
+12 June 1825
+Kinuha ni Bachiller Don Miguel Gregorio Jiménez ang parish administration. Siya ang malinaw na pangalang inuugnay sa malaking restoration work sa lumang simbahan.
+
+1836–1843
+Naglingkod sa Masinloc si Fr. José Julián Aranguren, na kalaunan ay naging Archbishop of Manila.
+
+1858 onward
+Si Fr. Marcial Bellido ay isa sa mga parish priests na nauugnay sa ika-19 na siglong infrastructure period; sa panahon niya umusad ang road connection toward Palauig.
+
+1877 onward
+Si Fr. Agustín Pérez ay naging mahalagang parish historian at administrator. Ang kanyang now-lost Libro de cosas notables ay ginamit ng mga sumunod na history writer sa pag-reconstruct ng lokal na chronology.
+
+1891
+Si Fr. Vicente Pascual ay nagsulat ng Breve reseña at gumamit ng old baptismal books para i-reconstruct ang listahan ng parish priests. Mahalaga rin siya dahil hindi niya basta tinanggap ang 1798 earthquake tradition.
+
+1898–1902
+Dumaan ang bayan sa Revolution at political transition. Nang bumalik si Agustín Pérez noong 1901, sinabi niyang ang church edifice ay nanatiling largely the same and had not suffered the kind of severe revolutionary destruction seen elsewhere, kahit ang bayan mismo ay nakaranas ng malaking disruption.
+
+December 1999
+Isang malakas na earthquake ang muling nagdulot ng malaking pinsala sa San Andrés Church.
+
+2001
+The National Museum declared San Andrés Parish Church a National Cultural Treasure. The heritage recognition belongs to the building we inherited after centuries of change, not to a fictional idea that every part has remained untouched since 1607.
+
+The church is old.
+But its deeper story is not simply age.
+
+It is response.
+
+Every generation received a structure already carrying the work of the generation before it.
+
+And when something broke, somebody had to decide whether to abandon it or repair it.
+
+That decision is also MABAYANI.
+
+CHRONOLOGY STATUS
+1607 first light-material church = DOCUMENTED.
+1745 stone church construction start = DOCUMENTED AS LATER RECOLLECT/TRADITIONAL REPORT; exact completion/builder STILL OPEN.
+1754/1766 earthquake context = DOCUMENTED; exact damaging event STILL OPEN.
+1798 completion/destruction story = REMEMBERED but contradicted by source review; do not state as fact.
+1825 Jiménez restoration = DOCUMENTED.
+1836–1843 Aranguren = DOCUMENTED.
+1877 Pérez / 1891 Pascual research = DOCUMENTED.
+1999 earthquake = DOCUMENTED.
+2001 National Cultural Treasure = DOCUMENTED.
+
+SOURCE DRAWER
+SOURCES:
+Vicente Pascual, Breve reseña histórica de la fundación y vicisitudes por que ha pasado esta parroquia de Masinloc. AHPN, Legajo 50b, Folder 4, 7r–14r.
+Agustín Pérez, Relación del viaje del que suscribe a Masinloc (Zambales) y de lo acaecido durante mi permanencia de cuatro años en el mismo pueblo. AHPN, Legajo 51, Folder 2, 16r–20r.
+Romanillos, Masinloc study, pp. 78–82 area in reprint.
+National Museum of the Philippines public declaration records for San Andrés Parish Church as National Cultural Treasure (2001; later institutional listing also records the church as an NCT).
+
+VISUAL
+Real church timeline. Use dated photos only when dates are known. Preserve old vs modern belfry/roof distinctions. If a photo’s date is uncertain, label “date not yet verified.”
+
+============================================================
+20. SECTION 18 | REBOLUSYON AT ANG PAGTATAPOS NG PANAHONG RECOLLECT
+============================================================
+
+TITLE
+A town can survive a change of empire and still wake up uncertain the next morning.
+
+PUBLIC COPY
+
+Noong 1898, umabot sa Zambales ang Philippine Revolution.
+
+Sa harap ng lumalalang panganib, umalis sa ilang parokya ang mga Recollect at nagtipon sa mas ligtas na lugar tulad ng Subic. Ilang prayle sa Zambales ang nahuli ng revolutionary forces. Sa pagtatapos ng Spanish rule, hindi lang government ang nagbabago. Nagbabago rin ang relasyon ng simbahan, bayan at political authority.
+
+Noong December 1901, bumalik si Fr. Agustín Pérez sa Masinloc upang tingnan ang religious situation at tulungan ang mga parish na walang pari.
+
+Noong December 8, nakarating siya at mga kasama sa baybayin ng Masinloc. May mga residenteng sumalubong at nag-alok ng tulong. Sa kanyang account, nakita niya ang isang bayang dumaan sa matinding disruption: mga bahay na nasira o nawala at mga taong lumipat sa outskirts.
+
+Pero ang pagbabalik ng dating authority ay hindi nangangahulugang bumalik din ang dating mundo.
+
+Pagsapit ng Holy Week 1902, lumala ang conflict sa pagitan ni Pérez at Mayor Juliano Estella tungkol sa processions, weddings, religious practice at public authority.
+
+Noong April 9, 1902, umalis si Pérez sa Masinloc.
+
+Sa framing ni Romanillos, dito nagtatapos ang mahabang Recollect period sa bayan.
+
+Ang mahalagang punto ay hindi kung sino ang dapat gawing kontrabida sa modernong retelling.
+
+Ang mahalaga ay makita ang isang komunidad na dumaraan mula Spanish colonial religious-political order tungo sa bagong political reality.
+
+Nagbago ang authority.
+
+Nagpatuloy ang Masinloc.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Revolutionary conditions affected Zambales in 1898; Recollects withdrew; Pérez returned in December 1901; conflict with Mayor Juliano Estella culminated in Pérez leaving on 9 April 1902.
+
+EVIDENCE STATUS:
+DOCUMENTED through Recollect account and Romanillos.
+
+WHAT REMAINS UNCERTAIN:
+The full perspective of local residents and municipal actors beyond surviving written accounts.
+
+SOURCES:
+Agustín Pérez, Relación del viaje..., AHPN Legajo 51, Folder 2.
+Romanillos, Masinloc study, final sections.
+
+VISUAL
+Real archival portrait/documents of Pérez if available; old municipal/church images only if dated. No current political analogy.
+
+============================================================
+21. SECTION 19 | BINABAYANI: ALAALA, PANANAMPALATAYA, AT PAGWAWASTO
+============================================================
+
+TITLE
+Binabayani remembers something.
+The question is how carefully we remember it.
+
+PUBLIC COPY
+
+Tuwing pinag-uusapan ang kultura ng Masinloc, hindi maiiwasan ang Binabayani.
+
+Isa itong traditional Sambal war-dance tradition na iniuugnay sa kapistahan ni San Andrés tuwing November 30. Sa living tradition, nakikita rito ang tapang, pananampalataya, conflict, reconciliation at local identity.
+
+May popular na kuwentong nagsasalaysay ng isang image ni San Andrés na natagpuan sa dagat kasama ng isang kampana, at ng isang war dance sa pagitan ng mga Kristiyano at Aeta na naging susi upang mailipat ang image. May mga bersiyon ding nagsasabing kailangang ipagpatuloy ang sayaw upang maiwasan ang calamity o humiling ng magandang ani.
+
+Mahalaga ang mga kuwentong ito.
+
+Pero ang oral tradition at historical documentation ay hindi pareho ng uri ng ebidensiya.
+
+AYON SA KUWENTONG-BAYAN
+Ang Binabayani ay may mga kuwentong ipinasa tungkol sa San Andrés, Aeta at Christian participants, calamity, harvest at religious devotion.
+
+AYON SA KASULATANG TALA
+Ang tradition ay tunay at buhay sa Masinloc at malinaw na nakaugnay sa November 30 feast of San Andrés. Pero ang madalas uliting 1621 origin date ay hindi pa napapatunayan ng isang primary 1621 document sa source set na ito.
+
+May isa pang problema sa chronology.
+
+Ang popular account ay nag-uugnay kay Capitan Florentino Elicaño at sa anak niyang si Municipal Judge Gerardo Elicaño sa transmission ng kuwento. Kung literal na ilalagay si Florentino bilang “one of the oldest inhabitants in 1621” at anak niya si Gerardo na municipal judge sa modern period, hindi tugma ang generational chronology.
+
+Ibig sabihin, may bahagi ng popular wording na kailangang suriin, hindi basta kopyahin.
+
+Hindi nito pinapatay ang tradition.
+
+Mas iginagalang natin ang tradition kapag hindi natin ito pinipilit maging mas eksaktong historical battle kaysa kayang patunayan ng evidence.
+
+At may mas malaking ethical responsibility.
+
+Kapag ang performance ay laging nagpapakita ng “Christian” laban sa “Aeta,” puwedeng magmukhang permanenteng kaaway ang dalawang identity.
+
+Hindi iyon sapat na historical framing.
+
+Ang Christian ay religious identity. Maraming local Sambal people ang naging Kristiyano. Hindi ibig sabihin na “Christian side” ay “Spanish side.”
+
+Ang Aeta naman ay Indigenous identity, hindi costume at hindi automatic enemy role.
+
+Ang relationship ng upland Aeta at lowland communities sa Zambales ay mas kumplikado: may conflict, exchange, negotiation, land pressure, mission expansion at pagbabago sa settlement.
+
+Kung buhay ang tradition, kaya rin nitong maging tapat sa dignidad ng mga taong nire-represent nito.
+
+MABAYANI is not only performing what we inherited.
+
+It is having the courage to correct the way we explain it when the evidence asks us to.
+
+FACT BOX
+BINABAYANI
+REMEMBERED / LIVING TRADITION
+- Performed in Masinloc and associated with November 30, feast of San Andrés.
+- War-dance form remembers conflict and bravery.
+- Oral tradition connects it with Aeta/Christian conflict and religious petition.
+- A 1621 origin is widely repeated but not currently verified by primary evidence in this project.
+- Do not state that 1649 is the proven origin of Binabayani.
+- Do not treat Aeta people as permanent enemies.
+
+CTA
+Read the full Binabayani research note
+
+SOURCE DRAWER
+WHAT WE KNOW:
+The Department of Tourism currently describes Binabayani as a Masinloc festival on November 30 depicting a war between Christians and Aetas and carrying a petition for plentiful harvest. Local histories preserve older oral narratives. These are evidence of living tradition, not automatic proof of a 1621 battle.
+
+EVIDENCE STATUS:
+REMEMBERED for origin story; DOCUMENTED for contemporary/living practice; STILL OPEN for exact origin date and historical event behind the dramatization.
+
+WHAT REMAINS UNCERTAIN:
+Earliest verifiable performance date; original written source behind Elicaño family attribution; whether “1621” arose from a transcription/chronology error; exact historical conflict represented.
+
+VISUAL
+Use real Binabayani photos/video with provenance and participant dignity. No skin-darkening/blackface in new editorial imagery. Do not use a costume image as the only representation of Aeta people. Include Aeta community consultation before explanatory claims about their identity or history.
+
+============================================================
+22. SECTION 20 | SAMBAL TINA: ANG WIKANG MAAARING MAWALA NANG TAHIMIK
+============================================================
+
+TITLE
+A language can disappear quietly.
+
+PUBLIC COPY
+
+Hindi kailangang may sumunog ng libro para mawala ang isang wika.
+
+Minsan, isang bata lang ang sumasagot sa ibang wika.
+Isang pamilya ang hindi na gumagamit ng lumang salita sa bahay.
+Isang teacher ang walang maaasahang material.
+Isang spelling ang nagiging uncertain.
+Isang expression ang lumalabas na lang tuwing fiesta.
+
+Unti-unti, nagiging dekorasyon ang dating normal na salita.
+
+Sa Masinloc, ang Sambal Tina ay bahagi ng buhay na inheritance.
+
+May matibay na documentary anchor ang pangalan: ang 1988 English–Tina Sambal–Pilipino Dictionary ay malinaw na gumagamit ng “Tina Sambal” bilang language label.
+
+Pero maging ang salitang Tina ay may kasaysayang kailangan ng pag-iingat.
+
+May local explanations tungkol sa “Tina.” May linguistic descriptions na nagbibigay ng kahulugang may idea ng mixing, bleaching o alteration. May mga explanation ding inuugnay ito sa contact at pagbabago sa lowland Sambal speech.
+
+Hindi pa sapat ang evidence para pumili tayo ng isang etymology at ideklara itong final para sa lahat ng speakers.
+
+Ang pangalan ng wika ay hindi lamang technical label.
+
+May gumagamit nito.
+May nakarinig nito mula sa magulang.
+May maaaring ma-offend sa isang explanation.
+May community memory sa likod nito.
+
+Kaya ang MABAYANI approach ay hindi magpanggap na solved ang isang bagay kung hindi pa solved.
+
+Preserving Sambal Tina means more than saving a PDF.
+
+It means speaking.
+Listening.
+Recording elders with consent.
+Teaching children.
+Checking spellings against sources and speakers.
+Accepting correction.
+
+Hindi lahat ng MABAYANI ay may hawak na sandata.
+
+Minsan, ang ipinagtatanggol ay isang salita bago ito tuluyang hindi marinig.
+
+CTA
+Explore Sambal Tina
+
+SOURCE DRAWER
+WHAT WE KNOW:
+A 1988 published dictionary uses the title English–Tina Sambal–Pilipino Dictionary. Sambal is a Sambalic language used in parts of Zambales and nearby areas, including Masinloc.
+
+EVIDENCE STATUS:
+DOCUMENTED for language label/use; STILL OPEN / contested for a single definitive etymology of “Tina.”
+
+WHAT REMAINS UNCERTAIN:
+Community-wide preferred explanation and historical etymology of “Tina”; speaker-by-speaker usage and orthographic preferences.
+
+SOURCES:
+Summer Institute of Linguistics, English–Tina Sambal–Pilipino Dictionary, 1988.
+University of the Philippines Department of Linguistics, Sambal language capsule.
+Community speaker/elder verification for present usage.
+
+VISUAL
+Real dictionary scan, handwriting, speaker portrait only with consent, recorded waveform if audio exists. No generic tribal iconography.
+
+============================================================
+23. SECTION 21 | HINDI LAHAT NG MABAYANI AY LUMABAN SA DIGMAAN
+============================================================
+
+TITLE
+Not every MABAYANI carried a weapon.
+
+PUBLIC COPY
+
+Kapag bravery ang pinag-uusapan, madaling maalala ang 1649.
+
+Pero walang bayan na nabubuhay sa battle scene lamang.
+
+May mga taong kailangang mangisda pagkatapos ng panganib.
+May mga kailangang magtanim.
+May kailangang mag-ayos ng bubong.
+May kailangang magpalaki ng bata.
+May kailangang magturo ng dasal at wika.
+May kailangang magpagaling ng may sakit.
+May kailangang magdala ng produkto sa ibang lugar.
+May kailangang magbukas ng daan.
+May kailangang magtago ng lumang litrato.
+May kailangang magsulat ng pangalan sa likod nito para hindi mawala kung sino ang nasa larawan.
+
+Ang problema: mas kaunti ang pangalan ng ordinaryong tao sa archive.
+
+Hindi ibig sabihin na hindi sila gumawa.
+
+Ibig sabihin, mas mahirap silang makita sa uri ng dokumentong nakaligtas.
+
+Kaya hindi natin hahayaang maging exclusively male, military at clerical ang MABAYANI.
+
+Kasama rito ang mga ina, ama, bata, elder, worker, farmer, fisher, boatman, builder, teacher, miner, migrant, Aeta community member, Sambal speaker, parishioner, local leader at ordinaryong residenteng nagpatuloy ng buhay sa pagitan ng malalaking event.
+
+Hindi natin kailangang mag-imbento ng isang fictional woman para patunayang may kababaihan sa kasaysayan.
+
+Mas honest na sabihin:
+
+Women were there.
+Families were there.
+Children were there.
+
+But the surviving records often did not preserve their names with the same detail as male officials and clergy.
+
+That silence is itself something we have to repair through family archives and oral history.
+
+REFLECTION
+Sino sa pamilya natin ang MABAYANI na hindi kailanman makikita sa textbook?
+
+EVIDENCE STATUS
+RECONSTRUCTED as social-history framing; specific named claims require direct records.
+
+CTA
+Contribute a family history
+
+VISUAL
+Real family photos from Masinloc with permission; otherwise use contemporary documentary photography of ordinary life, clearly present-day, not posed “historical” reenactments.
+
+============================================================
+24. SECTION 22 | WORLD WAR II: KABANATANG KULANG PA SA MGA PANGALAN
+============================================================
+
+TITLE
+World War II reached Masinloc.
+Our local chapter is not finished.
+
+PUBLIC COPY
+
+Malinaw ang national sequence.
+
+1941 invasion.
+Japanese occupation.
+Resistance.
+Liberation.
+Loss.
+
+Malinaw ring mahalaga ang Zambales sa pagbabalik ng Allied forces sa Luzon noong 1945.
+
+Pero ang isang national timeline ay hindi automatic local history.
+
+Sa kasalukuyang research, may leads tungkol sa Japanese occupation sa Masinloc sector, guerrilla activity sa Zambales mountains, Zambales Military District records, isang pier, air operations noong December 1944, at iba pang wartime movements.
+
+Hindi pa sapat ang source set para gawing cinematic local battle chapter ang mga iyon nang walang risk na makahalo ng kuwento mula sa ibang bayan o unit.
+
+Kaya hindi natin gagawin.
+
+Ang kailangan natin ay local names.
+
+Guerrilla rosters.
+Military reports.
+Burial records.
+Compensation claims.
+Diaries.
+Old photographs.
+School histories.
+Family letters.
+Testimony na may petsa at consent.
+
+A war chapter without local names is not finished history.
+
+Hindi kahinaan ang pag-amin na kulang pa.
+
+Ito ang invitation para kumilos bago tuluyang mawala ang family memory.
+
+FACT BOX
+WORLD WAR II
+DOCUMENTED: Philippine occupation and Zambales regional wartime context.
+RESEARCH LEADS: Masinloc-sector military activity and guerrilla records.
+STILL OPEN: complete local civilian/guerrilla names and event-level narrative.
+
+CTA
+Help recover Masinloc’s World War II names
+
+VISUAL
+No generic Japanese soldier stock photo. Prefer official map, unit record, family wartime photo, cemetery/burial document, or no image.
+
+============================================================
+25. SECTION 23 | COTO: TRABAHO, BUNDOK, AT PAGBABAGO
+============================================================
+
+TITLE
+Then the mountain became an industrial landscape.
+
+PUBLIC COPY
+
+Sa modern Masinloc, ang bundok ay hindi lamang kanlungan at kagubatan.
+
+Naging lugar din ito ng malaking mineral economy.
+
+Ang north-central Zambales Range ay kilala sa chromite deposits. Sa twentieth century, naging internationally significant ang Coto area sa refractory-grade chromite. Ang U.S. Geological Survey report ni Darwin Rossman noong 1970 ay nagbibigay ng geological at production context para sa historical peak period.
+
+Pero dapat eksakto ang numbers.
+
+Hindi natin gagamitin ang viral claim na “Coto produced 20% of the world’s chromite” kung hindi iyon ang eksaktong statistic na sinusuportahan ng source.
+
+Ang mahalagang local history ay hindi lang tonelada ng ore.
+
+Trabaho ito.
+Paglipat ng tao.
+Roads and transport.
+Families built around employment.
+Changes in the mountain landscape.
+A local economy tied to a global mineral market.
+
+At muli, may archive gap.
+
+Mas madaling makahanap ng geological report kaysa pangalan ng bawat worker.
+
+Mas madaling makahanap ng production table kaysa family memory tungkol sa camp life, labor, injury, migration at community.
+
+Kung gusto nating maging kumpleto ang Coto chapter, kailangang manggaling din sa mga taong nabuhay doon.
+
+FACT BOX
+COTO
+DOCUMENTED: major chromite geology and historical production importance.
+STILL OPEN: comprehensive worker/family social history.
+
+SOURCE DRAWER
+SOURCES:
+Darwin L. Rossman, Chromite Deposits of the North-Central Zambales Range, Luzon, Philippines. U.S. Geological Survey Open-File Report 70-281, 1970. DOI 10.3133/ofr70281.
+Mines and Geosciences Bureau Region III, Central Luzon Regional Profile, for regional mineral context.
+Environmental Management Bureau, Coto Chromite Project filings, for modern proposal context only; a proposal is not proof that all projected operations occurred.
+
+VISUAL
+Real Coto landscape, archival mine photo if provenance verified, USGS map/diagram. Do not use mine concept art as historical evidence.
+
+============================================================
+26. SECTION 24 | OYON BAY, KURYENTE, AT ISANG MAS MASALIMUOT NA BAYAN
+============================================================
+
+TITLE
+Modern Masinloc learned to hold industry and protection in the same geography.
+
+PUBLIC COPY
+
+Ang dagat na dating pangunahing daan ng mission, fishing at 1649 defense ay naging bahagi rin ng modern industrial at environmental history.
+
+Noong August 18, 1993, idineklara sa pamamagitan ng Presidential Proclamation No. 231 ang coastal area at islands within Masinloc and Oyon Bay bilang marine reserve.
+
+Sa ilalim ng Expanded NIPAS law, nakalista ang Masinloc and Oyon Bay Protected Landscape and Seascape bilang protected area.
+
+Kasabay nito, naging bahagi ng modern landscape ang large-scale power generation sa Masinloc. Government, lender at environmental documents record the development, privatization/rehabilitation and later expansion processes of the Masinloc power plant.
+
+Hindi natin kailangang gawing simpleng “development versus environment” slogan ang bahaging ito.
+
+Ang totoong modern Masinloc ay mas mahirap kaysa slogan.
+
+May pangangailangan sa kuryente.
+May trabaho at economic activity.
+May protected seascape.
+May fisheries.
+May environmental permits, monitoring at public consultation.
+May mga tanong tungkol sa kung paano sabay pinoprotektahan ang kabuhayan, ecosystem at long-term development.
+
+Ang MABAYANI today ay hindi automatic na “against” o “for” isang project.
+
+Ito ay willingness na basahin ang records, pakinggan ang communities, tingnan ang data, at huwag gawing propaganda ang history.
+
+FACT BOX
+1993: Masinloc/Oyon Bay marine reserve declared under Proclamation No. 231.
+2018: Masinloc and Oyon Bay Protected Landscape and Seascape included under Expanded NIPAS framework; listed area 7,558 hectares in the law.
+Modern period: Masinloc power plant development/rehabilitation/expansion documented in government and lender records.
+
+SOURCE DRAWER
+SOURCES:
+Presidential Proclamation No. 231, 18 August 1993.
+Republic Act No. 11038, Expanded NIPAS Act of 2018.
+Biodiversity Management Bureau, Protected Area Information System profile for Masinloc and Oyon Bay Protected Landscape and Seascape.
+Anthony Ian G. Pag-ong and Dulce Marie P. Nisperos, “Reassessment of Masinloc and Oyon Bay Protected Landscape and Seascape Management Effectiveness,” Philippine Journal of Science 153(6B), 2024.
+Environmental Management Bureau, Masinloc Power Plant Expansion Project EPRMP and public hearing documentation, 2021.
+Asian Development Bank project documentation on acquisition and rehabilitation of the Masinloc coal-fired thermal power plant.
+
+CAUTION
+Keep ownership claims period-specific. Do not present an owner named in a historical privatization document as automatically the current owner in 2026.
+
+VISUAL
+Real Oyon Bay/protected seascape photography, map, power plant as part of landscape. Avoid editorial photo manipulation that implies pollution/harm not established by evidence.
+
+============================================================
+27. SECTION 25 | DUMAMI ANG TAO. NAGBAGO ANG MASINLOC.
+============================================================
+
+TITLE
+A town of a few thousand became a municipality of tens of thousands.
+
+PUBLIC COPY
+
+Noong 1903 American-era census, 3,230 ang recorded population ng Masinloc.
+
+Noong 1939: 7,012.
+Noong 1960: 15,258.
+Noong 1990: 32,375.
+Noong 2020: 54,529.
+Sa 2024 POPCEN: 56,579.
+
+Hindi nito sinasabi kung bakit lumaki ang population sa bawat yugto.
+
+Hindi natin dapat gawing causal story ang isang table kung wala tayong migration, birth, death at economic data na sapat para sa bawat period.
+
+Pero may isang bagay itong ipinapakita nang malinaw:
+
+Ang Masinloc na minana natin ay hindi frozen town.
+
+Dumami ang pamilya.
+Lumawak ang built environment.
+Nagbago ang trabaho.
+Dumami ang galing sa ibang lugar at ang lumipat palabas.
+Nag-iba ang language environment.
+Nagbago ang pressure sa lupa, baybayin, infrastructure at public services.
+
+Ang tanong sa MABAYANI ay hindi kung paano ibabalik ang bayan sa isang imagined pure past.
+
+Ang tanong ay paano dadalhin ang memory at responsibility sa isang bayan na patuloy na nagbabago.
+
+SOURCE DRAWER
+WHAT WE KNOW:
+Population counts above are from historical census series/PSA-based records. 2024 POPCEN lists 56,579.
+
+EVIDENCE STATUS:
+DOCUMENTED for counts; STILL OPEN for any causal explanation not separately sourced.
+
+VISUAL
+Simple population timeline. Do not dramatize migration with invented silhouettes or claim causation.
+
+============================================================
+28. SECTION 26 | WALA NANG ANIM NA CARACOA SA BAYBAYIN
+============================================================
+
+TITLE
+Wala nang anim na caracoa sa baybayin.
+
+PUBLIC COPY
+
+Iba na ang panganib ng panahon natin.
+
+Hindi na natin kailangang tumingin sa horizon at magbilang ng anim na caracoa.
+
+Pero puwedeng mawala ang isang wika nang walang putok.
+
+Puwedeng mawala ang pangalan ng isang defender dahil walang naghanap.
+
+Puwedeng maitapon ang lumang litrato dahil walang nakakaalam kung sino ang nasa likod nito.
+
+Puwedeng maulit ang maling petsa nang daan-daang beses hanggang sa mahirap nang itanong kung saan ito nanggaling.
+
+Puwedeng maging costume ang isang Indigenous identity kapag hindi na natin pinakikinggan ang taong nire-represent natin.
+
+Puwedeng maging backdrop lang ang simbahan kapag ayaw nating aralin ang mga layer ng kasaysayan nito.
+
+Puwedeng maging slogan lang ang dagat kapag hindi natin inaalam kung paano ito pinoprotektahan, ginagamit at minamanage.
+
+Puwedeng maging content ang history, pero walang responsibility.
+
+The threats changed.
+
+So the work of MABAYANI must change too.
+
+Today, MABAYANI can mean:
+checking the source before sharing;
+recording an elder before the story disappears;
+teaching a child a Sambal word;
+preserving an old photograph with a name and date;
+correcting a festival explanation without insulting the people who carried it;
+respecting Aeta dignity;
+refusing anti-Muslim prejudice in the name of an old battle;
+protecting a church by understanding its real chronology;
+caring about the sea, mountain and archive;
+and admitting when the answer is still unknown.
+
+They defended Masinloc with what their time demanded of them.
+
+What does our time demand of us?
+
+TRANSITION
+Do not show final question yet. Allow one quiet scroll.
+
+VISUAL
+Present-day Masinloc montage only: child/elder language, archive, church, coast, mountain, ordinary life. Real documentary photos.
+
+============================================================
+29. SECTION 27 | PROUD TAYO. PERO SAPAT BA IYON?
+============================================================
+
+TITLE
+Proud tayo.
+Pero sapat ba iyon?
+
+PUBLIC COPY
+
+Proud ba tayo kung alam natin ang fiesta schedule pero hindi ang kasaysayang sinusubukan nitong alalahanin?
+
+Proud ba tayo kung ginagamit natin ang Sambal sa slogan pero hindi natin ito kinakausap sa bata?
+
+Proud ba tayo kung pinipicturan natin ang simbahan pero wala tayong pakialam kung tama ang chronology na ikinukuwento tungkol dito?
+
+Proud ba tayo kung mas gusto natin ang magandang alamat kaysa sa inconvenient na source?
+
+Proud ba tayo kung mabilis tayong magtanggol ng local pride pero mabagal tayong makinig kapag dignity ng Aeta community ang pinag-uusapan?
+
+Proud ba tayo kung ginagamit natin ang 1649 para gumawa ng bagong galit laban sa kapwa Pilipino?
+
+Proud ba tayo kung sinasabi nating atin ang dagat pero ayaw nating basahin ang documents tungkol sa pangangalaga nito?
+
+Pride is a feeling.
+
+MABAYANI is work.
+
+Pride says:
+“This is ours.”
+
+MABAYANI asks:
+“What will I do to protect what was left to us?”
+
+The defenders of 1649 did not preserve Masinloc so we could only boast about them.
+
+The people who built and repaired the church did not carry material so the building could become only a background for photographs.
+
+The people who carried Sambal across generations did not keep it alive so it could survive only as ceremonial vocabulary.
+
+What they left is not only something to admire.
+
+It is something to answer for.
+
+VISUAL
+Almost no visual. Typography and negative space.
+
+============================================================
+30. SECTION 28 | MABAYANI PA RIN BA TAYO?
+============================================================
+
+FULL-VIEWPORT COPY
+
+They were described as fierce.
+
+They lived here before the dates we inherited.
+
+They met missionaries and a new faith.
+
+They built, lost, repaired and rebuilt.
+
+They fled when survival demanded it.
+
+They defended when their time demanded it.
+
+Some names survived.
+
+Many did not.
+
+They carried a language.
+
+They carried a town through changing priests, governments, industries and generations.
+
+They did what their time demanded of them.
+
+What does our time demand of us?
+
+MABAYANI pa rin ba tayo?
+
+SECOND REVEAL AFTER PAUSE/SCROLL
+
+The question is no longer whether Masinloc had MABAYANI before us.
+
+The question is what kind of descendants we choose to become.
+
+CTA
+Basahin ang Panata
+
+VISUAL
+Current Masinloc at dawn/dusk or a quiet coastline. No button clutter. No Marketplace, ad, newsletter or tourism promo on this viewport.
+
+============================================================
+31. SECTION 29 | PANATA NG MABAYANI
+============================================================
+
+TITLE
+PANATA NG MABAYANI
+
+PUBLIC COPY
+
+Hindi ko kailangang gawing alamat ang ating mga ninuno para mahalin sila.
+
+Pipiliin kong mahalin ang totoo.
+
+Igagalang ko ang mga pangalang naingatan,
+at hahanapin ko ang mga pangalang nawala.
+
+Kapag may dokumento, babasahin ko ito.
+Kapag may salungatan sa source, hindi ko ito itatago.
+Kapag kulang ang ebidensiya, hindi ako mag-iimbento para lang maging kumpleto ang kuwento.
+
+Hindi ko gagamitin ang lumang digmaan para gumawa ng bagong kaaway.
+
+Hindi ko gagawing costume ang pagkakakilanlan ng Aeta.
+Makikinig ako bago ako magsalita para sa ibang komunidad.
+
+Hindi ko hahayaang maging dekorasyon lamang ang Sambal Tina.
+Gagamitin ko ito, aaralin, ituturo, itatala, at tatanggapin ang pagwawasto ng mga taong tunay na nagsasalita nito.
+
+Hindi ko titingnan ang San Andrés Church bilang lumang gusali lamang.
+Aalalahanin ko ang mga henerasyong nagtayo, nag-ayos at nagligtas ng mga bahaging minana natin.
+
+Hindi ko hahayaang mawala ang lumang litrato nang walang pangalan.
+Hindi ko hahayaang mawala ang kuwento ng pamilya kung kaya pa itong maitala nang may pahintulot at respeto.
+
+Pangangalagaan ko ang dagat, bundok, wika, simbahan, archive at alaala hindi dahil perpekto ang nakaraan, kundi dahil responsibilidad natin ang susunod na henerasyon.
+
+Hindi ko ipagpapalit ang katotohanan sa mas magandang caption.
+
+Hindi ako magiging proud Masinloqueño sa salita lamang.
+
+Pipiliin kong maging MABAYANI.
+
+IMPLEMENTATION
+Present line-by-line or in short grouped stanzas. Reader controls the pace. No forced checkbox requiring agreement. Do not turn this into legal consent or gamified badge.
+
+============================================================
+32. SECTION 30 | CONTINUE THE WORK
+============================================================
+
+TITLE
+The story is not closed.
+
+PUBLIC COPY
+
+May mga bahagi ng Masinloc history na malinaw.
+May mga bahagi na kailangang i-reconstruct nang maingat.
+May mga alaalang buhay sa komunidad pero hindi pa natutunton sa lumang dokumento.
+At may mga tanong na wala pa ring sagot.
+
+Hindi kahinaan iyon.
+
+Iyan ang dahilan kung bakit tuloy ang trabaho.
+
+PRIMARY CTA
+View Verified History
+
+SECONDARY CTA
+Explore Sources & Open Questions
+
+TERTIARY CTA
+Help preserve Masinloc history
+
+FINAL FOOTNOTE COPY
+MABAYANI is an independent historical and cultural experience. It distinguishes documented evidence, reconstruction, community memory and open questions so that pride does not depend on invented certainty.
+
+AUTHOR CREDIT
+Historical narrative and research direction: Francine Marie Bautista.
+Research acknowledgments and source institutions should appear in the Sources page/drawer. Keep credit clear but restrained; MABAYANI remains centered on Masinloc and its people.
+
+============================================================
+33. HISTORICAL PEOPLE PROFILES
+============================================================
+
+PROFILE 1
+FR. ANDRÉS DEL ESPÍRITU SANTO
+Evidence: DOCUMENTED.
+Public profile:
+Born in Valladolid, Spain, in January 1585 according to Recollect biographical records. A pioneering Augustinian Recollect missionary in the Philippines. He reached Masinloc in 1607 with Fr. Jerónimo de Cristo. Recollect sources identify him as founder of the Masinloc mission-pueblo tradition and builder of its first light-material church. Patricio Marcellán’s 1879 history gives 18 November 1607 for the founding of the pueblo, dwelling and church of San Andrés. “Founder” must never be used to imply that people did not live in Masinloc before him.
+
+PROFILE 2
+FR. JERÓNIMO DE CRISTO
+Evidence: DOCUMENTED.
+Public profile:
+A Recollect missionary who reached Masinloc with Fr. Andrés del Espíritu Santo in 1607. He later joined the northward mission movement toward Bolinao and died in 1607 in Bolinao according to the Recollect account cited by Romanillos. His presence reminds us that the 1607 mission was not the work of a single man.
+
+PROFILE 3
+FR. RODRIGO DE SAN MIGUEL / RODRIGO AGANDURU MÓRIZ
+Evidence: DOCUMENTED regionally.
+Public profile:
+A major early Recollect figure in Bataan and Zambales. Recollect history links him with the expansion of missions along the coast and with the request to continue missionary work beyond earlier centers. He also wrote on missions, geography, ethnography and languages, including work associated with Zambal grammar. His role belongs to the wider mission network around Masinloc, not as a replacement for Andrés in the specific Masinloc foundation tradition.
+
+PROFILE 4
+FR. FRANCISCO DE SAN JOSÉ
+Evidence: DOCUMENTED.
+Public profile:
+A Recollect who arrived in the Philippines in 1645. He was in Masinloc in 1649 and is the named religious figure in the surviving account of the defense against six caracoas. The same account says he led local Zambaleño defenders, who are mostly not individually named. He later served elsewhere and died in 1668 after being wounded during another maritime attack in Romblon.
+
+PROFILE 5
+FR. CRISTÓBAL DE SANTA MÓNICA
+Evidence: DOCUMENTED.
+Public profile:
+Served as prior of Masinloc in multiple periods and later held provincial leadership. Recollect records connect him with expansion and resettlement efforts in Zambales mission posts. Use him to explain institutional continuity, not as a hero replacing local agency.
+
+PROFILE 6
+DON GABRIEL JOSÉ MARTÍNEZ DEL BURGO
+Evidence: DOCUMENTED.
+Public profile:
+Diocesan priest who took over Masinloc parish administration in 1785. Later reconstruction of parish history benefited from the survival/copying of older books around this period, while the missing 1726–1784 baptismal volume exposed a major archival gap.
+
+PROFILE 7
+DON MIGUEL GREGORIO JIMÉNEZ
+Evidence: DOCUMENTED.
+Public profile:
+Became parish administrator on 12 June 1825. Romanillos, using parish history, identifies him as the administrator who undertook major restoration work on the old church after earlier damage.
+
+PROFILE 8
+FR. JOSÉ JULIÁN ARANGUREN
+Evidence: DOCUMENTED.
+Public profile:
+Served in Masinloc from 1836 to 1843 in the main local chronology. He later became Archbishop of Manila. In MABAYANI, his importance is his documented connection to Masinloc’s nineteenth-century church history, not the later prestige of his office alone.
+
+PROFILE 9
+FR. MARCIAL BELLIDO
+Evidence: DOCUMENTED.
+Public profile:
+Parish priest of Masinloc from 1858 in the chronology used by the project. His period is associated with infrastructure, including the Masinloc–Palauig road completed by 1870. Use this profile to show that parish-era history included roads, labor and connection as well as sacraments.
+
+PROFILE 10
+FR. AGUSTÍN PÉREZ DE LA INMACULADA CONCEPCIÓN
+Evidence: DOCUMENTED.
+Public profile:
+Installed as parish priest in 1877 and served Masinloc across multiple terms. He prepared a Libro de cosas notables that later historians referenced but which is no longer available to us. He returned to Masinloc in December 1901 after the Revolution and left in April 1902 amid conflict over religious and municipal authority. His surviving account is important but reflects his own institutional perspective.
+
+PROFILE 11
+FR. VICENTE PASCUAL
+Evidence: DOCUMENTED.
+Public profile:
+Parish priest and historian who wrote an 1891 Breve reseña of Masinloc. He reconstructed the succession of parish priests from older records and, importantly, questioned the oral claim that the stone church was both completed and destroyed by an earthquake in 1798. He is useful as an example of a historical source that did not simply accept local tradition without checking.
+
+PROFILE 12
+BERNARDINO DE LA CONCEPCIÓN
+Evidence: RECONSTRUCTED / source trail incomplete.
+Public profile:
+A Recollect name appearing in the working reconstruction of the 1660–1661 crisis, associated with dispatches and local response. Do not promote to a full narrative character until the primary source chain is pinned.
+
+UNNAMED PROFILE GROUP
+THE ZAMBALEÑO DEFENDERS OF 1649
+Evidence: DOCUMENTED collectively.
+Public profile:
+The surviving Recollect account identifies local Zambaleños/Masinloc fighters who joined the defense and the following-day pursuit. Most individual names are not preserved in the currently verified source trail. Do not create avatars with fake names.
+
+UNNAMED PROFILE GROUP
+THE THREE LOCAL CHIEFS OF THE 1660–1661 RECONSTRUCTION
+Evidence: RECONSTRUCTED / STILL OPEN.
+Public profile:
+Three local leaders appear in a working reconstruction as helping recover Masinloc. Their names, lineages, local titles and descendants have not yet been securely recovered. Display absence, not invention.
+
+============================================================
+34. CONTRIBUTION / RESEARCH SUBMISSION FLOW
+============================================================
+
+ENTRY CTA COPY
+May hawak ba kayong bahagi ng kasaysayang nawawala sa amin?
+
+BODY COPY
+Hindi lahat ng history nasa national archive. Minsan nasa lumang kahon, family album, notebook, aparador, parish souvenir program, lumang cassette, o kuwento ng elder.
+
+Maaaring makatulong ang:
+- old photographs
+- family letters and records
+- baptism/marriage/funeral documents
+- land documents and maps
+- old municipal or barangay papers
+- fiesta programs and souvenir books
+- Binabayani photos, programs or oral accounts
+- Sambal recordings, word lists or old teaching materials
+- World War II documents, guerrilla records, burial records, compensation papers
+- Coto worker photos, ID cards, camp documents and family stories
+- church photographs with known dates
+- newspaper clippings
+- names connected to 1649, 1660–1661 or other historical events
+
+KEY TRUST COPY
+A contribution is evidence to examine.
+It does not automatically become verified history.
+
+FORM FIELDS
+1. What are you sharing?
+2. Approximate date or period.
+3. Place connected to the item/story.
+4. Names of people shown/mentioned, if known.
+5. How did this come into your family/possession?
+6. Who owns the original?
+7. Can the research team contact you for follow-up?
+8. May we reproduce the item publicly if verified? YES / NO / ASK ME FIRST.
+9. Preferred public credit, if used.
+10. Additional context.
+
+ORAL HISTORY CONSENT COPY
+If you are sharing another person’s story, tell us whether the speaker gave permission to record or publish it. We may ask for direct consent before public use.
+
+SUBMIT BUTTON
+Submit for historical review
+
+CONFIRMATION COPY
+Salamat.
+Hindi namin agad ilalathala ang contribution. Susuriin muna ang provenance, date, names, permissions and relationship to existing evidence. Maaari kaming makipag-ugnayan kung may kailangan pang linawin.
+
+PRIVACY RULE
+Do not publicly expose home addresses, private phone numbers, IDs, minors’ sensitive information, or living-person allegations. Sensitive claims require stronger review and consent/legal consideration.
+
+============================================================
+35. EVIDENCE DRAWER UX COPY
+============================================================
+
+BUTTON LABEL
+View the record
+
+DRAWER TABS
+What we know
+What remains uncertain
+Sources
+
+EVIDENCE BADGE TOOLTIP
+DOCUMENTED
+Supported directly by a strong historical or official source.
+
+RECONSTRUCTED
+Built carefully from multiple pieces of evidence. The exact full event is not directly preserved in one source.
+
+REMEMBERED
+Preserved through oral tradition, ritual, local memory or later community telling.
+
+STILL OPEN
+The current evidence is not enough to give a final answer.
+
+DRAWER FOOTER
+Historical confidence can change when stronger evidence appears. Corrections should be recorded, not hidden.
+
+============================================================
+36. VISUAL ASSET PLAN BY SECTION
+============================================================
+
+00 Entry
+Real Masinloc sea/landscape. Minimal.
+
+01 Fiereza
+Historical scan of Juan de la Concepción / Licinio Ruiz passage. Typography focus.
+
+02 Before written record
+Real sea, rivers, mountains; Boxer Codex only as regional late-16th-century visual with explicit caption, not “a Masinloc family.”
+
+03 1572
+Historical regional map / date typography. No fake founding ceremony.
+
+04 March 16
+Old municipal/fiesta program if recovered. Until then, text/open-question visual.
+
+05 18 Nov 1607
+Scan of Marcellán p. 78, date highlighted.
+
+06 Founder
+User-supplied real historic portrait. Founder Masinloc Drive folder. Show full framed original in evidence view. A restored/cropped portrait must be labeled restored.
+
+07 Geography/life
+Current documentary landscape photography; period-specific 19th-century map if relevant.
+
+08 Recollect encounter
+Archival map, mission text, language document. No staged conversion.
+
+09 First church
+Present church detail + “not the 1607 church” text. No invented chapel.
+
+10 Builders
+Coral stone details, old wood, carved doorway. No fake anonymous laborers.
+
+11 Continuity
+Parish book excerpts + modern town life.
+
+12 Sea
+Real water horizon / map line.
+
+13 1649
+Coast, Pulô San Salvador, historical caracoa reference image only if generic type clearly labeled; source text. Do not present a generated battle as fact.
+
+14 Terminology
+Text-only / document context.
+
+15 Three chiefs
+Three blank name fields. No faces.
+
+16 Archive gap
+Real old record scan + 1726–1784 blank timeline.
+
+17 Church chronology
+Dated church photography; National Cultural Treasure marker; archival images. No undated photo placed on exact year.
+
+18 Revolution
+Pérez document/portrait if available, old Masinloc photo if dated.
+
+19 Binabayani
+Real performance images with permission/provenance. Represent Aeta identity respectfully; ideally include community-reviewed explanatory context.
+
+20 Sambal Tina
+1988 dictionary scan, speaker/elder material with consent.
+
+21 Ordinary MABAYANI
+Real family archives or present-day documentary photos, clearly labeled by date.
+
+22 WWII
+Local document/photo only. Otherwise official Zambales military map or no image.
+
+23 Coto
+USGS map, real Coto photos/documents, worker family archive.
+
+24 Oyon Bay/power
+Real protected seascape, official boundary map, real power plant landscape.
+
+25 Population
+Clean chart/timeline, no decorative stock.
+
+26 MABAYANI today
+Present-day real people/places.
+
+27 Pride
+Typography.
+
+28 Final question
+Quiet real Masinloc horizon.
+
+29 Panata
+No illustration required. Text carries the ending.
+
+30 Continue work
+Archive/contact visual or simple neutral layout.
+
+GLOBAL VISUAL RULES
+No stock image pretending to be Masinloc.
+No AI historical recreation presented as documentary truth.
+No fake old-photo filter used to imply provenance.
+No modern church tower inserted into a seventeenth-century scene.
+No darkening skin to depict Aeta identity.
+No stereotyped Muslim visual for the 1649 raiding force.
+When no real visual exists, use text, map, source fragment or negative space.
+
+============================================================
+37. MOBILE READING STRUCTURE
+============================================================
+
+Mobile is primary.
+
+Rules:
+- One major idea per viewport where possible.
+- Narrative paragraphs usually 1–4 sentences.
+- Fact boxes collapsible after the key facts.
+- “View the record” opens as accessible bottom sheet or full-screen modal on small devices.
+- Story Map hidden behind a clear control.
+- Persistent progress indicator must not cover content.
+- Large tap targets.
+- No horizontal micro-timeline requiring precise drag.
+- Source citation text readable without zoom.
+- Images responsive and lazy-loaded below first viewport.
+- No video background.
+- No autoplay audio.
+- If narration is added, user must tap play; provide transcript.
+- prefers-reduced-motion removes parallax/reveal dependency.
+- Motion never carries information that disappears when motion is off.
+- Evidence status not communicated by color alone.
+- Semantic heading order and keyboard/focus support.
+
+Suggested mobile pacing:
+Screen 1 MABAYANI wordmark
+Screen 2 opening premise
+Screen 3 fiereza quote
+Screen 4 interpretation/context
+Then story sections in short vertical chapters.
+1649: split across 4–6 screens rather than a single dense card.
+Final question: one full viewport.
+Panata: line groups, not one giant wall of text.
+
+============================================================
+38. SEO AND INTERNAL LINK OWNERSHIP
+============================================================
+
+CANONICAL ROUTE
+https://www.masinloc-zambales.com/mabayani/
+
+SEO TITLE
+MABAYANI | The Story of Masinloc, Zambales
+
+META DESCRIPTION
+A documented human history of Masinloc, Zambales: the people before the written record, the 1607 Recollect mission, the 1649 defense, San Andrés Church, Binabayani, Sambal Tina, and what MABAYANI means today.
+
+H1
+MABAYANI
+
+PAGE SEMANTIC OWNERSHIP
+MABAYANI = immersive narrative / people-centered history of Masinloc.
+Verified History = chronological facts, evidence status, citations.
+Founder of Masinloc = detailed Fr. Andrés profile and 1607 source trail.
+Sambal Tina = language, dictionary, orthography, learning tools.
+Discover = destinations, culture, thematic reading, visitor discovery.
+About Masinloc = parent understanding hub.
+Sources & Research = bibliography, methodology, open questions.
+
+PRIMARY INTERNAL LINKS
+About Masinloc -> MABAYANI: “Read the story of the MABAYANI.”
+MABAYANI -> Verified History: “View the record.”
+Verified History -> MABAYANI: “Read the human story.”
+MABAYANI 1607 -> Founder: “Open founder profile.”
+MABAYANI Sambal -> Sambal Tina: “Explore Sambal Tina.”
+MABAYANI Binabayani -> dedicated Binabayani research note if available.
+MABAYANI ending -> Sources & Research / contribution flow.
+
+SCHEMA
+WebPage + BreadcrumbList.
+Article or CreativeWork only if it maps cleanly to the implemented content. Do not encode unresolved dates as definitive historical entities in structured data.
+
+BREADCRUMB
+Home > About Masinloc > MABAYANI
+
+NO CANNIBALIZATION
+Do not make MABAYANI and Verified History use identical title/meta/H1 targeting “History of Masinloc.”
+
+============================================================
+39. FINAL IA RELATIONSHIP
+============================================================
+
+ABOUT MASINLOC
+- Masinloc at a Glance
+- MABAYANI
+- Verified History
+- Founder of Masinloc
+- Municipal Leadership / People, according to existing site architecture
+- Sources & Research
+
+MABAYANI is not Bulletin.
+MABAYANI is not a Discover article collection.
+MABAYANI may be promoted from Discover but its conceptual home is About Masinloc.
+
+Do not delete working old URLs without redirects. Preserve canonical host conventions already standardized to www.masinloc-zambales.com.
+
+============================================================
+40. SOURCE REGISTRY / CORE CITATIONS
+============================================================
+
+S01 JUAN DE LA CONCEPCIÓN
+Juan de la Concepción, Historia general de Philipinas: conquistas espirituales y temporales de estos españoles dominios..., Tome IV. Manila: Imprenta del Seminario Conciliar y Real de San Carlos, Agustín de la Rosa y Balagras, 1788, p. 255.
+Use: exact “Los habitantes de Zambales distinguíanse por su fiereza...” source.
+Status: primary/near-period Recollect chronicle, written later than the 1607 events and from colonial missionary perspective.
+
+S02 LICINIO RUIZ
+Licinio Ruiz, Sinopsis histórica de la Provincia de San Nicolás de Tolentino de las Islas Filipinas, Vol. I. Manila, 1925, p. 20.
+Use: directly quotes Juan de la Concepción and gives exact Tome IV p.255 citation for fiereza passage; broader Recollect Zambales synthesis.
+Status: institutional secondary history.
+
+S03 PATRICIO MARCELLÁN
+Patricio Marcellán de San José, Provincia de San Nicolás de Tolentino de Agustinos Descalzos de la Congregación de España e Indias. Manila: Colegio de Santo Tomás, 1879.
+Use: “Pueblo de Masinloc,” pp. 61–63; Fr. Andrés bio p. 78 with exact “dia diez y ocho de Noviembre de mil seiscientos y siete.”
+Status: Recollect institutional historical source; later than 1607 but precise and citable.
+
+S04 ROMANILLOS
+Emmanuel Luis A. Romanillos, “Masinloc, Zambales: Augustinian Recollect Mission (1607–1902),” Philippine Social Science Journal, Vol. 2 No. 2 (2019), pp. 151–171, DOI 10.52006/main.v2i2.86. Reproduced/available in later Recollect historical compilation used in this project.
+Use: central modern scholarly synthesis; 1607 mission, church, 1649, parish chronology, Revolution/1901–02.
+Status: scholarly secondary source with citations to Recollect primary/archival material.
+
+S05 SÁDABA
+Francisco Sádaba, Catálogo de los Religiosos Agustinos Recoletos de la Provincia de San Nicolás de Tolentino de Filipinas desde 1606, en que llegó la primera misión, hasta nuestros días. Madrid, 1906.
+Use: biographical data for Andrés and Francisco de San José; Romanillos cites pp. 42–43 for Andrés and pp. 92–93 for Francisco.
+Status: institutional biographical reference.
+
+S06 ANDRÉS DEL ESPÍRITU SANTO
+Andrés del Espíritu Santo, Relación de la fundación y progresos de esta santa Provincia de San Nicolás de Tolentino, later published in Boletín de la Provincia de San Nicolás de Tolentino de Filipinas 55 (1965), pp. 66–179.
+Use: early Recollect mission institutional memory.
+Status: published primary Recollect source; interpret within missionary perspective.
+
+S07 VICENTE PASCUAL ARCHIVE
+Vicente Pascual, Breve reseña histórica de la fundación y vicisitudes por que ha pasado esta parroquia de Masinloc. Archivo Histórico Provincial de la Provincia de San Nicolás de Tolentino, Marcilla, Navarre, Spain, Legajo 50b, Folder 4, 7r–14r.
+Use: parish chronology, 1745 tradition, missing records, 1798 skepticism, historical priest list.
+Status: archival primary/near-primary local parish history written 1891.
+
+S08 AGUSTÍN PÉREZ ARCHIVE
+Agustín Pérez, Relación del viaje del que suscribe a Masinloc (Zambales) y de lo acaecido durante mi permanencia de cuatro años en el mismo pueblo. AHPN, Legajo 51, Folder 2, 16r–20r.
+Use: 1901 return, local condition, 1902 conflict/departure.
+Status: archival first-person institutional source; perspective must be labeled.
+
+S09 MARCELLÁN / NINETEENTH-CENTURY ZAMBALES DESCRIPTIONS
+Period descriptions of Masinloc’s agricultural products, timber and trade.
+Use: everyday/economic life in later Spanish period only.
+Caution: do not project all 19th-century livelihood details backward to 1607.
+
+S10 1988 TINA SAMBAL DICTIONARY
+Summer Institute of Linguistics, English–Tina Sambal–Pilipino Dictionary, 1988.
+Use: documentary use of Tina Sambal name, lexical evidence.
+Status: linguistic reference.
+
+S11 UP LINGUISTICS
+University of the Philippines Department of Linguistics, Sambal language capsule.
+Use: current linguistic classification/distribution.
+Status: academic public reference.
+
+S12 NATIONAL MUSEUM
+National Museum of the Philippines public declaration/heritage listings for San Andrés Parish Church, Masinloc.
+Use: National Cultural Treasure status, 2001.
+Status: official.
+
+S13 DOT BINABAYANI
+Department of Tourism, “Binabayani Festival,” Love the Philippines platform.
+Use: current official tourism description of living festival: Nov. 30, Christian/Aeta performance, petition for plentiful harvest.
+Status: official description of contemporary festival, not primary proof of colonial origin.
+
+S14 BINABAYANI LOCAL ORAL TRADITION
+Elicaño-related local narrative and floating San Andrés/bell story preserved in later histories and community retellings.
+Use: label AYON SA KUWENTONG-BAYAN.
+Status: REMEMBERED; exact 1621 origin unverified.
+
+S15 WWII RESEARCH
+Official Philippine/U.S. military histories, Zambales Military District leads, family/community archives still to be assembled.
+Use: national/regional context only until local events/names are source-pinned.
+Status: STILL OPEN for complete Masinloc local chapter.
+
+S16 COTO / USGS
+Darwin L. Rossman, Chromite Deposits of the North-Central Zambales Range, Luzon, Philippines. U.S. Geological Survey Open-File Report 70-281, 1970. DOI 10.3133/ofr70281.
+Use: geology, historical production context, refractory-grade significance.
+Status: authoritative geological report for its period.
+
+S17 MGB
+Mines and Geosciences Bureau Region III, Central Luzon Regional Profile.
+Use: regional mineral context.
+Status: official.
+
+S18 COTO MODERN FILING
+Environmental Management Bureau, Coto Chromite Project project description/scoping materials, 2021.
+Use: proposal context only.
+Status: official filing; not proof that all proposed production occurred.
+
+S19 PROCLAMATION 231
+Presidential Proclamation No. 231, 18 August 1993, declaring coastal area/islands within Masinloc and Oyon Bay as marine reserve.
+Status: official legal source.
+
+S20 RA 11038
+Republic Act No. 11038, Expanded National Integrated Protected Areas System Act of 2018.
+Use: Masinloc and Oyon Bay Protected Landscape and Seascape legal listing; 7,558 hectares as listed.
+Status: official law.
+
+S21 BMB PAIS
+Biodiversity Management Bureau, Protected Area Information System: Masinloc and Oyon Bay Protected Landscape and Seascape.
+Use: living administrative profile.
+Status: official.
+
+S22 PAG-ONG & NISPEROS
+Anthony Ian G. Pag-ong and Dulce Marie P. Nisperos, “Reassessment of Masinloc and Oyon Bay Protected Landscape and Seascape Management Effectiveness,” Philippine Journal of Science 153(6B), 2024, pp. 2321–2327.
+Use: recent protected-area management context.
+Status: scholarly.
+
+S23 EMB POWER
+Environmental Management Bureau, Masinloc Power Plant Expansion Project Environmental Performance Report and Management Plan, 2021; related public hearing report.
+Use: plant/project/environmental baseline and consultation context.
+Status: official regulatory/project filing; not a neutral proof that every claim or concern is resolved.
+
+S24 ADB POWER
+Asian Development Bank project documentation, Acquisition and Rehabilitation of the Masinloc Coal-Fired Thermal Power Plant, Project 41936-PHI.
+Use: post-privatization acquisition/rehabilitation context.
+Status: lender institutional record.
+
+S25 PSA
+Philippine Statistics Authority census/POPCEN/PSGC data for Masinloc.
+Use: population counts; 2020 = 54,529, 2024 POPCEN = 56,579 in current project records.
+Status: official.
+
+============================================================
+41. CLAIM CLASSIFICATION MASTER
+============================================================
+
+DOCUMENTED
+- Juan de la Concepción’s fiereza wording about Zambales inhabitants.
+- Pre-Spanish Sambal/Aeta presence at Zambales regional level.
+- 1572 Spanish activity/contact context in Zambales region.
+- 1607 Andrés/Jerónimo presence in Masinloc.
+- Marcellán’s exact 18 Nov 1607 Recollect foundation claim.
+- First light-material church under Andrés.
+- Masinloc as major Recollect mission center in northern Zambales.
+- 1649 six caracoas, >600 reported fighters, mountain withdrawal, Francisco de San José, Zambaleño defense, Pulô San Salvador pursuit, capture of caracoas/war materiel in Recollect account.
+- 1745 as later recorded/traditional start of stone church construction.
+- Missing 1726–1784 baptismal record.
+- 1825 Jiménez restoration.
+- Aranguren, Bellido, Pérez, Pascual periods.
+- Revolution/1901–02 Recollect return/end sequence.
+- 1999 earthquake damage.
+- National Cultural Treasure status.
+- Living Binabayani practice / Nov 30 association.
+- 1988 Tina Sambal dictionary title.
+- Coto historical chromite significance.
+- 1993 marine reserve / 2018 protected-area status.
+- PSA population counts.
+
+RECONSTRUCTED
+- Detailed pre-1607 everyday life specifically in Masinloc using regional Zambal/Aeta evidence.
+- Unnamed roles such as guides/translators/food providers in early mission life; plausible institutional necessities but identities/actions unrecorded.
+- Masinloc-specific 1660–61 siege/escape/return/two-stage sequence and Bernardino/three chiefs pending complete source trace.
+- Broader interpretation of church as generations of unnamed labor.
+- Long-term “sea as road/resource/threat” synthesis.
+
+REMEMBERED
+- Binabayani floating San Andrés/bell story.
+- Binabayani calamity/harvest petition narratives beyond current contemporary documentation.
+- 1621 Binabayani origin claim as local/popular tradition, not established historical date.
+- 1798 church completion/destruction story; specifically contradicted by Pascual/Romanillos review.
+
+STILL OPEN
+- Why March 16 became Masinloc’s commemorative/founding date.
+- Primary evidence for March 16, 1572 formal founding.
+- Exact local settlement structure before 1607.
+- Names of most 1649 defenders.
+- Names/lineages/titles of three 1660–61 chiefs.
+- Complete source chain for Masinloc-specific Malong reconstruction.
+- Exact completion date and singular builder of stone church.
+- Which 1754/1766 earthquake caused specific church damage.
+- Exact origin date/event of Binabayani.
+- One definitive etymology of “Tina.”
+- Complete Masinloc World War II names/events.
+- Full Coto worker/family social history.
+
+============================================================
+42. STRICT EDITORIAL LOCKS FOR CLAUDE
+============================================================
+
+1. Do not call March 16, 1572 the verified founding date.
+2. Do not erase March 16; present it as an unresolved commemorative-history question.
+3. Do not say March 16 is religious in origin unless a source is found.
+4. Use 18 November 1607 as a documented Recollect historical claim from Marcellán 1879, and explain what it does and does not mean.
+5. Never say Masinloc began to exist in 1607.
+6. Never say Fr. Andrés founded the first human community.
+7. Never attribute Juan de la Concepción’s fiereza quote to Fr. Andrés.
+8. State that the fiereza quote describes Zambales inhabitants broadly and comes from a colonial missionary perspective.
+9. Never invent names for 1649 defenders or the three chiefs.
+10. Never dramatize the 1649 battle beyond source-supported facts.
+11. Never transfer historical “Moro” conflict into prejudice against Muslims today.
+12. Never equate Christian with Spanish.
+13. Never frame Aeta as the opposite of Filipino or a permanent enemy.
+14. Never use blackface/skin-darkening to represent Aeta identity.
+15. Never declare 1621 Binabayani origin verified.
+16. Never claim 1649 is the proven origin of Binabayani.
+17. Never settle Tina etymology if speakers/sources remain divided.
+18. Never put the current stone church into a 1607 visual reconstruction as if it existed then.
+19. Never state the 1798 earthquake story as fact.
+20. Never claim one friar single-handedly built the present stone church.
+21. Never make a broad forced-labor/no-forced-labor claim without period-specific evidence.
+22. Never invent World War II local episodes because the national history is known.
+23. Never repeat unsupported viral Coto production statistics.
+24. Never state historical power-plant ownership as current ownership without current verification.
+25. Never use stock/AI historical visuals as documentary evidence.
+26. When evidence is weak, use the labels RECONSTRUCTED, REMEMBERED or STILL OPEN visibly.
+27. The final emotional force must come from truth, missing names, survival and responsibility, not fictional tragedy.
+28. End the emotional story with the Panata. Promotional navigation appears only afterward.
+
+============================================================
+43. FINAL IMPLEMENTATION CHECK
+============================================================
+
+The build is not complete unless:
+- all 30 story sections exist or their content is intentionally combined without losing copy/facts;
+- every major historical claim has an evidence state;
+- source drawers are reachable without leaving the narrative;
+- Verified History is linked as the factual reading mode;
+- 18 November 1607 is present with Marcellán citation;
+- March 16 is visibly STILL OPEN;
+- 1649 is fully represented with names/unknowns and anti-prejudice context;
+- the three chiefs remain unnamed;
+- church chronology separates 1607 from 1745/later structure;
+- Binabayani separates living tradition from unverified 1621 origin;
+- Sambal Tina preserves uncertainty around Tina etymology;
+- Aeta dignity and Christian/Spanish distinction are explicit;
+- World War II is not fabricated;
+- Coto/power/protected seascape sections use strong official/scholarly sources;
+- MABAYANI today leads naturally to “MABAYANI pa rin ba tayo?”;
+- the Panata ends exactly with “Pipiliin kong maging MABAYANI.”;
+- mobile evidence drawers, reduced motion and no autoplay are implemented;
+- the founder portrait is real/provenanced and not used as the opening hero before the people;
+- no section calls this work by a technical document label in public-facing copy.
+
+END OF FILE

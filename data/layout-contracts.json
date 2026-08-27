@@ -233,15 +233,15 @@
       }
     },
     {
-      "page": "discover/index.html",
-      "section": "MABAYANI sequence list",
-      "selector": ".d-seq-list",
+      "page": "mabayani/index.html",
+      "section": "MABAYANI research index",
+      "selector": ".mb-res-list",
       "minChildren": 10,
       "desktop": {
-        "display": "block"
+        "display": "grid"
       },
       "phone": {
-        "display": "block"
+        "display": "grid"
       }
     },
     {

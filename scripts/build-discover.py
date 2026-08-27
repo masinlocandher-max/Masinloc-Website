@@ -475,42 +475,28 @@ def theme_section(theme: dict, members: list[dict]) -> str:
 
 
 def sequence_section() -> str:
-    """MABAYANI, listed in the order it was written to be read."""
-    published = [a for a in BULLETIN["articles"] if a.get("status") == "published"]
-    parts = sorted(published, key=lambda a: a["order"])
-    entry = BULLETIN.get("entryStory")
+    """MABAYANI, which is a page of its own now rather than a list here.
+
+    Discover listed the ten research articles as "the MABAYANI sequence" while
+    that was what MABAYANI was. It is now the immersive reading at /mabayani/,
+    whose conceptual home is About Masinloc, and the ten articles are the
+    worked research behind it — gathered there, beside the sections they
+    support, rather than restated here. Discover points at the story; it does
+    not hold a second copy of its contents.
+    """
     pub = BULLETIN.get("publication", {})
-
-    items = []
-    for n, article in enumerate(parts, 1):
-        first = ' d-seq-entry' if article["slug"] == entry else ""
-        mins = article.get("readingMinutes")
-        meta = f'<span class="d-seq-mins">{mins} min</span>' if mins else ""
-        # data-slug is what bulletin.js reads to dim the parts this reader has
-        # already opened and to count them up. The sequence moved here from the
-        # Bulletin; the place you keep your progress had to move with it, or
-        # the feature would have quietly stopped working.
-        items.append(
-            f'<li class="d-seq-item{first}" data-slug="{esc(article["slug"])}">'
-            f'<a href="../bulletin/{article["slug"]}.html">'
-            f'<span class="d-seq-n">{n}</span>'
-            f'<span class="d-seq-body">'
-            f'<span class="d-seq-title">{esc(article["title"])}</span>'
-            f'<span class="d-seq-stand">{esc(article.get("standfirst", ""))}</span>'
-            f'</span>{meta}</a></li>')
-
     return (
-        f'  <section class="d-seq" aria-labelledby="seq-title">\n'
-        f'    <div class="d-theme-head">\n'
+        '  <section class="d-seq" aria-labelledby="seq-title">\n'
+        '    <div class="d-theme-head">\n'
         f'      <h2 id="seq-title">{esc(pub.get("name", "MABAYANI"))}</h2>\n'
         f'      <p>{esc(pub.get("kicker", ""))}</p>\n'
-        f'    </div>\n'
+        '    </div>\n'
         f'    <p class="d-seq-lead">{esc(pub.get("blurb", ""))}</p>\n'
-        f'    <p class="d-seq-note">Ten parts, written to be read in order. '
-        f'Each one hands you the question the next one answers.</p>\n'
-        f'    <p class="d-seq-progress" id="mabProgress" hidden></p>\n'
-        f'    <ol class="d-seq-list" id="mabPath">{"".join(items)}</ol>\n'
-        f'  </section>')
+        '    <p class="d-seq-note">The people who lived here, what the evidence '
+        'supports, and what it does not. Thirty parts, with the record open '
+        'beside each one.</p>\n'
+        '    <p class="d-seq-more"><a href="../mabayani/">Read MABAYANI</a></p>\n'
+        '  </section>')
 
 
 def questions_section() -> str:

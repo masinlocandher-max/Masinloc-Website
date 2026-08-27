@@ -1,0 +1,401 @@
+/* MABAYANI — the immersive reading of Masinloc's history.
+   ------------------------------------------------------------------------
+   Mobile is the primary surface, so the base rules here are the phone rules
+   and the wider viewports add to them rather than the other way round.
+
+   Three things this sheet is responsible for holding to:
+
+   1. Evidence state is never carried by colour alone. Each badge prints its
+      word; the tint and the dot are secondary, and the dot has a distinct
+      shape per state so the four remain distinguishable in greyscale.
+
+   2. Motion never carries meaning. Sections fade and rise on entry, but the
+      content is fully laid out and readable with animation disabled, and
+      prefers-reduced-motion switches every transition off rather than
+      shortening it.
+
+   3. Long-form reading measure. The copy runs to roughly 65 characters, and
+      the quoted Spanish and the Panata get their own treatment so a reader
+      can tell a source from the writing around it.
+   ------------------------------------------------------------------------ */
+
+.mabayani-page{background:var(--white)}
+
+/* --- the spine ----------------------------------------------------------- */
+
+.mabayani-page main{padding-bottom:0}
+
+.mb-section{
+  padding:clamp(52px,9vh,104px) 0;
+  border-top:1px solid var(--line);
+}
+.mb-section:first-of-type{border-top:0}
+.mb-inner{
+  max-width:720px;margin:0 auto;
+  padding:0 clamp(20px,5vw,40px);
+}
+
+/* The entry and the closing question each take the screen to themselves. */
+.mb-full{
+  min-height:min(88vh,760px);
+  display:flex;align-items:center;
+}
+
+.mb-eyebrow{
+  margin:0 0 14px;
+  font:600 11.5px/1.4 var(--font-ui);
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--muted);
+}
+.mb-title{
+  margin:0 0 18px;
+  font:400 clamp(27px,4.6vw,44px)/1.12 var(--font-editorial);
+  letter-spacing:-.02em;color:var(--ink);
+  text-wrap:balance;
+}
+h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
+.mb-sub{
+  margin:0 0 22px;max-width:56ch;
+  font:400 clamp(16px,1.9vw,19px)/1.55 var(--font-ui);
+  color:var(--muted);
+}
+.mb-inner > p{
+  margin:0 0 20px;max-width:65ch;
+  font:400 clamp(16.5px,2vw,18.5px)/1.72 var(--font-editorial);
+  color:var(--text);
+}
+.mb-large{font-size:clamp(19px,3vw,26px);line-height:1.5;color:var(--ink)}
+.mb-reveal{color:var(--muted)}
+.mb-transition{
+  margin-top:30px;max-width:52ch;
+  font:400 clamp(16px,2vw,18px)/1.6 var(--font-ui);
+  color:var(--muted);font-style:italic;
+}
+.mb-reflect{
+  margin:26px 0;padding:2px 0 2px 20px;
+  border-left:3px solid var(--yellow);
+}
+.mb-reflect p{
+  margin:0;max-width:56ch;
+  font:400 clamp(17px,2.2vw,20px)/1.55 var(--font-editorial);
+  color:var(--ink);
+}
+
+/* --- evidence state ------------------------------------------------------ */
+
+.mb-badges{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:26px 0 0}
+.mb-badges-label{
+  font:600 11px/1 var(--font-ui);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.mb-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 11px 5px 9px;border-radius:999px;
+  font:600 11.5px/1 var(--font-ui);
+  letter-spacing:.08em;
+  border:1px solid currentColor;
+}
+/* The dot differs in shape as well as tint: filled, ring, half and hollow.
+   Printed in greyscale or read by somebody who cannot separate the hues, the
+   four states are still four states. */
+.mb-badge-dot{width:9px;height:9px;border:2px solid currentColor;flex:0 0 auto}
+.mb-badge-documented{color:#166534;background:rgba(22,101,52,.08)}
+.mb-badge-documented .mb-badge-dot{border-radius:50%;background:currentColor}
+.mb-badge-reconstructed{color:#9a5b00;background:rgba(154,91,0,.08)}
+.mb-badge-reconstructed .mb-badge-dot{border-radius:50%}
+.mb-badge-remembered{color:#5b4bb1;background:rgba(91,75,177,.08)}
+.mb-badge-remembered .mb-badge-dot{border-radius:50%;background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
+.mb-badge-still-open{color:#9f1239;background:rgba(159,18,57,.07)}
+.mb-badge-still-open .mb-badge-dot{border-radius:2px}
+
+.mb-legend-row{
+  display:flex;gap:16px;align-items:flex-start;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.mb-legend-row .mb-badge{flex:0 0 auto;margin-top:2px}
+.mb-legend-row p{margin:0;font:400 15.5px/1.6 var(--font-ui);color:var(--text)}
+
+/* --- fact boxes and the record ------------------------------------------- */
+
+.mb-facts,.mb-record{
+  margin:26px 0 0;border:1px solid var(--line);
+  border-radius:12px;background:var(--soft);
+}
+.mb-facts > summary,.mb-record > summary{
+  list-style:none;cursor:pointer;
+  padding:15px 18px;min-height:48px;              /* a real tap target */
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font:600 13.5px/1.3 var(--font-ui);
+  letter-spacing:.04em;color:var(--ink);
+}
+.mb-facts > summary::-webkit-details-marker,
+.mb-record > summary::-webkit-details-marker{display:none}
+.mb-facts > summary::after,.mb-record > summary::after{
+  content:"+";font:400 20px/1 var(--font-ui);color:var(--muted);
+}
+.mb-facts[open] > summary::after,.mb-record[open] > summary::after{content:"\2212"}
+.mb-facts > summary:focus-visible,.mb-record > summary:focus-visible{
+  outline:2px solid var(--blue);outline-offset:-2px;border-radius:12px;
+}
+.mb-facts ul,.mb-facts ol{margin:0;padding:0 18px 18px 36px}
+.mb-facts li{
+  margin:0 0 8px;
+  font:400 15.5px/1.6 var(--font-ui);color:var(--text);
+}
+.mb-facts > p{margin:0;padding:0 18px 18px;font:400 14.5px/1.6 var(--font-ui);color:var(--muted)}
+
+.mb-record{background:#fff}
+.mb-rec-body{padding:0 18px 18px}
+.mb-rec-tab + .mb-rec-tab{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.mb-rec-tab h3{
+  margin:0 0 8px;
+  font:600 11.5px/1.3 var(--font-ui);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.mb-rec-tab ul{margin:0;padding:0;list-style:none}
+.mb-rec-tab li{
+  margin:0 0 10px;
+  font:400 15px/1.65 var(--font-ui);color:var(--text);
+}
+.mb-rec-foot{
+  margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line);
+  font:400 13px/1.55 var(--font-ui);color:var(--muted);
+}
+
+/* --- the three names nobody has recovered -------------------------------- */
+
+.mb-missing{
+  margin:28px 0 0;padding:0;list-style:none;
+  display:grid;gap:12px;
+}
+.mb-missing li{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 18px;border:1px dashed rgba(159,18,57,.45);border-radius:10px;
+  font:600 12px/1.2 var(--font-ui);
+  letter-spacing:.12em;color:#9f1239;background:rgba(159,18,57,.03);
+}
+.mb-missing-slot{
+  flex:1 1 auto;height:1px;background:repeating-linear-gradient(
+    90deg,rgba(159,18,57,.35) 0 8px,transparent 8px 16px);
+  order:2;
+}
+
+/* --- the vows, the side-by-side readings, further reading ---------------- */
+
+.mb-vow,.mb-side,.mb-further{
+  margin:26px 0 0;padding:18px 20px;
+  border-left:3px solid var(--line);
+}
+.mb-vow h3,.mb-side h3,.mb-further h3{
+  margin:0 0 10px;
+  font:600 11.5px/1.3 var(--font-ui);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.mb-vow ul,.mb-further ul{margin:0;padding-left:18px}
+.mb-vow li,.mb-further li{
+  margin:0 0 6px;font:400 15.5px/1.6 var(--font-ui);color:var(--text);
+}
+.mb-side p{margin:0 0 10px;font:400 16px/1.65 var(--font-editorial);color:var(--text)}
+.mb-side p:last-child,.mb-vow li:last-child{margin-bottom:0}
+.mb-further{border-left-color:var(--blue)}
+.mb-further a{color:var(--blue)}
+
+/* --- calls to action ----------------------------------------------------- */
+
+.mb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 0}
+.mb-cta{
+  display:inline-flex;align-items:center;min-height:48px;
+  padding:12px 22px;border-radius:999px;
+  border:1px solid var(--blue);color:var(--blue);
+  font:600 15px/1.3 var(--font-ui);text-decoration:none;
+}
+.mb-cta-primary{background:var(--blue);color:#fff}
+.mb-cta:hover,.mb-cta:focus-visible{background:var(--blue);color:#fff}
+
+/* --- the Panata ---------------------------------------------------------- */
+
+.mb-panata-section{background:var(--soft)}
+.mb-panata{margin:0;padding:0;list-style:none;counter-reset:none}
+.mb-panata li{
+  margin:0 0 26px;max-width:56ch;
+  font:400 clamp(17.5px,2.4vw,21px)/1.6 var(--font-editorial);
+  color:var(--ink);
+}
+.mb-panata li:last-child{
+  margin-bottom:0;padding-top:26px;
+  border-top:1px solid var(--line);
+  font-weight:600;
+}
+
+/* --- people, contribution, sources --------------------------------------- */
+
+.mb-people-list{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:22px}
+.mb-person{padding:20px;border:1px solid var(--line);border-radius:12px}
+.mb-person h3{
+  margin:0 0 10px;
+  font:400 clamp(19px,2.4vw,23px)/1.25 var(--font-editorial);color:var(--ink);
+}
+.mb-person p{margin:0 0 10px;font:400 15.5px/1.65 var(--font-ui);color:var(--text)}
+.mb-person p:last-child{margin-bottom:0}
+.mb-person .mb-badges{margin:0 0 12px}
+/* A group with no recovered names is marked as a group, not dressed as a person. */
+.mb-person-group{border-style:dashed;background:rgba(17,24,39,.02)}
+
+.mb-trust{font-weight:600;color:var(--ink)!important}
+.mb-note{
+  margin:20px 0 0;max-width:60ch;
+  font:400 14.5px/1.65 var(--font-ui);color:var(--muted);
+}
+
+.mb-src-list{margin:26px 0 0;padding-left:22px;display:grid;gap:18px}
+.mb-src-list li{color:var(--muted)}
+.mb-src-cite{margin:0;font:400 15px/1.6 var(--font-ui);color:var(--text)}
+.mb-src-use,.mb-src-status{margin:5px 0 0;font:400 13.5px/1.55 var(--font-ui);color:var(--muted)}
+
+/* --- story map and progress ---------------------------------------------- */
+
+.mb-map{
+  position:sticky;top:0;z-index:40;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(10px);
+}
+.mb-map > summary{
+  list-style:none;cursor:pointer;
+  max-width:760px;margin:0 auto;padding:14px clamp(20px,5vw,40px);min-height:48px;
+  display:flex;align-items:center;gap:10px;
+  font:600 12.5px/1 var(--font-ui);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.mb-map > summary::-webkit-details-marker{display:none}
+.mb-map > summary::after{content:"\25be";margin-left:auto;font-size:14px}
+.mb-map[open] > summary::after{content:"\25b4"}
+.mb-map nav{max-height:min(62vh,520px);overflow-y:auto}
+.mb-map ol{
+  max-width:760px;margin:0 auto;padding:0 clamp(20px,5vw,40px) 20px;
+  list-style:none;display:grid;gap:2px;
+}
+.mb-map a{
+  display:flex;gap:14px;align-items:baseline;
+  padding:11px 8px;min-height:44px;border-radius:8px;
+  color:var(--ink);text-decoration:none;
+  font:400 15px/1.4 var(--font-ui);
+}
+.mb-map a:hover,.mb-map a:focus-visible{background:rgba(17,24,39,.06)}
+.mb-map-n{
+  flex:0 0 auto;width:2.2em;
+  font:600 12px/1.4 var(--font-ui);color:var(--muted);
+}
+
+/* Progress is a thin rule and a count. It sits under the map and never covers
+   the reading. Hidden until the reader has actually moved. */
+.mb-progress{
+  position:fixed;left:0;right:0;bottom:0;z-index:35;
+  display:flex;align-items:center;gap:10px;
+  padding:0;pointer-events:none;
+}
+.mb-progress-bar{
+  position:absolute;left:0;bottom:0;height:3px;
+  background:var(--blue);width:0;
+  transition:width .18s linear;
+}
+.mb-progress-text{
+  margin:0 0 10px auto;padding:5px 12px;
+  border-radius:999px;background:rgba(17,24,39,.82);color:#fff;
+  font:600 11.5px/1 var(--font-ui);letter-spacing:.06em;
+}
+
+/* --- motion -------------------------------------------------------------- */
+
+/* Entry animation is site.js's shared reveal, the same one every other section
+   on the site uses, including its reduced-motion handling. Nothing here adds a
+   second one. */
+
+/* --- wider viewports ----------------------------------------------------- */
+
+@media (min-width:860px){
+  .mb-inner{max-width:760px}
+  .mb-people-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mb-missing{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .mb-progress-text{margin-right:20px}
+}
+
+/* On a phone the record opens as a sheet against the bottom of the screen,
+   which is where a thumb is. It is the same <details>; only the presentation
+   changes, so nothing depends on the script or the media query. */
+@media (max-width:640px){
+  .mb-record[open]{
+    position:fixed;inset:auto 0 0 0;z-index:60;
+    max-height:82vh;overflow-y:auto;
+    border-radius:16px 16px 0 0;border-bottom:0;
+    box-shadow:0 -12px 40px rgba(17,24,39,.26);
+    margin:0;
+  }
+  .mb-record[open] > summary{
+    position:sticky;top:0;background:#fff;z-index:1;
+    border-bottom:1px solid var(--line);
+  }
+  .mb-record[open]::before{
+    content:"";position:fixed;inset:0;z-index:-1;background:rgba(17,24,39,.5);
+  }
+}
+
+/* --- sections that carry the apparatus rather than the story ------------- */
+
+/* These four close the page: how to read the labels, who the record names,
+   how to add to it, and what it all rests on. They share the reading measure
+   of the narrative so the page does not change shape at the end. */
+.mb-legend,.mb-people,.mb-give,.mb-sources{background:var(--soft)}
+.mb-people,.mb-sources{background:var(--white)}
+.mb-legend .mb-legend-row:last-child{border-bottom:0}
+.mb-people > .mb-inner,.mb-sources > .mb-inner,
+.mb-give > .mb-inner,.mb-legend > .mb-inner{max-width:820px}
+/* A named person and an unrecovered group are not the same kind of card, and
+   the difference is in the border rather than in the wording alone. */
+.mb-person-person{background:var(--white)}
+
+/* --- breadcrumb ---------------------------------------------------------- */
+
+/* .crumbs is shared markup, but every sheet that styles it belongs to another
+   section. Styling it here rather than importing one of those keeps this page
+   from depending on a stylesheet it has no other reason to load. */
+.mabayani-page .crumbs{max-width:820px;margin:0 auto;padding:18px clamp(20px,5vw,40px) 0}
+.mabayani-page .crumbs ol{
+  margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 10px;
+  font:400 13px/1.5 var(--font-ui);color:var(--muted);
+}
+.mabayani-page .crumbs li + li::before{content:"/";margin-right:10px;opacity:.55}
+.mabayani-page .crumbs a{color:var(--muted);text-decoration:none}
+.mabayani-page .crumbs a:hover,.mabayani-page .crumbs a:focus-visible{color:var(--blue)}
+
+/* --- the research index -------------------------------------------------- */
+
+.mb-research{background:var(--soft)}
+.mb-research > .mb-inner{max-width:820px}
+.mb-res-list{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:2px}
+.mb-res-item a{
+  display:flex;gap:16px;align-items:baseline;
+  padding:15px 12px;min-height:48px;border-radius:10px;
+  color:var(--ink);text-decoration:none;
+  font:400 clamp(16px,1.9vw,17.5px)/1.45 var(--font-ui);
+}
+.mb-res-item a:hover,.mb-res-item a:focus-visible{background:var(--white)}
+.mb-res-n{
+  flex:0 0 auto;width:2.2em;
+  font:600 12.5px/1.6 var(--font-ui);color:var(--muted);
+}
+.mb-res-title{flex:1 1 auto}
+/* Written by bulletin.js from what this browser remembers. Absent on a first
+   visit, and a part already opened is stated rather than struck through. */
+.mb-res-progress{margin:16px 0 0;font:400 13.5px/1.5 var(--font-ui);color:var(--muted)}
+.mb-res-item.is-read .mb-res-n,.mb-res-item.is-read .mb-res-title{color:var(--muted)}
+.mb-res-item.is-read a::after{
+  content:"Read";margin-left:auto;flex:0 0 auto;
+  font:400 11.5px/1 var(--font-ui);letter-spacing:.04em;color:var(--muted);opacity:.8;
+}
+
+.mb-footnote{
+  margin:30px 0 0;max-width:62ch;padding-top:20px;
+  border-top:1px solid var(--line);
+  font:400 14.5px/1.7 var(--font-ui);color:var(--muted);
+}
+.mb-credit{margin:12px 0 0;font:600 14px/1.6 var(--font-ui);color:var(--text)}
