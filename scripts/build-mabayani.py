@@ -108,6 +108,13 @@ FURTHER_READING = {
 
 BADGES = ["DOCUMENTED", "RECONSTRUCTED", "REMEMBERED", "STILL OPEN"]
 
+# The word beside each chapter number. Tagalog, unlike the rest of the page's
+# furniture, because this label sits directly against the section titles and
+# those are Tagalog — "Part 13 / 1649: Anim na Caracoa" changes language in the
+# middle of a line, and "Bahagi" does not.
+CHAPTER_LABEL = "Bahagi"
+
+
 
 def esc(value: str) -> str:
     return html.escape(str(value or ""), quote=True)
@@ -123,7 +130,7 @@ def prose(blocks: list[str], cls: str = "") -> str:
     return "\n".join(f"      <p{attr}>{lines(b)}</p>" for b in blocks)
 
 
-def artwork(slug: str, eager: bool = False) -> str:
+def artwork(slug: str, eager: bool = False, full: bool = False) -> str:
     """One supplied MABAYANI design, at every width it was built in.
 
     Rendered as a <figure> rather than a bare <img> because these are drawings,
@@ -135,7 +142,7 @@ def artwork(slug: str, eager: bool = False) -> str:
     art = ARTWORK[slug]
     width, height = ARTWORK_SIZE[slug]
     widths = art["widths"]
-    sizes = "(min-width: 900px) 860px, 100vw"
+    sizes = "100vw" if full else "(min-width: 900px) 860px, 100vw"
 
     def srcset(ext: str) -> str:
         return ", ".join(f"../assets/mabayani/{slug}-{w}.{ext} {w}w" for w in widths)
@@ -156,7 +163,7 @@ def artwork(slug: str, eager: bool = False) -> str:
             f'<cite>{esc(art.get("attribution", ""))}</cite></blockquote>\n')
 
     return (
-        f'      <figure class="mb-art">\n'
+        f'      <figure class="mb-art{" mb-art-full" if full else ""}">\n'
         f'        <picture class="mb-art-image">\n'
         f'          <source type="image/avif" sizes="{sizes}" srcset="{srcset("avif")}">\n'
         f'          <source type="image/webp" sizes="{sizes}" srcset="{srcset("webp")}">\n'
@@ -294,7 +301,18 @@ def section_html(section: dict, index: int) -> str:
     # a band, and it sits above the heading rather than behind it — laying the
     # H1 over a drawing that already says MABAYANI prints the word twice.
     if number == "00":
-        head.append(artwork("mabayani-history", eager=True))
+        head.append(artwork("mabayani-history", eager=True, full=True))
+    # The chapter mark. The number is information rather than ornament — this
+    # is a numbered sequence, the story map is built on these numbers, and the
+    # bar overhead prints the one the reader is in. Section 00 is the title
+    # screen and the five reference sections are not part of the count, so
+    # neither gets one.
+    if number != "00":
+        head.append(
+            f'      <p class="mb-chapter">'
+            f'<span class="mb-chapter-n">{esc(number)}</span>'
+            f"<span>{esc(CHAPTER_LABEL)}</span>"
+            f'<span class="mb-chapter-rule" aria-hidden="true"></span></p>')
     if section.get("eyebrow"):
         head.append(f'      <p class="mb-eyebrow">{esc(section["eyebrow"])}</p>')
     head.append(f'      <{heading} id="t{number}" class="mb-title">{lines(title)}</{heading}>')
@@ -403,7 +421,8 @@ def story_map() -> str:
         for anchor, label in REFERENCE_MAP)
     return (
         '<details class="mb-map" id="storyMap">\n'
-        '  <summary><span>Story Map</span>'
+        '  <summary><span class="mb-map-brand">MABAYANI</span>'
+        '<span class="mb-map-label">Story map</span>'
         # Where the reader is, printed in the bar they can always see. Filled by
         # mabayani.js and aria-hidden, because the summary is a button: its
         # accessible name should not change under a screen-reader user as they
@@ -605,7 +624,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-6">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-10">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>

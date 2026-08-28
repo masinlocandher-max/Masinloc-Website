@@ -1,13 +1,33 @@
 /* MABAYANI — the immersive reading of Masinloc's history.
    ------------------------------------------------------------------------
-   Mobile is the primary surface, so the base rules here are the phone rules
-   and the wider viewports add to them rather than the other way round.
+   THIS PAGE IS A SEGMENT, AND IT LOOKS LIKE ONE.
 
-   Three things this sheet is responsible for holding to:
+   The rest of the site is daylight civic: white ground, blue accent, clean
+   sans. MABAYANI is the room the documents are kept in. It runs on the same
+   locked identity — the ground is --navy-deep, the accent is --yellow, both
+   straight from tokens.css — but inverted, so a reader knows inside one screen
+   that they have walked into something with its own rules and its own weight.
+
+   Two decisions worth stating, because both were choices and not oversights.
+
+   The site masthead stays light. You are still on masinloc-zambales.com and
+   the shared navigation should still look like itself; the logo is supplied
+   artwork and is never recoloured or filtered to suit a background. The
+   segment begins immediately below it, at the MABAYANI bar, and that hard
+   edge from white chrome to dark ground is the threshold.
+
+   The page is not uniformly dark. The Panata — the one passage a reader is
+   asked to say — inverts to paper, and so does the closing. A single tone for
+   thirty-six sections is a mood, not a structure; the light sections are where
+   the page changes gear.
+
+   And three things this sheet still has to hold to:
 
    1. Evidence state is never carried by colour alone. Each badge prints its
       word; the tint and the dot are secondary, and the dot has a distinct
-      shape per state so the four remain distinguishable in greyscale.
+      shape per state so the four remain distinguishable in greyscale. The
+      hues here are the dark-ground versions of the same four states — the
+      light-ground values fail against this ground.
 
    2. Motion never carries meaning. Sections fade and rise on entry, but the
       content is fully laid out and readable with animation disabled, and
@@ -20,26 +40,61 @@
    ------------------------------------------------------------------------ */
 
 .mabayani-page{
-  background:var(--white);
-  /* The site masthead's height on this page, and the story map bar's. Named
-     because three things depend on them: where the map sits, how far an
+  /* THE SEGMENT PALETTE.
+     Derived from the locked tokens rather than invented beside them: the
+     ground is --navy-deep and the accent is --yellow. tokens.css warns that
+     --yellow fails as text on white — on this ground it is the opposite, and
+     it clears its floor by a wide margin. The paper tones are warm rather
+     than neutral so the type sits in the same temperature as the sepia
+     artwork instead of going blue-white against it. */
+  --mb-ground:var(--navy-deep);
+  --mb-raised:#0A1E44;
+  --mb-sunken:#020C21;
+  --mb-paper:#F4EFE6;
+  --mb-paper-dim:#C6CBDA;
+  --mb-faint:#97A2BC;
+  --mb-rule:rgba(244,239,230,.13);
+  --mb-rule-strong:rgba(244,239,230,.3);
+  --mb-accent:var(--yellow);
+  /* Two translucent layers, mixed from the tones above rather than restated as
+     rgb() — the whole point of a token is that a colour has one definition.
+     Each is declared after a solid fallback, so a browser without color-mix
+     gets an opaque bar and an opaque scrim rather than nothing. */
+  --mb-veil:color-mix(in srgb, var(--mb-ground) 92%, transparent);
+  --mb-scrim:color-mix(in srgb, var(--mb-sunken) 72%, transparent);
+
+  background:var(--mb-ground);
+  color:var(--mb-paper);
+
+  /* The site masthead's height on this page, and the MABAYANI bar's. Named
+     because three things depend on them: where the bar sits, how far an
      anchor jump has to clear, and nothing else may guess. */
   --mb-masthead:88px;
-  --mb-bar:49px;
+  --mb-bar:54px;
 }
 @media(max-width:1099px){.mabayani-page{--mb-masthead:76px}}
+
+/* The threshold. A hairline of the accent under the light masthead, so the
+   change of world reads as deliberate rather than as a page that failed to
+   load its background. */
+.mabayani-page .site-nav{border-bottom:2px solid var(--mb-accent)}
 
 /* --- the spine ----------------------------------------------------------- */
 
 .mabayani-page main{padding-bottom:0}
 
 .mb-section{
-  padding:clamp(52px,9vh,104px) 0;
-  border-top:1px solid var(--line);
+  position:relative;
+  padding:clamp(60px,11vh,124px) 0;
+  border-top:1px solid var(--mb-rule);
 }
 .mb-section:first-of-type{border-top:0}
+/* The opening is a title sequence: the artwork meets the bar above it with
+   nothing in between. Section padding here left a band of empty ground before
+   the page had said anything. */
+.mb-section:first-of-type{padding-top:0}
 /* TWO BARS, ONE OFFSET.
-   This page carries the site masthead and its own story map, and both are
+   This page carries the site masthead and its own MABAYANI bar, and both are
    sticky. Every destination here is reached by an anchor — from the map, from
    a section CTA, from a shared link — so a jump has to clear both or it lands
    with its heading hidden. The site-wide scroll-padding is zeroed for this
@@ -52,60 +107,98 @@
 .mb-inner{
   max-width:720px;margin:0 auto;
   padding:0 clamp(20px,5vw,40px);
+  /* The entry section is a flex container, and a flex item's min-width:auto
+     refuses to shrink below its content. The full-bleed artwork inside is a
+     viewport wide, so without this the column grew to fit it and took the
+     whole page 40px past the screen on a phone. */
+  min-width:0;
 }
 
 /* The entry and the closing question each take the screen to themselves. */
 .mb-full{
-  min-height:min(88vh,760px);
+  min-height:min(92vh,860px);
   display:flex;align-items:center;
+}
+
+/* --- the chapter mark ---------------------------------------------------- */
+
+/* The number is information, not ornament: this is a numbered sequence, the
+   story map is built on those numbers, and the bar overhead prints the one
+   you are in. Setting it large and quiet gives the page a spine you can feel
+   while scrolling, which is what thirty-one undifferentiated blocks lacked. */
+.mb-chapter{
+  display:flex;align-items:center;gap:14px;
+  margin:0 0 22px;
+  font:600 11px/1 var(--font-ui);
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mb-accent);
+}
+.mb-chapter-n{
+  font:400 clamp(34px,5.4vw,52px)/.8 var(--font-editorial);
+  letter-spacing:-.03em;
+  color:var(--mb-accent);
+}
+.mb-chapter-rule{
+  flex:1 1 auto;height:1px;
+  background:linear-gradient(90deg,var(--mb-rule-strong),transparent);
 }
 
 .mb-eyebrow{
   margin:0 0 14px;
   font:600 11.5px/1.4 var(--font-ui);
   letter-spacing:.15em;text-transform:uppercase;
-  color:var(--muted);
+  color:var(--mb-faint);
 }
 .mb-title{
-  margin:0 0 18px;
-  font:400 clamp(27px,4.6vw,44px)/1.12 var(--font-editorial);
-  letter-spacing:-.02em;color:var(--ink);
+  margin:0 0 20px;
+  font:400 clamp(30px,5.4vw,52px)/1.08 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--mb-paper);
   text-wrap:balance;
 }
-h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
+h1.mb-title{
+  font-size:clamp(52px,13vw,124px);
+  letter-spacing:-.05em;line-height:.9;
+  margin:0 0 26px;
+}
 .mb-sub{
-  margin:0 0 22px;max-width:56ch;
+  margin:0 0 24px;max-width:56ch;
   font:400 clamp(16px,1.9vw,19px)/1.55 var(--font-ui);
-  color:var(--muted);
+  color:var(--mb-faint);
 }
 .mb-inner > p{
-  margin:0 0 20px;max-width:65ch;
-  font:400 clamp(16.5px,2vw,18.5px)/1.72 var(--font-editorial);
-  color:var(--text);
+  margin:0 0 22px;max-width:65ch;
+  font:400 clamp(17px,2vw,19.5px)/1.75 var(--font-editorial);
+  color:var(--mb-paper-dim);
 }
-.mb-large{font-size:clamp(19px,3vw,26px);line-height:1.5;color:var(--ink)}
-.mb-reveal{color:var(--muted)}
+.mb-large{
+  font-size:clamp(21px,3.4vw,30px);line-height:1.45;
+  color:var(--mb-paper);
+}
+.mb-reveal{color:var(--mb-faint)}
 .mb-transition{
-  margin-top:30px;max-width:52ch;
+  margin-top:34px;max-width:52ch;
   font:400 clamp(16px,2vw,18px)/1.6 var(--font-ui);
-  color:var(--muted);font-style:italic;
+  color:var(--mb-faint);font-style:italic;
 }
 .mb-reflect{
-  margin:26px 0;padding:2px 0 2px 20px;
-  border-left:3px solid var(--yellow);
+  margin:30px 0;padding:4px 0 4px 22px;
+  border-left:3px solid var(--mb-accent);
 }
 .mb-reflect p{
   margin:0;max-width:56ch;
-  font:400 clamp(17px,2.2vw,20px)/1.55 var(--font-editorial);
-  color:var(--ink);
+  font:400 clamp(18px,2.4vw,23px)/1.5 var(--font-editorial);
+  color:var(--mb-paper);
 }
 
 /* --- evidence state ------------------------------------------------------ */
 
-.mb-badges{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:26px 0 0}
+/* The one bright system on the page. Everything else is paper on ink; the
+   four states carry the only other hues, because telling documented from
+   remembered is the single most important thing this page does. */
+.mb-badges{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;margin:30px 0 0}
 .mb-badges-label{
   font:600 11px/1 var(--font-ui);
-  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mb-faint);
 }
 .mb-badge{
   display:inline-flex;align-items:center;gap:7px;
@@ -118,179 +211,211 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
    Printed in greyscale or read by somebody who cannot separate the hues, the
    four states are still four states. */
 .mb-badge-dot{width:9px;height:9px;border:2px solid currentColor;flex:0 0 auto}
-.mb-badge-documented{color:#166534;background:rgba(22,101,52,.08)}
+.mb-badge-documented{color:#7FD9A1;background:rgba(127,217,161,.1)}
 .mb-badge-documented .mb-badge-dot{border-radius:50%;background:currentColor}
-.mb-badge-reconstructed{color:#9a5b00;background:rgba(154,91,0,.08)}
+.mb-badge-reconstructed{color:#F2B45E;background:rgba(242,180,94,.1)}
 .mb-badge-reconstructed .mb-badge-dot{border-radius:50%}
-.mb-badge-remembered{color:#5b4bb1;background:rgba(91,75,177,.08)}
+.mb-badge-remembered{color:#B7AAF2;background:rgba(183,170,242,.1)}
 .mb-badge-remembered .mb-badge-dot{border-radius:50%;background:linear-gradient(90deg,currentColor 50%,transparent 50%)}
-.mb-badge-still-open{color:#9f1239;background:rgba(159,18,57,.07)}
+.mb-badge-still-open{color:#F79BB0;background:rgba(247,155,176,.1)}
 .mb-badge-still-open .mb-badge-dot{border-radius:2px}
 
 .mb-legend-row{
   display:flex;gap:16px;align-items:flex-start;
-  padding:16px 0;border-bottom:1px solid var(--line);
+  padding:18px 0;border-bottom:1px solid var(--mb-rule);
 }
 .mb-legend-row .mb-badge{flex:0 0 auto;margin-top:2px}
-.mb-legend-row p{margin:0;font:400 15.5px/1.6 var(--font-ui);color:var(--text)}
+.mb-legend-row p{margin:0;font:400 15.5px/1.6 var(--font-ui);color:var(--mb-paper-dim)}
 
 /* --- fact boxes and the record ------------------------------------------- */
 
 .mb-facts,.mb-record{
-  margin:26px 0 0;border:1px solid var(--line);
-  border-radius:12px;background:var(--soft);
+  margin:30px 0 0;border:1px solid var(--mb-rule);
+  border-radius:12px;background:var(--mb-raised);
 }
 .mb-facts > summary,.mb-record > summary{
   list-style:none;cursor:pointer;
   padding:15px 18px;min-height:48px;              /* a real tap target */
   display:flex;align-items:center;justify-content:space-between;gap:12px;
   font:600 13.5px/1.3 var(--font-ui);
-  letter-spacing:.04em;color:var(--ink);
+  letter-spacing:.04em;color:var(--mb-paper);
 }
 .mb-facts > summary::-webkit-details-marker,
 .mb-record > summary::-webkit-details-marker{display:none}
 .mb-facts > summary::after,.mb-record > summary::after{
-  content:"+";font:400 20px/1 var(--font-ui);color:var(--muted);
+  content:"+";font:400 20px/1 var(--font-ui);color:var(--mb-accent);
 }
 .mb-facts[open] > summary::after,.mb-record[open] > summary::after{content:"\2212"}
 .mb-facts > summary:focus-visible,.mb-record > summary:focus-visible{
-  outline:2px solid var(--blue);outline-offset:-2px;border-radius:12px;
+  outline:2px solid var(--mb-accent);outline-offset:-2px;border-radius:12px;
 }
 .mb-facts ul,.mb-facts ol{margin:0;padding:0 18px 18px 36px}
 .mb-facts li{
   margin:0 0 8px;
-  font:400 15.5px/1.6 var(--font-ui);color:var(--text);
+  font:400 15.5px/1.6 var(--font-ui);color:var(--mb-paper-dim);
 }
-.mb-facts > p{margin:0;padding:0 18px 18px;font:400 14.5px/1.6 var(--font-ui);color:var(--muted)}
+.mb-facts > p{margin:0;padding:0 18px 18px;font:400 14.5px/1.6 var(--font-ui);color:var(--mb-faint)}
 
-.mb-record{background:#fff}
+/* The record sits a shade deeper than the fact box: it is the evidence under
+   the claim, and the page should read as layers rather than as one flat tone. */
+.mb-record{background:var(--mb-sunken)}
 .mb-rec-body{padding:0 18px 18px}
-.mb-rec-tab + .mb-rec-tab{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.mb-rec-tab + .mb-rec-tab{margin-top:18px;padding-top:18px;border-top:1px solid var(--mb-rule)}
 .mb-rec-tab h3{
   margin:0 0 8px;
   font:600 11.5px/1.3 var(--font-ui);
-  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mb-accent);
 }
 .mb-rec-tab ul{margin:0;padding:0;list-style:none}
 .mb-rec-tab li{
   margin:0 0 10px;
-  font:400 15px/1.65 var(--font-ui);color:var(--text);
+  font:400 15px/1.65 var(--font-ui);color:var(--mb-paper-dim);
 }
 .mb-rec-foot{
-  margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line);
-  font:400 13px/1.55 var(--font-ui);color:var(--muted);
+  margin:18px 0 0;padding-top:14px;border-top:1px solid var(--mb-rule);
+  font:400 13px/1.55 var(--font-ui);color:var(--mb-faint);
 }
 
 /* --- the three names nobody has recovered -------------------------------- */
 
+/* The emotional centre of the whole page, and it should look like it. Three
+   empty slots, ruled and waiting, in the colour the page uses for a question
+   it has not answered. */
 .mb-missing{
-  margin:28px 0 0;padding:0;list-style:none;
-  display:grid;gap:12px;
+  margin:34px 0 0;padding:0;list-style:none;
+  display:grid;gap:14px;
 }
 .mb-missing li{
   display:flex;align-items:center;gap:14px;
-  padding:16px 18px;border:1px dashed rgba(159,18,57,.45);border-radius:10px;
+  padding:22px 20px;border:1px dashed rgba(247,155,176,.5);border-radius:10px;
   font:600 12px/1.2 var(--font-ui);
-  letter-spacing:.12em;color:#9f1239;background:rgba(159,18,57,.03);
+  letter-spacing:.14em;color:#F79BB0;background:rgba(247,155,176,.05);
 }
 .mb-missing-slot{
   flex:1 1 auto;height:1px;background:repeating-linear-gradient(
-    90deg,rgba(159,18,57,.35) 0 8px,transparent 8px 16px);
+    90deg,rgba(247,155,176,.45) 0 8px,transparent 8px 16px);
   order:2;
 }
 
 /* --- the vows, the side-by-side readings, further reading ---------------- */
 
 .mb-vow,.mb-side,.mb-further{
-  margin:26px 0 0;padding:18px 20px;
-  border-left:3px solid var(--line);
+  margin:30px 0 0;padding:18px 22px;
+  border-left:3px solid var(--mb-rule-strong);
 }
 .mb-vow h3,.mb-side h3,.mb-further h3{
   margin:0 0 10px;
   font:600 11.5px/1.3 var(--font-ui);
-  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mb-faint);
 }
 .mb-vow ul,.mb-further ul{margin:0;padding-left:18px}
 .mb-vow li,.mb-further li{
-  margin:0 0 6px;font:400 15.5px/1.6 var(--font-ui);color:var(--text);
+  margin:0 0 6px;font:400 15.5px/1.6 var(--font-ui);color:var(--mb-paper-dim);
 }
-.mb-side p{margin:0 0 10px;font:400 16px/1.65 var(--font-editorial);color:var(--text)}
+.mb-side p{margin:0 0 10px;font:400 16px/1.65 var(--font-editorial);color:var(--mb-paper-dim)}
 .mb-side p:last-child,.mb-vow li:last-child{margin-bottom:0}
-.mb-further{border-left-color:var(--blue)}
-.mb-further a{color:var(--blue)}
+.mb-further{border-left-color:var(--mb-accent)}
+.mb-further a{color:var(--mb-accent)}
 
 /* --- calls to action ----------------------------------------------------- */
 
-.mb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 0}
+.mb-ctas{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
 .mb-cta{
   display:inline-flex;align-items:center;min-height:48px;
-  padding:12px 22px;border-radius:999px;
-  border:1px solid var(--blue);color:var(--blue);
+  padding:12px 24px;border-radius:999px;
+  border:1px solid var(--mb-rule-strong);color:var(--mb-paper);
   font:600 15px/1.3 var(--font-ui);text-decoration:none;
+  transition:background var(--ease),color var(--ease),border-color var(--ease);
 }
-.mb-cta-primary{background:var(--blue);color:#fff}
-.mb-cta:hover,.mb-cta:focus-visible{background:var(--blue);color:#fff}
+.mb-cta-primary{background:var(--mb-accent);border-color:var(--mb-accent);color:var(--navy-deep)}
+.mb-cta:hover,.mb-cta:focus-visible{
+  background:var(--mb-accent);border-color:var(--mb-accent);color:var(--navy-deep);
+}
 
 /* --- the Panata ---------------------------------------------------------- */
 
-.mb-panata-section{background:var(--soft)}
+/* Paper, in the middle of the ink. The vow is the one passage the reader is
+   asked to say, and turning the lights on for it is the page's loudest moment
+   — which is why nothing else in the narrative gets this treatment. */
+.mb-panata-section{
+  background:var(--mb-paper);
+  color:var(--ink);
+  border-top:0;
+}
+.mb-panata-section .mb-chapter,
+.mb-panata-section .mb-chapter-n{color:var(--red-ink)}
+.mb-panata-section .mb-chapter-rule{background:linear-gradient(90deg,rgba(17,24,39,.24),transparent)}
+.mb-panata-section .mb-title{color:var(--navy)}
+.mb-panata-section .mb-eyebrow{color:var(--text)}
+.mb-panata-section .mb-inner > p{color:var(--text)}
 .mb-panata{margin:0;padding:0;list-style:none;counter-reset:none}
 .mb-panata li{
-  margin:0 0 26px;max-width:56ch;
-  font:400 clamp(17.5px,2.4vw,21px)/1.6 var(--font-editorial);
+  margin:0 0 28px;max-width:56ch;
+  font:400 clamp(19px,2.8vw,25px)/1.55 var(--font-editorial);
   color:var(--ink);
 }
 .mb-panata li:last-child{
-  margin-bottom:0;padding-top:26px;
-  border-top:1px solid var(--line);
-  font-weight:600;
+  margin-bottom:0;padding-top:28px;
+  border-top:1px solid rgba(17,24,39,.18);
+  font-weight:600;color:var(--navy);
 }
 
 /* --- people, contribution, sources --------------------------------------- */
 
-.mb-people-list{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:22px}
-.mb-person{padding:20px;border:1px solid var(--line);border-radius:12px}
+.mb-people-list{margin:30px 0 0;padding:0;list-style:none;display:grid;gap:22px}
+.mb-person{padding:22px;border:1px solid var(--mb-rule);border-radius:12px;background:var(--mb-raised)}
 .mb-person h3{
   margin:0 0 10px;
-  font:400 clamp(19px,2.4vw,23px)/1.25 var(--font-editorial);color:var(--ink);
+  font:400 clamp(19px,2.4vw,23px)/1.25 var(--font-editorial);color:var(--mb-paper);
 }
-.mb-person p{margin:0 0 10px;font:400 15.5px/1.65 var(--font-ui);color:var(--text)}
+.mb-person p{margin:0 0 10px;font:400 15.5px/1.65 var(--font-ui);color:var(--mb-paper-dim)}
 .mb-person p:last-child{margin-bottom:0}
 .mb-person .mb-badges{margin:0 0 12px}
 /* A group with no recovered names is marked as a group, not dressed as a person. */
-.mb-person-group{border-style:dashed;background:rgba(17,24,39,.02)}
+.mb-person-group{border-style:dashed;background:transparent}
 
-.mb-trust{font-weight:600;color:var(--ink)!important}
+.mb-trust{font-weight:600;color:var(--mb-paper)!important}
 .mb-note{
-  margin:20px 0 0;max-width:60ch;
-  font:400 14.5px/1.65 var(--font-ui);color:var(--muted);
+  margin:22px 0 0;max-width:60ch;
+  font:400 14.5px/1.65 var(--font-ui);color:var(--mb-faint);
 }
 
-.mb-src-list{margin:26px 0 0;padding-left:22px;display:grid;gap:18px}
-.mb-src-list li{color:var(--muted)}
-.mb-src-cite{margin:0;font:400 15px/1.6 var(--font-ui);color:var(--text)}
-.mb-src-use,.mb-src-status{margin:5px 0 0;font:400 13.5px/1.55 var(--font-ui);color:var(--muted)}
+.mb-src-list{margin:30px 0 0;padding-left:22px;display:grid;gap:20px}
+.mb-src-list li{color:var(--mb-faint)}
+.mb-src-cite{margin:0;font:400 15px/1.6 var(--font-ui);color:var(--mb-paper-dim)}
+.mb-src-use,.mb-src-status{margin:5px 0 0;font:400 13.5px/1.55 var(--font-ui);color:var(--mb-faint)}
 
-/* --- story map and progress ---------------------------------------------- */
+/* --- the MABAYANI bar and progress --------------------------------------- */
 
 /* Under the masthead, not beneath it. Both bars are sticky and both were
    pinned to top:0, so the masthead — 88px tall and on a higher layer — covered
-   the story map completely. The one control for moving around a thirty-one
-   part page was never once on screen. */
+   this one completely, and the only control for moving around a thirty-one
+   part page was never once on screen.
+
+   It carries the segment's name as well as its map. Whatever a reader has
+   scrolled past, the word MABAYANI is on their screen. */
 .mb-map{
   position:sticky;top:var(--mb-masthead);z-index:40;
-  border-bottom:1px solid var(--line);
-  background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid var(--mb-rule);
+  background:var(--mb-ground);
+  background:var(--mb-veil);
+  backdrop-filter:saturate(1.3) blur(12px);
 }
 .mb-map > summary{
   list-style:none;cursor:pointer;
-  max-width:760px;margin:0 auto;padding:14px clamp(20px,5vw,40px);min-height:48px;
-  display:flex;align-items:center;gap:10px;
+  max-width:820px;margin:0 auto;padding:16px clamp(20px,5vw,40px);min-height:54px;
+  display:flex;align-items:center;gap:14px;
   font:600 12.5px/1 var(--font-ui);
-  letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mb-faint);
 }
+.mb-map-brand{
+  flex:0 0 auto;
+  font:700 14px/1 var(--font-ui);
+  letter-spacing:.3em;color:var(--mb-accent);
+}
+.mb-map-label{flex:0 0 auto}
 .mb-map > summary::-webkit-details-marker{display:none}
-.mb-map > summary::after{content:"\25be";margin-left:auto;font-size:14px}
+.mb-map > summary::after{content:"\25be";margin-left:auto;font-size:14px;color:var(--mb-paper)}
 .mb-map[open] > summary::after{content:"\25b4"}
 /* The open map is a panel hanging under the bar, not a block in the document.
    In normal flow it expanded at the top of the document — where a sticky
@@ -305,57 +430,59 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
 .mb-map nav{
   position:absolute;left:0;right:0;top:100%;
   max-height:min(62vh,520px);overflow-y:auto;
-  background:var(--white);
-  border-bottom:1px solid var(--line);
-  box-shadow:0 18px 34px -22px rgba(17,24,39,.45);
+  background:var(--mb-sunken);
+  border-bottom:1px solid var(--mb-rule-strong);
+  box-shadow:0 24px 44px -20px rgba(0,0,0,.7);
 }
 .mb-map ol{
-  max-width:760px;margin:0 auto;padding:0 clamp(20px,5vw,40px) 20px;
+  max-width:820px;margin:0 auto;padding:0 clamp(20px,5vw,40px) 20px;
   list-style:none;display:grid;gap:2px;
 }
 .mb-map a{
   display:flex;gap:14px;align-items:baseline;
   padding:11px 8px;min-height:44px;border-radius:8px;
-  color:var(--ink);text-decoration:none;
+  color:var(--mb-paper-dim);text-decoration:none;
   font:400 15px/1.4 var(--font-ui);
 }
-.mb-map a:hover,.mb-map a:focus-visible{background:rgba(17,24,39,.06)}
+.mb-map a:hover,.mb-map a:focus-visible{background:rgba(244,239,230,.08);color:var(--mb-paper)}
 .mb-map-n{
   flex:0 0 auto;width:2.2em;
-  font:600 12px/1.4 var(--font-ui);color:var(--muted);
+  font:600 12px/1.4 var(--font-ui);color:var(--mb-faint);
 }
 /* The two halves of the map: the narrative in order, and the reference
    material that follows it. Labelled, because a reader looking for the
    sources should not have to guess that they are past part 30. */
 .mb-map-group{
-  max-width:760px;margin:0 auto;
-  padding:16px clamp(20px,5vw,40px) 6px;
+  max-width:820px;margin:0 auto;
+  padding:18px clamp(20px,5vw,40px) 6px;
   font:600 11px/1.4 var(--font-ui);
-  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--mb-accent);
 }
 .mb-map ul{
-  max-width:760px;margin:0 auto;
+  max-width:820px;margin:0 auto;
   padding:0 clamp(20px,5vw,40px) 20px;
   list-style:none;display:grid;gap:2px;
 }
 /* Where the reader is. A left rule and weight rather than a fill, so it stays
    legible against the hover background and does not read as a hover state. */
 .mb-map a.is-here{
-  font-weight:600;color:var(--blue);
-  box-shadow:inset 2px 0 0 var(--blue);
+  font-weight:600;color:var(--mb-accent);
+  box-shadow:inset 2px 0 0 var(--mb-accent);
 }
-.mb-map a.is-here .mb-map-n{color:var(--blue)}
+.mb-map a.is-here .mb-map-n{color:var(--mb-accent)}
 /* The current part, printed in the bar itself so it can be read without
-   opening anything. Truncated rather than wrapped: the bar is 48px and must
-   stay that height whatever the section is called. */
+   opening anything. Truncated rather than wrapped: the bar has a fixed height
+   and must keep it whatever the section is called. */
 .mb-here{
-  margin-left:14px;min-width:0;
+  margin-left:4px;min-width:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
   font:400 12.5px/1 var(--font-ui);
-  letter-spacing:0;text-transform:none;color:var(--ink);
+  letter-spacing:0;text-transform:none;color:var(--mb-paper);
 }
 .mb-here:empty{display:none}
-@media (max-width:520px){.mb-here{display:none}}
+/* On a phone the bar keeps the name and drops the rest: MABAYANI and a way in
+   is the whole job at that width. */
+@media (max-width:640px){.mb-here,.mb-map-label{display:none}}
 
 /* Progress is a thin rule and a count. It sits under the map and never covers
    the reading. Hidden until the reader has actually moved. */
@@ -366,12 +493,12 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
 }
 .mb-progress-bar{
   position:absolute;left:0;bottom:0;height:3px;
-  background:var(--blue);width:0;
+  background:var(--mb-accent);width:0;
   transition:width .18s linear;
 }
 .mb-progress-text{
-  margin:0 0 10px auto;padding:5px 12px;
-  border-radius:999px;background:rgba(17,24,39,.82);color:#fff;
+  margin:0 0 10px auto;padding:6px 13px;
+  border-radius:999px;background:var(--mb-accent);color:var(--navy-deep);
   font:600 11.5px/1 var(--font-ui);letter-spacing:.06em;
 }
 
@@ -379,7 +506,15 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
 
 /* Entry animation is site.js's shared reveal, the same one every other section
    on the site uses, including its reduced-motion handling. Nothing here adds a
-   second one. */
+   second one.
+
+   One exception, and only to the opacity half of it. The shared reveal fades a
+   section in from transparent, which is right on a white site: the section
+   arrives out of the page's own colour. On the two inverted sections it is
+   wrong — a paper block at 40% over an ink ground is neither, and the page's
+   loudest moment spent 0.7s looking like a rendering fault. They keep the
+   rise and skip the fade, so the paper arrives solid. */
+html.js .mb-panata-section[data-reveal]{opacity:1}
 
 /* --- wider viewports ----------------------------------------------------- */
 
@@ -398,94 +533,109 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
     position:fixed;inset:auto 0 0 0;z-index:60;
     max-height:82vh;overflow-y:auto;
     border-radius:16px 16px 0 0;border-bottom:0;
-    box-shadow:0 -12px 40px rgba(17,24,39,.26);
+    box-shadow:0 -12px 40px rgba(0,0,0,.6);
     margin:0;
   }
   .mb-record[open] > summary{
-    position:sticky;top:0;background:#fff;z-index:1;
-    border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:var(--mb-sunken);z-index:1;
+    border-bottom:1px solid var(--mb-rule);
   }
   .mb-record[open]::before{
-    content:"";position:fixed;inset:0;z-index:-1;background:rgba(17,24,39,.5);
+    content:"";position:fixed;inset:0;z-index:-1;
+    background:var(--mb-sunken);background:var(--mb-scrim);
   }
 }
 
 /* --- sections that carry the apparatus rather than the story ------------- */
 
-/* These four close the page: how to read the labels, who the record names,
-   how to add to it, and what it all rests on. They share the reading measure
-   of the narrative so the page does not change shape at the end. */
-.mb-legend,.mb-people,.mb-give,.mb-sources{background:var(--soft)}
-.mb-people,.mb-sources{background:var(--white)}
+/* These five close the page: how to read the labels, the worked research, who
+   the record names, how to add to it, and what it all rests on. They share the
+   reading measure of the narrative so the page does not change shape at the
+   end, and they alternate ground so the run of them still has a rhythm. */
+.mb-legend,.mb-give{background:var(--mb-raised)}
+.mb-people,.mb-sources{background:var(--mb-ground)}
 .mb-legend .mb-legend-row:last-child{border-bottom:0}
 .mb-people > .mb-inner,.mb-sources > .mb-inner,
 .mb-give > .mb-inner,.mb-legend > .mb-inner{max-width:820px}
 /* A named person and an unrecovered group are not the same kind of card, and
    the difference is in the border rather than in the wording alone. */
-.mb-person-person{background:var(--white)}
+.mb-person-person{background:var(--mb-raised)}
 
 /* --- breadcrumb ---------------------------------------------------------- */
 
 /* .crumbs is shared markup, but every sheet that styles it belongs to another
    section. Styling it here rather than importing one of those keeps this page
    from depending on a stylesheet it has no other reason to load. */
-.mabayani-page .crumbs{max-width:820px;margin:0 auto;padding:18px clamp(20px,5vw,40px) 0}
+.mabayani-page .crumbs{max-width:820px;margin:0 auto;padding:22px clamp(20px,5vw,40px) 0}
 .mabayani-page .crumbs ol{
   margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px 10px;
-  font:400 13px/1.5 var(--font-ui);color:var(--muted);
+  font:400 13px/1.5 var(--font-ui);color:var(--mb-faint);
 }
 .mabayani-page .crumbs li + li::before{content:"/";margin-right:10px;opacity:.55}
-.mabayani-page .crumbs a{color:var(--muted);text-decoration:none}
-.mabayani-page .crumbs a:hover,.mabayani-page .crumbs a:focus-visible{color:var(--blue)}
+.mabayani-page .crumbs a{color:var(--mb-faint);text-decoration:none}
+.mabayani-page .crumbs a:hover,.mabayani-page .crumbs a:focus-visible{color:var(--mb-accent)}
 
 /* --- the research index -------------------------------------------------- */
 
-.mb-research{background:var(--soft)}
+.mb-research{background:var(--mb-raised)}
 .mb-research > .mb-inner{max-width:820px}
-.mb-res-list{margin:26px 0 0;padding:0;list-style:none;display:grid;gap:2px}
+.mb-res-list{margin:30px 0 0;padding:0;list-style:none;display:grid;gap:2px}
 .mb-res-item a{
   display:flex;gap:16px;align-items:baseline;
   padding:15px 12px;min-height:48px;border-radius:10px;
-  color:var(--ink);text-decoration:none;
+  color:var(--mb-paper);text-decoration:none;
   font:400 clamp(16px,1.9vw,17.5px)/1.45 var(--font-ui);
 }
-.mb-res-item a:hover,.mb-res-item a:focus-visible{background:var(--white)}
+.mb-res-item a:hover,.mb-res-item a:focus-visible{background:rgba(244,239,230,.08)}
 .mb-res-n{
   flex:0 0 auto;width:2.2em;
-  font:600 12.5px/1.6 var(--font-ui);color:var(--muted);
+  font:600 12.5px/1.6 var(--font-ui);color:var(--mb-accent);
 }
 .mb-res-title{flex:1 1 auto}
 /* Written by bulletin.js from what this browser remembers. Absent on a first
    visit, and a part already opened is stated rather than struck through. */
-.mb-res-progress{margin:16px 0 0;font:400 13.5px/1.5 var(--font-ui);color:var(--muted)}
-.mb-res-item.is-read .mb-res-n,.mb-res-item.is-read .mb-res-title{color:var(--muted)}
+.mb-res-progress{margin:16px 0 0;font:400 13.5px/1.5 var(--font-ui);color:var(--mb-faint)}
+.mb-res-item.is-read .mb-res-n,.mb-res-item.is-read .mb-res-title{color:var(--mb-faint)}
 .mb-res-item.is-read a::after{
   content:"Read";margin-left:auto;flex:0 0 auto;
-  font:400 11.5px/1 var(--font-ui);letter-spacing:.04em;color:var(--muted);opacity:.8;
+  font:400 11.5px/1 var(--font-ui);letter-spacing:.04em;color:var(--mb-faint);
 }
 
 .mb-footnote{
-  margin:30px 0 0;max-width:62ch;padding-top:20px;
-  border-top:1px solid var(--line);
-  font:400 14.5px/1.7 var(--font-ui);color:var(--muted);
+  margin:34px 0 0;max-width:62ch;padding-top:22px;
+  border-top:1px solid var(--mb-rule);
+  font:400 14.5px/1.7 var(--font-ui);color:var(--mb-faint);
 }
-.mb-credit{margin:12px 0 0;font:600 14px/1.6 var(--font-ui);color:var(--text)}
+.mb-credit{margin:12px 0 0;font:600 14px/1.6 var(--font-ui);color:var(--mb-paper)}
 
 /* --- the supplied artwork ------------------------------------------------- */
 /* Two finished designs: the title illustration that opens the page and the
    quotation card that closes it. Both carry their own copy inside the frame,
    so they are shown whole — never cropped to a band, never with type laid over
-   them. They break out of the reading column because at 65ch the lettering
-   inside them stops being legible, but they stop short of full bleed so they
-   still read as artwork placed on a page rather than as a page background. */
+   them. */
 .mb-art{
-  margin:0 0 34px;
+  margin:0 0 38px;
   width:min(860px,100%);
 }
 .mb-art img{
   display:block;width:100%;height:auto;
   border-radius:4px;
 }
+/* The opening artwork runs the full width of the screen. It is the first thing
+   a reader meets and it carries the segment's name, its tagline and its whole
+   subject in one frame, so it is given the room to be a title sequence rather
+   than an illustration inside a column. */
+.mb-art-full{
+  /* Full bleed by symmetric negative margins rather than width:100vw. 100vw
+     counts the scrollbar on the platforms that reserve space for one, so it
+     is reliably a few pixels wider than the page can actually show; auto width
+     between two margins of calc(50% - 50vw) is exactly the viewport, always. */
+  width:auto;max-width:none;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  margin-bottom:clamp(30px,5vh,54px);
+}
+.mb-art-full img{border-radius:0}
 /* The card and its set-in-type alternative. One or the other, never both:
    the artwork carries its quotation at 1672px, and shrinking that to a phone
    leaves a rectangle nobody can read. */
@@ -494,15 +644,15 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
   .mb-art:has(.mb-art-text) .mb-art-image{display:none}
   .mb-art-text{
     display:block;margin:0;
-    padding:20px 0 0 18px;border-left:2px solid var(--blue);
+    padding:22px 0 0 20px;border-left:3px solid var(--mb-accent);
   }
   .mb-art-text p{
     margin:0 0 16px;
-    font:400 17px/1.6 var(--font-editorial);color:var(--ink);
+    font:400 18px/1.62 var(--font-editorial);color:var(--mb-paper);
   }
   .mb-art-text cite{
     font:600 11.5px/1.5 var(--font-ui);letter-spacing:.12em;
-    font-style:normal;color:var(--muted);
+    font-style:normal;color:var(--mb-accent);
   }
   /* With the card hidden there is no artwork left to caption. */
   .mb-art:has(.mb-art-text) figcaption{display:none}
@@ -511,18 +661,22 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
    reconstructed everywhere else; an illustration should not be the one place
    it goes quiet about what kind of thing it is. */
 .mb-art figcaption{
-  margin-top:10px;
+  margin-top:12px;
   font:500 11.5px/1.5 var(--font-ui);
   letter-spacing:.1em;text-transform:uppercase;
-  color:var(--muted);
+  color:var(--mb-faint);
 }
-.mb-section:last-of-type .mb-art{margin:34px 0 0}
+.mb-art-full figcaption{
+  max-width:760px;margin-left:auto;margin-right:auto;
+  padding:0 clamp(20px,5vw,40px);
+}
+.mb-section:last-of-type .mb-art{margin:38px 0 0}
 
 @media (min-width:900px){
   /* Centred on the reading column rather than offset by a fixed amount: the
      column's own padding is a clamp, so subtracting a hard number left the
      artwork sitting off to one side of the text it introduces. */
-  .mb-art{
+  .mb-art:not(.mb-art-full){
     width:860px;
     margin-left:50%;
     transform:translateX(-50%);
