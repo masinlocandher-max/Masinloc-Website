@@ -38,5 +38,84 @@
       "contactDetailsInArtwork": false,
       "note": "Replacement file, read at full size and at 4x on the band under the wordmark. The first file supplied had a line of contact details there; in this one the rule runs straight into the tagline 'Artfully Arranged, Perfectly Shared' and that line is gone. No phone number, email or address is set into the artwork. The numbers themselves are deliberately not quoted here: this file is served publicly at /data/, so writing them down to record their removal would republish them."
     }
+  },
+  "captain-wheels-car-rental": {
+    "source": "Captain.JPG",
+    "alt": "Captain Wheels logo: a saluting pilot between two white cars, with a plane above and the name on a red banner",
+    "native": {
+      "width": 1024,
+      "height": 1024
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480,
+      640
+    ],
+    "artworkReviewed": {
+      "date": "2026-08-28",
+      "contactDetailsInArtwork": false,
+      "note": "Read at full size before publishing. A saluting pilot between two white cars, a plane and sun behind, and CAPTAIN WHEELS on a red banner. No phone number, email or address is set into the artwork."
+    }
+  },
+  "1418-cafe": {
+    "source": "1418.JPG",
+    "alt": "1418 Cafe logo: a hand holding a cup over the red numerals 1418, above the line Coffee and More",
+    "native": {
+      "width": 2000,
+      "height": 2000
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480,
+      640
+    ],
+    "artworkReviewed": {
+      "date": "2026-08-28",
+      "contactDetailsInArtwork": false,
+      "note": "Read at full size before publishing. A hand holding a cup over the numerals 1418, with ESTD 2022 and the line COFFEE AND MORE. The only numerals are the business name and its founding year; no phone number, email or address is set into the artwork."
+    }
+  },
+  "cakes-by-jacq": {
+    "source": "Cakes by Jacq.JPG",
+    "alt": "CAKES by JACQ logo: a pink stand mixer with roses in gold script, above EST. 2020",
+    "native": {
+      "width": 960,
+      "height": 960
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480,
+      640
+    ],
+    "artworkReviewed": {
+      "date": "2026-08-28",
+      "contactDetailsInArtwork": false,
+      "note": "Read at full size before publishing. A pink stand mixer with roses, the name in gold script, and EST. 2020 beneath. No phone number, email or address is set into the artwork."
+    }
+  },
+  "tagpuan-shawarma-grill": {
+    "source": "Tagpuan.JPG",
+    "alt": "Tagpuan Shawarma & Grill logo: the name in white script inside a ring reading Good Food, Good People, Good Times",
+    "native": {
+      "width": 500,
+      "height": 500
+    },
+    "ratio": 1.0,
+    "widths": [
+      160,
+      320,
+      480
+    ],
+    "artworkReviewed": {
+      "date": "2026-08-28",
+      "contactDetailsInArtwork": false,
+      "note": "Read at full size before publishing. The name in white script inside a ring reading GOOD FOOD, GOOD PEOPLE, GOOD TIMES and SHAWARMA & GRILL. The artwork carries ZAMBALES, PH, which names a province rather than a street address and is published as supplied. No phone number, email or address is set into the artwork."
+    }
   }
 }

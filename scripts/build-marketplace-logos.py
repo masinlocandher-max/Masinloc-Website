@@ -69,6 +69,30 @@ LOGOS = {
         "alt": ("Adaler's Grazing Delights logo: an orange pretzel above the "
                 "business name and the line Artfully Arranged, Perfectly Shared"),
     },
+    # Supplied 2026-08-25, five more. Each was read at full size before being
+    # added here, and none carries a phone number, an email or a street
+    # address in the artwork. Tagpuan's ring reads "ZAMBALES, PH", which names
+    # a province rather than an address and stays.
+    "captain-wheels-car-rental": {
+        "file": "Captain.JPG",
+        "alt": ("Captain Wheels logo: a saluting pilot between two white cars, "
+                "with a plane above and the name on a red banner"),
+    },
+    "1418-cafe": {
+        "file": "1418.JPG",
+        "alt": ("1418 Cafe logo: a hand holding a cup over the red numerals "
+                "1418, above the line Coffee and More"),
+    },
+    "cakes-by-jacq": {
+        "file": "Cakes by Jacq.JPG",
+        "alt": ("CAKES by JACQ logo: a pink stand mixer with roses in gold "
+                "script, above EST. 2020"),
+    },
+    "tagpuan-shawarma-grill": {
+        "file": "Tagpuan.JPG",
+        "alt": ("Tagpuan Shawarma & Grill logo: the name in white script "
+                "inside a ring reading Good Food, Good People, Good Times"),
+    },
 }
 
 
