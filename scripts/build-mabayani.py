@@ -69,6 +69,27 @@ ARTWORK = {
 # dimensions and the browser reserves the right box before the file arrives.
 ARTWORK_SIZE = {"mabayani-history": (1672, 941), "mabayani-quote": (1672, 941)}
 
+# WHERE MABAYANI CAME FROM, AND THE ONE LINE OF THE AUTHOR'S THIS PAGE QUOTES.
+#
+# Hand-authored, and deliberately not in data/mabayani.json — that file is
+# regenerated wholesale from the brief by parse-mabayani-spec.py, so anything
+# added to it by hand disappears on the next parse.
+#
+# The epigraph is asserted to be a verbatim substring of the closing quotation
+# card rather than trusted to match it. The author is quoted here, never
+# written for, and a check is the only thing that makes that true tomorrow as
+# well as today: without it, editing one JSON file would be enough to put a
+# sentence she never wrote under her name, on the page whose entire argument is
+# that claims come with their evidence.
+PROVENANCE = json.loads(
+    (ROOT / "data" / "mabayani-provenance.json").read_text(encoding="utf-8"))
+if PROVENANCE["epigraph"] not in " ".join(ARTWORK["mabayani-quote"]["text"]):
+    sys.exit(
+        "REFUSING TO BUILD: the epigraph in data/mabayani-provenance.json is not "
+        "a verbatim passage of the closing quotation card in "
+        "data/mabayani-assets.json. The author is quoted on this page, not "
+        "written for. Fix the epigraph, or quote a different passage she wrote.")
+
 # Where each call to action goes. Written out rather than inferred from the
 # copy, because a CTA pointing at the wrong page is invisible to every check
 # that only counts links.
@@ -425,6 +446,30 @@ REFERENCE_MAP = [
 ]
 
 
+def provenance() -> str:
+    """Who wrote this, said at the top rather than only in the credits.
+
+    It used to be a single line at the foot of thirty-six sections: "Historical
+    narrative and research direction: Francine Marie Bautista." Anyone who did
+    not read to the end never learned the page had an author at all, let alone
+    that it is a book she donated. That is the first thing about it worth
+    knowing, so it is now the first thing after the title.
+    """
+    body = "".join(f'      <p>{lines(block)}</p>\n' for block in PROVENANCE["body"])
+    return (
+        '  <aside class="mb-prov" aria-labelledby="prov-title">\n'
+        '    <div class="mb-inner">\n'
+        f'      <p class="mb-prov-label">{esc(PROVENANCE["label"])}</p>\n'
+        f'      <h2 id="prov-title" class="mb-prov-title">{esc(PROVENANCE["title"])}</h2>\n'
+        f"{body}"
+        '      <blockquote class="mb-prov-quote">\n'
+        f'        <p>{lines(PROVENANCE["epigraph"])}</p>\n'
+        f'        <cite>{esc(PROVENANCE["author"])}</cite>\n'
+        "      </blockquote>\n"
+        "    </div>\n"
+        "  </aside>")
+
+
 def story_map() -> str:
     rows = "".join(
         f'<li><a href="#s{esc(item["number"])}">'
@@ -610,7 +655,11 @@ def page() -> str:
         ],
     }
     jsonld = json.dumps(graph, indent=2, ensure_ascii=False)
-    body = "\n\n".join(section_html(s, i) for i, s in enumerate(DATA["sections"]))
+    # The provenance block sits directly after the title sequence: a reader
+    # meets the artwork, then the name of the page, then who wrote it.
+    rendered = [section_html(s, i) for i, s in enumerate(DATA["sections"])]
+    rendered.insert(1, provenance())
+    body = "\n\n".join(rendered)
     total = len(DATA["sections"])
 
     return f"""<!doctype html>
@@ -641,7 +690,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-11">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-12">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>

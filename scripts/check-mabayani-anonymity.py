@@ -40,11 +40,15 @@ CREATOR = BULLETIN["publication"]["creator"]["name"]
 # so that moving the reveal moves the exemption with it.
 REVEAL = next(a["slug"] for a in BULLETIN["articles"] if a.get("revealsCreator"))
 REVEAL_PAGE = f"bulletin/{REVEAL}.html"
-# MABAYANI's closing section credits the research direction, which the page's
-# brief asks for. That is the one other place the name belongs, and naming it
-# here means the exemption is a decision on the record rather than a directory
-# this guard happens not to look at.
+# MABAYANI names her in two places: a provenance block under the title, saying
+# the page is a book she wrote and donated to the project, and the research
+# credit in its closing section, which the page's brief asks for. Naming the
+# page here means the exemption is a decision on the record rather than a
+# directory this guard happens not to look at.
 CREDIT_PAGE = "mabayani/index.html"
+# The provenance block states she wrote the book and donated it, and signs her
+# quotation; the closing section carries the research credit. Three mentions.
+CREDIT_PAGE_MENTIONS = 3
 
 # Names to look for. The surname alone is included because "Bautista" on a page
 # is a reveal even without the first name.
@@ -128,15 +132,30 @@ def main() -> int:
         low = raw.lower()
 
         if rel == CREDIT_PAGE:
-            # Once, in the closing credit. More than once would mean the name
-            # had spread into the narrative, which is what this guard protects.
+            # TWO PLACES, BOTH DECLARED, AND NOWHERE ELSE ON THE PAGE.
+            #
+            # This used to be "once, in the closing credit". That was right
+            # while the credit was all the page said about its author: one line
+            # at the foot of thirty-six sections. It now also says, directly
+            # under the title, that MABAYANI is a book she wrote and donated —
+            # which anyone who does not read to the end would otherwise never
+            # learn, and which is the first thing about the page worth knowing.
+            #
+            # So the allowance is the provenance block plus the closing credit.
+            # It stays a count rather than becoming "anywhere on this page",
+            # because the thing being protected has not changed: the name must
+            # not spread into the narrative itself. The block names her in its
+            # sentence and again under her quotation, so the ceiling is three.
             shown = low.count(CREATOR.lower())
             if shown == 0:
                 problems.append(f"{rel}: the closing section must credit the "
                                 f"research direction, and does not")
-            elif shown > 1:
-                problems.append(f"{rel}: names the creator {shown} times; the "
-                                f"credit belongs once, in the closing section")
+            elif shown > CREDIT_PAGE_MENTIONS:
+                problems.append(
+                    f"{rel}: names the creator {shown} times; the page allows "
+                    f"{CREDIT_PAGE_MENTIONS} — the provenance block under the "
+                    f"title and the closing credit. More than that means the "
+                    f"name has spread into the narrative.")
 
         hits = [n for n in NEEDLES if n in low]
         if hits and rel not in (REVEAL_PAGE, CREDIT_PAGE):
@@ -219,7 +238,8 @@ def main() -> int:
 
     print("MABAYANI GUARD PASSED")
     print(f"{len(pages())} pages checked; the creator is named on "
-          f"{REVEAL_PAGE}, and as the research credit on {CREDIT_PAGE}.")
+          f"{REVEAL_PAGE}, and on {CREDIT_PAGE} as the author of the book and "
+          f"in its closing research credit.")
     print("No streaming-platform language in the Bulletin interface.")
     return 0
 

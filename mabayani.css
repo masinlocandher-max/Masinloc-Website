@@ -120,6 +120,48 @@
   display:flex;align-items:center;
 }
 
+/* --- who wrote this ------------------------------------------------------ */
+
+/* Straight after the title sequence, and deliberately not styled as another
+   chapter: no number, a raised ground and a rule of the accent down its edge,
+   so it reads as the book's own front matter rather than as part 00.5. */
+.mb-prov{
+  background:var(--mb-raised);
+  border-top:1px solid var(--mb-rule);
+  border-bottom:1px solid var(--mb-rule);
+  padding:clamp(40px,6vh,72px) 0;
+}
+.mb-prov .mb-inner{border-left:3px solid var(--mb-accent)}
+.mb-prov-label{
+  margin:0 0 12px;
+  font:600 11px/1.4 var(--font-ui);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--mb-accent);
+}
+.mb-prov-title{
+  margin:0 0 18px;
+  font:400 clamp(26px,3.6vw,38px)/1.15 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--mb-paper);
+}
+.mb-prov p{
+  margin:0 0 16px;max-width:60ch;
+  font:400 clamp(16.5px,1.8vw,18px)/1.7 var(--font-ui);
+  color:var(--mb-paper-dim);
+}
+/* Her words, set apart from the sentences about her. */
+.mb-prov-quote{
+  margin:26px 0 0;padding:0;
+}
+.mb-prov-quote p{
+  margin:0 0 12px;max-width:52ch;
+  font:400 clamp(19px,2.4vw,24px)/1.5 var(--font-editorial);
+  font-style:italic;color:var(--mb-paper);
+}
+.mb-prov-quote cite{
+  font:600 11.5px/1.5 var(--font-ui);
+  letter-spacing:.16em;text-transform:uppercase;
+  font-style:normal;color:var(--mb-accent);
+}
+
 /* --- the chapter mark ---------------------------------------------------- */
 
 /* The number is information, not ornament: this is a numbered sequence, the
