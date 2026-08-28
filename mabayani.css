@@ -579,6 +579,99 @@ h1.mb-title{
   font:600 11.5px/1 var(--font-ui);letter-spacing:.06em;
 }
 
+/* --- passing it on ------------------------------------------------------- */
+
+/* At the end, where a reader who has finished is the one worth asking. Not a
+   floating widget: a share button that follows you down thirty-six sections is
+   asking before you have anything to say. */
+.mb-share{background:var(--mb-raised);border-top:1px solid var(--mb-rule)}
+.mb-share-label{
+  margin:0 0 12px;
+  font:600 11px/1.4 var(--font-ui);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--mb-accent);
+}
+.mb-share-title{
+  margin:0 0 16px;max-width:20ch;
+  font:400 clamp(26px,3.6vw,40px)/1.12 var(--font-editorial);
+  letter-spacing:-.025em;color:var(--mb-paper);
+}
+.mb-share-note{
+  margin:0 0 26px;max-width:56ch;
+  font:400 clamp(16px,1.8vw,17.5px)/1.7 var(--font-ui);color:var(--mb-paper-dim);
+}
+/* Revealed by mabayani.js only where navigator.share exists, which in practice
+   means the phone the story map was designed for. */
+.mb-share-native{
+  display:inline-flex;align-items:center;min-height:52px;margin:0 0 20px;
+  padding:14px 30px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--mb-accent);color:var(--navy-deep);
+  font:700 15.5px/1.2 var(--font-ui);
+}
+.mb-share-native[hidden]{display:none}
+.mb-share-list{
+  margin:0 0 26px;padding:0;list-style:none;
+  display:flex;flex-wrap:wrap;gap:10px;
+}
+.mb-share-link{
+  display:inline-flex;align-items:center;min-height:48px;
+  padding:12px 22px;border-radius:999px;
+  border:1px solid var(--mb-rule-strong);color:var(--mb-paper);
+  font:600 14.5px/1.2 var(--font-ui);text-decoration:none;
+  transition:background var(--ease),color var(--ease),border-color var(--ease);
+}
+.mb-share-link:hover,.mb-share-link:focus-visible{
+  background:var(--mb-accent);border-color:var(--mb-accent);color:var(--navy-deep);
+}
+.mb-share-rights{
+  margin:0;max-width:56ch;
+  font:400 13.5px/1.65 var(--font-ui);color:var(--mb-faint);
+}
+/* Used by the share links' screen-reader prefixes. Defined here rather than
+   borrowed from contact.css or sambal-tina.css, neither of which this page
+   loads — a class styled only in a sheet the page does not link is a class
+   that does nothing. */
+.visually-hidden{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}
+
+/* --- the text of the book ------------------------------------------------ */
+
+/* The narrative is an unpublished manuscript the author donated, so it is not
+   offered up to a select-all. This is a deterrent and nothing more: the page
+   is HTML, and view-source, reader mode, scripting off or curl all still
+   reach it. It raises the effort of lifting the whole thing wholesale, which
+   is the realistic thing CSS can do. Copyright is what actually protects it.
+   
+   THE RECORD IS DELIBERATELY EXEMPT. The evidence drawers, the fact boxes and
+   the source list stay selectable, because this page's entire argument is that
+   its claims arrive with citations anyone can check — and a citation you
+   cannot copy is a citation you cannot follow. Protecting the prose while
+   locking the footnotes would be the wrong way round.
+   
+   user-select does not affect assistive technology, find-in-page, or
+   translation of the rendered page. */
+.mb-section .mb-inner,
+.mb-prov .mb-inner{-webkit-user-select:none;user-select:none}
+.mb-record,.mb-facts,.mb-src-list,
+.mb-record *,.mb-facts *,.mb-src-list *{-webkit-user-select:text;user-select:text}
+
+/* Said once, when somebody tries, instead of an alert on every keystroke. */
+.mb-copy-note{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(8px);
+  z-index:70;max-width:min(420px,calc(100vw - 32px));
+  padding:14px 20px;border-radius:12px;
+  background:var(--mb-accent);color:var(--navy-deep);
+  font:600 13.5px/1.5 var(--font-ui);text-align:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 220ms var(--ease-out),transform 220ms var(--ease-out);
+}
+.mb-copy-note.is-shown{opacity:1;transform:translateX(-50%) translateY(0)}
+@media (prefers-reduced-motion:reduce){
+  .mb-copy-note{transition:opacity 220ms linear;transform:translateX(-50%)}
+  .mb-copy-note.is-shown{transform:translateX(-50%)}
+}
+
 /* --- motion -------------------------------------------------------------- */
 
 /* Entry animation is site.js's shared reveal, the same one every other section

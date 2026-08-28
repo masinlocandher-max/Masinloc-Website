@@ -199,6 +199,89 @@
     });
   }
 
+  /* --- passing it on ----------------------------------------------------- */
+
+  /* The share links are ordinary anchors and work without any of this. All the
+     script adds is the native share sheet, and only where the browser has one
+     — which is the phone this page was laid out for. Where it does not exist
+     the button stays hidden and the links are the whole feature. */
+  const native = document.getElementById('mbShareNative');
+  if (native && navigator.share) {
+    native.hidden = false;
+    native.addEventListener('click', async () => {
+      try {
+        await navigator.share({
+          title: 'MABAYANI',
+          text: 'MABAYANI — the documented history of Masinloc, Zambales.',
+          url: window.location.origin + '/mabayani/',
+        });
+      } catch (error) {
+        /* The reader dismissed the sheet, or the browser refused. Either way
+           there is nothing to say: the links below it still work. */
+      }
+    });
+  }
+
+  /* --- the text of the book ---------------------------------------------- */
+
+  /* The narrative is an unpublished manuscript, so copying it is turned away
+     and the reader is pointed at the share links instead. Worth being plain
+     about what this is: a deterrent, not protection. The page is HTML and
+     anyone determined reaches the text through view-source, reader mode, this
+     file failing to load, or curl. It stops the casual select-all, and it puts
+     a sentence in front of somebody about to take a copy telling them where
+     the link is.
+
+     The evidence drawers, fact boxes and source list are exempt, in the CSS
+     and here: this page's argument is that its claims come with citations
+     anyone can check, and a citation you cannot copy is one you cannot
+     follow. */
+  const COPYABLE = '.mb-record, .mb-facts, .mb-src-list';
+  const note = document.createElement('p');
+  note.className = 'mb-copy-note';
+  note.setAttribute('role', 'status');
+  note.hidden = true;
+  document.body.appendChild(note);
+
+  let noteTimer = 0;
+  const say = (message) => {
+    note.textContent = message;
+    note.hidden = false;
+    // Two frames: the element has to be laid out before the class can animate.
+    requestAnimationFrame(() => requestAnimationFrame(() => note.classList.add('is-shown')));
+    window.clearTimeout(noteTimer);
+    noteTimer = window.setTimeout(() => {
+      note.classList.remove('is-shown');
+      window.setTimeout(() => { note.hidden = true; }, 260);
+    }, 3600);
+  };
+
+  const inRecord = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return false;
+    let node = selection.getRangeAt(0).commonAncestorContainer;
+    if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+    return !!(node && node.closest && node.closest(COPYABLE));
+  };
+
+  document.addEventListener('copy', (event) => {
+    if (inRecord()) return;
+    event.preventDefault();
+    say('The text of MABAYANI stays here. Use Pass it on at the end to send the page.');
+  });
+  document.addEventListener('cut', (event) => {
+    if (inRecord()) return;
+    event.preventDefault();
+  });
+
+  /* The artwork and the author's portrait were supplied for this page. */
+  main.addEventListener('contextmenu', (event) => {
+    if (event.target.tagName === 'IMG') {
+      event.preventDefault();
+      say('This artwork was supplied for MABAYANI and is not for download.');
+    }
+  });
+
   /* --- record drawers ---------------------------------------------------- */
 
   /* On a phone the open drawer is a sheet over the page, so Escape should

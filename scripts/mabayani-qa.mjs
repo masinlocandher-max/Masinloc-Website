@@ -114,6 +114,67 @@ for (const [label, viewport] of [
   await context.close();
 }
 
+/* --- passing it on, and the text staying put ----------------------------- */
+
+/* The narrative is an unpublished manuscript the author donated, so copying it
+   is turned away and readers are pointed at the share links instead. Two
+   halves of that are checked, and the second matters more than the first:
+
+   1. The prose is not offered up to a select-all.
+   2. THE RECORD STILL IS. The evidence drawers, fact boxes and source list stay
+      copyable, because this page's argument is that its claims arrive with
+      citations anyone can check, and a citation you cannot copy is one you
+      cannot follow. A future tightening that locks the whole page would be a
+      regression, and this is what would catch it.
+
+   The share links are also checked with scripting off: they are ordinary
+   anchors, and the native share sheet on top of them is the enhancement. */
+{
+  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await page.goto(`${baseURL}/mabayani/`, { waitUntil: 'networkidle' });
+
+  const shares = await page.locator('.mb-share-link').count();
+  if (shares < 3) fail(`share: only ${shares} share links`);
+  for (const link of await page.locator('.mb-share-link').all()) {
+    const href = await link.getAttribute('href');
+    if (!href.includes(encodeURIComponent('masinloc-zambales.com/mabayani/'))
+        && !href.includes('masinloc-zambales.com%2Fmabayani%2F')) {
+      fail(`share: a share link does not carry the MABAYANI URL: ${href}`);
+    }
+    if (await link.getAttribute('rel') !== 'noopener noreferrer') {
+      fail('share: a share link opens a new tab without rel="noopener noreferrer"');
+    }
+  }
+  /* The project asked for sharing that does not run through the clipboard. */
+  if (await page.locator('.mb-share a[href^="mailto:"]').count()) {
+    fail('share: a mailto link is back; contact routes through contact.html');
+  }
+
+  const copyBlocked = async (selector) => page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    const event = new ClipboardEvent('copy', { bubbles: true, cancelable: true });
+    el.dispatchEvent(event);
+    return { prevented: event.defaultPrevented, select: getComputedStyle(el).userSelect };
+  }, selector);
+
+  const prose = await copyBlocked('#s13 .mb-inner p');
+  if (!prose.prevented) fail('copy: the narrative can be copied');
+  if (prose.select !== 'none') fail(`copy: narrative user-select is ${prose.select}`);
+
+  for (const [selector, what] of [['.mb-src-list', 'the source list'],
+                                  ['.mb-record', 'an evidence drawer'],
+                                  ['.mb-facts', 'a fact box']]) {
+    const record = await copyBlocked(selector);
+    if (record.prevented) fail(`copy: ${what} is blocked — the record must stay copyable`);
+  }
+  await page.close();
+}
+
 /* --- Discover points at the story rather than holding a copy of it ------- */
 
 {

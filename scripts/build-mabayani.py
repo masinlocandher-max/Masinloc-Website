@@ -515,6 +515,52 @@ def provenance() -> str:
         "  </aside>")
 
 
+# Where a reader can send this. No "copy link" button: the project asked for
+# sharing that does not run through the clipboard, and the same request is why
+# the narrative itself is not selectable. Every one of these is an ordinary
+# link, so they work with scripting off; the native share sheet on top of them
+# is the enhancement, not the mechanism.
+SHARE_TEXT = "MABAYANI — the documented history of Masinloc, Zambales."
+SHARE_TARGETS = [
+    ("Facebook", "https://www.facebook.com/sharer/sharer.php?u={url}"),
+    ("X", "https://twitter.com/intent/tweet?url={url}&text={text}"),
+    ("WhatsApp", "https://wa.me/?text={text}%20{url}"),
+]
+# No email target. A mailto: share link is a reasonable thing to want, but this
+# site routes every contact through contact.html and check-seo.py enforces it
+# across every page — carving an exception into that rule for a share button is
+# a worse trade than doing without one.
+
+
+def share() -> str:
+    """Somewhere to send the page, at the point a reader has finished it."""
+    from urllib.parse import quote
+    url = quote(f"{SITE}/mabayani/", safe="")
+    text = quote(SHARE_TEXT, safe="")
+    links = "".join(
+        f'<li><a class="mb-share-link" '
+        f'href="{target.format(url=url, text=text)}" '
+        f'target="_blank" rel="noopener noreferrer">'
+        f'<span class="visually-hidden">Share MABAYANI on </span>{esc(name)}</a></li>'
+        for name, target in SHARE_TARGETS)
+    return (
+        '  <section class="mb-share" aria-labelledby="share-title">\n'
+        '    <div class="mb-inner">\n'
+        '      <p class="mb-share-label">Pass it on</p>\n'
+        '      <h2 id="share-title" class="mb-share-title">'
+        "Somebody in Masinloc has not read this yet.</h2>\n"
+        '      <p class="mb-share-note">Send them the page rather than a copy of it. '
+        "The link opens the whole thing, with the sources and the evidence beside "
+        "every claim &mdash; a pasted paragraph arrives without any of that.</p>\n"
+        '      <button class="mb-share-native" id="mbShareNative" type="button" hidden>'
+        "Share MABAYANI</button>\n"
+        f'      <ul class="mb-share-list">{links}</ul>\n'
+        '      <p class="mb-share-rights">The text of MABAYANI is the author&rsquo;s work and '
+        "remains hers. Link to it freely; reproducing it elsewhere is her decision to give.</p>\n"
+        "    </div>\n"
+        "  </section>")
+
+
 def story_map() -> str:
     rows = "".join(
         f'<li><a href="#s{esc(item["number"])}">'
@@ -735,7 +781,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-15">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-16">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -769,6 +815,8 @@ def page() -> str:
 
 {body}
 
+{share()}
+
 {legend()}
 
 {research_index()}
@@ -787,7 +835,7 @@ def page() -> str:
 </footer>
 <script src="../site.js?v=20260825-1"></script>
 <script src="../bulletin.js?v=20260825-2"></script>
-<script src="../mabayani.js?v=20260828-4"></script>
+<script src="../mabayani.js?v=20260828-5"></script>
 <script type="application/ld+json">
 {jsonld}
 </script>
