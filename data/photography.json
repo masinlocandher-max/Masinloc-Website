@@ -62,6 +62,11 @@
       "file": "IMG_9143.JPG",
       "folder": "Masinloc Website Asset / Regular Images",
       "decision": "Not used. Cannot be tied to a named place, so it is never labelled as a location."
+    },
+    {
+      "file": "8BFBC90E-B67F-49E1-8D1D-20303A441C1C.png",
+      "folder": "Masinloc Website Asset / Founder Masinloc",
+      "decision": "Not used. A painted portrait of an Augustinian Recollect friar, confirmed by the project as an imagined likeness rather than a work from a collection. No contemporary portrait of Fray Andres del Espiritu Santo is known, so publishing this one on the founder page would put an invented face on a real person — and a portrait, unlike an illustrated scene, exists precisely to say what somebody looked like. It would be screenshotted and recirculated as his face within a week, which is the same failure this site spends thirty-one MABAYANI sections arguing against. founder-of-masinloc.html keeps its stated absence: 'Portrait to be added from an approved historical source.' scripts/build-history.py fails the build if that line is ever softened. Revisit only if a documented work from a named collection is found."
     }
   ],
   "campaigns": {
