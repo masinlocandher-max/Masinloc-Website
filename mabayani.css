@@ -354,6 +354,10 @@ h1.mb-title{
   font:400 clamp(19px,2.8vw,25px)/1.55 var(--font-editorial);
   color:var(--ink);
 }
+/* The mark signing the vow. Sized to sit under the last line rather than to
+   compete with it. */
+.mb-panata-mark{margin:38px 0 0}
+.mb-panata-mark img{display:block;width:196px;max-width:60%;height:auto}
 .mb-panata li:last-child{
   margin-bottom:0;padding-top:28px;
   border-top:1px solid rgba(17,24,39,.18);

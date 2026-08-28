@@ -549,6 +549,36 @@ else:
                  f"articles are reached from here now that Discover links to the "
                  f"story rather than listing them, so one missing here is orphaned.")
 
+# THE MABAYANI BAND COUNTS WHAT MABAYANI ACTUALLY HOLDS.
+#
+# About Masinloc gives MABAYANI a feature band, and the band states its scale:
+# so many chapters, so many sources, so many research articles. Those are the
+# reason a visitor decides the link is worth their evening, so they have to be
+# the real figures rather than three numbers that were true in August. Each is
+# read here off the data the page is built from. a-closer-look.html is written
+# by hand, so nothing else would notice them going stale.
+_band = ROOT / "a-closer-look.html"
+if _band.is_file():
+    _band_text = _band.read_text(encoding="utf-8")
+    if 'class="mab-feature"' in _band_text:
+        _mab = json.loads((ROOT / "data" / "mabayani.json").read_text(encoding="utf-8"))
+        _bul = json.loads((ROOT / "data" / "bulletin.json").read_text(encoding="utf-8"))
+        _counts = {
+            "chapters": len(_mab["sections"]),
+            "sources": len(_mab["sources"]),
+            "research articles": len(
+                [a for a in _bul["articles"] if a.get("status") == "published"]),
+        }
+        for _label, _n in _counts.items():
+            _stat = re.search(
+                r"<b>(\d[\d,]*)</b><span>" + re.escape(_label) + r"</span>", _band_text)
+            if not _stat:
+                fail(f"a-closer-look.html: the MABAYANI band no longer states its "
+                     f"{_label} count")
+            elif _stat.group(1).replace(",", "") != str(_n):
+                fail(f"a-closer-look.html: the MABAYANI band says {_stat.group(1)} "
+                     f"{_label}; MABAYANI has {_n}")
+
 if errors:
     print("SITE INTEGRITY CHECK FAILED")
     for item in errors:

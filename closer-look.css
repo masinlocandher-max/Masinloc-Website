@@ -39,8 +39,110 @@
   }
 }
 
-/* The MABAYANI wordmark stands in for that section's heading, so it is sized
-   to the heading it replaces rather than to the artwork it came from. It is
-   navy on transparency and sits directly on the page — no white box. */
-.about-wordmark{display:block;width:178px;max-width:70%;height:auto}
-@media (max-width:760px){.about-wordmark{width:150px}}
+/* --- the MABAYANI band ---------------------------------------------------
+   MABAYANI was the second of nine rows on this page, in the same 220px-plus-
+   body shape as Local Life and Sources & Research. It is not that kind of
+   thing: it is thirty-one chapters of researched history and the largest piece
+   of work the project holds, and About Masinloc is where it structurally
+   lives. So it comes out of the list entirely and takes a band of its own,
+   between the introduction and the rows.
+
+   The band is dark because the segment is dark. Landing on /mabayani/ should
+   feel like arriving somewhere already glimpsed, not like a page that changed
+   its mind — so this carries the segment's own ground and its own accent, and
+   the ink against nine white rows is what makes it read as the exception.
+
+   Full bleed by symmetric negative margins rather than width:100vw, which
+   counts the scrollbar on platforms that reserve space for one. */
+.mab-feature{
+  --mab-ground:var(--navy-deep);
+  --mab-paper:#F4EFE6;
+  --mab-paper-dim:#C6CBDA;
+  --mab-faint:#97A2BC;
+
+  margin:0 0 86px;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  padding:clamp(40px,6vw,72px) 0;
+  background:var(--mab-ground);
+  border-top:2px solid var(--yellow);
+  border-bottom:2px solid var(--yellow);
+}
+.mab-feature-grid{
+  max-width:1180px;margin:0 auto;padding:0 clamp(24px,5vw,56px);
+  display:grid;gap:clamp(28px,4vw,54px);
+}
+/* min-width:0 so a long word or the artwork cannot push the column past its
+   track and take the band off the side of a phone. */
+.mab-feature-body,
+.mab-feature-art{min-width:0}
+.mab-feature-art img{
+  display:block;width:100%;height:auto;border-radius:4px;
+}
+.mab-feature-eyebrow{
+  margin:0 0 14px;
+  font:600 11px/1.4 var(--font-ui);
+  letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);
+}
+.mab-feature-title{
+  margin:0 0 20px;
+  font:400 clamp(44px,7vw,86px)/.92 var(--font-editorial);
+  letter-spacing:-.045em;color:var(--mab-paper);
+}
+.mab-feature-lead{
+  margin:0 0 24px;max-width:52ch;
+  font:400 clamp(17px,1.6vw,19.5px)/1.7 var(--font-editorial);
+  color:var(--mab-paper-dim);
+}
+/* Three counts, each read straight off the page they describe and checked
+   against it by scripts/check-site.py. A feature band that boasts is worth
+   nothing here; one that says exactly how much work is behind the link is
+   worth the space. */
+.mab-feature-stats{
+  margin:0 0 24px;padding:22px 0;list-style:none;
+  display:flex;flex-wrap:wrap;gap:14px clamp(28px,4vw,52px);
+  border-top:1px solid rgba(244,239,230,.16);
+  border-bottom:1px solid rgba(244,239,230,.16);
+}
+.mab-feature-stats b{
+  display:block;
+  font:400 clamp(30px,3.4vw,40px)/1 var(--font-editorial);
+  letter-spacing:-.03em;color:var(--yellow);
+  font-variant-numeric:tabular-nums;
+}
+.mab-feature-stats span{
+  display:block;margin-top:7px;
+  font:600 11px/1.3 var(--font-ui);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--mab-faint);
+}
+.mab-feature-note{
+  margin:0 0 30px;max-width:52ch;
+  font:400 15px/1.7 var(--font-ui);color:var(--mab-faint);
+}
+.mab-feature-go{margin:0}
+.mab-feature-cta{
+  display:inline-flex;align-items:center;gap:10px;min-height:52px;
+  padding:14px 28px;border-radius:999px;
+  background:var(--yellow);color:var(--navy-deep);
+  font:700 15.5px/1.2 var(--font-ui);letter-spacing:.01em;
+  text-decoration:none;
+  transition:transform 260ms var(--ease-out),box-shadow 260ms var(--ease-out);
+}
+.mab-feature-cta svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  transition:transform 260ms var(--ease-out);
+}
+.mab-feature-cta:hover,.mab-feature-cta:focus-visible{
+  box-shadow:0 10px 30px -12px rgba(255,199,0,.7);
+}
+.mab-feature-cta:hover svg,.mab-feature-cta:focus-visible svg{transform:translateX(4px)}
+
+@media (min-width:940px){
+  /* The artwork leads on a wide screen: it is the thing that says what this
+     is before a word is read. */
+  .mab-feature-grid{grid-template-columns:1.15fr 1fr;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .mab-feature-cta,.mab-feature-cta svg{transition:none}
+  .mab-feature-cta:hover svg,.mab-feature-cta:focus-visible svg{transform:none}
+}

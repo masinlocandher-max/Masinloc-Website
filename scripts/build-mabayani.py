@@ -252,7 +252,24 @@ def pledge_lines(section: dict) -> str:
     """The Panata, one stanza at a time, at the reader's own pace."""
     stanzas = "".join(
         f'<li>{lines(block)}</li>' for block in section.get("public_copy", []))
-    return f'      <ol class="mb-panata">{stanzas}</ol>'
+    # The wordmark signs the vow. It is navy on transparency and this is the one
+    # section on the page with a paper ground, so it is the only place on the
+    # page where the mark can sit on the colour it was drawn for. Decorative:
+    # the heading above it already reads PANATA NG MABAYANI, so an alt here
+    # would make a screen reader say the name twice in three seconds.
+    mark = ARTWORK["mabayani-wordmark"]
+    widths = mark["widths"]
+    sign = (
+        '      <p class="mb-panata-mark" aria-hidden="true">'
+        '<picture>'
+        f'<source type="image/webp" srcset="'
+        + ", ".join(f"../assets/mabayani/mabayani-wordmark-{w}.webp {w}w" for w in widths)
+        + '">'
+        f'<img src="../assets/mabayani/mabayani-wordmark-{widths[-1]}.png" srcset="'
+        + ", ".join(f"../assets/mabayani/mabayani-wordmark-{w}.png {w}w" for w in widths)
+        + '" sizes="196px" width="756" height="138" alt="" loading="lazy" decoding="async">'
+        "</picture></p>")
+    return f'      <ol class="mb-panata">{stanzas}</ol>\n{sign}'
 
 
 def further(section: dict) -> str:
@@ -624,7 +641,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-10">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-11">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>
