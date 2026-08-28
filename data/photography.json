@@ -106,6 +106,17 @@
     "note": "The landing page hero: Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta. Unlike the Connect, Discover and 404 artwork this arrives as a plain photograph with no logo, ribbons or baked-in text, so it is placed with object-fit like any editorial photograph — the frame moves, the photograph is not altered. Built by scripts/build-landing-hero.py. It replaces the aerial photograph as the homepage hero; that file is unchanged, still byte-locked, and still the share image for nine other pages.",
     "mapping": "scripts/build-landing-hero.py"
   },
+  "mabayani": {
+    "directory": "assets/mabayani/",
+    "status": "built",
+    "origin": "Google Drive - Masinloc Website Asset / Founder Masinloc",
+    "note": "The MABAYANI wordmark and two finished designs, supplied by the project. These are drawn artwork, not photographs of Masinloc, and they are labelled as artwork rather than presented as a photographic record: mabayani-history is a title illustration over an antique chart of the Zambales coast, and mabayani-quote is a typeset quotation card signed FMB2026. scripts/build-mabayani-assets.py only re-encodes and resizes them, because each carries its own copy and cropping would cut the words it exists to show. The wordmark keeps its transparency and is derived as WebP and PNG only. Subjects and origins are recorded per file in data/mabayani-assets.json.",
+    "mapping": {
+      "mabayani-wordmark": "The MABAYANI wordmark, navy letterforms on transparency.",
+      "mabayani-history": "MABAYANI title artwork: History. Expression. Remembrance.",
+      "mabayani-quote": "The closing quotation card, signed FMB2026."
+    }
+  },
   "marketplaceLogos": {
     "directory": "assets/marketplace/",
     "status": "built",

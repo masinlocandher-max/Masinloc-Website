@@ -56,6 +56,19 @@ META_DESCRIPTION = (
 )
 DRAWER = DATA["drawer"]
 
+# The artwork the project supplied for this page, declared in
+# data/mabayani-assets.json and built by scripts/build-mabayani-assets.py.
+# Keyed by slug so a page can ask for one by name and get its real widths,
+# native size and alt text rather than repeating them in markup.
+ARTWORK = {
+    art["slug"]: art
+    for art in json.loads(
+        (ROOT / "data" / "mabayani-assets.json").read_text(encoding="utf-8"))["artwork"]
+}
+# Both designs are 1672x941. Stated once here so the <img> can carry real
+# dimensions and the browser reserves the right box before the file arrives.
+ARTWORK_SIZE = {"mabayani-history": (1672, 941), "mabayani-quote": (1672, 941)}
+
 # Where each call to action goes. Written out rather than inferred from the
 # copy, because a CTA pointing at the wrong page is invisible to every check
 # that only counts links.
@@ -108,6 +121,52 @@ def lines(block: str) -> str:
 def prose(blocks: list[str], cls: str = "") -> str:
     attr = f' class="{cls}"' if cls else ""
     return "\n".join(f"      <p{attr}>{lines(b)}</p>" for b in blocks)
+
+
+def artwork(slug: str, eager: bool = False) -> str:
+    """One supplied MABAYANI design, at every width it was built in.
+
+    Rendered as a <figure> rather than a bare <img> because these are drawings,
+    not photographs of Masinloc, and the page's whole argument is that a reader
+    can tell what kind of evidence they are looking at. The caption says so in
+    words; the alt text describes what is drawn, so somebody who cannot see it
+    is told the same thing rather than only that an image exists.
+    """
+    art = ARTWORK[slug]
+    width, height = ARTWORK_SIZE[slug]
+    widths = art["widths"]
+    sizes = "(min-width: 900px) 860px, 100vw"
+
+    def srcset(ext: str) -> str:
+        return ", ".join(f"../assets/mabayani/{slug}-{w}.{ext} {w}w" for w in widths)
+
+    loading = "" if eager else ' loading="lazy"'
+
+    # A card whose content is a paragraph of type is unreadable once it is
+    # scaled to a phone: 1672px of setting inside a 350px box. So the same
+    # passage is also set in the page's own type, and a media query shows
+    # exactly one of the two — the card where its lettering is legible, the
+    # text where it is not. Both are in the HTML at every width; neither is
+    # ever displayed at the same time as the other.
+    alternative = ""
+    if art.get("text"):
+        paragraphs = "".join(f"<p>{lines(block)}</p>" for block in art["text"])
+        alternative = (
+            f'        <blockquote class="mb-art-text">{paragraphs}'
+            f'<cite>{esc(art.get("attribution", ""))}</cite></blockquote>\n')
+
+    return (
+        f'      <figure class="mb-art">\n'
+        f'        <picture class="mb-art-image">\n'
+        f'          <source type="image/avif" sizes="{sizes}" srcset="{srcset("avif")}">\n'
+        f'          <source type="image/webp" sizes="{sizes}" srcset="{srcset("webp")}">\n'
+        f'          <img src="../assets/mabayani/{slug}-{widths[-1]}.jpg" '
+        f'sizes="{sizes}" srcset="{srcset("jpg")}" width="{width}" height="{height}" '
+        f'alt="{esc(art["alt"])}"{loading} decoding="async">\n'
+        f"        </picture>\n"
+        f"{alternative}"
+        f'        <figcaption>Artwork &middot; {esc(art["origin"].split("—")[0].strip())}</figcaption>\n'
+        f"      </figure>")
 
 
 def badge(section: dict) -> str:
@@ -230,6 +289,12 @@ def section_html(section: dict, index: int) -> str:
     # not the name of the thing.
     title = SEO["h1"] if number == "00" else (section.get("title") or section["label"])
     head = []
+    # The page opens on the title artwork. It is a finished design carrying the
+    # wordmark and its own tagline, so it is shown whole rather than cropped to
+    # a band, and it sits above the heading rather than behind it — laying the
+    # H1 over a drawing that already says MABAYANI prints the word twice.
+    if number == "00":
+        head.append(artwork("mabayani-history", eager=True))
     if section.get("eyebrow"):
         head.append(f'      <p class="mb-eyebrow">{esc(section["eyebrow"])}</p>')
     head.append(f'      <{heading} id="t{number}" class="mb-title">{lines(title)}</{heading}>')
@@ -283,15 +348,19 @@ def section_html(section: dict, index: int) -> str:
     # The closing section carries the footnote that explains what this page is,
     # and the credit for the research direction. Both come from the brief.
     if section.get("final_footnote_copy"):
-        tail.append(
-            f'      <p class="mb-footnote">{prose(section["final_footnote_copy"])[13:]}')
+        tail.append(prose(section["final_footnote_copy"], "mb-footnote"))
     if section.get("author_credit"):
         # The field holds the credit line and then a note about where
         # acknowledgments belong. Only the first is a credit.
         credit = section["author_credit"].split("\n")[0].strip()
         tail.append(f'      <p class="mb-credit">{esc(credit)}</p>')
     if section.get("transition"):
-        tail.append(f'      <p class="mb-transition">{prose(section["transition"])[13:]}')
+        tail.append(prose(section["transition"], "mb-transition"))
+
+    # The last word on the page is the project's own, set in the closing card:
+    # after the credit, after the footnote, with nothing after it.
+    if number == "30":
+        tail.append(artwork("mabayani-quote"))
 
     classes = ["mb-section"]
     if number in {"00", "28"}:
@@ -488,19 +557,19 @@ def page() -> str:
 <meta property="og:title" content="{esc(SEO["title"])}">
 <meta property="og:description" content="{esc(META_DESCRIPTION)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
-<meta property="og:image:alt" content="Masinloc, Zambales from the air">
+<meta property="og:image" content="{SITE}/assets/mabayani/mabayani-history-1120.jpg">
+<meta property="og:image:alt" content="MABAYANI — History. Expression. Remembrance.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{esc(SEO["title"])}">
 <meta name="twitter:description" content="{esc(META_DESCRIPTION)}">
-<meta name="twitter:image" content="{SITE}/assets/stage1/masinloc-hero.avif">
+<meta name="twitter:image" content="{SITE}/assets/mabayani/mabayani-history-1120.jpg">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260827-1">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-2">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>

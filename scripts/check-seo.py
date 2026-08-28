@@ -32,6 +32,25 @@ PRIVATE = {"admin.html"}
 # previews and unlimited snippets are granted deliberately: the point of
 # publishing this research is to be findable and quotable.
 ROBOTS = "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"
+
+# ALT TEXT THAT IS A TRANSCRIPTION, NOT A DESCRIPTION.
+#
+# The 160-character ceiling below exists to catch keyword stuffing. It is the
+# wrong tool for an image whose content IS a paragraph of text — the MABAYANI
+# closing card is a typeset quotation, and the only honest alt for a picture of
+# words is the words. Shortening it would leave that passage readable to
+# sighted visitors and to nobody else, on a page whose whole argument is that
+# the record should be open.
+#
+# So the exemption is narrow and declared: an alt earns it only by being the
+# alt of an artwork that data/mabayani-assets.json marks "transcription": true.
+# Nothing can claim it by being long.
+TRANSCRIPTIONS = {
+    art["alt"]
+    for art in json.loads(
+        (ROOT / "data" / "mabayani-assets.json").read_text(encoding="utf-8"))["artwork"]
+    if art.get("transcription")
+}
 # A recovery screen needs no description or social card.
 MINIMAL = {"404.html"}
 
@@ -108,6 +127,15 @@ class PageParser(HTMLParser):
                 "src": a.get("src", ""), "alt": a.get("alt"),
                 "hidden": hides or self._hidden_depth > 0,
             })
+            # A logotype set as an image is still the heading's text. HTML and
+            # WCAG both take the alt as the accessible name, so a heading whose
+            # only child is <img alt="MABAYANI"> reads as "MABAYANI" to a
+            # screen reader and is not the empty heading this file is looking
+            # for. Counting it keeps the empty-heading rule pointed at genuinely
+            # silent headings rather than at wordmarks.
+            if self._heading and self.headings and a.get("alt"):
+                level, text = self.headings[-1]
+                self.headings[-1] = (level, (text + " " + a["alt"].strip()).strip())
         elif tag == "a" and a.get("href"):
             self.links.append(a["href"])
         elif tag == "script" and a.get("type") == "application/ld+json":
@@ -361,9 +389,13 @@ for page in pages:
             # marked decorative.
             fail(f"{name}: <img {image['src']}> has empty alt but is not "
                  f"marked decorative")
-        if alt and len(alt) > 160:
+        if alt and len(alt) > 160 and alt not in TRANSCRIPTIONS:
             fail(f"{name}: alt text is {len(alt)} characters, which reads as "
                  f"keyword stuffing: {alt[:60]}...")
+        if alt in TRANSCRIPTIONS and len(alt) > 700:
+            fail(f"{name}: alt text is {len(alt)} characters. A declared "
+                 f"transcription may run past the 160 the stuffing rule allows, "
+                 f"but not this far: {alt[:60]}...")
         if alt and alt.lower().count("masinloc") > 2:
             fail(f"{name}: alt text repeats Masinloc {alt.lower().count('masinloc')} "
                  f"times: {alt[:60]}...")

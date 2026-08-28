@@ -1,0 +1,63 @@
+{
+  "note": "The MABAYANI artwork. Source of truth: Google Drive / Masinloc Website Asset / Founder Masinloc. These are finished designs and one wordmark, supplied by the project — not photographs, not stock, and not generated here. scripts/build-mabayani-assets.py derives the responsive sizes; scripts/check-photography.py refuses to serve anything under assets/mabayani/ that is not listed below.",
+  "rules": [
+    "Never redesign the artwork, and never alter the wordmark, its colour or its proportions.",
+    "Never crop. Each design carries its own copy and composition, and the whole frame stays visible at every width.",
+    "The wordmark keeps its transparency. It sits on the page background rather than in a white box, so it is derived as WebP and PNG only — a JPEG would fill the letters' surroundings with white.",
+    "No portrait variant is ever fabricated. A second crop is used only if the project supplies one."
+  ],
+  "artwork": [
+    {
+      "slug": "mabayani-wordmark",
+      "source": "mabayani-wordmark.png",
+      "kind": "wordmark",
+      "alpha": true,
+      "widths": [
+        378,
+        756
+      ],
+      "alt": "MABAYANI",
+      "origin": "Mabayani Project by FMB — project wordmark",
+      "use": "The MABAYANI identity mark, standing as the heading of the MABAYANI entry on About Masinloc."
+    },
+    {
+      "slug": "mabayani-history",
+      "source": "mabayani-history.png",
+      "kind": "design",
+      "alpha": false,
+      "widths": [
+        480,
+        768,
+        1120,
+        1440,
+        1672
+      ],
+      "alt": "MABAYANI — History. Expression. Remembrance. Drawn over an antique chart of the Zambales coast: a Sambal family, a galleon, San Andres Church, a friar",
+      "origin": "Mabayani Project by FMB — title artwork for MABAYANI",
+      "use": "The opening image of the MABAYANI page, and its share card."
+    },
+    {
+      "slug": "mabayani-quote",
+      "source": "mabayani-quote.png",
+      "kind": "design",
+      "alpha": false,
+      "widths": [
+        480,
+        768,
+        1120,
+        1440,
+        1672
+      ],
+      "alt": "A quotation card reading: To be MABAYANI now is to protect the town from a different kind of invasion — forgetting, misinformation, contempt, indifference, and the belief that somebody else will do the work. The question is no longer whether Masinloc has brave ancestors. The question is whether Masinloc still has brave descendants. MABAYANI is not finished when it is printed. It begins when a reader decides to become worthy of the history. Signed FMB2026",
+      "origin": "Mabayani Project by FMB — closing card for MABAYANI",
+      "use": "The closing image of the MABAYANI page.",
+      "transcription": true,
+      "text": [
+        "To be MABAYANI now is to protect the town from a different kind of invasion: forgetting, misinformation, contempt, indifference, and the belief that somebody else will do the work.",
+        "The question is no longer whether Masinloc has brave ancestors. The question is whether Masinloc still has brave descendants. MABAYANI is not finished when it is printed. It begins when a reader decides to become worthy of the history."
+      ],
+      "attribution": "FMB2026",
+      "note": "A picture of words. The card is shown where its type is legible; below 760px the same passage is set in the page's own type instead, so a reader on a phone gets the words rather than a decorative rectangle. Exactly one of the two is displayed at any width."
+    }
+  ]
+}

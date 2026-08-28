@@ -26,6 +26,7 @@ CAMPAIGNS = ROOT / "data" / "campaigns.json"
 LEADERSHIP = ROOT / "data" / "leadership.json"
 DISCOVER_ASSETS = ROOT / "data" / "discover-assets.json"
 MARKETPLACE = ROOT / "data" / "marketplace.json"
+MABAYANI_ASSETS = ROOT / "data" / "mabayani-assets.json"
 
 IMAGE_SUFFIXES = {".avif", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
 
@@ -81,6 +82,7 @@ discover_dir = manifest["discover"]["directory"]
 notfound_dir = manifest["notfound"]["directory"]
 landing_dir = manifest["landingHero"]["directory"]
 marketplace_dir = manifest["marketplaceLogos"]["directory"]
+mabayani_dir = manifest["mabayani"]["directory"]
 
 locations = json.loads(LOCATIONS.read_text(encoding="utf-8"))["locations"]
 location_slugs = {location["slug"] for location in locations}
@@ -92,6 +94,10 @@ leaders = json.loads(LEADERSHIP.read_text(encoding="utf-8"))["leaders"]
 leader_slugs = {leader["slug"] for leader in leaders}
 
 discover_slugs = set(json.loads(DISCOVER_ASSETS.read_text(encoding="utf-8")))
+mabayani_slugs = {
+    art["slug"]
+    for art in json.loads(MABAYANI_ASSETS.read_text(encoding="utf-8"))["artwork"]
+}
 marketplace_slugs = {
     business["slug"]
     for business in json.loads(MARKETPLACE.read_text(encoding="utf-8"))["businesses"]
@@ -100,7 +106,8 @@ marketplace_slugs = {
 pages = (sorted(ROOT.glob("*.html"))
          + sorted(ROOT.glob("bulletin/*.html"))
          + sorted(ROOT.glob("discover/*.html"))
-         + sorted(ROOT.glob("marketplace/*.html")))
+         + sorted(ROOT.glob("marketplace/*.html"))
+         + sorted(ROOT.glob("mabayani/*.html")))
 seen: dict[str, list[str]] = {}
 
 for page in pages:
@@ -203,6 +210,17 @@ for page in pages:
                      f"scripts/build-marketplace-logos.py")
             continue
 
+        # MABAYANI artwork: assets/mabayani/<slug>-<width>.<ext>, built by
+        # scripts/build-mabayani-assets.py from the originals in Drive.
+        if path.startswith(mabayani_dir):
+            name = Path(path).stem
+            match = re.fullmatch(r"(?P<slug>[a-z0-9-]+)-\d+", name)
+            if not match or match.group("slug") not in mabayani_slugs:
+                fail(f"{page_name}: {path} is not one of the approved MABAYANI "
+                     f"artworks in data/mabayani-assets.json or a build product "
+                     f"of scripts/build-mabayani-assets.py")
+            continue
+
         # The 404 artwork: assets/notfound/notfound-<width>.<ext>.
         if path.startswith(notfound_dir):
             name = Path(path).stem
@@ -238,7 +256,8 @@ for path in sorted(ROOT.glob("assets/**/*")):
             or relative.startswith(discover_dir)
             or relative.startswith(notfound_dir)
             or relative.startswith(landing_dir)
-            or relative.startswith(marketplace_dir)):
+            or relative.startswith(marketplace_dir)
+            or relative.startswith(mabayani_dir)):
         continue
     fail(f"unaccounted image in the repository: {relative}")
 
