@@ -455,17 +455,44 @@ def provenance() -> str:
     that it is a book she donated. That is the first thing about it worth
     knowing, so it is now the first thing after the title.
     """
-    body = "".join(f'      <p>{lines(block)}</p>\n' for block in PROVENANCE["body"])
+    body = "".join(f'        <p>{lines(block)}</p>\n' for block in PROVENANCE["body"])
+    art = ARTWORK["mabayani-author"]
+    widths = art["widths"]
+    sizes = "(min-width: 820px) 260px, 168px"
+
+    def srcset(ext: str) -> str:
+        return ", ".join(f"../assets/mabayani/mabayani-author-{w}.{ext} {w}w" for w in widths)
+
+    # A real photograph of a living person, carrying her name in its alt rather
+    # than an empty one. A portrait beside a name is sometimes decorative; this
+    # one is not. The page has spent thirty-six sections arguing that a claim
+    # arrives with whoever stands behind it, and the person standing behind all
+    # of it has a face and a name.
+    portrait = (
+        '      <figure class="mb-prov-portrait">\n'
+        "        <picture>\n"
+        f'          <source type="image/avif" sizes="{sizes}" srcset="{srcset("avif")}">\n'
+        f'          <source type="image/webp" sizes="{sizes}" srcset="{srcset("webp")}">\n'
+        f'          <img src="../assets/mabayani/mabayani-author-{widths[1]}.jpg" '
+        f'sizes="{sizes}" srcset="{srcset("jpg")}" width="1122" height="1402" '
+        f'alt="{esc(art["alt"])}" loading="lazy" decoding="async">\n'
+        "        </picture>\n"
+        "      </figure>")
+
     return (
         '  <aside class="mb-prov" aria-labelledby="prov-title">\n'
-        '    <div class="mb-inner">\n'
-        f'      <p class="mb-prov-label">{esc(PROVENANCE["label"])}</p>\n'
-        f'      <h2 id="prov-title" class="mb-prov-title">{esc(PROVENANCE["title"])}</h2>\n'
+        '    <div class="mb-inner mb-prov-inner">\n'
+        f"{portrait}\n"
+        '      <div class="mb-prov-body">\n'
+        f'        <p class="mb-prov-label">{esc(PROVENANCE["label"])}</p>\n'
+        f'        <h2 id="prov-title" class="mb-prov-title">{esc(PROVENANCE["title"])}</h2>\n'
         f"{body}"
-        '      <blockquote class="mb-prov-quote">\n'
-        f'        <p>{lines(PROVENANCE["epigraph"])}</p>\n'
-        f'        <cite>{esc(PROVENANCE["author"])}</cite>\n'
-        "      </blockquote>\n"
+        '        <blockquote class="mb-prov-quote">\n'
+        f'          <p>{lines(PROVENANCE["epigraph"])}</p>\n'
+        f'          <cite>{esc(PROVENANCE["author"])}'
+        f'<span>{esc(PROVENANCE["role"])}</span></cite>\n'
+        "        </blockquote>\n"
+        "      </div>\n"
         "    </div>\n"
         "  </aside>")
 
@@ -690,7 +717,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-12">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-15">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>

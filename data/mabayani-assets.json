@@ -1,10 +1,11 @@
 {
-  "note": "The MABAYANI artwork. Source of truth: Google Drive / Masinloc Website Asset / Founder Masinloc. These are finished designs and one wordmark, supplied by the project — not photographs, not stock, and not generated here. scripts/build-mabayani-assets.py derives the responsive sizes; scripts/check-photography.py refuses to serve anything under assets/mabayani/ that is not listed below.",
+  "note": "The MABAYANI artwork and the author's portrait. Source of truth: Google Drive / Masinloc Website Asset / Founder Masinloc, and the portrait supplied directly by the project. The designs and the wordmark are finished artwork; the portrait is a photograph of a living person, supplied by her for this use. None of it is generated here. scripts/build-mabayani-assets.py derives the responsive sizes; scripts/check-photography.py refuses to serve anything under assets/mabayani/ that is not listed below.",
   "rules": [
     "Never redesign the artwork, and never alter the wordmark, its colour or its proportions.",
     "Never crop. Each design carries its own copy and composition, and the whole frame stays visible at every width.",
     "The wordmark keeps its transparency. It sits on the page background rather than in a white box, so it is derived as WebP and PNG only — a JPEG would fill the letters' surroundings with white.",
-    "No portrait variant is ever fabricated. A second crop is used only if the project supplies one."
+    "No portrait variant is ever fabricated. A second crop is used only if the project supplies one.",
+    "The portrait is of a real, living person who supplied it for this page. It is resized and re-encoded and nothing else: not retouched, not recoloured, not cropped to a different framing, and never used anywhere but as her author portrait."
   ],
   "artwork": [
     {
@@ -58,6 +59,20 @@
       ],
       "attribution": "FMB2026",
       "note": "A picture of words. The card is shown where its type is legible; below 760px the same passage is set in the page's own type instead, so a reader on a phone gets the words rather than a decorative rectangle. Exactly one of the two is displayed at any width."
+    },
+    {
+      "slug": "mabayani-author",
+      "source": "mabayani-author.png",
+      "kind": "portrait",
+      "alpha": false,
+      "widths": [
+        280,
+        560,
+        840
+      ],
+      "alt": "Francine Marie Bautista, author of MABAYANI",
+      "origin": "Supplied by the project — the author's own portrait",
+      "use": "The author portrait in the provenance block on the MABAYANI page."
     }
   ]
 }

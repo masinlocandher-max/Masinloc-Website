@@ -131,7 +131,31 @@
   border-bottom:1px solid var(--mb-rule);
   padding:clamp(40px,6vh,72px) 0;
 }
-.mb-prov .mb-inner{border-left:3px solid var(--mb-accent)}
+/* Portrait beside the words on a wide screen, above them on a phone. The
+   accent rule runs down the text rather than the whole block, so the portrait
+   sits clear of it. */
+/* Selector carries two classes on purpose: .mb-inner's own max-width is set
+   again inside the wide-viewport media query near the foot of this file, and a
+   single-class rule here would tie on specificity and lose to it for coming
+   first. */
+.mb-prov .mb-prov-inner{
+  display:grid;gap:clamp(22px,3vw,44px);
+  align-items:start;
+  /* Wider than the reading column. Splitting the 760px measure between a
+     260px portrait and the words left the text breaking after four or five
+     of them, which reads as a caption rather than as the page's front matter. */
+  max-width:1020px;
+}
+.mb-prov-body{min-width:0;border-left:3px solid var(--mb-accent);padding-left:clamp(18px,2vw,26px)}
+.mb-prov-portrait{margin:0;min-width:0}
+.mb-prov-portrait img{
+  display:block;width:168px;max-width:100%;height:auto;
+  border-radius:3px;
+}
+@media (min-width:820px){
+  .mb-prov .mb-prov-inner{grid-template-columns:260px minmax(0,1fr)}
+  .mb-prov-portrait img{width:260px}
+}
 .mb-prov-label{
   margin:0 0 12px;
   font:600 11px/1.4 var(--font-ui);
@@ -157,9 +181,16 @@
   font-style:italic;color:var(--mb-paper);
 }
 .mb-prov-quote cite{
+  display:block;
   font:600 11.5px/1.5 var(--font-ui);
   letter-spacing:.16em;text-transform:uppercase;
   font-style:normal;color:var(--mb-accent);
+}
+/* Her role, under her name and quieter than it. */
+.mb-prov-quote cite span{
+  display:block;margin-top:5px;
+  font:400 11px/1.5 var(--font-ui);
+  letter-spacing:.14em;color:var(--mb-faint);
 }
 
 /* --- the chapter mark ---------------------------------------------------- */

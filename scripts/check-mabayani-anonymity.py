@@ -46,9 +46,12 @@ REVEAL_PAGE = f"bulletin/{REVEAL}.html"
 # page here means the exemption is a decision on the record rather than a
 # directory this guard happens not to look at.
 CREDIT_PAGE = "mabayani/index.html"
-# The provenance block states she wrote the book and donated it, and signs her
-# quotation; the closing section carries the research credit. Three mentions.
-CREDIT_PAGE_MENTIONS = 3
+# The provenance block states she wrote the book and donated it, signs her
+# quotation, and carries her portrait — whose alt text names her, because a
+# photograph of a person is not decoration and a reader who cannot see it
+# should still be told whose face it is. The closing section carries the
+# research credit. Four mentions.
+CREDIT_PAGE_MENTIONS = 4
 
 # Names to look for. The surname alone is included because "Bautista" on a page
 # is a reveal even without the first name.
@@ -154,8 +157,9 @@ def main() -> int:
                 problems.append(
                     f"{rel}: names the creator {shown} times; the page allows "
                     f"{CREDIT_PAGE_MENTIONS} — the provenance block under the "
-                    f"title and the closing credit. More than that means the "
-                    f"name has spread into the narrative.")
+                    f"title, its portrait's alt text, and the closing credit. "
+                    f"More than that means the name has spread into the "
+                    f"narrative.")
 
         hits = [n for n in NEEDLES if n in low]
         if hits and rel not in (REVEAL_PAGE, CREDIT_PAGE):
@@ -239,7 +243,7 @@ def main() -> int:
     print("MABAYANI GUARD PASSED")
     print(f"{len(pages())} pages checked; the creator is named on "
           f"{REVEAL_PAGE}, and on {CREDIT_PAGE} as the author of the book and "
-          f"in its closing research credit.")
+          f"in its closing research credit, with her portrait beside it.")
     print("No streaming-platform language in the Bulletin interface.")
     return 0
 
