@@ -12,6 +12,11 @@
 (function () {
   'use strict';
 
+  const liveStyles = document.createElement('link');
+  liveStyles.rel = 'stylesheet';
+  liveStyles.href = 'marketplace-live.css?v=20260828-1';
+  document.head.appendChild(liveStyles);
+
   const ENDPOINT = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/marketplace-directory';
   const CATEGORY_LABELS = {
     'food-drinks': 'Food & Drinks',
