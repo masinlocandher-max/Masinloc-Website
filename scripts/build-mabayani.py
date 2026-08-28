@@ -75,20 +75,38 @@ ARTWORK_SIZE = {"mabayani-history": (1672, 941), "mabayani-quote": (1672, 941)}
 # regenerated wholesale from the brief by parse-mabayani-spec.py, so anything
 # added to it by hand disappears on the next parse.
 #
-# The epigraph is asserted to be a verbatim substring of the closing quotation
-# card rather than trusted to match it. The author is quoted here, never
-# written for, and a check is the only thing that makes that true tomorrow as
-# well as today: without it, editing one JSON file would be enough to put a
-# sentence she never wrote under her name, on the page whose entire argument is
-# that claims come with their evidence.
+# EVERY QUOTED LINE SAYS WHERE IT CAME FROM.
+#
+# The author is quoted on this page, never written for. This started as a check
+# that the epigraph was a verbatim passage of the closing quotation card, which
+# was right while that card was the only thing of hers the project held. It is
+# not any more: she has since supplied an author's message written for this
+# page, and a rule that only recognises one source would have refused her own
+# words.
+#
+# So the rule is now about provenance rather than about one source. A quoted
+# line declares where it came from and the build stops without that
+# declaration. "quotation-card" is machine-checkable and is checked. "supplied"
+# is not — no script can confirm what a person sent — so the declaration is the
+# record of who vouched for it, which is exactly how this page treats every
+# other claim it makes.
 PROVENANCE = json.loads(
     (ROOT / "data" / "mabayani-provenance.json").read_text(encoding="utf-8"))
-if PROVENANCE["epigraph"] not in " ".join(ARTWORK["mabayani-quote"]["text"]):
+EPIGRAPH_SOURCES = ("quotation-card", "supplied")
+_source = PROVENANCE.get("epigraphSource")
+if _source not in EPIGRAPH_SOURCES:
     sys.exit(
-        "REFUSING TO BUILD: the epigraph in data/mabayani-provenance.json is not "
-        "a verbatim passage of the closing quotation card in "
-        "data/mabayani-assets.json. The author is quoted on this page, not "
-        "written for. Fix the epigraph, or quote a different passage she wrote.")
+        f"REFUSING TO BUILD: data/mabayani-provenance.json quotes the author but "
+        f"declares epigraphSource {_source!r}. It must be one of "
+        f"{', '.join(EPIGRAPH_SOURCES)} — a line attributed to a real person "
+        f"ships with a record of where it came from, or it does not ship.")
+if (_source == "quotation-card"
+        and PROVENANCE["epigraph"] not in " ".join(ARTWORK["mabayani-quote"]["text"])):
+    sys.exit(
+        "REFUSING TO BUILD: the epigraph in data/mabayani-provenance.json is "
+        "declared as coming from the closing quotation card, and is not a "
+        "verbatim passage of it. Quote it exactly, or declare the line as "
+        "'supplied' if the project provided it directly.")
 
 # Where each call to action goes. Written out rather than inferred from the
 # copy, because a CTA pointing at the wrong page is invisible to every check

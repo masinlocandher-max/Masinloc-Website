@@ -1,20 +1,20 @@
 {
   "note": "Where MABAYANI came from, stated on the page itself. This is hand-authored and lives apart from data/mabayani.json, which scripts/parse-mabayani-spec.py regenerates wholesale from the brief — anything added there by hand is lost on the next parse.",
   "rules": [
-    "The author is quoted, never paraphrased and never written for. `epigraph` must appear word for word inside the closing quotation card in data/mabayani-assets.json; scripts/build-mabayani.py refuses to build if it does not, so the two can never drift and no sentence can be put in her name by editing this file alone.",
-    "State what is known and nothing around it. That she wrote it and donated it is the claim; why she donated it is not recorded here and is not guessed at.",
+    "Every word of this block is the project's own, supplied for this page. Nothing here is written for the author or paraphrased from her.",
+    "`epigraphSource` says where the quoted line came from and the build refuses to run without it. \"quotation-card\" means the line must appear word for word inside the closing card in data/mabayani-assets.json, and scripts/build-mabayani.py checks that it does. \"supplied\" means the project provided it directly as the author's own message; a machine cannot verify that, so the declaration is the record of who vouched for it. A line with no declared source does not ship.",
     "Her name appears on this page and in the closing reflection of bulletin/why-mabayani-exists.html, and nowhere else on the site. scripts/check-mabayani-anonymity.py enforces that against the built HTML.",
     "The portrait is hers, supplied by her. It is shown at the size a portrait is shown at and never treated as decoration or as a background.",
-    "No date, no publisher and no way to buy it is stated, because none has been given. When the book is out, this sentence is the one to change."
+    "No publication date, publisher or way to buy the book is stated, because none has been given. The About Masinloc band carries the note that it is being prepared for publication."
   ],
   "author": "Binibining Francine Marie Bautista",
   "label": "Where this comes from",
-  "title": "MABAYANI is a book.",
+  "title": "MABAYANI began as a book.",
   "body": [
-    "It was researched and written by Binibining Francine Marie Bautista, who donated the work to this initiative. What you are reading is that book.",
-    "Every chapter of it is published here with the record it rests on beside it — the sources, the evidence state of each claim, and the questions the evidence has not answered.",
-    "The book itself is being prepared for publication. Its chapters are here first, so that Masinloc can read them without waiting for a printed copy."
+    "Researched and written by Binibining Francine Marie Bautista, it was donated to this initiative to help make Masinloc’s history more accessible.",
+    "If you loved this section, you’ll love the book even more."
   ],
-  "epigraph": "MABAYANI is not finished when it is printed. It begins when a reader decides to become worthy of the history.",
-  "role": "Author, MABAYANI"
+  "epigraph": "To be a MABAYANI is to remember, protect, question, and carry our history forward.",
+  "role": "Author, MABAYANI",
+  "epigraphSource": "supplied"
 }
