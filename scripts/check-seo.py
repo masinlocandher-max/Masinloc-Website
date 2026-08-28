@@ -357,6 +357,23 @@ for page in pages:
     if name not in MINIMAL and len(h1s) != 1:
         fail(f"{name}: expected exactly one H1, found {len(h1s)}")
 
+    # NO TWO ELEMENTS SHARE AN ID.
+    #
+    # An id is how every anchor, every aria-labelledby and every getElementById
+    # finds its target, and a browser resolves a duplicate to whichever comes
+    # first in the document. So a collision does not error — it silently sends
+    # some links to the wrong element. MABAYANI shipped with twenty-five: the
+    # sources are numbered S01..S25 and the story parts 00..30, and lowercasing
+    # the source ids put "s13" on both part 13 and source S13, which made every
+    # source anchor land in the narrative instead.
+    ids = re.findall(r'\sid="([^"]+)"', markup)
+    seen_ids: set[str] = set()
+    repeated = sorted({i for i in ids if i in seen_ids or seen_ids.add(i)})
+    if repeated:
+        shown = ", ".join(repeated[:6]) + ("…" if len(repeated) > 6 else "")
+        fail(f"{name}: {len(repeated)} id(s) used more than once, so a link to "
+             f"one reaches whichever comes first: {shown}")
+
     levels = [level for level, _ in parser.headings]
     for before, after in zip(levels, levels[1:]):
         if after > before + 1:

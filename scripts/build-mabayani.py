@@ -376,16 +376,45 @@ def section_html(section: dict, index: int) -> str:
         "  </section>")
 
 
+# What follows the thirty-one story parts. These are real destinations — the
+# people, the evidence key, the worked research, the sources, and the form for
+# adding to them — and until now the story map ended at part 30, so the only
+# way to any of them was to scroll past the whole narrative. A reader who wants
+# the sources wants them now, not after thirty-one sections.
+REFERENCE_MAP = [
+    ("legend", "How to read the evidence labels"),
+    ("research", "The research behind the story"),
+    ("people", "The people named in the record"),
+    ("sources", "Every source this page rests on"),
+    ("contribute", "Add what you know"),
+]
+
+
 def story_map() -> str:
     rows = "".join(
         f'<li><a href="#s{esc(item["number"])}">'
         f'<span class="mb-map-n">{esc(item["number"])}</span>'
         f'<span>{esc(item["label"])}</span></a></li>'
         for item in DATA["storyMap"])
+    reference = "".join(
+        f'<li><a href="#{esc(anchor)}">'
+        f'<span class="mb-map-n" aria-hidden="true">&middot;</span>'
+        f"<span>{esc(label)}</span></a></li>"
+        for anchor, label in REFERENCE_MAP)
     return (
         '<details class="mb-map" id="storyMap">\n'
-        '  <summary><span>Story Map</span></summary>\n'
-        f'  <nav aria-label="Story map"><ol>{rows}</ol></nav>\n'
+        '  <summary><span>Story Map</span>'
+        # Where the reader is, printed in the bar they can always see. Filled by
+        # mabayani.js and aria-hidden, because the summary is a button: its
+        # accessible name should not change under a screen-reader user as they
+        # scroll. Position is announced by the progress region instead.
+        '<span class="mb-here" id="mbHere" aria-hidden="true"></span></summary>\n'
+        '  <nav aria-label="Story map">\n'
+        f'    <p class="mb-map-group" id="mbMapStory">The story</p>\n'
+        f'    <ol aria-labelledby="mbMapStory">{rows}</ol>\n'
+        f'    <p class="mb-map-group" id="mbMapRef">Reference</p>\n'
+        f'    <ul aria-labelledby="mbMapRef">{reference}</ul>\n'
+        "  </nav>\n"
         "</details>")
 
 
@@ -440,8 +469,15 @@ def contribution_section() -> str:
 def sources_section() -> str:
     rows = []
     for entry in DATA["sources"]:
+        # Prefixed. The sources are numbered S01..S25 in the brief and the
+        # story parts are numbered 00..30, so lowercasing the source id gave
+        # twenty-five elements sharing an id with a story section — "s13" was
+        # both part 13 and source S13. A browser resolves a duplicate id to
+        # whichever comes first in the document, which is always the story
+        # section, so every source anchor pointed at the wrong place and the
+        # page shipped invalid HTML. The visible label is unchanged.
         rows.append(
-            f'<li id="{esc(entry["id"].lower())}">'
+            f'<li id="src-{esc(entry["id"].lower())}">'
             f'<p class="mb-src-cite">{esc(entry["citation"])}</p>'
             + (f'<p class="mb-src-use">{esc(entry["use"])}</p>' if entry.get("use") else "")
             + (f'<p class="mb-src-status">{esc(entry["status"])}</p>' if entry.get("status") else "")
@@ -569,7 +605,7 @@ def page() -> str:
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="../site-stability.css?v=20260825-1">
-<link rel="stylesheet" href="../mabayani.css?v=20260828-2">
+<link rel="stylesheet" href="../mabayani.css?v=20260828-6">
 </head>
 <body class="about-page mabayani-page">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -621,7 +657,7 @@ def page() -> str:
 </footer>
 <script src="../site.js?v=20260825-1"></script>
 <script src="../bulletin.js?v=20260825-2"></script>
-<script src="../mabayani.js?v=20260827-1"></script>
+<script src="../mabayani.js?v=20260828-4"></script>
 <script type="application/ld+json">
 {jsonld}
 </script>

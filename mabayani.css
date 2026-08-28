@@ -19,7 +19,15 @@
       can tell a source from the writing around it.
    ------------------------------------------------------------------------ */
 
-.mabayani-page{background:var(--white)}
+.mabayani-page{
+  background:var(--white);
+  /* The site masthead's height on this page, and the story map bar's. Named
+     because three things depend on them: where the map sits, how far an
+     anchor jump has to clear, and nothing else may guess. */
+  --mb-masthead:88px;
+  --mb-bar:49px;
+}
+@media(max-width:1099px){.mabayani-page{--mb-masthead:76px}}
 
 /* --- the spine ----------------------------------------------------------- */
 
@@ -30,6 +38,17 @@
   border-top:1px solid var(--line);
 }
 .mb-section:first-of-type{border-top:0}
+/* TWO BARS, ONE OFFSET.
+   This page carries the site masthead and its own story map, and both are
+   sticky. Every destination here is reached by an anchor — from the map, from
+   a section CTA, from a shared link — so a jump has to clear both or it lands
+   with its heading hidden. The site-wide scroll-padding is zeroed for this
+   page and the whole offset is stated here, once, from the two heights it is
+   actually made of. Splitting it across a scroll-padding and a scroll-margin
+   meant the two silently added up and no single number described the result. */
+:root:has(.mabayani-page){scroll-padding-top:0}
+.mb-section,
+.mb-src-list li{scroll-margin-top:calc(var(--mb-masthead) + var(--mb-bar) + 10px)}
 .mb-inner{
   max-width:720px;margin:0 auto;
   padding:0 clamp(20px,5vw,40px);
@@ -254,8 +273,12 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
 
 /* --- story map and progress ---------------------------------------------- */
 
+/* Under the masthead, not beneath it. Both bars are sticky and both were
+   pinned to top:0, so the masthead — 88px tall and on a higher layer — covered
+   the story map completely. The one control for moving around a thirty-one
+   part page was never once on screen. */
 .mb-map{
-  position:sticky;top:0;z-index:40;
+  position:sticky;top:var(--mb-masthead);z-index:40;
   border-bottom:1px solid var(--line);
   background:rgba(255,255,255,.94);backdrop-filter:saturate(1.4) blur(10px);
 }
@@ -269,7 +292,23 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
 .mb-map > summary::-webkit-details-marker{display:none}
 .mb-map > summary::after{content:"\25be";margin-left:auto;font-size:14px}
 .mb-map[open] > summary::after{content:"\25b4"}
-.mb-map nav{max-height:min(62vh,520px);overflow-y:auto}
+/* The open map is a panel hanging under the bar, not a block in the document.
+   In normal flow it expanded at the top of the document — where a sticky
+   element's static box actually sits — so opening it pushed 500px of content
+   down and the reader's position lurched while the browser's scroll anchoring
+   caught up. Taken out of flow it costs the page nothing, and it behaves like
+   the menu it is: it covers the reading rather than displacing it.
+
+   Absolute positioning also makes this the offsetParent of the rows inside,
+   so the script that scrolls to the current row measures against the scroller
+   rather than against the <details> that contains it. */
+.mb-map nav{
+  position:absolute;left:0;right:0;top:100%;
+  max-height:min(62vh,520px);overflow-y:auto;
+  background:var(--white);
+  border-bottom:1px solid var(--line);
+  box-shadow:0 18px 34px -22px rgba(17,24,39,.45);
+}
 .mb-map ol{
   max-width:760px;margin:0 auto;padding:0 clamp(20px,5vw,40px) 20px;
   list-style:none;display:grid;gap:2px;
@@ -285,6 +324,38 @@ h1.mb-title{font-size:clamp(38px,9vw,72px);letter-spacing:-.035em}
   flex:0 0 auto;width:2.2em;
   font:600 12px/1.4 var(--font-ui);color:var(--muted);
 }
+/* The two halves of the map: the narrative in order, and the reference
+   material that follows it. Labelled, because a reader looking for the
+   sources should not have to guess that they are past part 30. */
+.mb-map-group{
+  max-width:760px;margin:0 auto;
+  padding:16px clamp(20px,5vw,40px) 6px;
+  font:600 11px/1.4 var(--font-ui);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+}
+.mb-map ul{
+  max-width:760px;margin:0 auto;
+  padding:0 clamp(20px,5vw,40px) 20px;
+  list-style:none;display:grid;gap:2px;
+}
+/* Where the reader is. A left rule and weight rather than a fill, so it stays
+   legible against the hover background and does not read as a hover state. */
+.mb-map a.is-here{
+  font-weight:600;color:var(--blue);
+  box-shadow:inset 2px 0 0 var(--blue);
+}
+.mb-map a.is-here .mb-map-n{color:var(--blue)}
+/* The current part, printed in the bar itself so it can be read without
+   opening anything. Truncated rather than wrapped: the bar is 48px and must
+   stay that height whatever the section is called. */
+.mb-here{
+  margin-left:14px;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font:400 12.5px/1 var(--font-ui);
+  letter-spacing:0;text-transform:none;color:var(--ink);
+}
+.mb-here:empty{display:none}
+@media (max-width:520px){.mb-here{display:none}}
 
 /* Progress is a thin rule and a count. It sits under the map and never covers
    the reading. Hidden until the reader has actually moved. */

@@ -77,6 +77,9 @@ jobs:
       - name: Run MABAYANI flagship checks
         run: node scripts/mabayani-qa.mjs
 
+      - name: Run MABAYANI wayfinding checks
+        run: node scripts/mabayani-nav-qa.mjs
+
       - name: Run municipal leadership checks
         run: node scripts/leadership-qa.mjs
 
