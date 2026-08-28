@@ -119,6 +119,15 @@
   margin:0 0 30px;max-width:52ch;
   font:400 15px/1.7 var(--font-ui);color:var(--mab-faint);
 }
+/* That it is a book, and one still on its way. Set below the note and above
+   the way in, quieter than both: it is the answer to "what am I actually
+   clicking into", not the pitch. The author is not named here — she is named
+   on /mabayani/ and in the closing reflection of the Bulletin, and nowhere
+   else on the site, which check-mabayani-anonymity.py enforces. */
+.mab-feature-book{
+  margin:0 0 26px;max-width:52ch;
+  font:400 14px/1.65 var(--font-ui);color:var(--mab-faint);
+}
 .mab-feature-go{margin:0}
 .mab-feature-cta{
   display:inline-flex;align-items:center;gap:10px;min-height:52px;

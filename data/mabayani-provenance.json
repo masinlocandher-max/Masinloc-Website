@@ -4,14 +4,16 @@
     "The author is quoted, never paraphrased and never written for. `epigraph` must appear word for word inside the closing quotation card in data/mabayani-assets.json; scripts/build-mabayani.py refuses to build if it does not, so the two can never drift and no sentence can be put in her name by editing this file alone.",
     "State what is known and nothing around it. That she wrote it and donated it is the claim; why she donated it is not recorded here and is not guessed at.",
     "Her name appears on this page and in the closing reflection of bulletin/why-mabayani-exists.html, and nowhere else on the site. scripts/check-mabayani-anonymity.py enforces that against the built HTML.",
-    "The portrait is hers, supplied by her. It is shown at the size a portrait is shown at and never treated as decoration or as a background."
+    "The portrait is hers, supplied by her. It is shown at the size a portrait is shown at and never treated as decoration or as a background.",
+    "No date, no publisher and no way to buy it is stated, because none has been given. When the book is out, this sentence is the one to change."
   ],
   "author": "Binibining Francine Marie Bautista",
   "label": "Where this comes from",
   "title": "MABAYANI is a book.",
   "body": [
     "It was researched and written by Binibining Francine Marie Bautista, who donated the work to this initiative. What you are reading is that book.",
-    "Every chapter of it is published here with the record it rests on beside it — the sources, the evidence state of each claim, and the questions the evidence has not answered."
+    "Every chapter of it is published here with the record it rests on beside it — the sources, the evidence state of each claim, and the questions the evidence has not answered.",
+    "The book itself is being prepared for publication. Its chapters are here first, so that Masinloc can read them without waiting for a printed copy."
   ],
   "epigraph": "MABAYANI is not finished when it is printed. It begins when a reader decides to become worthy of the history.",
   "role": "Author, MABAYANI"
