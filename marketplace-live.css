@@ -1,0 +1,59 @@
+/* Live POS enhancement for the Marketplace hub only.
+   The reviewed static directory keeps marketplace.css unchanged; these rules
+   cover runtime POS rows and the Order now action added to linked businesses. */
+
+.mk-business-link{
+  display:grid;
+  grid-template-columns:168px minmax(190px,.9fr) minmax(0,1.35fr);
+  gap:clamp(22px,3.4vw,52px);
+  align-items:start;
+  padding:clamp(28px,3.6vw,44px) 0;
+  color:inherit;
+}
+
+.mk-item[data-ordering="true"]>a:first-child,
+.mk-item[data-ordering="true"]>.mk-business-link{
+  padding-bottom:20px;
+}
+
+.mk-actions{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:-2px 0 clamp(28px,3.6vw,44px) calc(168px + clamp(22px,3.4vw,52px));
+}
+
+.mk-order-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  box-sizing:border-box;
+  padding:0 20px;
+  border-radius:10px;
+  background:var(--navy);
+  color:var(--white);
+  text-decoration:none;
+  font:700 13.5px/1 var(--font-ui);
+  letter-spacing:.005em;
+  transition:background var(--ease),transform var(--ease);
+}
+.mk-order-action:hover{background:var(--navy-deep)}
+.mk-order-action:active{transform:translateY(1px)}
+.mk-order-action:focus-visible{outline:3px solid rgba(13,59,158,.45);outline-offset:3px}
+
+.mk-live-facebook{display:inline-block;text-decoration:none}
+.mk-live-facebook:hover{text-decoration:underline}
+
+@media(max-width:720px){
+  .mk-business-link{
+    grid-template-columns:1fr;
+    gap:16px;
+    padding:clamp(26px,6vw,34px) 0;
+  }
+  .mk-item[data-ordering="true"]>a:first-child,
+  .mk-item[data-ordering="true"]>.mk-business-link{padding-bottom:18px}
+  .mk-actions{margin:0 0 clamp(26px,6vw,34px)}
+  .mk-order-action{width:100%}
+}
