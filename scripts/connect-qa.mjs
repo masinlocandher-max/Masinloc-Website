@@ -45,8 +45,8 @@ async function testMobileConnect() {
     fail('mobile/connect: stale story-only heading is still rendered');
   }
 
-  if (await page.locator('a[href="jobs.html"]', { hasText: 'Find Jobs' }).count() !== 1) fail('mobile/connect: primary Jobs CTA is missing');
-  if (await page.locator('a[href="career.html"]', { hasText: 'My Career' }).count() !== 1) fail('mobile/connect: My Career CTA is missing');
+  if (await page.locator('.connect-jobs-actions a[href="jobs.html"]', { hasText: 'Find Jobs' }).count() !== 1) fail('mobile/connect: primary Jobs CTA is missing');
+  if (await page.locator('.connect-jobs-actions a[href="career.html"]', { hasText: 'My Career' }).count() !== 1) fail('mobile/connect: primary My Career CTA is missing');
   const contributionContext = (await page.locator('.quick-context').innerText()).toLowerCase();
   if (!contributionContext.includes('career profiles') || !contributionContext.includes('private') || !contributionContext.includes('separate')) {
     fail('mobile/connect: Career Profile and Professional submission are not clearly separated');
