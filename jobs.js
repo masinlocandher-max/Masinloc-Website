@@ -6,7 +6,7 @@ const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const text=v=>String(v??'').trim();
 const low=v=>text(v).toLowerCase();
 const queryTokens=v=>low(v).split(/\s+/).map(v=>v.trim()).filter(Boolean);
@@ -95,12 +95,7 @@ function bindUI(){
   });
   $('#quickMatchForm').addEventListener('submit',event=>{
     event.preventDefault();
-    quickMatch={
-      role:text($('#quickRole').value),
-      location:$('#quickLocation').value,
-      type:$('#quickType').value,
-      experience:$('#quickExperience').value
-    };
+    quickMatch={role:text($('#quickRole').value),location:$('#quickLocation').value,type:$('#quickType').value,experience:$('#quickExperience').value};
     if(!Object.values(quickMatch).some(Boolean)){
       $('#quickMatchNote').textContent='Choose at least one preference to create a Quick Match.';
       return;
@@ -111,7 +106,7 @@ function bindUI(){
     renderJobs();
     const count=jobs.filter(job=>quickScore(job)>0).length;
     $('#quickMatchNote').textContent=count?`${count} current ${count===1?'opportunity':'opportunities'} matched at least one of your choices. Best matches are shown first.`:'No current checked opportunities match those choices yet. You can adjust them or browse all jobs.';
-    $('#jobsWorkspace').scrollIntoView({behavior:'smooth',block:'start'});
+    if(count)$('#jobsWorkspace').scrollIntoView({behavior:'smooth',block:'start'});
   });
   $('#resetQuickMatch').addEventListener('click',()=>resetQuickMatch(true));
 }
@@ -138,19 +133,13 @@ function setFilter(filter){
 
 async function loadJobs(){
   $('#jobsStatus').textContent='Loading available opportunities…';
-  const {data,error}=await supabase
-    .from('external_jobs')
-    .select('id,external_job_id,title,company,location,work_setup,employment_type,salary_text,description_excerpt,requirements_excerpt,published_at,expires_at,source_url,apply_url,last_verified_at,provider_metadata,provider:job_providers!inner(code,name,attribution_label,render_mode,application_mode,status)')
-    .order('published_at',{ascending:false,nullsFirst:false})
-    .limit(200);
-
+  const {data,error}=await supabase.from('external_jobs').select('id,external_job_id,title,company,location,work_setup,employment_type,salary_text,description_excerpt,requirements_excerpt,published_at,expires_at,source_url,apply_url,last_verified_at,provider_metadata,provider:job_providers!inner(code,name,attribution_label,render_mode,application_mode,status)').order('published_at',{ascending:false,nullsFirst:false}).limit(200);
   if(error){
     console.error('jobs_load_error',error.message);
     $('#jobsStatus').textContent='Jobs could not be loaded right now. Please try again later.';
     $('#jobsEmpty').hidden=false;
     return;
   }
-
   jobs=data||[];
   $('#jobsStatus').textContent='';
   if(!jobs.length){
@@ -159,7 +148,6 @@ async function loadJobs(){
     $('#jobsWorkspace').hidden=true;
     return;
   }
-
   renderSummary();
   $('#jobsEmpty').hidden=true;
   $('#jobsWorkspace').hidden=false;
@@ -190,8 +178,7 @@ function scoreJob(job){
   const skills=splitTerms(careerProfile?.skills);
   const locations=splitTerms(preferences?.preferred_locations);
   if(roles.some(role=>hay.includes(role)))score+=35;
-  const skillMatches=skills.filter(skill=>hay.includes(skill)).slice(0,2).length;
-  score+=Math.min(skillMatches*10,20);
+  score+=Math.min(skills.filter(skill=>hay.includes(skill)).slice(0,2).length*10,20);
   if(locations.some(loc=>low(job.location).includes(loc)||loc.includes(low(job.location))))score+=20;
   if(preferences?.remote_ok&&isRemote(job))score+=10;
   const types=splitTerms(preferences?.employment_types);
@@ -214,7 +201,8 @@ function quickScore(job){
   if(quickMatch.location==='remote'&&isRemote(job))score+=30;
   if(quickMatch.location==='abroad'&&isAbroad(job))score+=30;
   if(quickMatch.location==='philippines'&&!isAbroad(job))score+=12;
-  if(quickMatch.type&&low(job.employment_type).includes(quickMatch.type.replace('full-time','full').replace('part-time','part')))score+=20;
+  const normalizedType=quickMatch.type.replace('full-time','full').replace('part-time','part');
+  if(quickMatch.type&&low(job.employment_type).includes(normalizedType))score+=20;
   if(quickMatch.experience==='entry'&&isEntryLevel(job))score+=25;
   if(quickMatch.experience==='experienced'&&!isEntryLevel(job))score+=10;
   return Math.min(score,100);
@@ -245,14 +233,8 @@ function matchesFilter(job){
 
 function sortedJobs(list){
   return [...list].sort((a,b)=>{
-    if(activeFilter==='quick-match'){
-      const diff=quickScore(b)-quickScore(a);
-      if(diff)return diff;
-    }
-    if(activeFilter==='for-you'){
-      const scoreDiff=scoreJob(b)-scoreJob(a);
-      if(scoreDiff)return scoreDiff;
-    }
+    if(activeFilter==='quick-match'){const diff=quickScore(b)-quickScore(a);if(diff)return diff}
+    if(activeFilter==='for-you'){const diff=scoreJob(b)-scoreJob(a);if(diff)return diff}
     if(activeFilter==='all'){
       const placeA=isZambales(a)?2:isPampanga(a)?1:0;
       const placeB=isZambales(b)?2:isPampanga(b)?1:0;
@@ -264,10 +246,7 @@ function sortedJobs(list){
 
 function updateFilterCounts(){
   const hayTokens=queryTokens($('#jobSearch').value);
-  const queryMatches=job=>{
-    const hay=jobHaystack(job);
-    return hayTokens.every(token=>hay.includes(token));
-  };
+  const queryMatches=job=>{const hay=jobHaystack(job);return hayTokens.every(token=>hay.includes(token))};
   $$('#jobFilters .jobs-chip').forEach(button=>{
     const filter=button.dataset.filter||'all';
     const count=jobs.filter(job=>queryMatches(job)&&matchesCategory(job,filter)).length;
@@ -281,21 +260,16 @@ function renderJobs(){
   const filtered=sortedJobs(jobs.filter(matchesFilter));
   $('#jobsCount').textContent=`${filtered.length} ${filtered.length===1?'opportunity':'opportunities'}`;
   $('#jobsListTitle').textContent=activeFilter==='quick-match'?'Your Quick Match':activeFilter==='for-you'?'For you':'Opportunities';
-
   if(activeFilter==='for-you'&&!preferences&&!careerProfile){
     $('#jobsStatus').innerHTML='For a saved, ongoing match, create your <a href="career.html">Career Profile</a>. You can also use Quick Match above without signing in.';
   }else if(activeFilter==='saved'&&!session){
     $('#jobsStatus').innerHTML='Sign in through <a href="career.html">My Career</a> to see saved jobs.';
   }else if(!filtered.length){
     $('#jobsStatus').textContent=activeFilter==='quick-match'?'No current checked opportunities match those choices yet.':'No current opportunities match this search or filter.';
-  }else{
-    $('#jobsStatus').textContent='';
-  }
-
+  }else $('#jobsStatus').textContent='';
   $('#jobsEmpty').hidden=Boolean(filtered.length);
   $('#jobsWorkspace').hidden=!filtered.length;
   if(!filtered.length)return;
-
   if(!filtered.some(j=>j.id===activeJobId))activeJobId=filtered[0].id;
   $('#jobsList').innerHTML=filtered.map(job=>{
     const meta=[job.location,job.employment_type,job.work_setup,displayPay(job.salary_text)].filter(Boolean);
@@ -304,13 +278,11 @@ function renderJobs(){
     const match=activeFilter==='quick-match'?quickScore(job):activeFilter==='for-you'?scoreJob(job):0;
     return `<li class="job-row"><button type="button" data-job-id="${esc(job.id)}" aria-current="${job.id===activeJobId?'true':'false'}"><span class="job-row-top"><span class="job-row-title">${esc(job.title)}</span>${state?`<span class="job-state">${esc(state)}</span>`:saved?'<span class="job-state">Saved</span>':match?`<span class="job-state">${match}% match</span>`:''}</span><span class="job-row-company">${esc(job.company||'Employer')}</span><span class="job-row-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</span><span class="job-row-source"><span>${esc(sourceLabel(job))}</span><span>${esc(freshnessLabel(job.last_verified_at))}</span></span></button></li>`;
   }).join('');
-
   $$('#jobsList [data-job-id]').forEach(button=>button.addEventListener('click',()=>{
     activeJobId=button.dataset.jobId;
     renderJobs();
     if(matchMedia('(max-width:820px)').matches)$('#jobsDetail').scrollIntoView({behavior:'smooth',block:'start'});
   }));
-
   renderDetail(filtered.find(j=>j.id===activeJobId)||filtered[0]);
 }
 
@@ -325,7 +297,8 @@ function quickReasons(job){
   if(quickMatch.location==='remote'&&isRemote(job))reasons.push('The vacancy is listed as remote or work from home.');
   if(quickMatch.location==='abroad'&&isAbroad(job))reasons.push('The vacancy is an overseas opportunity.');
   if(quickMatch.experience==='entry'&&isEntryLevel(job))reasons.push('The vacancy appears suitable for applicants starting out.');
-  if(quickMatch.type&&low(job.employment_type).includes(quickMatch.type.replace('full-time','full').replace('part-time','part')))reasons.push(`${job.employment_type||'The work type'} matches the work type you selected.`);
+  const normalizedType=quickMatch.type.replace('full-time','full').replace('part-time','part');
+  if(quickMatch.type&&low(job.employment_type).includes(normalizedType))reasons.push(`${job.employment_type||'The work type'} matches the work type you selected.`);
   return reasons.slice(0,3);
 }
 
@@ -367,7 +340,7 @@ function providerGuidance(provider){
   if(code==='csc')return ['Review the qualification standards and documentary requirements.','Submit the application to the hiring government agency as instructed in the posting.','CSC lists the vacancy, but the concerned agency receives the application.'];
   if(code==='dmw')return ['Check that the agency and job order remain active before applying.','Follow only the licensed agency or official DMW instructions.','Do not pay or send documents outside the verified recruitment process.'];
   if(code==='indeed')return ['Confirm the employer and vacancy details on Indeed.','Use the official application path shown there.','Return to Masinloc Connect after submission if you want to record it.'];
-  return [`Confirm that the employer and position match before continuing.`,`Follow the instructions required by ${provider?.name||'the official source'}.`,'Return to Masinloc Connect after submission if you want to keep your application history accurate.'];
+  return ['Confirm that the employer and position match before continuing.',`Follow the instructions required by ${provider?.name||'the official source'}.`,'Return to Masinloc Connect after submission if you want to keep your application history accurate.'];
 }
 
 function renderDetail(job){
@@ -415,11 +388,8 @@ async function toggleSaved(job){
   }
   const isSaved=savedIds.has(job.id);
   let error=null;
-  if(isSaved){
-    ({error}=await supabase.from('saved_jobs').delete().eq('user_id',session.user.id).eq('external_job_id',job.id));
-  }else{
-    ({error}=await supabase.from('saved_jobs').upsert({user_id:session.user.id,external_job_id:job.id},{onConflict:'user_id,external_job_id'}));
-  }
+  if(isSaved)({error}=await supabase.from('saved_jobs').delete().eq('user_id',session.user.id).eq('external_job_id',job.id));
+  else ({error}=await supabase.from('saved_jobs').upsert({user_id:session.user.id,external_job_id:job.id},{onConflict:'user_id,external_job_id'}));
   if(error){$('#jobsStatus').textContent='We could not update your saved jobs right now.';return}
   if(isSaved)savedIds.delete(job.id);else savedIds.add(job.id);
   $('#jobsStatus').textContent=isSaved?'Removed from saved jobs.':'Saved to My Career.';
@@ -441,22 +411,11 @@ async function handoff(job){
   const destination=job.apply_url||job.source_url;
   if(!destination){$('#jobsStatus').textContent='This vacancy does not currently have an application link.';return}
   const existing=latestActivity(job.id);
-  if(existing?.status==='handed_off'){
-    currentActivityId=existing.id;
-  }else{
+  if(existing?.status==='handed_off')currentActivityId=existing.id;
+  else{
     const snapshot={title:job.title,company:job.company,location:job.location,provider:provider.code||null,source_label:sourceLabel(job),apply_url:destination};
-    const {data,error}=await supabase.from('application_activity').insert({
-      user_id:session.user.id,
-      external_job_id:job.id,
-      resume_version_id:primaryResume.id,
-      status:'handed_off',
-      handed_off_at:new Date().toISOString(),
-      job_snapshot:snapshot
-    }).select('id,external_job_id,status,job_snapshot,handed_off_at,user_confirmed_applied_at,created_at').single();
-    if(error){
-      $('#jobsStatus').textContent='We could not start the application handoff. Please try again.';
-      return;
-    }
+    const {data,error}=await supabase.from('application_activity').insert({user_id:session.user.id,external_job_id:job.id,resume_version_id:primaryResume.id,status:'handed_off',handed_off_at:new Date().toISOString(),job_snapshot:snapshot}).select('id,external_job_id,status,job_snapshot,handed_off_at,user_confirmed_applied_at,created_at').single();
+    if(error){$('#jobsStatus').textContent='We could not start the application handoff. Please try again.';return}
     currentActivityId=data.id;
     activityByJob.set(job.id,data);
   }
