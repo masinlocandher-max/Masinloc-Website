@@ -6,7 +6,7 @@ const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true
 
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
 const text=v=>String(v??'').trim();
 const low=v=>text(v).toLowerCase();
 const queryTokens=v=>low(v).split(/\s+/).map(v=>v.trim()).filter(Boolean);
@@ -21,6 +21,7 @@ let activityByJob=new Map();
 let activeFilter='all';
 let activeJobId=null;
 let currentActivityId=null;
+let quickMatch={role:'',location:'',type:'',experience:''};
 
 function providerOf(job){return Array.isArray(job.provider)?job.provider[0]:job.provider}
 function sourceLabel(job){return providerOf(job)?.attribution_label||providerOf(job)?.name||'External source'}
@@ -30,6 +31,8 @@ function splitTerms(value){return (Array.isArray(value)?value:[]).map(low).filte
 function jobHaystack(job){return low([job.title,job.company,job.location,job.work_setup,job.employment_type,job.description_excerpt,job.requirements_excerpt].filter(Boolean).join(' '))}
 function isZambales(job){return /(zambales|masinloc|olongapo|subic|iba|botolan|san marcelino|castillejos)/i.test(`${job.location||''}`)}
 function isPampanga(job){return /(pampanga|clark|angeles|mabalacat)/i.test(`${job.location||''}`)}
+function isRemote(job){return /remote|work from home|wfh/i.test(`${job.work_setup||''} ${job.location||''} ${job.title||''}`)}
+function isAbroad(job){return sourceCode(job)==='dmw'||Boolean(job.provider_metadata?.overseas)||/overseas|abroad/i.test(jobHaystack(job))}
 function isEntryLevel(job){return Boolean(job.provider_metadata?.entry_level)||/entry level|no experience|fresh graduate|fresh graduates|junior|trainee|high school graduate|high school diploma/i.test(`${job.requirements_excerpt||''} ${job.description_excerpt||''}`)}
 function freshnessLabel(value){
   if(!value)return 'Source check not dated';
@@ -68,7 +71,7 @@ async function loadUserContext(){
   const userId=session.user.id;
   const [{data:prefs},{data:career},{data:resume},{data:saved},{data:activities}]=await Promise.all([
     supabase.from('job_preferences').select('*').eq('user_id',userId).maybeSingle(),
-    supabase.from('career_profiles').select('target_roles,skills,education_level,current_location,profile_completion').eq('user_id',userId).maybeSingle(),
+    supabase.from('career_profiles').select('full_name,mobile,target_roles,skills,education_level,current_location,profile_completion').eq('user_id',userId).maybeSingle(),
     supabase.from('resume_versions').select('id,name,target_role,is_primary,updated_at').eq('user_id',userId).eq('is_primary',true).maybeSingle(),
     supabase.from('saved_jobs').select('external_job_id,created_at').eq('user_id',userId),
     supabase.from('application_activity').select('id,external_job_id,status,job_snapshot,handed_off_at,user_confirmed_applied_at,created_at').eq('user_id',userId).order('created_at',{ascending:false}).limit(100)
@@ -86,9 +89,43 @@ function bindUI(){
   $$('#jobFilters .jobs-chip').forEach(button=>button.addEventListener('click',()=>setFilter(button.dataset.filter||'all')));
   $('#clearJobsBtn').addEventListener('click',()=>{
     $('#jobSearch').value='';
+    resetQuickMatch(false);
     setFilter('all');
     $('#jobSearch').focus();
   });
+  $('#quickMatchForm').addEventListener('submit',event=>{
+    event.preventDefault();
+    quickMatch={
+      role:text($('#quickRole').value),
+      location:$('#quickLocation').value,
+      type:$('#quickType').value,
+      experience:$('#quickExperience').value
+    };
+    if(!Object.values(quickMatch).some(Boolean)){
+      $('#quickMatchNote').textContent='Choose at least one preference to create a Quick Match.';
+      return;
+    }
+    activeFilter='quick-match';
+    $('#jobSearch').value='';
+    $$('#jobFilters .jobs-chip').forEach(b=>b.classList.remove('is-active'));
+    renderJobs();
+    const count=jobs.filter(job=>quickScore(job)>0).length;
+    $('#quickMatchNote').textContent=count?`${count} current ${count===1?'opportunity':'opportunities'} matched at least one of your choices. Best matches are shown first.`:'No current checked opportunities match those choices yet. You can adjust them or browse all jobs.';
+    $('#jobsWorkspace').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  $('#resetQuickMatch').addEventListener('click',()=>resetQuickMatch(true));
+}
+
+function resetQuickMatch(render=true){
+  quickMatch={role:'',location:'',type:'',experience:''};
+  $('#quickMatchForm').reset();
+  $('#quickMatchNote').textContent='';
+  if(activeFilter==='quick-match'){
+    activeFilter='all';
+    const all=$('#jobFilters [data-filter="all"]');
+    $$('#jobFilters .jobs-chip').forEach(b=>b.classList.toggle('is-active',b===all));
+    if(render)renderJobs();
+  }
 }
 
 function setFilter(filter){
@@ -156,10 +193,30 @@ function scoreJob(job){
   const skillMatches=skills.filter(skill=>hay.includes(skill)).slice(0,2).length;
   score+=Math.min(skillMatches*10,20);
   if(locations.some(loc=>low(job.location).includes(loc)||loc.includes(low(job.location))))score+=20;
-  if(preferences?.remote_ok&&/remote|work from home|wfh/i.test(`${job.work_setup||''} ${job.location||''}`))score+=10;
+  if(preferences?.remote_ok&&isRemote(job))score+=10;
   const types=splitTerms(preferences?.employment_types);
   if(types.some(type=>low(job.employment_type).includes(type)))score+=10;
   if(isEntryLevel(job)&&careerProfile?.education_level)score+=5;
+  return Math.min(score,100);
+}
+
+function quickScore(job){
+  if(!Object.values(quickMatch).some(Boolean))return 0;
+  let score=0;
+  const hay=jobHaystack(job);
+  const roleTokens=queryTokens(quickMatch.role);
+  if(roleTokens.length){
+    const matches=roleTokens.filter(token=>hay.includes(token)).length;
+    if(matches)score+=Math.min(45,20+(matches*12));
+  }
+  if(quickMatch.location==='zambales'&&isZambales(job))score+=30;
+  if(quickMatch.location==='pampanga'&&isPampanga(job))score+=30;
+  if(quickMatch.location==='remote'&&isRemote(job))score+=30;
+  if(quickMatch.location==='abroad'&&isAbroad(job))score+=30;
+  if(quickMatch.location==='philippines'&&!isAbroad(job))score+=12;
+  if(quickMatch.type&&low(job.employment_type).includes(quickMatch.type.replace('full-time','full').replace('part-time','part')))score+=20;
+  if(quickMatch.experience==='entry'&&isEntryLevel(job))score+=25;
+  if(quickMatch.experience==='experienced'&&!isEntryLevel(job))score+=10;
   return Math.min(score,100);
 }
 
@@ -167,12 +224,13 @@ function matchesCategory(job,filter){
   const hay=jobHaystack(job);
   const code=sourceCode(job);
   if(filter==='all')return true;
+  if(filter==='quick-match')return quickScore(job)>0;
   if(filter==='for-you')return Boolean(preferences||careerProfile)&&scoreJob(job)>0;
   if(filter==='zambales')return isZambales(job);
   if(filter==='pampanga')return isPampanga(job);
-  if(filter==='remote')return /remote|work from home|wfh/i.test(`${job.work_setup||''} ${job.location||''} ${job.title||''}`);
+  if(filter==='remote')return isRemote(job);
   if(filter==='government')return code==='csc'||/government|government agency|municipal|national agency/i.test(hay);
-  if(filter==='abroad')return code==='dmw'||Boolean(job.provider_metadata?.overseas)||/overseas|abroad/i.test(hay);
+  if(filter==='abroad')return isAbroad(job);
   if(filter==='entry')return isEntryLevel(job);
   if(filter==='saved')return savedIds.has(job.id);
   return true;
@@ -187,6 +245,10 @@ function matchesFilter(job){
 
 function sortedJobs(list){
   return [...list].sort((a,b)=>{
+    if(activeFilter==='quick-match'){
+      const diff=quickScore(b)-quickScore(a);
+      if(diff)return diff;
+    }
     if(activeFilter==='for-you'){
       const scoreDiff=scoreJob(b)-scoreJob(a);
       if(scoreDiff)return scoreDiff;
@@ -218,13 +280,14 @@ function renderJobs(){
   updateFilterCounts();
   const filtered=sortedJobs(jobs.filter(matchesFilter));
   $('#jobsCount').textContent=`${filtered.length} ${filtered.length===1?'opportunity':'opportunities'}`;
+  $('#jobsListTitle').textContent=activeFilter==='quick-match'?'Your Quick Match':activeFilter==='for-you'?'For you':'Opportunities';
 
   if(activeFilter==='for-you'&&!preferences&&!careerProfile){
-    $('#jobsStatus').innerHTML='Create your <a href="career.html">Career Profile</a> first so Masinloc Connect can organize opportunities around your roles, skills, and preferred locations.';
+    $('#jobsStatus').innerHTML='For a saved, ongoing match, create your <a href="career.html">Career Profile</a>. You can also use Quick Match above without signing in.';
   }else if(activeFilter==='saved'&&!session){
     $('#jobsStatus').innerHTML='Sign in through <a href="career.html">My Career</a> to see saved jobs.';
   }else if(!filtered.length){
-    $('#jobsStatus').textContent='No current opportunities match this search or filter.';
+    $('#jobsStatus').textContent=activeFilter==='quick-match'?'No current checked opportunities match those choices yet.':'No current opportunities match this search or filter.';
   }else{
     $('#jobsStatus').textContent='';
   }
@@ -238,7 +301,8 @@ function renderJobs(){
     const meta=[job.location,job.employment_type,job.work_setup,displayPay(job.salary_text)].filter(Boolean);
     const state=activityLabel(latestActivity(job.id));
     const saved=savedIds.has(job.id);
-    return `<li class="job-row"><button type="button" data-job-id="${esc(job.id)}" aria-current="${job.id===activeJobId?'true':'false'}"><span class="job-row-top"><span class="job-row-title">${esc(job.title)}</span>${state?`<span class="job-state">${esc(state)}</span>`:saved?'<span class="job-state">Saved</span>':''}</span><span class="job-row-company">${esc(job.company||'Employer')}</span><span class="job-row-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</span><span class="job-row-source"><span>${esc(sourceLabel(job))}</span><span>${esc(freshnessLabel(job.last_verified_at))}</span></span></button></li>`;
+    const match=activeFilter==='quick-match'?quickScore(job):activeFilter==='for-you'?scoreJob(job):0;
+    return `<li class="job-row"><button type="button" data-job-id="${esc(job.id)}" aria-current="${job.id===activeJobId?'true':'false'}"><span class="job-row-top"><span class="job-row-title">${esc(job.title)}</span>${state?`<span class="job-state">${esc(state)}</span>`:saved?'<span class="job-state">Saved</span>':match?`<span class="job-state">${match}% match</span>`:''}</span><span class="job-row-company">${esc(job.company||'Employer')}</span><span class="job-row-meta">${meta.map(v=>`<span>${esc(v)}</span>`).join('')}</span><span class="job-row-source"><span>${esc(sourceLabel(job))}</span><span>${esc(freshnessLabel(job.last_verified_at))}</span></span></button></li>`;
   }).join('');
 
   $$('#jobsList [data-job-id]').forEach(button=>button.addEventListener('click',()=>{
@@ -250,7 +314,24 @@ function renderJobs(){
   renderDetail(filtered.find(j=>j.id===activeJobId)||filtered[0]);
 }
 
+function quickReasons(job){
+  if(activeFilter!=='quick-match')return [];
+  const reasons=[];
+  const hay=jobHaystack(job);
+  const role=queryTokens(quickMatch.role).find(token=>hay.includes(token));
+  if(role)reasons.push(`The role details include “${role}”, which you entered in Quick Match.`);
+  if(quickMatch.location==='zambales'&&isZambales(job))reasons.push(`${job.location||'The listed location'} matches your Zambales preference.`);
+  if(quickMatch.location==='pampanga'&&isPampanga(job))reasons.push(`${job.location||'The listed location'} matches your Pampanga / Clark preference.`);
+  if(quickMatch.location==='remote'&&isRemote(job))reasons.push('The vacancy is listed as remote or work from home.');
+  if(quickMatch.location==='abroad'&&isAbroad(job))reasons.push('The vacancy is an overseas opportunity.');
+  if(quickMatch.experience==='entry'&&isEntryLevel(job))reasons.push('The vacancy appears suitable for applicants starting out.');
+  if(quickMatch.type&&low(job.employment_type).includes(quickMatch.type.replace('full-time','full').replace('part-time','part')))reasons.push(`${job.employment_type||'The work type'} matches the work type you selected.`);
+  return reasons.slice(0,3);
+}
+
 function matchReasons(job){
+  const quick=quickReasons(job);
+  if(quick.length)return quick;
   if(!preferences&&!careerProfile)return [];
   const reasons=[];
   const hay=jobHaystack(job);
@@ -260,10 +341,33 @@ function matchReasons(job){
   if(skill)reasons.push(`Your “${skill}” skill appears in the vacancy details.`);
   const loc=splitTerms(preferences?.preferred_locations).find(l=>low(job.location).includes(l)||l.includes(low(job.location)));
   if(loc)reasons.push(`${job.location||'This location'} matches a location you selected.`);
-  if(preferences?.remote_ok&&/remote|work from home|wfh/i.test(`${job.work_setup||''} ${job.location||''}`))reasons.push('You marked work-from-home opportunities as acceptable.');
+  if(preferences?.remote_ok&&isRemote(job))reasons.push('Work from home is included in your Career Profile preferences.');
   const type=splitTerms(preferences?.employment_types).find(t=>low(job.employment_type).includes(t));
   if(type)reasons.push(`${job.employment_type||'The work type'} matches one of your work preferences.`);
   return reasons.slice(0,3);
+}
+
+function readiness(job){
+  if(!session)return [
+    {label:'Career Profile',state:'optional',copy:'Create one if you want Masinloc Connect to remember your details.'},
+    {label:'Resume',state:'review',copy:'You can build a reusable resume before continuing.'},
+    {label:'Requirements',state:'review',copy:'Review the official requirements before submitting.'}
+  ];
+  return [
+    {label:'Email',state:session.user.email?'ready':'review',copy:session.user.email?'Available for your application.':'Add a working email before applying.'},
+    {label:'Mobile',state:careerProfile?.mobile?'ready':'review',copy:careerProfile?.mobile?'Available in your Career Profile.':'Add a mobile number if the application requires one.'},
+    {label:'Resume',state:primaryResume?'ready':'review',copy:primaryResume?'Your primary resume is ready.':'Build your resume before handoff.'},
+    {label:'Requirements',state:'review',copy:job.requirements_excerpt?'Compare your experience and education with the vacancy requirements.':'Review the complete requirements on the official source.'}
+  ];
+}
+
+function providerGuidance(provider){
+  const code=provider?.code||'';
+  if(code==='philjobnet')return ['Confirm that the position and employer match the vacancy you selected.','Follow the application instructions shown on PhilJobNet.','Return to Masinloc Connect after submission if you want to record it in My Career.'];
+  if(code==='csc')return ['Review the qualification standards and documentary requirements.','Submit the application to the hiring government agency as instructed in the posting.','CSC lists the vacancy, but the concerned agency receives the application.'];
+  if(code==='dmw')return ['Check that the agency and job order remain active before applying.','Follow only the licensed agency or official DMW instructions.','Do not pay or send documents outside the verified recruitment process.'];
+  if(code==='indeed')return ['Confirm the employer and vacancy details on Indeed.','Use the official application path shown there.','Return to Masinloc Connect after submission if you want to record it.'];
+  return [`Confirm that the employer and position match before continuing.`,`Follow the instructions required by ${provider?.name||'the official source'}.`,'Return to Masinloc Connect after submission if you want to keep your application history accurate.'];
 }
 
 function renderDetail(job){
@@ -274,6 +378,7 @@ function renderDetail(job){
   const saved=savedIds.has(job.id);
   const meta=[job.location,job.employment_type,job.work_setup,displayPay(job.salary_text),job.published_at?`Posted ${formatDate(job.published_at)}`:''].filter(Boolean);
   const reasons=matchReasons(job);
+  const ready=readiness(job);
   const resumeReady=Boolean(primaryResume);
   const destination=job.apply_url||job.source_url;
   let applyLabel=!session?'Prepare and apply':resumeReady?`Continue to ${provider.name||'official source'}`:'Prepare my resume to apply';
@@ -289,6 +394,7 @@ function renderDetail(job){
     ${job.description_excerpt?`<section class="jobs-detail-section"><h3>Role</h3><p>${esc(job.description_excerpt)}</p></section>`:''}
     ${job.requirements_excerpt?`<section class="jobs-detail-section"><h3>Requirements</h3><p>${esc(job.requirements_excerpt)}</p></section>`:''}
     ${reasons.length?`<div class="jobs-match"><strong>Why this may fit you</strong><ul>${reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul></div>`:''}
+    <section class="jobs-readiness" aria-label="Application readiness"><h3>Before you continue</h3>${ready.map(item=>`<div class="readiness-row"><span class="readiness-state ${item.state}">${item.state==='ready'?'Ready':'Review'}</span><div><strong>${esc(item.label)}</strong><p>${esc(item.copy)}</p></div></div>`).join('')}</section>
     <div class="jobs-actions">
       <button type="button" class="jobs-primary" id="applyJobBtn" ${applyDisabled}>${esc(applyLabel)}</button>
       <button type="button" class="jobs-secondary${saved?' is-saved':''}" id="saveJobBtn">${saved?'Saved ✓':'Save job'}</button>
@@ -356,7 +462,8 @@ async function handoff(job){
   }
   const opened=window.open(destination,'_blank','noopener,noreferrer');
   const target=$('#handoffConfirmation');
-  target.innerHTML=`<div class="jobs-match"><strong>${opened?'The official application opened in a new tab.':'Open the official application to continue.'}</strong><ul><li>Your resume is ready in My Career.</li><li>Complete the questions required by ${esc(provider.name||'the official source')}.</li><li>Return here after submission so your application history stays accurate.</li></ul><div class="jobs-actions"><button type="button" class="jobs-primary" id="confirmAppliedBtn">I submitted my application</button>${opened?'':`<a class="jobs-secondary" href="${esc(destination)}" target="_blank" rel="noopener noreferrer">Open official application</a>`}</div></div>`;
+  const guidance=providerGuidance(provider);
+  target.innerHTML=`<div class="jobs-match"><strong>${opened?'The official application opened in a new tab.':'Open the official application to continue.'}</strong><ul>${guidance.map(item=>`<li>${esc(item)}</li>`).join('')}</ul><div class="jobs-actions"><button type="button" class="jobs-primary" id="confirmAppliedBtn">I submitted my application</button>${opened?'':`<a class="jobs-secondary" href="${esc(destination)}" target="_blank" rel="noopener noreferrer">Open official application</a>`}</div></div>`;
   $('#confirmAppliedBtn').addEventListener('click',()=>confirmApplied(job.id));
 }
 
