@@ -2,9 +2,9 @@
  *
  * The database/RLS checks own data security. This suite proves the job-seeker
  * experience without depending on a live provider feed or a real email login:
- * public browsing, truthful empty state, populated vacancy rendering, useful
- * search/filter summaries, pending-job preservation, resume auth guard,
- * responsive layout, and console health.
+ * public browsing, truthful empty state, guest Quick Match, populated vacancy
+ * rendering, useful search/filter summaries, application readiness, pending-job
+ * preservation, resume auth guard, responsive layout, and console health.
  */
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
@@ -92,6 +92,7 @@ async function testJobsEmpty(viewport, label) {
   if (!empty.includes('no current opportunities are available')) fail(`${label}/jobs-empty: truthful empty state is missing`);
   if (!(await page.locator('#jobsWorkspace').isHidden())) fail(`${label}/jobs-empty: empty feed still exposes job workspace`);
   if (!(await page.locator('#jobsSummary').isHidden())) fail(`${label}/jobs-empty: summary is visible with no jobs`);
+  if (await page.locator('#quickMatchForm').count() !== 1) fail(`${label}/jobs-empty: Quick Match is missing`);
   if (await page.locator('#jobSearch').count() !== 1) fail(`${label}/jobs-empty: search input missing`);
   if (await page.locator('#jobFilters .jobs-chip').count() < 8) fail(`${label}/jobs-empty: guided job filters are incomplete`);
   const careerHref = await page.locator('#careerLink').getAttribute('href');
@@ -127,10 +128,24 @@ async function testJobsPopulated(viewport, label) {
   }));
   if (painted.opacity < 0.9 || painted.height < 100) fail(`${label}/jobs-live: job workspace is present but not visibly painted`);
 
-  const detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
-  for (const expected of ['production worker','qa employer','subic, zambales','from philjobnet','role','requirements','checked today','view official listing']) {
+  let detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
+  for (const expected of ['production worker','qa employer','subic, zambales','from philjobnet','role','requirements','checked today','view official listing','before you continue','resume']) {
     if (!detail.includes(expected)) fail(`${label}/jobs-live: detail missing ${expected}`);
   }
+
+  await page.locator('#quickRole').fill('production');
+  await page.locator('#quickLocation').selectOption('zambales');
+  await page.locator('#quickExperience').selectOption('entry');
+  await page.locator('#quickMatchForm button[type="submit"]').click();
+  await page.locator('#jobsWorkspace').waitFor({ state: 'visible' });
+  if ((await page.locator('#jobsListTitle').innerText()).trim() !== 'Your Quick Match') fail(`${label}/quick-match: result heading did not switch`);
+  if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/quick-match: matching vacancy was not returned`);
+  const quickNote = (await page.locator('#quickMatchNote').innerText()).toLowerCase();
+  if (!quickNote.includes('1 current opportunity')) fail(`${label}/quick-match: useful match count is missing`);
+  detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
+  if (!detail.includes('why this may fit you')) fail(`${label}/quick-match: match reasons are missing`);
+  if (!detail.includes('zambales preference')) fail(`${label}/quick-match: location reason is missing`);
+  await page.locator('#resetQuickMatch').click();
 
   await page.locator('#jobSearch').fill('production subic');
   if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/jobs-live: multi-word search did not match across vacancy fields`);
@@ -230,4 +245,4 @@ if (failures.length) {
 }
 
 console.log('JOBS QA PASSED');
-console.log('Useful search, filter counts, visible vacancy rendering, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
+console.log('Guest Quick Match, useful search, filter counts, visible vacancy rendering, readiness guidance, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
