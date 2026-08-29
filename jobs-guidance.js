@@ -3,59 +3,54 @@ import { createClient } from './assets/vendor/supabase.js?v=2.112.3';
 const SUPABASE_URL='https://uwcqvsitjtknxsaypjxj.supabase.co';
 const SUPABASE_KEY='sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-const low=v=>String(v||'').toLowerCase();
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-let context=null;
+const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
+const low=v=>clean(v).toLowerCase();
+let session=null;
+let career=null;
+let primaryResume=null;
+const jobCache=new Map();
+let runningFor='';
 
-async function loadContext(){
-  const {data:{session}}=await supabase.auth.getSession();
-  if(!session)return {session:null,career:null,resume:null};
-  const [{data:career},{data:resume}]=await Promise.all([
-    supabase.from('career_profiles').select('mobile,target_roles,skills,education_level,work_experience,training,certifications,profile_completion').eq('user_id',session.user.id).maybeSingle(),
-    supabase.from('resume_versions').select('id').eq('user_id',session.user.id).eq('is_primary',true).maybeSingle()
-  ]);
-  return {session,career:career||null,resume:resume||null};
+function activeJobId(){return document.querySelector('#jobsList [data-job-id][aria-current="true"]')?.dataset.jobId||''}
+function educationRank(value){const t=low(value);if(!t)return 0;if(/postgraduate|master|doctor/.test(t))return 7;if(/college graduate|bachelor|four.?year college/.test(t))return 6;if(/college undergraduate|college level/.test(t))return 5;if(/vocational|tesda|technical|nc ii|nc 2/.test(t))return 4;if(/senior high|grade 12/.test(t))return 3;if(/junior high|high school|secondary/.test(t))return 2;if(/elementary/.test(t))return 1;return 0}
+function requiredEducation(value){const t=low(value);return [['Postgraduate',7,/postgraduate|master'?s degree|doctorate/],['College graduate',6,/college graduate|bachelor'?s degree|four.?year college/],['College undergraduate',5,/college undergraduate|college level/],['Vocational / TESDA',4,/vocational|tesda|technical course|nc ii|nc 2/],['Senior High School',3,/senior high|grade 12/],['High School',2,/high school graduate|secondary graduate|junior high/],['Elementary',1,/elementary graduate/]].find(([,rank,pattern])=>pattern.test(t))||null}
+function profileExperience(){const items=Array.isArray(career?.work_experience)?career.work_experience:[];return items.map(item=>clean(typeof item==='string'?item:item?.summary)).filter(Boolean)}
+function matchingSkills(job){const hay=low([job.title,job.description_excerpt,job.requirements_excerpt].filter(Boolean).join(' '));return (career?.skills||[]).map(clean).filter(skill=>skill.length>=3&&hay.includes(low(skill))).slice(0,4)}
+function matchingTraining(job){const hay=low([job.title,job.description_excerpt,job.requirements_excerpt].filter(Boolean).join(' '));return [...(career?.training||[]),...(career?.certifications||[])].map(clean).filter(item=>item.length>=3&&hay.includes(low(item))).slice(0,3)}
+function requirementYears(job){const match=low(job.requirements_excerpt).match(/(\d+)\s*(?:\+\s*)?(?:year|years|yr|yrs)\b/);return match?Number(match[1]):0}
+
+function readinessRows(job){
+  const rows=[];
+  const email=clean(session?.user?.email),mobile=clean(career?.mobile);
+  rows.push({label:'Resume',state:primaryResume?'ready':'review',tag:primaryResume?'Ready':'Review',copy:primaryResume?'Your reusable Masinloc Connect resume is ready for this application.':'Build your resume before you continue so your application materials are prepared.'});
+  rows.push({label:'Contact details',state:email&&mobile?'ready':'review',tag:email&&mobile?'Ready':'Review',copy:email&&mobile?'Your email and mobile number are available in your Career Profile.':email?'Your email is ready. Add a mobile number if this vacancy or agency requires one.':'Add a working email and mobile number before applying.'});
+  const skills=matchingSkills(job);
+  rows.push(skills.length?{label:'Skills',state:'aligned',tag:'Looks aligned',copy:`Your Career Profile includes ${skills.join(', ')}, which also appear in this opportunity.`}:{label:'Skills',state:'check',tag:'Check',copy:'No direct skill keyword overlap was found in the vacancy summary. Review the complete requirements before applying.'});
+  const reqEdu=requiredEducation(`${job.requirements_excerpt||''} ${job.description_excerpt||''}`),userEdu=educationRank(career?.education_level);
+  if(reqEdu){const [label,rank]=reqEdu;rows.push(userEdu>=rank?{label:'Education',state:'aligned',tag:'Looks aligned',copy:`The vacancy text mentions ${label}. Your saved education level appears at or above that level.`}:{label:'Education',state:'review',tag:'Review',copy:`The vacancy text mentions ${label}. Compare that requirement with your saved education details before continuing.`})}
+  else rows.push({label:'Education',state:'check',tag:'Check',copy:career?.education_level?'Your education is saved. No clear education threshold was detected in the vacancy summary, so review the full listing.':'No clear education threshold was detected in the summary. Review the full listing and add your education to My Career if relevant.'});
+  const exp=profileExperience(),years=requirementYears(job),mentionsExperience=/experience|experienced|work background/i.test(`${job.requirements_excerpt||''} ${job.description_excerpt||''}`);
+  if(years)rows.push(exp.length?{label:'Experience',state:'check',tag:'Check',copy:`You have experience recorded. Confirm that its duration and duties satisfy the vacancy's ${years}-year experience wording.`}:{label:'Experience',state:'review',tag:'Review',copy:`The vacancy summary mentions ${years} year${years===1?'':'s'} of experience. Add relevant experience to My Career or review the requirement carefully.`});
+  else if(mentionsExperience)rows.push(exp.length?{label:'Experience',state:'check',tag:'Check',copy:'Relevant experience is recorded in your Career Profile. Compare the duties with the employer or agency requirement.'}:{label:'Experience',state:'review',tag:'Review',copy:'The vacancy mentions experience, but none is currently saved in your Career Profile.'});
+  else rows.push({label:'Experience',state:exp.length?'ready':'check',tag:exp.length?'Ready':'Check',copy:exp.length?'Your relevant experience is already included in your Career Profile.':'No specific experience requirement was detected in the summary. Review the full listing before applying.'});
+  const training=matchingTraining(job);if(training.length)rows.push({label:'Training / certificates',state:'aligned',tag:'Looks aligned',copy:`Your saved ${training.join(', ')} also appears in the opportunity details.`});
+  return rows;
 }
 
-function educationFit(requirements,education){
-  const req=low(requirements);const edu=low(education);
-  if(!req)return {state:'review',label:'Requirements',copy:'Open the complete vacancy details and compare every requirement before submitting.'};
-  if(/college graduate|bachelor|degree/.test(req))return {state:/college graduate|postgraduate/.test(edu)?'ready':'review',label:'Education',copy:/college graduate|postgraduate/.test(edu)?'Your saved education appears consistent with the education shown for this vacancy.':'This vacancy appears to ask for a college degree. Review the exact qualification before applying.'};
-  if(/vocational|tesda|nc ii|nc2/.test(req))return {state:/vocational|tesda/.test(edu)?'ready':'review',label:'Education / training',copy:/vocational|tesda/.test(edu)?'Your saved education or training appears relevant to the listed qualification.':'Review whether you have the vocational or TESDA qualification requested.'};
-  if(/high school|senior high|secondary/.test(req))return {state:edu?'ready':'review',label:'Education',copy:edu?'You have education information saved. Confirm it meets the employer’s exact requirement.':'Add your education so Masinloc Connect can help you compare it.'};
-  return {state:'review',label:'Requirements',copy:'The available listing does not provide enough structured qualification detail for Masinloc Connect to confirm this item.'};
+async function loadJob(id){if(jobCache.has(id))return jobCache.get(id);const {data}=await supabase.from('external_jobs').select('id,title,company,location,description_excerpt,requirements_excerpt,provider_metadata').eq('id',id).maybeSingle();if(data)jobCache.set(id,data);return data||null}
+function render(section,job,rows){
+  const prepared=rows.filter(row=>row.state==='ready'||row.state==='aligned').length,total=rows.length,target=encodeURIComponent(job.title||''),jobId=encodeURIComponent(job.id||'');
+  section.dataset.guidanceJob=job.id;
+  section.innerHTML=`<div class="readiness-heading"><div><h3>Application readiness</h3><p><strong>${prepared} of ${total}</strong> preparation items are ready or look aligned.</p></div><a class="readiness-resume-link" href="${primaryResume?`resume.html?target=${target}&job=${jobId}`:'career.html'}">${primaryResume?'Review resume for this job':'Build my resume'}</a></div><div class="readiness-list">${rows.map(item=>`<div class="readiness-row"><span class="readiness-state ${esc(item.state)}">${esc(item.tag)}</span><div><strong>${esc(item.label)}</strong><p>${esc(item.copy)}</p></div></div>`).join('')}</div><p class="readiness-disclaimer">This is a preparation check based on the information you saved and the vacancy text available to Masinloc Connect. It is not an employer or agency eligibility decision.</p>`;
 }
-
-function buildReadiness(detail){
-  if(!context?.session)return null;
-  const career=context.career||{};
-  const title=detail.querySelector('h2')?.textContent||'';
-  const role=detail.querySelector('.jobs-detail-section p')?.textContent||'';
-  const requirementSections=[...detail.querySelectorAll('.jobs-detail-section')];
-  const reqSection=requirementSections.find(section=>/requirements/i.test(section.querySelector('h3')?.textContent||''));
-  const requirements=reqSection?.querySelector('p')?.textContent||'';
-  const hay=low(`${title} ${role} ${requirements}`);
-  const skills=(career.skills||[]).filter(skill=>hay.includes(low(skill)));
-  const roles=(career.target_roles||[]).filter(item=>hay.includes(low(item)));
-  const checks=[
-    {state:context.session.user.email?'ready':'review',label:'Contact email',copy:context.session.user.email?'Your application email is ready.':'Add a working email before applying.'},
-    {state:career.mobile?'ready':'review',label:'Mobile number',copy:career.mobile?'Your mobile number is saved in My Career.':'Add a mobile number so employers can reach you.'},
-    {state:context.resume?'ready':'review',label:'Resume',copy:context.resume?'Your Masinloc Connect resume is ready to use.':'Complete My Career so Masinloc Connect can prepare your resume.'},
-    educationFit(requirements,career.education_level),
-    {state:(skills.length||roles.length)?'ready':'review',label:'Role and skills',copy:skills.length?`Your profile shares relevant terms such as ${skills.slice(0,2).join(' and ')}.`:roles.length?`This opportunity overlaps with ${roles[0]} in your target roles.`:'No clear role or skill overlap was found in the details currently available. Review the full vacancy before deciding.'}
-  ];
-  return checks;
+async function enhance(){if(!session)return;const section=document.querySelector('.jobs-readiness'),id=activeJobId();if(!section||!id||section.dataset.guidanceJob===id||runningFor===id)return;runningFor=id;const job=await loadJob(id);runningFor='';if(!job||activeJobId()!==id)return;const current=document.querySelector('.jobs-readiness');if(current)render(current,job,readinessRows(job))}
+async function start(){
+  const {data:{session:current}}=await supabase.auth.getSession();session=current;if(!session)return;
+  const userId=session.user.id;
+  const [{data:careerData},{data:resumeData}]=await Promise.all([supabase.from('career_profiles').select('mobile,skills,education_level,work_experience,training,certifications,languages').eq('user_id',userId).maybeSingle(),supabase.from('resume_versions').select('id,target_role,is_primary').eq('user_id',userId).eq('is_primary',true).maybeSingle()]);
+  career=careerData||null;primaryResume=resumeData||null;
+  const detail=document.getElementById('jobsDetail');if(!detail)return;
+  new MutationObserver(()=>queueMicrotask(enhance)).observe(detail,{subtree:true,childList:true});await enhance();
 }
-
-function enhance(){
-  const detail=document.getElementById('jobsDetail');
-  const box=detail?.querySelector('.jobs-readiness');
-  if(!box||box.dataset.guidance==='1')return;
-  const checks=buildReadiness(detail);if(!checks)return;
-  const ready=checks.filter(item=>item.state==='ready').length;
-  box.dataset.guidance='1';
-  box.innerHTML=`<h3>Application readiness: ${ready} of ${checks.length}</h3><p class="jobs-readiness-note">Based on your saved Career Profile and the vacancy details currently available. This is preparation guidance, not an employer decision.</p>${checks.map(item=>`<div class="readiness-row"><span class="readiness-state ${item.state}">${item.state==='ready'?'Ready':'Review'}</span><div><strong>${esc(item.label)}</strong><p>${esc(item.copy)}</p></div></div>`).join('')}`;
-}
-
-async function start(){context=await loadContext();enhance();new MutationObserver(enhance).observe(document.getElementById('jobsDetail'),{subtree:true,childList:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
