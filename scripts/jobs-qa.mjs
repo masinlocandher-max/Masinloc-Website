@@ -2,8 +2,9 @@
  *
  * The database/RLS checks own data security. This suite proves the job-seeker
  * experience without depending on a live provider feed or a real email login:
- * public browsing, truthful empty state, guided career entry, pending-job
- * preservation, resume auth guard, responsive layout, and console health.
+ * public browsing, truthful empty state, populated vacancy rendering, guided
+ * career entry, pending-job preservation, resume auth guard, responsive layout,
+ * and console health.
  */
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
@@ -15,13 +16,40 @@ const browser = await chromium.launch({ headless: true });
 
 await fs.mkdir('artifacts/browser-qa', { recursive: true });
 
-async function stubJobsFeed(page) {
+const sampleJob = {
+  id: 'qa-live-job-123',
+  external_job_id: 'qa-provider-123',
+  title: 'Production Worker',
+  company: 'QA Employer',
+  location: 'SUBIC, ZAMBALES',
+  work_setup: 'On-site',
+  employment_type: 'Permanent',
+  salary_text: '₱18,000.00',
+  description_excerpt: 'Production work in a supervised manufacturing environment.',
+  requirements_excerpt: 'High school graduate. Review the official source for complete requirements.',
+  published_at: '2026-08-27T00:00:00+08:00',
+  expires_at: null,
+  source_url: 'https://example.com/source',
+  apply_url: 'https://example.com/apply',
+  last_verified_at: '2026-08-29T10:00:00+08:00',
+  provider_metadata: { entry_level: true },
+  provider: {
+    code: 'philjobnet',
+    name: 'PhilJobNet',
+    attribution_label: 'From PhilJobNet',
+    render_mode: 'linkout',
+    application_mode: 'handoff',
+    status: 'testing',
+  },
+};
+
+async function stubJobsFeed(page, body = []) {
   await page.route('**/rest/v1/external_jobs*', async (route) => {
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      headers: { 'content-range': '0-0/0' },
-      body: '[]',
+      headers: { 'content-range': body.length ? `0-${body.length - 1}/${body.length}` : '0-0/0' },
+      body: JSON.stringify(body),
     });
   });
 }
@@ -36,7 +64,7 @@ function watchErrors(page, bucket) {
   });
 }
 
-async function testJobs(viewport, label) {
+async function testJobsEmpty(viewport, label) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
@@ -44,7 +72,7 @@ async function testJobs(viewport, label) {
   await stubJobsFeed(page);
 
   const response = await page.goto(`${baseURL}/jobs.html`, { waitUntil: 'networkidle' });
-  if (!response || response.status() >= 400) fail(`${label}/jobs: HTTP ${response?.status() ?? 'no response'}`);
+  if (!response || response.status() >= 400) fail(`${label}/jobs-empty: HTTP ${response?.status() ?? 'no response'}`);
 
   const state = await page.evaluate(() => ({
     h1: document.querySelectorAll('h1').length,
@@ -53,23 +81,59 @@ async function testJobs(viewport, label) {
     robots: document.querySelector('meta[name="robots"]')?.content || '',
     overflow: document.documentElement.scrollWidth - innerWidth,
   }));
-  if (state.h1 !== 1) fail(`${label}/jobs: expected one H1`);
-  if (state.heading !== 'Hanap tayo ng trabahong bagay sa iyo.') fail(`${label}/jobs: unexpected H1: ${state.heading}`);
-  if (state.canonical !== 'https://www.masinloc-zambales.com/jobs.html') fail(`${label}/jobs: canonical is ${state.canonical}`);
-  if (!state.robots.includes('noindex')) fail(`${label}/jobs: MVP route must remain noindex`);
-  if (state.overflow > 1) fail(`${label}/jobs: horizontal overflow ${state.overflow}px`);
+  if (state.h1 !== 1) fail(`${label}/jobs-empty: expected one H1`);
+  if (state.heading !== 'Hanap tayo ng trabahong bagay sa iyo.') fail(`${label}/jobs-empty: unexpected H1: ${state.heading}`);
+  if (state.canonical !== 'https://www.masinloc-zambales.com/jobs.html') fail(`${label}/jobs-empty: canonical is ${state.canonical}`);
+  if (!state.robots.includes('noindex')) fail(`${label}/jobs-empty: MVP route must remain noindex`);
+  if (state.overflow > 1) fail(`${label}/jobs-empty: horizontal overflow ${state.overflow}px`);
 
   await page.locator('#jobsEmpty').waitFor({ state: 'visible' });
   const empty = (await page.locator('#jobsEmpty').innerText()).toLowerCase();
-  if (!empty.includes('live opportunities are being connected')) fail(`${label}/jobs: truthful provider empty state is missing`);
-  if (!(await page.locator('#jobsWorkspace').isHidden())) fail(`${label}/jobs: empty feed still exposes job workspace`);
-  if (await page.locator('#jobSearch').count() !== 1) fail(`${label}/jobs: search input missing`);
-  if (await page.locator('#jobFilters .jobs-chip').count() < 7) fail(`${label}/jobs: guided job filters are incomplete`);
+  if (!empty.includes('live opportunities are being connected')) fail(`${label}/jobs-empty: truthful provider empty state is missing`);
+  if (!(await page.locator('#jobsWorkspace').isHidden())) fail(`${label}/jobs-empty: empty feed still exposes job workspace`);
+  if (await page.locator('#jobSearch').count() !== 1) fail(`${label}/jobs-empty: search input missing`);
+  if (await page.locator('#jobFilters .jobs-chip').count() < 7) fail(`${label}/jobs-empty: guided job filters are incomplete`);
   const careerHref = await page.locator('#careerLink').getAttribute('href');
-  if (careerHref !== 'career.html') fail(`${label}/jobs: career CTA does not lead to career.html`);
+  if (careerHref !== 'career.html') fail(`${label}/jobs-empty: career CTA does not lead to career.html`);
 
-  await page.screenshot({ path: `artifacts/browser-qa/jobs-${label}.png`, fullPage: true });
-  for (const error of errors) fail(`${label}/jobs: ${error}`);
+  await page.screenshot({ path: `artifacts/browser-qa/jobs-empty-${label}.png`, fullPage: true });
+  for (const error of errors) fail(`${label}/jobs-empty: ${error}`);
+  await context.close();
+}
+
+async function testJobsPopulated(viewport, label) {
+  const context = await browser.newContext({ viewport });
+  const page = await context.newPage();
+  const errors = [];
+  watchErrors(page, errors);
+  await stubJobsFeed(page, [sampleJob]);
+
+  const response = await page.goto(`${baseURL}/jobs.html`, { waitUntil: 'networkidle' });
+  if (!response || response.status() >= 400) fail(`${label}/jobs-live: HTTP ${response?.status() ?? 'no response'}`);
+  await page.locator('#jobsWorkspace').waitFor({ state: 'visible' });
+
+  if (!(await page.locator('#jobsEmpty').isHidden())) fail(`${label}/jobs-live: empty state remains visible with a job`);
+  if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/jobs-live: expected one rendered vacancy`);
+  if ((await page.locator('#jobsList').innerText()).includes('Production Worker') === false) fail(`${label}/jobs-live: vacancy title missing from list`);
+  const detail = await page.locator('#jobsDetail').innerText();
+  for (const expected of ['Production Worker','QA Employer','SUBIC, ZAMBALES','From PhilJobNet','What the job is about','What they are looking for']) {
+    if (!detail.includes(expected)) fail(`${label}/jobs-live: detail missing ${expected}`);
+  }
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+  if (overflow > 1) fail(`${label}/jobs-live: horizontal overflow ${overflow}px`);
+
+  await page.locator('#saveJobBtn').click();
+  await page.waitForURL('**/career.html?return_job=qa-live-job-123&action=save');
+  if (!page.url().includes('return_job=qa-live-job-123')) fail(`${label}/jobs-live: save did not preserve the vacancy`);
+
+  await page.goto(`${baseURL}/jobs.html`, { waitUntil: 'networkidle' });
+  await page.locator('#jobsWorkspace').waitFor({ state: 'visible' });
+  await page.locator('#applyJobBtn').click();
+  await page.waitForURL('**/career.html?return_job=qa-live-job-123&action=apply');
+  if (!page.url().includes('action=apply')) fail(`${label}/jobs-live: apply did not preserve application intent`);
+
+  await page.screenshot({ path: `artifacts/browser-qa/jobs-live-${label}.png`, fullPage: true });
+  for (const error of errors) fail(`${label}/jobs-live: ${error}`);
   await context.close();
 }
 
@@ -101,7 +165,6 @@ async function testCareer(viewport, label) {
   const pendingCopy = (await page.locator('#returnNotice').innerText()).toLowerCase();
   if (!pendingCopy.includes('same opportunity')) fail(`${label}/career: pending-job preservation is not explained`);
 
-  // Privacy acknowledgement is required before any auth request is attempted.
   await page.locator('#authEmail').fill('qa@example.com');
   await page.locator('#sendLinkBtn').click();
   const authMessage = (await page.locator('#authMessage').innerText()).toLowerCase();
@@ -129,7 +192,8 @@ for (const [label, viewport] of [
   ['desktop', { width: 1280, height: 900 }],
   ['phone', { width: 390, height: 844 }],
 ]) {
-  await testJobs(viewport, label);
+  await testJobsEmpty(viewport, label);
+  await testJobsPopulated(viewport, label);
   await testCareer(viewport, label);
 }
 await testResumeAuthGuard();
@@ -142,4 +206,4 @@ if (failures.length) {
 }
 
 console.log('JOBS QA PASSED');
-console.log('Public browse, truthful provider state, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
+console.log('Empty and populated public browse, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
