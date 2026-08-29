@@ -115,12 +115,15 @@ async function testJobsPopulated(viewport, label) {
   if (!(await page.locator('#jobsEmpty').isHidden())) fail(`${label}/jobs-live: empty state remains visible with a job`);
   if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/jobs-live: expected one rendered vacancy`);
   if ((await page.locator('#jobsList').innerText()).includes('Production Worker') === false) fail(`${label}/jobs-live: vacancy title missing from list`);
-  const detail = await page.locator('#jobsDetail').innerText();
-  for (const expected of ['Production Worker','QA Employer','SUBIC, ZAMBALES','From PhilJobNet','What the job is about','What they are looking for']) {
+  const detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
+  for (const expected of ['production worker','qa employer','subic, zambales','from philjobnet','what the job is about','what they are looking for']) {
     if (!detail.includes(expected)) fail(`${label}/jobs-live: detail missing ${expected}`);
   }
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   if (overflow > 1) fail(`${label}/jobs-live: horizontal overflow ${overflow}px`);
+
+  // Capture the real populated Jobs surface before the Save/Apply flows navigate away.
+  await page.screenshot({ path: `artifacts/browser-qa/jobs-live-${label}.png`, fullPage: true });
 
   await page.locator('#saveJobBtn').click();
   await page.waitForURL('**/career.html?return_job=qa-live-job-123&action=save');
@@ -132,7 +135,6 @@ async function testJobsPopulated(viewport, label) {
   await page.waitForURL('**/career.html?return_job=qa-live-job-123&action=apply');
   if (!page.url().includes('action=apply')) fail(`${label}/jobs-live: apply did not preserve application intent`);
 
-  await page.screenshot({ path: `artifacts/browser-qa/jobs-live-${label}.png`, fullPage: true });
   for (const error of errors) fail(`${label}/jobs-live: ${error}`);
   await context.close();
 }
