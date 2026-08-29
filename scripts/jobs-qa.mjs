@@ -82,14 +82,14 @@ async function testJobsEmpty(viewport, label) {
     overflow: document.documentElement.scrollWidth - innerWidth,
   }));
   if (state.h1 !== 1) fail(`${label}/jobs-empty: expected one H1`);
-  if (state.heading !== 'Hanap tayo ng trabahong bagay sa iyo.') fail(`${label}/jobs-empty: unexpected H1: ${state.heading}`);
+  if (state.heading !== 'Explore opportunities in Zambales and beyond.') fail(`${label}/jobs-empty: unexpected H1: ${state.heading}`);
   if (state.canonical !== 'https://www.masinloc-zambales.com/jobs.html') fail(`${label}/jobs-empty: canonical is ${state.canonical}`);
   if (!state.robots.includes('noindex')) fail(`${label}/jobs-empty: MVP route must remain noindex`);
   if (state.overflow > 1) fail(`${label}/jobs-empty: horizontal overflow ${state.overflow}px`);
 
   await page.locator('#jobsEmpty').waitFor({ state: 'visible' });
   const empty = (await page.locator('#jobsEmpty').innerText()).toLowerCase();
-  if (!empty.includes('live opportunities are being connected')) fail(`${label}/jobs-empty: truthful provider empty state is missing`);
+  if (!empty.includes('no current opportunities are available')) fail(`${label}/jobs-empty: truthful empty state is missing`);
   if (!(await page.locator('#jobsWorkspace').isHidden())) fail(`${label}/jobs-empty: empty feed still exposes job workspace`);
   if (await page.locator('#jobSearch').count() !== 1) fail(`${label}/jobs-empty: search input missing`);
   if (await page.locator('#jobFilters .jobs-chip').count() < 7) fail(`${label}/jobs-empty: guided job filters are incomplete`);
@@ -122,7 +122,6 @@ async function testJobsPopulated(viewport, label) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   if (overflow > 1) fail(`${label}/jobs-live: horizontal overflow ${overflow}px`);
 
-  // Capture the real populated Jobs surface before the Save/Apply flows navigate away.
   await page.screenshot({ path: `artifacts/browser-qa/jobs-live-${label}.png`, fullPage: true });
 
   await page.locator('#saveJobBtn').click();
