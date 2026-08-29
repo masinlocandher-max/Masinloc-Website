@@ -6,6 +6,7 @@ const PRIVACY_VERSION='2026-08-29-career-v1';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
 const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const splitList=value=>String(value||'').split(/[,\n]/).map(v=>v.trim()).filter(Boolean).slice(0,50);
 const selectedValues=selector=>[...document.querySelectorAll(selector)].filter(el=>el.checked).map(el=>el.value);
 const text=v=>String(v??'').trim();
@@ -14,6 +15,9 @@ let session=null;
 let career=null;
 let preferences=null;
 let primaryResume=null;
+let savedRows=[];
+let applicationRows=[];
+let activeJobsById=new Map();
 const params=new URLSearchParams(location.search);
 const returnJob=params.get('return_job')||localStorage.getItem('mc_pending_job')||'';
 const requestedAction=params.get('action')||'';
@@ -32,8 +36,8 @@ function renderReturnNotice(){
   const notice=$('#returnNotice');
   notice.hidden=false;
   notice.textContent=requestedAction==='save'
-    ?'You were saving a job. Sign in or finish your career profile and we will take you back to that opportunity.'
-    :'You were applying for a job. Finish your career profile and resume first. We will take you back to the same opportunity when you are ready.';
+    ?'You were saving a job. Sign in or finish your Career Profile and we will take you back to that opportunity.'
+    :'You were applying for a job. Finish your Career Profile and resume first. We will take you back to the same opportunity when you are ready.';
 }
 
 function showAuth(){
@@ -58,19 +62,84 @@ async function showCareer(){
   $('#accountEmail').textContent=session.user.email||'Masinloc Connect account';
   $('#careerMessage').textContent='Loading your career profile…';
   const userId=session.user.id;
-  const [{data:member},{data:careerData},{data:prefsData},{data:resumeData}]=await Promise.all([
+  const [{data:member},{data:careerData},{data:prefsData},{data:resumeData},{data:savedData},{data:activityData}]=await Promise.all([
     supabase.from('member_profiles').select('*').eq('user_id',userId).maybeSingle(),
     supabase.from('career_profiles').select('*').eq('user_id',userId).maybeSingle(),
     supabase.from('job_preferences').select('*').eq('user_id',userId).maybeSingle(),
-    supabase.from('resume_versions').select('*').eq('user_id',userId).eq('is_primary',true).maybeSingle()
+    supabase.from('resume_versions').select('*').eq('user_id',userId).eq('is_primary',true).maybeSingle(),
+    supabase.from('saved_jobs').select('external_job_id,created_at').eq('user_id',userId).order('created_at',{ascending:false}).limit(50),
+    supabase.from('application_activity').select('id,external_job_id,status,job_snapshot,handed_off_at,user_confirmed_applied_at,created_at').eq('user_id',userId).order('created_at',{ascending:false}).limit(100)
   ]);
   career=careerData||null;
   preferences=prefsData||null;
   primaryResume=resumeData||null;
+  savedRows=savedData||[];
+  applicationRows=activityData||[];
+  await loadActiveJobDetails();
   fillForm(member||{},career||{},preferences||{});
+  renderCareerOverview();
   $('#viewResumeLink').hidden=!primaryResume;
   if(returnJob)$('#saveCareerBtn').textContent='Save resume and continue application';
   $('#careerMessage').textContent='';
+}
+
+async function loadActiveJobDetails(){
+  const ids=[...new Set([...savedRows.map(row=>row.external_job_id),...applicationRows.map(row=>row.external_job_id)].filter(Boolean))];
+  activeJobsById=new Map();
+  if(!ids.length)return;
+  const {data}=await supabase.from('external_jobs').select('id,title,company,location,last_verified_at').in('id',ids);
+  (data||[]).forEach(job=>activeJobsById.set(job.id,job));
+}
+
+function latestApplications(){
+  const seen=new Set();
+  return applicationRows.filter(row=>{
+    const key=row.external_job_id||row.id;
+    if(seen.has(key))return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function applicationStatus(row){
+  if(row.status==='applied_confirmed')return 'Applied';
+  if(row.status==='handed_off')return 'Application started';
+  if(row.status==='ready')return 'Ready to apply';
+  return 'In progress';
+}
+
+function renderCareerOverview(){
+  const applications=latestApplications();
+  $('#profileMetric').textContent=`${career?.profile_completion||0}%`;
+  $('#savedMetric').textContent=String(savedRows.length);
+  $('#applicationMetric').textContent=String(applications.length);
+  $('#resumeMetric').textContent=primaryResume?'Ready':'Not ready';
+
+  const savedList=$('#savedJobsList');
+  if(!savedRows.length){
+    savedList.innerHTML='<div class="career-activity-empty"><p>No saved jobs yet.</p><a href="jobs.html">Browse opportunities</a></div>';
+  }else{
+    savedList.innerHTML=savedRows.slice(0,5).map(row=>{
+      const job=activeJobsById.get(row.external_job_id);
+      if(!job)return '<div class="career-activity-row is-muted"><div><strong>Saved opportunity</strong><span>No longer active in the current feed</span></div></div>';
+      return `<a class="career-activity-row" href="jobs.html?job=${encodeURIComponent(job.id)}"><div><strong>${esc(job.title)}</strong><span>${esc(job.company||'Employer')} · ${esc(job.location||'Location not listed')}</span></div><b>Open</b></a>`;
+    }).join('');
+  }
+
+  const applicationList=$('#applicationList');
+  if(!applications.length){
+    applicationList.innerHTML='<div class="career-activity-empty"><p>No applications recorded yet.</p><a href="jobs.html">Find an opportunity</a></div>';
+  }else{
+    applicationList.innerHTML=applications.slice(0,5).map(row=>{
+      const job=activeJobsById.get(row.external_job_id);
+      const snapshot=row.job_snapshot||{};
+      const title=job?.title||snapshot.title||'Job application';
+      const company=job?.company||snapshot.company||snapshot.source_label||'Official source';
+      const status=applicationStatus(row);
+      const body=`<div><strong>${esc(title)}</strong><span>${esc(company)} · ${esc(status)}</span></div><b>${status==='Applied'?'Recorded':job?'Open':'History'}</b>`;
+      return job?`<a class="career-activity-row" href="jobs.html?job=${encodeURIComponent(job.id)}">${body}</a>`:`<div class="career-activity-row is-muted">${body}</div>`;
+    }).join('');
+  }
 }
 
 function fillForm(member,profile,prefs){
@@ -221,7 +290,7 @@ async function saveCareer(event){
 
   if(resumeError){
     console.error('resume_save_error',resumeError.message);
-    $('#careerMessage').textContent='Your career profile was saved, but the resume could not be generated yet.';
+    $('#careerMessage').textContent='Your Career Profile was saved, but the resume could not be generated yet.';
     button.disabled=false;
     button.textContent=returnJob?'Save resume and continue application':'Save and build my resume';
     return;
@@ -230,7 +299,8 @@ async function saveCareer(event){
   career=profile;
   preferences=prefs;
   $('#viewResumeLink').hidden=false;
-  $('#careerMessage').textContent=`Saved. Your career profile is ${profile.profile_completion}% ready.`;
+  renderCareerOverview();
+  $('#careerMessage').textContent=`Saved. Your Career Profile is ${profile.profile_completion}% ready.`;
   button.disabled=false;
   button.textContent=returnJob?'Save resume and continue application':'Save and build my resume';
 
