@@ -22,6 +22,7 @@ body.jobs-page{background:var(--white);color:var(--ink);font-family:var(--font-u
 .jobs-chip{flex:0 0 auto;min-height:42px;border:1px solid var(--line);border-radius:999px;padding:0 14px;background:var(--white);color:var(--text);font:700 13px/1 var(--font-ui);cursor:pointer}
 .jobs-chip.is-active{background:var(--navy);border-color:var(--navy);color:var(--white)}
 .jobs-workspace{display:grid;grid-template-columns:minmax(320px,.82fr) minmax(0,1.18fr);gap:28px;align-items:start}
+.jobs-workspace[hidden]{display:none!important}
 .jobs-list-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin:0 0 12px}
 .jobs-list-head h2{margin:0;font-size:18px;color:var(--navy)}
 .jobs-count{margin:0;font-size:13px;color:var(--muted)}
