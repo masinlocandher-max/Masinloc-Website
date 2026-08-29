@@ -71,6 +71,9 @@ jobs:
       - name: Run Masinloc Connect privacy and mobile checks
         run: node scripts/connect-qa.mjs
 
+      - name: Run Masinloc Jobs and Career checks
+        run: node scripts/jobs-qa.mjs
+
       - name: Run Masinloc locations checks
         run: node scripts/destinations-qa.mjs
 
