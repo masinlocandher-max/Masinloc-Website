@@ -39,10 +39,17 @@ async function testMobileConnect() {
   await waitForConnectRuntime(page);
 
   const heading = (await page.locator('#shareTitle').innerText()).trim();
-  if (heading !== 'May gusto kang ibahagi tungkol sa Masinloc?') fail(`mobile/connect: unexpected share heading: ${heading}`);
+  if (heading !== 'Contribute to Masinloc.') fail(`mobile/connect: unexpected share heading: ${heading}`);
 
   if (await page.getByText('May kwento ka tungkol sa Masinloc?', { exact: true }).count()) {
     fail('mobile/connect: stale story-only heading is still rendered');
+  }
+
+  if (await page.locator('a[href="jobs.html"]', { hasText: 'Find Jobs' }).count() !== 1) fail('mobile/connect: primary Jobs CTA is missing');
+  if (await page.locator('a[href="career.html"]', { hasText: 'My Career' }).count() !== 1) fail('mobile/connect: My Career CTA is missing');
+  const contributionContext = (await page.locator('.quick-context').innerText()).toLowerCase();
+  if (!contributionContext.includes('career profiles') || !contributionContext.includes('private') || !contributionContext.includes('separate')) {
+    fail('mobile/connect: Career Profile and Professional submission are not clearly separated');
   }
 
   const logo = page.locator('#overlayNav img[src="assets/masinloc-logo.webp"]');
@@ -154,4 +161,4 @@ if (failures.length) {
 }
 
 console.log('CONNECT QA PASSED');
-console.log('Mobile copy, logo sizing, session-only draft privacy, honeypot presence, upload controls and shared desktop branding are healthy.');
+console.log('Jobs visibility, Career/Profile separation, mobile layout, session-only draft privacy, upload controls and shared desktop branding are healthy.');
