@@ -51,6 +51,10 @@ body.jobs-page{background:var(--white);color:var(--ink);font-family:var(--font-u
 .jobs-empty h2{margin:0;color:var(--navy);font-size:26px}
 .jobs-empty p{max-width:620px;margin:12px auto 22px;color:var(--text);line-height:1.65}
 .jobs-status{min-height:20px;margin:0 0 14px;color:var(--red-ink);font-size:13px}
+/* Jobs/empty state are populated after the shared reveal observer is created.
+   Keep these dynamic surfaces visible once `hidden` is removed instead of
+   leaving valid job content at opacity:0. */
+html.js .jobs-workspace[data-reveal],html.js .jobs-empty[data-reveal]{opacity:1;transform:none}
 .career-wrap{max-width:920px;margin:0 auto;padding:28px 24px 88px}
 .career-hero{padding:34px 0 36px;border-bottom:1px solid var(--line)}
 .career-hero h1{margin:0;font-family:var(--font-display);font-size:clamp(42px,7vw,72px);line-height:.96;letter-spacing:-.05em;color:var(--navy-deep)}
