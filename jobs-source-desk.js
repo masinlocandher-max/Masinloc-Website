@@ -10,7 +10,8 @@ const text=v=>String(v??'').trim();
 const iso=v=>v?new Date(v).toISOString():null;
 const localValue=value=>{if(!value)return '';const d=new Date(value);const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`};
 const fmt=value=>value?new Intl.DateTimeFormat('en-PH',{dateStyle:'medium'}).format(new Date(value)):'';
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
+const DAY=24*60*60*1000;
 
 let session=null;
 let providers=[];
@@ -18,7 +19,13 @@ let jobs=[];
 let editingJob=null;
 
 function isAdmin(user){return user?.app_metadata?.role==='admin'}
-function setDefaultDates(){const now=new Date();const recheck=new Date(now.getTime()+7*24*60*60*1000);const cache=new Date(now.getTime()+14*24*60*60*1000);$('#sourceCheckedAt').value=localValue(now);$('#staleAfter').value=localValue(recheck);$('#cacheExpiresAt').value=localValue(cache)}
+function freshnessDefaults(base=new Date()){
+  return {
+    recheck:new Date(base.getTime()+3*DAY),
+    cache:new Date(base.getTime()+7*DAY)
+  };
+}
+function setDefaultDates(){const now=new Date();const {recheck,cache}=freshnessDefaults(now);$('#sourceCheckedAt').value=localValue(now);$('#staleAfter').value=localValue(recheck);$('#cacheExpiresAt').value=localValue(cache)}
 
 async function boot(){
   const {data:{user}}=await supabase.auth.getUser();
@@ -74,8 +81,22 @@ function resetForm(){editingJob=null;$('#jobForm').reset();$('#jobId').value='';
 async function handleRowAction(id,action){
   const job=jobs.find(j=>j.id===id);if(!job)return;
   if(action==='edit'){fillForm(job);return}
-  const now=new Date().toISOString();const patch={updated_at:now};
-  if(action==='live')Object.assign(patch,{verification_status:'live',is_active:true,source_checked_at:now,last_seen_active_at:now,verified_by_user_id:session.user.id});
+  const nowDate=new Date();const now=nowDate.toISOString();const patch={updated_at:now};
+  if(action==='live'){
+    const defaults=freshnessDefaults(nowDate);
+    const currentStale=job.stale_after?new Date(job.stale_after):null;
+    const currentCache=job.cache_expires_at?new Date(job.cache_expires_at):null;
+    Object.assign(patch,{
+      verification_status:'live',
+      is_active:true,
+      source_checked_at:now,
+      last_verified_at:now,
+      last_seen_active_at:now,
+      verified_by_user_id:session.user.id,
+      stale_after:!currentStale||currentStale<=nowDate?defaults.recheck.toISOString():job.stale_after,
+      cache_expires_at:!currentCache||currentCache<=nowDate?defaults.cache.toISOString():job.cache_expires_at
+    });
+  }
   if(action==='recheck')Object.assign(patch,{verification_status:'needs_recheck',is_active:false});
   if(action==='expired')Object.assign(patch,{verification_status:'expired',is_active:false});
   const {error}=await supabase.from('external_jobs').update(patch).eq('id',id);
@@ -95,6 +116,9 @@ async function save(status){
   const closingDate=iso($('#closingDate').value);const staleAfter=iso($('#staleAfter').value);const cacheExpiresAt=iso($('#cacheExpiresAt').value);
   if(!cacheExpiresAt){$('#formMessage').textContent='Set a cache expiry before saving.';return}
   if(status==='live'&&!$('#sourceCheckedAt').value){$('#formMessage').textContent='A live vacancy must have a source check time.';return}
+  if(status==='live'&&!staleAfter){$('#formMessage').textContent='A live vacancy must have a recheck date.';return}
+  if(status==='live'&&new Date(staleAfter)<=new Date()){$('#formMessage').textContent='The recheck date must be in the future before publishing.';return}
+  if(status==='live'&&new Date(cacheExpiresAt)<=new Date()){$('#formMessage').textContent='The cache expiry must be in the future before publishing.';return}
   if(status==='live'&&closingDate&&new Date(closingDate)<=new Date()){$('#formMessage').textContent='This closing date has already passed. Save it as expired instead.';return}
   const externalJobId=text($('#externalJobId').value)||await stableExternalId(providerId,sourceUrl);
   const now=new Date().toISOString();
