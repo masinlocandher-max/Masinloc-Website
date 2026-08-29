@@ -48,7 +48,7 @@ async function testJobsEmpty(viewport, label) {
   const state = await page.evaluate(() => ({ h1: document.querySelectorAll('h1').length, heading: document.querySelector('h1')?.textContent.trim() || '', canonical: document.querySelector('link[rel="canonical"]')?.href || '', robots: document.querySelector('meta[name="robots"]')?.content || '', overflow: document.documentElement.scrollWidth - innerWidth }));
   if (state.h1 !== 1 || state.heading !== 'Explore opportunities in Zambales and beyond.') fail(`${label}/jobs-empty: heading contract drifted`);
   if (state.canonical !== 'https://www.masinloc-zambales.com/jobs.html') fail(`${label}/jobs-empty: canonical is ${state.canonical}`);
-  if (!state.robots.includes('noindex')) fail(`${label}/jobs-empty: Jobs route must remain noindex for now`);
+  if (!state.robots.includes('index') || state.robots.includes('noindex')) fail(`${label}/jobs-empty: Jobs route must remain indexable for public launch`);
   if (state.overflow > 1) fail(`${label}/jobs-empty: horizontal overflow ${state.overflow}px`);
   await page.locator('#jobsEmpty').waitFor({ state: 'visible' });
   const empty = (await page.locator('#jobsEmpty').innerText()).toLowerCase();
@@ -122,9 +122,10 @@ async function testCareer(viewport, label) {
   const context = await browser.newContext({ viewport }); const page = await context.newPage(); const errors = []; watchErrors(page, errors);
   const response = await page.goto(`${baseURL}/career.html?return_job=qa-job-123&action=apply`, { waitUntil: 'networkidle' });
   if (!response || response.status() >= 400) fail(`${label}/career: HTTP ${response?.status() ?? 'no response'}`);
-  const state = await page.evaluate(() => ({ h1: document.querySelectorAll('h1').length, heading: document.querySelector('h1')?.textContent.trim() || '', canonical: document.querySelector('link[rel="canonical"]')?.href || '', overflow: document.documentElement.scrollWidth - innerWidth }));
+  const state = await page.evaluate(() => ({ h1: document.querySelectorAll('h1').length, heading: document.querySelector('h1')?.textContent.trim() || '', canonical: document.querySelector('link[rel="canonical"]')?.href || '', robots: document.querySelector('meta[name="robots"]')?.content || '', overflow: document.documentElement.scrollWidth - innerWidth }));
   if (state.h1 !== 1 || state.heading !== 'My Career') fail(`${label}/career: H1 contract drifted`);
   if (state.canonical !== 'https://www.masinloc-zambales.com/career.html') fail(`${label}/career: canonical wrong`);
+  if (!state.robots.includes('noindex')) fail(`${label}/career: private Career route must remain noindex`);
   if (state.overflow > 1) fail(`${label}/career: horizontal overflow ${state.overflow}px`);
   if (!(await page.locator('#authView').isVisible()) || !(await page.locator('#careerView').isHidden())) fail(`${label}/career: privacy/auth gate wrong`);
   if (!(await page.locator('#returnNotice').isVisible())) fail(`${label}/career: pending-job notice hidden`);
@@ -135,16 +136,33 @@ async function testCareer(viewport, label) {
 }
 
 async function testResumeAuthGuard() {
+  const staticContext = await browser.newContext({ viewport: { width: 390, height: 844 }, javaScriptEnabled: false });
+  const staticPage = await staticContext.newPage();
+  await staticPage.goto(`${baseURL}/resume.html`, { waitUntil: 'domcontentloaded' });
+  const robots = await staticPage.locator('meta[name="robots"]').getAttribute('content');
+  if (!String(robots || '').includes('noindex')) fail('resume/indexing: private Resume route must remain noindex');
+  await staticContext.close();
+
   const context = await browser.newContext({ viewport: { width: 390, height: 844 } }); const page = await context.newPage(); const errors = []; watchErrors(page, errors);
   await page.goto(`${baseURL}/resume.html`, { waitUntil: 'networkidle' }); await page.waitForURL('**/career.html');
   if (!page.url().endsWith('/career.html')) fail(`resume/auth: signed-out resume did not redirect`);
   errors.forEach(error => fail(`resume/auth: ${error}`)); await context.close();
 }
 
+async function testPublicSitemap() {
+  const context = await browser.newContext();
+  const response = await context.request.get(`${baseURL}/sitemap.xml`);
+  if (!response.ok()) fail(`sitemap: HTTP ${response.status()}`);
+  const xml = await response.text();
+  if (!xml.includes('https://www.masinloc-zambales.com/jobs.html')) fail('sitemap: public Jobs route missing');
+  if (xml.includes('https://www.masinloc-zambales.com/career.html') || xml.includes('https://www.masinloc-zambales.com/resume.html')) fail('sitemap: private Career/Resume route leaked');
+  await context.close();
+}
+
 for (const [label, viewport] of [['desktop',{width:1280,height:900}],['phone',{width:390,height:844}]]) {
   await testJobsEmpty(viewport, label); await testJobsPopulated(viewport, label); await testCareer(viewport, label);
 }
-await testResumeAuthGuard(); await browser.close();
+await testResumeAuthGuard(); await testPublicSitemap(); await browser.close();
 if (failures.length) { console.error('JOBS QA FAILED'); failures.forEach(failure => console.error(`- ${failure}`)); process.exit(1); }
 console.log('JOBS QA PASSED');
-console.log('Masinloc Connect-first presentation, guest Quick Match, search/filter counts, vacancy rendering, readiness guidance, privacy-gated Career entry, pending-job preservation, resume auth guard and responsive widths hold.');
+console.log('Public Jobs discovery, Masinloc Connect-first presentation, guest Quick Match, search/filter counts, vacancy rendering, readiness guidance, privacy-gated Career entry, pending-job preservation, private resume protection and responsive widths hold.');
