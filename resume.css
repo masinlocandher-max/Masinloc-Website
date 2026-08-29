@@ -2,6 +2,9 @@ body.resume-page{margin:0;background:var(--soft);color:var(--ink);font-family:va
 .resume-toolbar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--white) 96%,transparent);backdrop-filter:blur(10px)}
 .resume-toolbar-left,.resume-toolbar-right{display:flex;gap:10px;align-items:center}
 .resume-toolbar a{color:var(--blue);font-weight:750;text-decoration:none}
+.resume-toolbar button{min-height:42px;border:1px solid var(--blue);border-radius:10px;padding:0 14px;background:var(--blue);color:var(--white);font:750 13px/1 var(--font-ui);cursor:pointer}
+.resume-toolbar button:hover{background:var(--navy);border-color:var(--navy)}
+.resume-toolbar button:disabled{opacity:.5;cursor:not-allowed}
 .resume-document{width:min(210mm,calc(100% - 32px));min-height:297mm;margin:28px auto;padding:20mm 18mm;box-sizing:border-box;background:var(--white);box-shadow:0 20px 70px color-mix(in srgb,var(--navy) 12%,transparent)}
 .resume-header{padding-bottom:22px;border-bottom:3px solid var(--navy)}
 .resume-header h1{margin:0;font-family:var(--font-display);font-size:40px;line-height:1;letter-spacing:-.035em;color:var(--navy-deep)}
@@ -18,4 +21,4 @@ body.resume-page{margin:0;background:var(--soft);color:var(--ink);font-family:va
 .resume-empty{max-width:650px;margin:60px auto;padding:36px 24px;text-align:center;color:var(--text)}
 .resume-empty h1{color:var(--navy);font-size:30px}
 @media(max-width:720px){.resume-toolbar{align-items:flex-start;flex-direction:column}.resume-toolbar-left,.resume-toolbar-right{width:100%;justify-content:space-between}.resume-document{width:100%;min-height:0;margin:0;padding:34px 22px;box-shadow:none}.resume-header h1{font-size:34px}}
-@media print{body.resume-page{background:var(--white)}.resume-toolbar{display:none!important}.resume-document{width:auto;min-height:auto;margin:0;padding:12mm 13mm;box-shadow:none}.resume-section{break-inside:avoid}.site-footer{display:none!important}@page{size:A4;margin:0}}
+@media print{body.resume-page{background:var(--white)}.resume-toolbar{display:none!important}.resume-document{width:auto;min-height:auto;margin:0;padding:12mm 13mm;box-shadow:none}.resume-section{break-inside:avoid}@page{size:A4;margin:0}}
