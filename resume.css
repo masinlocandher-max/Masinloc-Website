@@ -21,4 +21,4 @@ body.resume-page{margin:0;background:var(--soft);color:var(--ink);font-family:va
 .resume-empty{max-width:650px;margin:60px auto;padding:36px 24px;text-align:center;color:var(--text)}
 .resume-empty h1{color:var(--navy);font-size:30px}
 @media(max-width:720px){.resume-toolbar{align-items:flex-start;flex-direction:column}.resume-toolbar-left,.resume-toolbar-right{width:100%;justify-content:space-between}.resume-document{width:100%;min-height:0;margin:0;padding:34px 22px;box-shadow:none}.resume-header h1{font-size:34px}}
-@media print{body.resume-page{background:var(--white)}.resume-toolbar{display:none!important}.resume-document{width:auto;min-height:auto;margin:0;padding:12mm 13mm;box-shadow:none}.resume-section{break-inside:avoid}@page{size:A4;margin:0}}
+@media print{body.resume-page{background:var(--white)}.resume-toolbar,.site-footer{display:none!important}.resume-document{width:auto;min-height:auto;margin:0;padding:12mm 13mm;box-shadow:none}.resume-section{break-inside:avoid}@page{size:A4;margin:0}}
