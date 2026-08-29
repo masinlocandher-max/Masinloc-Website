@@ -5,6 +5,7 @@ const SUPABASE_KEY='sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
 
 async function boot(){
   const {data:{session}}=await supabase.auth.getSession();
@@ -22,19 +23,38 @@ function showEmpty(){
 }
 
 function listSection(title,items){
-  const clean=(Array.isArray(items)?items:[]).filter(Boolean);
-  if(!clean.length)return '';
-  return `<section class="resume-section"><h2>${esc(title)}</h2><ul class="resume-skills">${clean.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></section>`;
+  const cleanItems=(Array.isArray(items)?items:[]).map(clean).filter(Boolean);
+  if(!cleanItems.length)return '';
+  return `<section class="resume-section"><h2>${esc(title)}</h2><ul class="resume-skills">${cleanItems.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></section>`;
+}
+
+function experienceBullets(value){
+  return clean(value).split(/(?:\n|[•]|\.\s+(?=[A-Z]))/).map(clean).filter(Boolean).slice(0,8);
+}
+
+function generatedSummary(r,target){
+  if(clean(r.summary))return clean(r.summary);
+  const skills=(r.skills||[]).map(clean).filter(Boolean).slice(0,4);
+  const experience=(r.experience||[]).map(item=>clean(typeof item==='string'?item:item?.summary)).filter(Boolean);
+  const education=clean(r.education?.level);
+  const parts=[];
+  if(target)parts.push(`Applicant interested in ${target}`);
+  else parts.push('Motivated applicant ready to contribute in a professional work environment');
+  if(skills.length)parts.push(`with strengths in ${skills.join(', ')}`);
+  if(experience.length)parts.push('bringing practical experience from work, training, school, volunteer, or community responsibilities');
+  else if(education)parts.push(`with ${education.toLowerCase()} education and readiness to learn`);
+  return `${parts.join(', ')}.`;
 }
 
 function renderResume(row){
   const r=row.resume_snapshot||{};
   const personal=r.personal||{};
   const target=row.target_role||(r.target_roles||[])[0]||'';
-  const contact=[personal.email,personal.mobile,personal.current_location].filter(Boolean);
-  const experience=(Array.isArray(r.experience)?r.experience:[]).map(item=>typeof item==='string'?item:item?.summary||'').filter(Boolean);
-  const training=[...(r.training||[]),...(r.certifications||[])].filter(Boolean);
-  const education=[r.education?.level,r.education?.school].filter(Boolean).join(' · ');
+  const contact=[personal.email,personal.mobile,personal.current_location].map(clean).filter(Boolean);
+  const experience=(Array.isArray(r.experience)?r.experience:[]).flatMap(item=>experienceBullets(typeof item==='string'?item:item?.summary||'')).filter(Boolean);
+  const training=[...(r.training||[]),...(r.certifications||[])].map(clean).filter(Boolean);
+  const education=[r.education?.level,r.education?.school].map(clean).filter(Boolean).join(' · ');
+  const summary=generatedSummary(r,target);
   const doc=$('#resumeDocument');
   doc.innerHTML=`
     <header class="resume-header">
@@ -42,9 +62,9 @@ function renderResume(row){
       ${target?`<p class="resume-target">${esc(target)}</p>`:''}
       ${contact.length?`<div class="resume-contact">${contact.map(v=>`<span>${esc(v)}</span>`).join('')}</div>`:''}
     </header>
-    ${r.summary?`<section class="resume-section"><h2>Profile</h2><p>${esc(r.summary)}</p></section>`:''}
-    ${listSection('Skills',r.skills)}
-    ${experience.length?`<section class="resume-section"><h2>Experience</h2><div class="resume-lines">${experience.map(v=>`<div class="resume-line"><span>${esc(v)}</span></div>`).join('')}</div></section>`:''}
+    <section class="resume-section"><h2>Professional Profile</h2><p>${esc(summary)}</p></section>
+    ${listSection('Core Skills',r.skills)}
+    ${experience.length?`<section class="resume-section"><h2>Relevant Experience</h2><ul class="resume-experience">${experience.map(v=>`<li>${esc(v.replace(/[.]+$/,''))}</li>`).join('')}</ul></section>`:''}
     ${education?`<section class="resume-section"><h2>Education</h2><p>${esc(education)}</p></section>`:''}
     ${listSection('Training & Certifications',training)}
     ${listSection('Languages',r.languages)}
