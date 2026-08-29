@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Jobs Source Desk | Masinloc Connect</title>
+<meta name="robots" content="noindex,nofollow,noarchive">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens.css?v=20260823-1">
+<link rel="stylesheet" href="site.css?v=20260825-2">
+<link rel="stylesheet" href="site-polish.css?v=20260825-2">
+<link rel="stylesheet" href="jobs-source-desk.css?v=20260829-1">
+</head>
+<body class="source-desk-page">
+<header class="desk-header">
+  <a href="connect.html" class="desk-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
+  <div><strong>Jobs Source Desk</strong><span>Private curation workspace</span></div>
+</header>
+<main class="desk-shell">
+  <section class="desk-auth" id="authView">
+    <h1>Jobs Source Desk</h1>
+    <p>Authorized Masinloc Connect administrators only.</p>
+    <label for="adminEmail">Admin email</label>
+    <div class="desk-auth-row"><input id="adminEmail" type="email" autocomplete="email" placeholder="Email address"><button id="sendLinkBtn" type="button">Send secure sign-in link</button></div>
+    <p id="authMessage" class="desk-message" role="status"></p>
+  </section>
+
+  <section id="deniedView" class="desk-auth" hidden>
+    <h1>Access denied</h1>
+    <p>This account is not authorized to manage Masinloc Connect Jobs.</p>
+    <button id="deniedSignOutBtn" type="button">Sign out</button>
+  </section>
+
+  <section id="deskView" hidden>
+    <div class="desk-topbar">
+      <div><p class="desk-kicker">MASINLOC CONNECT JOBS</p><h1>Source Desk</h1><p>Add only legitimate vacancies from traceable sources. A job never appears publicly until it is explicitly marked Live.</p></div>
+      <div class="desk-account"><span id="adminAccount"></span><button id="signOutBtn" type="button">Sign out</button></div>
+    </div>
+
+    <section class="desk-stats" aria-label="Vacancy status summary">
+      <div><strong id="draftCount">0</strong><span>Draft</span></div>
+      <div><strong id="verifiedCount">0</strong><span>Verified</span></div>
+      <div><strong id="liveCount">0</strong><span>Live</span></div>
+      <div><strong id="recheckCount">0</strong><span>Needs recheck</span></div>
+      <div><strong id="expiredCount">0</strong><span>Expired</span></div>
+    </section>
+
+    <div class="desk-layout">
+      <form class="desk-form" id="jobForm" novalidate>
+        <div class="desk-form-head"><div><h2 id="formTitle">Add vacancy</h2><p>Use the source as the factual record. Write only a short plain-language summary.</p></div><button id="resetBtn" type="button" class="desk-quiet">Clear</button></div>
+        <input type="hidden" id="jobId">
+
+        <fieldset><legend>Source</legend>
+          <div class="desk-grid">
+            <label>Provider<select id="providerId" required></select></label>
+            <label>Source listing ID, optional<input id="externalJobId" maxlength="300" placeholder="Provider vacancy ID"></label>
+            <label class="full">Official source URL<input id="sourceUrl" type="url" required placeholder="https://..."></label>
+            <label class="full">Application URL<input id="applyUrl" type="url" required placeholder="https://..."></label>
+            <label>Verification method<select id="verificationMethod"><option value="official_source">Official source</option><option value="provider_api">Provider API</option><option value="provider_embed">Provider embed</option><option value="manual_check">Manual check</option><option value="other">Other</option></select></label>
+            <label>Source checked<input id="sourceCheckedAt" type="datetime-local"></label>
+          </div>
+        </fieldset>
+
+        <fieldset><legend>Vacancy</legend>
+          <div class="desk-grid">
+            <label class="full">Job title<input id="title" required maxlength="300"></label>
+            <label>Employer / agency<input id="company" maxlength="300"></label>
+            <label>Location<input id="location" maxlength="300"></label>
+            <label>Employment type<input id="employmentType" maxlength="120" placeholder="Full-time"></label>
+            <label>Work setup<input id="workSetup" maxlength="120" placeholder="On-site / Remote / Hybrid"></label>
+            <label class="full">Published salary, if stated<input id="salaryText" maxlength="300" placeholder="₱25,000–₱30,000/month"></label>
+            <label>Source posting date<input id="publishedAt" type="datetime-local"></label>
+            <label>Closing date<input id="closingDate" type="datetime-local"></label>
+          </div>
+        </fieldset>
+
+        <fieldset><legend>Masinloc Connect explanation</legend>
+          <div class="desk-grid">
+            <label class="full">What the job is about<textarea id="descriptionExcerpt" maxlength="3000" placeholder="Short factual summary in plain language."></textarea></label>
+            <label class="full">What they are looking for<textarea id="requirementsExcerpt" maxlength="3000" placeholder="Short summary of stated requirements. Do not invent qualifications."></textarea></label>
+            <label class="full">Internal curator note<textarea id="curatorNote" maxlength="3000" placeholder="Private note. Never shown publicly."></textarea></label>
+          </div>
+        </fieldset>
+
+        <fieldset><legend>Freshness</legend>
+          <div class="desk-grid">
+            <label>Recheck by<input id="staleAfter" type="datetime-local"></label>
+            <label>Cache expires<input id="cacheExpiresAt" type="datetime-local" required></label>
+          </div>
+          <p class="desk-help">If no closing date is published, use a short recheck window. Public access stops automatically when the cache or stale date passes.</p>
+        </fieldset>
+
+        <div class="desk-actions">
+          <button type="button" class="desk-secondary" data-save-status="draft">Save draft</button>
+          <button type="button" class="desk-secondary" data-save-status="verified">Save as verified</button>
+          <button type="button" class="desk-primary" data-save-status="live">Publish live</button>
+        </div>
+        <p id="formMessage" class="desk-message" role="status"></p>
+      </form>
+
+      <section class="desk-list-panel">
+        <div class="desk-list-head"><div><h2>Vacancies</h2><p id="jobCount">0 records</p></div><select id="statusFilter" aria-label="Filter vacancies"><option value="all">All statuses</option><option value="draft">Draft</option><option value="verified">Verified</option><option value="live">Live</option><option value="needs_recheck">Needs recheck</option><option value="expired">Expired</option><option value="rejected">Rejected</option></select></div>
+        <div id="jobsList" class="desk-list"></div>
+      </section>
+    </div>
+  </section>
+</main>
+<script type="module" src="jobs-source-desk.js?v=20260829-1"></script>
+</body>
+</html>
