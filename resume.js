@@ -4,7 +4,7 @@ const SUPABASE_URL='https://uwcqvsitjtknxsaypjxj.supabase.co';
 const SUPABASE_KEY='sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
-const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[m]));
 const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
 const params=new URLSearchParams(location.search);
 const requestedTarget=clean(params.get('target'));
@@ -107,6 +107,7 @@ function renderResume(){
   const training=unique([...(r.training||[]),...(r.certifications||[])]);
   const education=[r.education?.level,r.education?.school].map(clean).filter(Boolean).join(' · ');
   const languages=unique(r.languages||[]);
+  const references=unique((r.references||[]).map(item=>typeof item==='string'?item:item?.summary||''));
   const summary=generatedSummary(r,target);
   const availability=clean(r.availability);
   const doc=$('#resumeDocument');
@@ -122,6 +123,7 @@ function renderResume(){
     ${listSection('Core Skills',r.skills)}
     ${listSection('Training & Certifications',training)}
     ${listSection('Languages',languages)}
+    ${listSection('References',references)}
     ${availability?`<section class="resume-section"><h2>Availability</h2><p>${esc(availability)}</p></section>`:''}
   `;
   doc.hidden=false;
