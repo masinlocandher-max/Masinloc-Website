@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Jobs | Masinloc Connect</title>
+<meta name="description" content="Masinloc Connect helps Masinloqueños find, understand, prepare for, and apply to job opportunities from approved external sources.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="tokens.css?v=20260823-1">
+<link rel="stylesheet" href="site.css?v=20260825-2">
+<link rel="stylesheet" href="site-polish.css?v=20260825-2">
+<link rel="stylesheet" href="jobs.css?v=20260829-1">
+<link rel="stylesheet" href="site-stability.css?v=20260825-1">
+</head>
+<body class="about-page jobs-page">
+<header class="site-nav" id="siteNav">
+  <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
+  <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Open menu"><span></span><span></span></button>
+  <nav class="primary-nav" id="primaryNav" aria-label="Primary navigation">
+    <a href="discover/index.html">Discover</a>
+    <a href="sambal-tina.html">Sambal Tina</a>
+    <a href="marketplace.html">Marketplace</a>
+    <a href="a-closer-look.html">About Masinloc</a>
+    <a class="connect-link" href="connect.html">Masinloc Connect</a>
+  </nav>
+</header>
+
+<main class="jobs-main" id="main">
+  <nav class="jobs-crumbs" aria-label="Breadcrumb">
+    <a href="connect.html">Masinloc Connect</a> · <span aria-current="page">Jobs</span>
+  </nav>
+
+  <section class="jobs-hero" aria-labelledby="jobsTitle">
+    <div>
+      <h1 id="jobsTitle">Hanap tayo ng trabahong bagay sa iyo.</h1>
+      <p>Hindi mo kailangang kabisado ang Indeed, JobStreet, government portals, o remote-work sites. Masinloc Connect will help you understand the opportunity, prepare your resume, and guide you through the application.</p>
+    </div>
+    <div class="jobs-assist">
+      <strong>Start where you are.</strong>
+      <span>Browse first. You only need an account when you want to save a job, build a resume, or apply.</span>
+    </div>
+  </section>
+
+  <section aria-label="Job search">
+    <div class="jobs-toolbar">
+      <div class="jobs-search">
+        <label class="visually-hidden" for="jobSearch">Search jobs</label>
+        <input id="jobSearch" type="search" autocomplete="off" placeholder="Anong trabaho ang hinahanap mo?">
+      </div>
+      <a class="jobs-career-link" id="careerLink" href="career.html">Build my resume</a>
+    </div>
+
+    <div class="jobs-filters" id="jobFilters" role="group" aria-label="Choose opportunities">
+      <button class="jobs-chip is-active" type="button" data-filter="all">All opportunities</button>
+      <button class="jobs-chip" type="button" data-filter="for-you">For you</button>
+      <button class="jobs-chip" type="button" data-filter="near">Near Zambales</button>
+      <button class="jobs-chip" type="button" data-filter="remote">Work from home</button>
+      <button class="jobs-chip" type="button" data-filter="government">Government</button>
+      <button class="jobs-chip" type="button" data-filter="abroad">Abroad</button>
+      <button class="jobs-chip" type="button" data-filter="entry">Entry level</button>
+    </div>
+  </section>
+
+  <p class="jobs-status" id="jobsStatus" role="status" aria-live="polite"></p>
+
+  <section class="jobs-empty" id="jobsEmpty" hidden>
+    <h2>Live opportunities are being connected.</h2>
+    <p>We will only show jobs from a source after its permitted integration is working and the listing can be kept fresh. You can already create your Masinloc Connect career profile and resume while the first approved feeds are being connected.</p>
+    <a class="jobs-primary" href="career.html">Create my career profile</a>
+  </section>
+
+  <section class="jobs-workspace" id="jobsWorkspace" hidden aria-label="Job opportunities">
+    <div>
+      <div class="jobs-list-head">
+        <h2>Opportunities</h2>
+        <p class="jobs-count" id="jobsCount"></p>
+      </div>
+      <ul class="jobs-list" id="jobsList"></ul>
+    </div>
+    <article class="jobs-detail" id="jobsDetail" aria-live="polite">
+      <div class="jobs-detail-empty">Choose a job to see the important details in plain language.</div>
+    </article>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="footer-main"><div class="footer-brand"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><p>By Masinloqueños.<br>For Masinloqueños.<br>With Masinloqueños.</p></div><div class="footer-item"><span>FACEBOOK</span><strong>Discover Masinloc</strong></div><div class="footer-item"><span>EMAIL</span><a href="contact.html">hello@masinloc-zambales.com</a></div></div><nav class="footer-links" aria-label="Footer"><a href="index.html">Home</a><a href="discover/index.html">Discover</a><a href="sambal-tina.html">Sambal Tina</a><a href="marketplace.html">Marketplace</a><a href="a-closer-look.html">About Masinloc</a><a href="connect.html">Masinloc Connect</a><a href="verified-history.html">Verified History</a><a href="masinloc-bulletin.html">Masinloc Bulletin</a><a href="sources.html">Sources &amp; References</a><a href="contact.html">Contact</a></nav><div class="footer-bottom"><span>© 2026 Mabayani Project by FMB. All rights reserved.</span><span><a href="privacy.html">Privacy Notice</a> · <a href="trust.html">Trust &amp; Transparency</a> · masinloc-zambales.com</span></div></footer>
+
+<script src="site.js?v=20260825-2"></script>
+<script type="module" src="jobs.js?v=20260829-1"></script>
+</body>
+</html>
