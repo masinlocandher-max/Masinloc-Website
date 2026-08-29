@@ -81,9 +81,10 @@ async function testJobsPopulated(viewport, label) {
   if (painted.opacity < 0.9 || painted.height < 100) fail(`${label}/jobs-live: workspace is not visibly painted`);
 
   let detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
-  for (const expected of ['production worker','qa employer','subic, zambales','role','requirements','view official listing','before you continue','resume','masinloc connect found and organized this opportunity for you']) {
+  for (const expected of ['production worker','qa employer','subic, zambales','role','requirements','before you continue','resume','masinloc connect found and organized this opportunity for you']) {
     if (!detail.includes(expected)) fail(`${label}/jobs-live: detail missing ${expected}`);
   }
+  if (detail.includes('view official listing')) fail(`${label}/jobs-live: official destination should wait until application review`);
   if (detail.includes('checked today') || detail.includes('checked yesterday') || detail.includes('from philjobnet')) fail(`${label}/jobs-live: provider/freshness dominates public detail`);
 
   await page.locator('#quickRole').fill('production');
