@@ -2,9 +2,9 @@
  *
  * The database/RLS checks own data security. This suite proves the job-seeker
  * experience without depending on a live provider feed or a real email login:
- * public browsing, truthful empty state, populated vacancy rendering, guided
- * career entry, pending-job preservation, resume auth guard, responsive layout,
- * and console health.
+ * public browsing, truthful empty state, populated vacancy rendering, useful
+ * search/filter summaries, pending-job preservation, resume auth guard,
+ * responsive layout, and console health.
  */
 import { chromium } from 'playwright';
 import fs from 'node:fs/promises';
@@ -31,7 +31,7 @@ const sampleJob = {
   expires_at: null,
   source_url: 'https://example.com/source',
   apply_url: 'https://example.com/apply',
-  last_verified_at: '2026-08-29T10:00:00+08:00',
+  last_verified_at: new Date().toISOString(),
   provider_metadata: { entry_level: true },
   provider: {
     code: 'philjobnet',
@@ -91,8 +91,9 @@ async function testJobsEmpty(viewport, label) {
   const empty = (await page.locator('#jobsEmpty').innerText()).toLowerCase();
   if (!empty.includes('no current opportunities are available')) fail(`${label}/jobs-empty: truthful empty state is missing`);
   if (!(await page.locator('#jobsWorkspace').isHidden())) fail(`${label}/jobs-empty: empty feed still exposes job workspace`);
+  if (!(await page.locator('#jobsSummary').isHidden())) fail(`${label}/jobs-empty: summary is visible with no jobs`);
   if (await page.locator('#jobSearch').count() !== 1) fail(`${label}/jobs-empty: search input missing`);
-  if (await page.locator('#jobFilters .jobs-chip').count() < 7) fail(`${label}/jobs-empty: guided job filters are incomplete`);
+  if (await page.locator('#jobFilters .jobs-chip').count() < 8) fail(`${label}/jobs-empty: guided job filters are incomplete`);
   const careerHref = await page.locator('#careerLink').getAttribute('href');
   if (careerHref !== 'career.html') fail(`${label}/jobs-empty: career CTA does not lead to career.html`);
 
@@ -113,12 +114,33 @@ async function testJobsPopulated(viewport, label) {
   await page.locator('#jobsWorkspace').waitFor({ state: 'visible' });
 
   if (!(await page.locator('#jobsEmpty').isHidden())) fail(`${label}/jobs-live: empty state remains visible with a job`);
+  if (!(await page.locator('#jobsSummary').isVisible())) fail(`${label}/jobs-live: useful summary is hidden`);
+  if ((await page.locator('#summaryTotal').innerText()).trim() !== '1') fail(`${label}/jobs-live: total summary is wrong`);
+  if ((await page.locator('#summaryZambales').innerText()).trim() !== '1') fail(`${label}/jobs-live: Zambales summary is wrong`);
+  if ((await page.locator('#summaryEntry').innerText()).trim() !== '1') fail(`${label}/jobs-live: entry-level summary is wrong`);
   if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/jobs-live: expected one rendered vacancy`);
   if ((await page.locator('#jobsList').innerText()).includes('Production Worker') === false) fail(`${label}/jobs-live: vacancy title missing from list`);
+
+  const painted = await page.locator('#jobsWorkspace').evaluate(el => ({
+    opacity: Number(getComputedStyle(el).opacity),
+    height: el.getBoundingClientRect().height,
+  }));
+  if (painted.opacity < 0.9 || painted.height < 100) fail(`${label}/jobs-live: job workspace is present but not visibly painted`);
+
   const detail = (await page.locator('#jobsDetail').innerText()).toLowerCase();
-  for (const expected of ['production worker','qa employer','subic, zambales','from philjobnet','what the job is about','what they are looking for']) {
+  for (const expected of ['production worker','qa employer','subic, zambales','from philjobnet','role','requirements','checked today','view official listing']) {
     if (!detail.includes(expected)) fail(`${label}/jobs-live: detail missing ${expected}`);
   }
+
+  await page.locator('#jobSearch').fill('production subic');
+  if (await page.locator('#jobsList .job-row').count() !== 1) fail(`${label}/jobs-live: multi-word search did not match across vacancy fields`);
+  await page.locator('#jobSearch').fill('production pampanga');
+  await page.locator('#jobsEmpty').waitFor({ state: 'visible' });
+  await page.locator('#clearJobsBtn').click();
+  await page.locator('#jobsWorkspace').waitFor({ state: 'visible' });
+
+  const zambalesCount = (await page.locator('[data-filter="zambales"] [data-count]').innerText()).trim();
+  if (zambalesCount !== '1') fail(`${label}/jobs-live: Zambales filter count is ${zambalesCount}`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
   if (overflow > 1) fail(`${label}/jobs-live: horizontal overflow ${overflow}px`);
 
@@ -159,6 +181,7 @@ async function testCareer(viewport, label) {
 
   if (!(await page.locator('#authView').isVisible())) fail(`${label}/career: signed-out auth view is not visible`);
   if (!(await page.locator('#careerView').isHidden())) fail(`${label}/career: private form is visible before authentication`);
+  if (await page.locator('#careerOverview').count() !== 1) fail(`${label}/career: signed-in activity dashboard is missing from the page contract`);
   if (await page.locator('#authEmail[type="email"]').count() !== 1) fail(`${label}/career: email sign-in input missing`);
   if (await page.locator('#privacyConsent[type="checkbox"]').count() !== 1) fail(`${label}/career: privacy consent control missing`);
   if (await page.locator('#sendLinkBtn').count() !== 1) fail(`${label}/career: passwordless sign-in control missing`);
@@ -207,4 +230,4 @@ if (failures.length) {
 }
 
 console.log('JOBS QA PASSED');
-console.log('Empty and populated public browse, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
+console.log('Useful search, filter counts, visible vacancy rendering, privacy-gated career entry, pending-job preservation, resume auth guard and responsive widths hold.');
