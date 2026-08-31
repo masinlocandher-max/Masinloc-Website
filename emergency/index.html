@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#03112F">
+<meta name="robots" content="noindex,nofollow">
+<title>Emergency Help | Masinloc Connect</title>
+<meta name="description" content="Emergency reporting interface for PNP and MDRRMO in Masinloc Connect.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="../tokens.css?v=20260823-1">
+<link rel="stylesheet" href="emergency.css?v=20260831-1">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to emergency form</a>
+<header class="emergency-header">
+  <a class="brand" href="../connect.html" aria-label="Back to Masinloc Connect"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
+  <div class="connection-pill" id="connectionPill" aria-live="polite"><span></span><b>Checking connection</b></div>
+</header>
+
+<main id="main">
+  <section class="emergency-hero">
+    <p class="eyebrow">MASINLOC CONNECT · EMERGENCY HELP</p>
+    <h1>Get help from the right response team.</h1>
+    <p class="lead">Choose PNP or MDRRMO. Your location can be captured automatically. If you lose data or Wi-Fi, the report stays on this device and retries when a connection returns.</p>
+    <div class="critical-callout">
+      <div><strong>Immediate danger?</strong><span>Do not wait for an online reply.</span></div>
+      <a href="tel:911">Call 911</a>
+    </div>
+  </section>
+
+  <section class="agency-picker" aria-labelledby="agencyTitle">
+    <div class="section-heading">
+      <p>STEP 1</p><h2 id="agencyTitle">Who do you need?</h2>
+    </div>
+    <div class="agency-grid">
+      <button class="agency-card pnp" type="button" data-agency="pnp" aria-pressed="false">
+        <span class="agency-icon" aria-hidden="true">PNP</span>
+        <span><strong>Police</strong><small>Crime, threats, suspicious activity, missing persons, traffic or public-safety incidents.</small></span>
+        <b>Choose PNP</b>
+      </button>
+      <button class="agency-card mdrrmo" type="button" data-agency="mdrrmo" aria-pressed="false">
+        <span class="agency-icon" aria-hidden="true">DR</span>
+        <span><strong>MDRRMO</strong><small>Flood, fire, rescue, medical response, disaster, evacuation or other hazards.</small></span>
+        <b>Choose MDRRMO</b>
+      </button>
+    </div>
+  </section>
+
+  <section class="report-panel" id="reportPanel" hidden aria-labelledby="reportTitle">
+    <div class="section-heading">
+      <p>STEP 2</p><h2 id="reportTitle">Tell us what is happening.</h2>
+    </div>
+
+    <div class="location-card" id="locationCard">
+      <div class="location-copy">
+        <span class="location-mark" aria-hidden="true">⌖</span>
+        <div><strong id="locationTitle">Location not captured yet</strong><small id="locationMeta">Allow location so responders can receive coordinates with your report.</small></div>
+      </div>
+      <button type="button" id="locationBtn">Capture GPS</button>
+    </div>
+
+    <form id="reportForm" novalidate>
+      <div class="field-grid">
+        <label class="field">
+          <span>Incident type *</span>
+          <select id="incidentType" name="incidentType" required></select>
+        </label>
+        <label class="field full">
+          <span>What is happening? *</span>
+          <textarea id="description" name="description" rows="5" maxlength="4000" required placeholder="Describe what you see, who needs help, and any immediate danger."></textarea>
+        </label>
+        <label class="field">
+          <span>Barangay / area</span>
+          <input id="barangay" name="barangay" maxlength="160" autocomplete="address-level3" placeholder="Example: Inhobol">
+        </label>
+        <label class="field">
+          <span>Landmark or exact place</span>
+          <input id="landmark" name="landmark" maxlength="300" placeholder="House, road, school, store, sitio, landmark">
+        </label>
+      </div>
+
+      <details class="contact-details">
+        <summary>Optional contact details</summary>
+        <div class="field-grid contact-grid">
+          <label class="field"><span>Name</span><input id="reporterName" maxlength="160" autocomplete="name"></label>
+          <label class="field"><span>Phone / contact</span><input id="reporterContact" maxlength="160" inputmode="tel" autocomplete="tel"></label>
+          <label class="field full"><span>Preferred reply</span><select id="contactPreference"><option value="chat">Chat in this report</option><option value="call">Call me</option><option value="sms">SMS me</option></select></label>
+        </div>
+      </details>
+
+      <div class="delivery-rule">
+        <strong id="deliveryRuleTitle">A report is not sent until the server confirms receipt.</strong>
+        <p>If you are offline, we will save it on this device and clearly mark it <b>Saved Offline · Not Yet Received</b>.</p>
+      </div>
+
+      <div class="form-actions">
+        <button class="submit-report" id="submitReport" type="submit">Send emergency report</button>
+        <a class="call-911" href="tel:911">Call 911 instead</a>
+      </div>
+      <p class="form-error" id="formError" role="alert" hidden></p>
+    </form>
+  </section>
+
+  <section class="active-report" id="activeReport" hidden aria-labelledby="activeReportTitle">
+    <div class="active-report-head">
+      <div><p>YOUR REPORT</p><h2 id="activeReportTitle">Emergency report</h2></div>
+      <button type="button" id="newReportBtn">New report</button>
+    </div>
+    <div class="status-card" id="statusCard">
+      <span class="status-dot"></span>
+      <div><strong id="statusLabel">Saved Offline</strong><small id="statusExplanation">This report has not been received yet.</small></div>
+    </div>
+    <div class="report-meta">
+      <div><span>Reference</span><strong id="referenceValue">Pending</strong></div>
+      <div><span>Agency</span><strong id="agencyValue">—</strong></div>
+      <div><span>Created</span><strong id="createdValue">—</strong></div>
+      <div><span>GPS</span><strong id="gpsValue">—</strong></div>
+    </div>
+
+    <div class="chat-card">
+      <div class="chat-heading"><div><strong>Updates & messages</strong><small>Only public responder replies appear here.</small></div><button type="button" id="refreshStatus">Refresh</button></div>
+      <div class="messages" id="messages" aria-live="polite"></div>
+      <form class="message-form" id="messageForm">
+        <label for="messageInput">Send an update</label>
+        <div><textarea id="messageInput" rows="2" maxlength="4000" placeholder="Add new information for responders"></textarea><button type="submit">Send</button></div>
+        <small id="messageHint">If offline, your message will be queued on this device.</small>
+      </form>
+    </div>
+
+    <div class="offline-fallback">
+      <div><strong>No data, Wi-Fi or load?</strong><p>Your queued report stays on this device. If cellular service still allows an emergency call, use 911. During a total signal outage, move to safety first and the report will retry when connectivity returns.</p></div>
+      <a href="tel:911">Call 911</a>
+    </div>
+  </section>
+
+  <section class="offline-guide" aria-labelledby="offlineGuideTitle">
+    <p class="eyebrow dark">BUILT FOR CONNECTION LOSS</p>
+    <h2 id="offlineGuideTitle">What still works offline</h2>
+    <div class="offline-grid">
+      <article><strong>Report drafting</strong><p>Write the incident and location details without data.</p></article>
+      <article><strong>GPS capture</strong><p>The phone can attempt to obtain coordinates after permission is granted.</p></article>
+      <article><strong>Local queue</strong><p>The report remains stored on this device until delivery succeeds.</p></article>
+      <article><strong>Automatic retry</strong><p>The system retries when the page detects a connection again.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer><a href="../connect.html">Masinloc Connect</a><span>Emergency reporting pilot</span></footer>
+<script src="emergency.js?v=20260831-1" defer></script>
+</body>
+</html>
