@@ -35,6 +35,10 @@ await page.route('**/functions/v1/emergency-response',async route=>{
     await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,incident:{client_report_id:body.client_report_id,public_reference:agencyReplies.length?'QA-MDRRMO-001':'QA-PNP-001',target_agency:agencyReplies.length?'mdrrmo':'pnp',lead_agency:agencyReplies.length?'mdrrmo':'pnp',status:serverStatus,priority:'unassessed',incident_type:'qa',received_at:new Date().toISOString(),acknowledged_at:null,assigned_unit:null,resolved_at:null,updated_at:new Date().toISOString()},messages:[{id:'qa-system',sender_kind:'system',sender_agency:null,body:'QA receipt confirmed.',created_at:new Date().toISOString()},...agencyReplies]})});
     return;
   }
+  if(action==='readiness'){
+    await route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({ok:true,determined:true,staffed:{pnp:true,mdrrmo:true}})});
+    return;
+  }
   if(action==='message'){
     await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,message_id:'qa-message',created_at:new Date().toISOString()})});
     return;
@@ -216,6 +220,81 @@ const FIXTURE=[
 ];
 const UNACKNOWLEDGED=FIXTURE.filter(x=>x.status==='received').length;
 const STUB_ROLE='duty officer';
+
+
+/* --- never claim a desk receives a report when none does -----------------
+
+   The resident page used to state flatly that "the same desk receives it".
+   Until the municipality activates an account, nobody can open a report at
+   all, so that sentence was false in the most consequential way a sentence on
+   this page can be. The claim is now derived from the server's roster, and
+   these assertions exist so it cannot drift back into being hard-coded.
+
+   Fails closed by construction: every state except a confirmed active desk —
+   unstaffed, undeterminable, request failed — must warn. */
+
+for(const [name,readinessBody,expect] of [
+  ['unstaffed',{ok:true,determined:true,staffed:{pnp:false,mdrrmo:false}},'has not activated this channel'],
+  ['undeterminable',{ok:true,determined:false,staffed:{pnp:false,mdrrmo:false}},'could not confirm'],
+  ['request failed',null,'could not confirm'],
+]){
+  const ctx=await browser.newContext({viewport:{width:390,height:844}});
+  const rp=await ctx.newPage();
+  await rp.route('**/functions/v1/emergency-response',async route=>{
+    let body={};try{body=route.request().postDataJSON()||{}}catch{}
+    if(body.action==='readiness'){
+      if(!readinessBody)return route.fulfill({status:500,contentType:'application/json',body:'{"ok":false,"error":"down"}'});
+      return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(readinessBody)});
+    }
+    return route.fulfill({status:400,contentType:'application/json',body:'{"ok":false}'});
+  });
+  await rp.goto(`${baseURL}/emergency/`,{waitUntil:'networkidle'});
+  await rp.locator('[data-agency="pnp"]').click();
+  await rp.waitForTimeout(300);
+
+  // Asserted on painted height, not the hidden attribute: a warning that is in
+  // the DOM but not on the screen has not warned anybody.
+  const shown=await rp.evaluate(()=>{
+    const e=document.querySelector('#deskState');
+    return {painted:e.getBoundingClientRect().height>0,text:e.innerText.replace(/\s+/g,' ').trim()};
+  });
+  if(!shown.painted)fail(`emergency/readiness(${name}): no warning is painted — the page implies a desk is receiving reports`);
+  if(!shown.text.toLowerCase().includes(expect))fail(`emergency/readiness(${name}): warning did not say '${expect}': "${shown.text}"`);
+  // Every warning must carry the route that does work right now.
+  if(!shown.text.includes('911'))fail(`emergency/readiness(${name}): warning does not point at 911`);
+
+  // No copy anywhere on the page may assert that an agency receives the report
+  // while the warning says otherwise.
+  const claims=await rp.evaluate(()=>document.body.innerText.replace(/\s+/g,' ').toLowerCase());
+  for(const phrase of ['the same desk receives','desk receives it','pnp receives','mdrrmo receives']){
+    if(claims.includes(phrase))fail(`emergency/readiness(${name}): page still claims "${phrase}" while no desk is active`);
+  }
+  await ctx.close();
+}
+
+// And the converse: a confirmed active desk must not be warned about, or the
+// warning becomes noise people learn to skip past.
+{
+  const ctx=await browser.newContext({viewport:{width:390,height:844}});
+  const rp=await ctx.newPage();
+  await rp.route('**/functions/v1/emergency-response',route=>route.fulfill({
+    status:200,contentType:'application/json',
+    body:JSON.stringify({ok:true,determined:true,staffed:{pnp:true,mdrrmo:false}}),
+  }));
+  await rp.goto(`${baseURL}/emergency/`,{waitUntil:'networkidle'});
+  await rp.locator('[data-agency="pnp"]').click();
+  await rp.waitForTimeout(300);
+  if(await rp.evaluate(()=>document.querySelector('#deskState').getBoundingClientRect().height>0)){
+    fail('emergency/readiness(staffed): an active desk is still warned about — a warning that always shows stops being read');
+  }
+  // The other desk is not staffed and must still say so.
+  await rp.locator('[data-agency="mdrrmo"]').click();
+  await rp.waitForTimeout(300);
+  if(!(await rp.evaluate(()=>document.querySelector('#deskState').getBoundingClientRect().height>0))){
+    fail('emergency/readiness(staffed): MDRRMO is not active but the page does not say so');
+  }
+  await ctx.close();
+}
 
 for(const agency of ['pnp','mdrrmo']){
   const path=`/emergency/${agency}.html`;

@@ -48,12 +48,47 @@ function setConnection(){const el=$('#connectionPill'),online=navigator.onLine;e
 function showError(msg){const e=$('#formError');e.textContent=msg;e.hidden=!msg}
 function setSending(on){$('#submitReport').disabled=on;$('#submitReport').textContent=on?'Saving report…':'Send emergency report'}
 
-function agencySelect(agency){selectedAgency=agency;document.querySelectorAll('[data-agency]').forEach(b=>{const selected=b.dataset.agency===agency;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false')});const select=$('#incidentType');select.innerHTML=TYPES[agency].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');$('#modePicker').hidden=false;$('#reportPanel').hidden=false;$('#modePicker').scrollIntoView({behavior:'smooth',block:'start'});captureGPS(false).catch(()=>{});}
+function agencySelect(agency){selectedAgency=agency;document.querySelectorAll('[data-agency]').forEach(b=>{const selected=b.dataset.agency===agency;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',selected?'true':'false')});const select=$('#incidentType');select.innerHTML=TYPES[agency].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');$('#modePicker').hidden=false;$('#reportPanel').hidden=false;$('#modePicker').scrollIntoView({behavior:'smooth',block:'start'});renderDeskState();captureGPS(false).catch(()=>{});}
 
 document.querySelectorAll('[data-agency]').forEach(b=>b.addEventListener('click',()=>agencySelect(b.dataset.agency)));
 function modeSelect(mode){reportMode=mode==='assistance'?'assistance':'emergency';document.querySelectorAll('[data-mode]').forEach(x=>{const on=x.dataset.mode===reportMode;x.classList.toggle('selected',on);x.setAttribute('aria-pressed',on?'true':'false')});
-$('#modeNote').textContent=reportMode==='assistance'?'The same desk receives this. It is not watched continuously — if the situation changes, call 911 or send an emergency report.':'Either way the same desk receives it. If you are unsure, choose Emergency.';}
+$('#modeNote').textContent=reportMode==='assistance'?'This goes to the same queue. It is not watched continuously — if the situation changes, call 911 or send an emergency report.':'Both types go to the same queue. If you are unsure, choose Emergency.';}
 document.querySelectorAll('[data-mode]').forEach(x=>x.addEventListener('click',()=>modeSelect(x.dataset.mode)));
+
+/* Is anybody actually able to open this report?
+
+   The honest answer is a fact about the server's roster, not a sentence a
+   designer chose, so it is fetched. Every state except a confirmed active
+   desk — unknown, offline, request failed, roster unreadable — renders as
+   nobody watching. Failing the other way would mean telling somebody in
+   danger that help has their report when it does not. */
+let deskStaffed=null,deskChecked=false;
+async function loadReadiness(){
+  try{const d=await api({action:'readiness'});deskStaffed=d.determined?d.staffed:null}
+  catch{deskStaffed=null}
+  deskChecked=true;renderDeskState();
+}
+function renderDeskState(){
+  const el=$('#deskState');
+  if(!el||!deskChecked)return;
+  // Before a choice is made the warning speaks for both desks; after one, for
+  // the desk actually chosen.
+  const label=selectedAgency?selectedAgency.toUpperCase():'';
+  const staffed=deskStaffed
+    ?(selectedAgency?deskStaffed[selectedAgency]:(deskStaffed.pnp||deskStaffed.mdrrmo))
+    :null;
+  if(staffed===true){el.hidden=true;el.innerHTML='';return}
+  const who=label||'PNP and MDRRMO';
+  const verb=label?'has':'have';
+  el.innerHTML=staffed===false
+    ?`<strong>${esc(who)} ${verb} not activated this channel yet.</strong>`+
+     `<p>Your report is saved and time-stamped and it stays on record, but no officer can open it until the municipality activates the desk. `+
+     `<b>If this is happening now, call <a href="tel:911">911</a>.</b></p>`
+    :`<strong>We could not confirm that ${label?`the ${esc(label)} desk is`:'either desk is'} active.</strong>`+
+     `<p>Treat this report as not yet received. `+
+     `<b>If this is happening now, call <a href="tel:911">911</a>.</b></p>`;
+  el.hidden=false;
+}
 
 function geolocate(){return new Promise((resolve,reject)=>{if(!navigator.geolocation){reject(new Error('Location is not supported by this browser.'));return}navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:true,timeout:12000,maximumAge:0})})}
 async function captureGPS(quiet=false){const card=$('#locationCard'),button=$('#locationBtn');button.disabled=true;button.textContent='Locating…';if(!quiet){$('#locationTitle').textContent='Getting your location';$('#locationMeta').textContent='Keep this page open while the phone attempts a GPS fix.'}try{const pos=await geolocate();locationFix={latitude:pos.coords.latitude,longitude:pos.coords.longitude,accuracy_m:pos.coords.accuracy,location_captured_at:new Date(pos.timestamp||Date.now()).toISOString()};card.classList.remove('failed');card.classList.add('captured');$('#locationTitle').textContent='Location captured';$('#locationMeta').textContent=`${locationFix.latitude.toFixed(6)}, ${locationFix.longitude.toFixed(6)} · accuracy ±${Math.round(locationFix.accuracy_m)} m`;return locationFix}catch(err){card.classList.remove('captured');card.classList.add('failed');$('#locationTitle').textContent='GPS unavailable';$('#locationMeta').textContent='Enter the barangay and nearest landmark below. You can retry GPS at any time.';throw err}finally{button.disabled=false;button.textContent='Refresh GPS'}}
@@ -178,8 +213,11 @@ async function runFlush(){setConnection();if(!navigator.onLine)return;const repo
 
 async function registerSync(){if(!('serviceWorker'in navigator))return;try{const reg=await navigator.serviceWorker.ready;if('sync'in reg)await reg.sync.register('masinloc-emergency-sync')}catch{}}
 
-window.addEventListener('online',()=>flushAll());window.addEventListener('offline',setConnection);window.addEventListener('focus',()=>flushAll());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')flushAll()});
+window.addEventListener('online',()=>{flushAll();loadReadiness()});window.addEventListener('offline',setConnection);window.addEventListener('focus',()=>flushAll());document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')flushAll()});
 
 async function boot(){setConnection();if('serviceWorker'in navigator){try{await navigator.serviceWorker.register('sw.js',{scope:'./'})}catch{}}const reports=await getReports();if(reports.length){reports.sort((a,b)=>new Date(b.source_created_at).getTime()-new Date(a.source_created_at).getTime());active=reports[0];if(active.sync_state==='delivered' || active.sync_state==='queued' || active.sync_state==='sending'){serverMessages=[];await showActive();}}await flushAll();}
 boot().catch(()=>setConnection());
+// Asked once on load and again on reconnect. Never cached across sessions: a
+// desk that was staffed yesterday is not evidence that one is staffed now.
+loadReadiness();
 })();
