@@ -54,6 +54,13 @@ jobs:
         run: python3 scripts/check-help-desk.py
       - name: Rebuild the Help Desk and verify it reproduces
         run: python3 scripts/build-help-desk.py && git diff --exit-code help-desk.html
+      - name: Verify the PNP and MDRRMO desks match what the public page claims
+        run: python3 scripts/check-assistance-desks.py
+      - name: Rebuild the desk pages and verify they reproduce
+        run: |
+          python3 scripts/build-report.py
+          python3 scripts/build-desk-consoles.py
+          git diff --exit-code report.html pnp-desk.html mdrrmo-desk.html
       - name: Rebuild the Marketplace and verify it reproduces
         run: python3 scripts/build-marketplace.py
       - name: Validate JavaScript syntax

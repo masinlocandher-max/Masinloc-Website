@@ -1,0 +1,47 @@
+{
+  "note": "The desks that can receive a non-emergency message through report.html, and — the field that matters — whether anyone is actually reading them yet. scripts/build-report.py renders the page from this file and scripts/check-assistance-desks.py refuses any page that claims more than this file declares.",
+  "rules": [
+    "`activated` means a named officer at that desk holds an account, has signed into the console, and has agreed to read what arrives. It does not mean the software works. Software being ready is not the same as somebody reading, and only the second one matters to a resident deciding whether to write instead of call.",
+    "While a desk is not activated its form is rendered disabled, with the reason stated in plain words on the page. Nothing is accepted and nothing is queued, because a message sitting in a table nobody can open is worse than a form that says it is not open — the second one sends somebody to the phone.",
+    "Activating a desk is a deliberate act by a person who knows the roster, not a default and not a side effect of a deploy. Flip `activated` to true in the same change that records who was onboarded and when, in `activation`.",
+    "This channel is never for emergencies, activated or not. report.html leads with the hotlines and report_kind has no emergency value. If a desk ever wants an urgent channel here, that is a different product with an on-call rota behind it, and it does not get built by relaxing this one.",
+    "Deactivating is always safe and always immediate: set `activated` to false, rebuild, and the form closes with an honest notice."
+  ],
+  "desks": [
+    {
+      "code": "pnp",
+      "service": "pnp",
+      "name": "PNP Masinloc",
+      "what": "Police assistance, follow-ups on something already reported, and non-urgent public safety concerns.",
+      "activated": false,
+      "activation": {
+        "onboarded": null,
+        "date": null,
+        "note": "No account has been issued for this desk. Until the Masinloc Municipal Police Station has a named officer signed into the console and reading what arrives, this desk stays closed and report.html says so."
+      },
+      "kinds": [
+        ["blotter_followup", "Following up a report I already made"],
+        ["safety_concern", "A public safety concern"],
+        ["assistance_request", "Requesting assistance"],
+        ["information", "A question for the desk"]
+      ]
+    },
+    {
+      "code": "mdrrmo",
+      "service": "mdrrmo",
+      "name": "MDRRMO",
+      "what": "Disaster preparedness, hazards that are not an active emergency, and requests for assistance.",
+      "activated": false,
+      "activation": {
+        "onboarded": null,
+        "date": null,
+        "note": "No account has been issued for this desk. Until the Municipal Disaster Risk Reduction and Management Office has a named officer signed into the console and reading what arrives, this desk stays closed and report.html says so."
+      },
+      "kinds": [
+        ["hazard_report", "A hazard that is not an emergency right now"],
+        ["assistance_request", "Requesting assistance"],
+        ["information", "A question for the desk"]
+      ]
+    }
+  ]
+}

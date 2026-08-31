@@ -158,8 +158,8 @@ markup = f"""<!doctype html>
     <h1>Emergency and assistance numbers for Masinloc.</h1>
     <p class="lead">The offices below answer directly. On a phone, tap a number to call it.</p>
     <p class="hd-independent">Masinloc Connect is an independent community platform, not the municipal
-      government. These numbers are published here so you can reach each office yourself —
-      nothing you send through this website reaches any of them.</p>
+      government. These numbers are published so you can reach each office yourself. In an
+      emergency, calling is the only way — no message sent through this website summons help.</p>
   </section>
 
   <section class="hd-emergency" aria-labelledby="emergencyTitle">

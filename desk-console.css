@@ -1,0 +1,292 @@
+/* PNP and MDRRMO desk consoles.
+
+   A working tool, not a page of the website — but built from the same tokens,
+   because an officer moving between this and the public Help Desk should not
+   feel they have changed products. Restrained, dense enough to read a queue at
+   a glance, and legible on the laptop or tablet a desk actually has. */
+
+.desk-console { background: #F5F6F8; }
+
+/* --- bar ---------------------------------------------------------------- */
+
+.dc-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px clamp(16px, 4vw, 32px);
+  background: #fff;
+  border-bottom: 1px solid #E1E4EA;
+}
+.dc-brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.dc-brand img { height: 30px; width: auto; }
+.dc-desk-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue);
+  padding-left: 14px;
+  border-left: 1px solid #E1E4EA;
+}
+.dc-bar-right { display: flex; align-items: center; gap: 12px; }
+.dc-account { font-size: 0.84rem; color: #5B6072; }
+
+.desk-console main { padding: clamp(18px, 3vw, 32px) clamp(16px, 4vw, 32px) 64px; }
+
+/* --- buttons ------------------------------------------------------------ */
+
+.dc-primary, .dc-quiet, .dc-action {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 18px;
+  min-height: 42px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.dc-primary { background: var(--blue); color: #fff; }
+.dc-primary:hover:not(:disabled) { background: var(--blue-bright); }
+.dc-quiet, .dc-action { background: #fff; color: var(--ink); border-color: #D3D7E0; }
+.dc-quiet:hover, .dc-action:hover:not(:disabled) { border-color: var(--blue); color: var(--blue); }
+.dc-action:disabled { opacity: 0.45; cursor: default; }
+.dc-primary:focus-visible, .dc-quiet:focus-visible, .dc-action:focus-visible {
+  outline: 3px solid var(--yellow); outline-offset: 2px;
+}
+
+/* --- gates -------------------------------------------------------------- */
+
+.dc-gate {
+  max-width: 460px;
+  margin: clamp(30px, 8vh, 80px) auto;
+  padding: clamp(24px, 4vw, 34px);
+  background: #fff;
+  border: 1px solid #E1E4EA;
+  border-radius: 14px;
+}
+.dc-gate h1 { margin: 0 0 12px; font-size: clamp(1.3rem, 2.4vw, 1.7rem); }
+.dc-gate p { margin: 0 0 18px; color: #4A5061; line-height: 1.6; font-size: 0.94rem; }
+.dc-auth { display: grid; gap: 8px; }
+.dc-auth label {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em;
+  text-transform: uppercase; color: #5B6072;
+}
+.dc-auth input {
+  padding: 11px 13px; font: inherit; font-size: 1rem;
+  border: 1px solid #CFD3DC; border-radius: 8px; background: #fff;
+}
+.dc-auth input:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.dc-auth button { margin-top: 6px; }
+.dc-auth-message { margin: 14px 0 0; font-size: 0.88rem; color: #4A5061; min-height: 1.2em; }
+
+/* The escalation reminder on the sign-in screen. An officer opening this on a
+   phone should not be able to mistake it for a dispatch channel. */
+.dc-gate-note {
+  margin: 20px 0 0; padding-top: 16px; border-top: 1px solid #E1E4EA;
+  font-size: 0.85rem; color: #6B7183;
+}
+
+/* --- head --------------------------------------------------------------- */
+
+.dc-head { margin: 0 0 18px; }
+.dc-head h1 { margin: 0 0 6px; font-size: clamp(1.4rem, 2.6vw, 1.9rem); }
+.dc-head p { margin: 0; color: #4A5061; max-width: 68ch; }
+
+.dc-not-live {
+  margin: 14px 0 0 !important;
+  padding: 12px 14px;
+  border-left: 4px solid var(--blue);
+  background: #EEF2FB;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+.dc-escalate {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
+  margin: 0 0 20px; padding: 12px 16px;
+  background: #FDF7F1; border: 1px solid #E4C7A8;
+  border-left: 4px solid #B4501E; border-radius: 0 8px 8px 0;
+}
+.dc-escalate strong { color: #8A3A12; font-size: 0.92rem; }
+.dc-escalate span { font-size: 0.92rem; color: #52402F; font-variant-numeric: tabular-nums; }
+
+/* --- controls ----------------------------------------------------------- */
+
+.dc-controls {
+  display: flex; flex-wrap: wrap; gap: 12px;
+  align-items: center; justify-content: space-between; margin: 0 0 14px;
+}
+.dc-filters { display: flex; flex-wrap: wrap; gap: 7px; }
+.dc-chip {
+  font: inherit; font-size: 0.84rem; font-weight: 600;
+  padding: 8px 14px; min-height: 38px;
+  background: #fff; border: 1px solid #D3D7E0; border-radius: 999px;
+  color: #4A5061; cursor: pointer;
+}
+.dc-chip[data-count] span, .dc-chip span { opacity: 0.6; font-variant-numeric: tabular-nums; }
+.dc-chip:hover { border-color: var(--blue); }
+.dc-chip.is-active { background: var(--navy-deep); border-color: var(--navy-deep); color: #fff; }
+.dc-chip.is-active span { opacity: 0.75; }
+.dc-chip:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+
+.dc-search { flex: 1 1 240px; max-width: 340px; }
+.dc-search input {
+  width: 100%; padding: 10px 13px; font: inherit; font-size: 0.94rem;
+  border: 1px solid #CFD3DC; border-radius: 8px; background: #fff;
+}
+.dc-search input:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+
+.dc-status { margin: 0 0 12px; font-size: 0.88rem; color: #5B6072; min-height: 1.2em; }
+
+/* --- workspace ---------------------------------------------------------- */
+
+/* List beside detail on a desk, stacked on a tablet held upright. The list
+   scrolls within its own column so the detail stays put while an officer works
+   down a queue. */
+.dc-workspace { display: grid; gap: 16px; align-items: start; }
+@media (min-width: 900px) {
+  .dc-workspace { grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); }
+  .dc-list { max-height: calc(100vh - 260px); overflow-y: auto; }
+}
+
+.dc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; }
+
+.dc-row {
+  display: grid; gap: 5px; width: 100%; text-align: left;
+  padding: 13px 15px; font: inherit;
+  background: #fff; border: 1px solid #E1E4EA; border-radius: 10px; cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.dc-row:hover { border-color: #AEB5C4; }
+.dc-row.is-open { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+.dc-row:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.dc-row-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.dc-row-when { font-size: 0.76rem; color: #8A8F9E; white-space: nowrap; }
+.dc-row-subject { font-weight: 650; font-size: 0.96rem; line-height: 1.35; }
+.dc-row-meta { font-size: 0.8rem; color: #6B7183; }
+
+.dc-empty {
+  padding: 26px 16px; text-align: center; color: #6B7183; font-size: 0.9rem;
+  background: #fff; border: 1px dashed #D3D7E0; border-radius: 10px;
+}
+
+/* --- badges ------------------------------------------------------------- */
+
+/* 'New' is the only one that carries colour weight. A queue where every state
+   shouts is a queue where nothing stands out, and the thing an officer needs
+   to find is what nobody has opened. */
+.dc-badge {
+  display: inline-block; padding: 3px 9px; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase;
+  background: #EEF0F4; color: #5B6072;
+}
+.dc-badge.is-submitted { background: #FDECE4; color: #8A3A12; }
+.dc-badge.is-received { background: #E8F1FD; color: #1B4C9B; }
+.dc-badge.is-in_progress { background: #FFF4D6; color: #7A5600; }
+.dc-badge.is-closed { background: #EAF3EC; color: #2C6138; }
+
+/* --- detail ------------------------------------------------------------- */
+
+.dc-detail {
+  background: #fff; border: 1px solid #E1E4EA; border-radius: 12px;
+  padding: clamp(18px, 2.6vw, 26px); min-width: 0;
+}
+.dc-detail-empty { margin: 0; color: #8A8F9E; font-size: 0.92rem; text-align: center; padding: 30px 0; }
+.dc-detail-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.dc-ref {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem; color: #6B7183; user-select: all;
+}
+.dc-detail h2 { margin: 0 0 16px; font-size: clamp(1.14rem, 2vw, 1.42rem); line-height: 1.25; }
+
+.dc-meta { display: grid; gap: 12px; margin: 0 0 18px; padding: 14px 16px;
+  background: #F7F8FA; border-radius: 10px; }
+@media (min-width: 620px) { .dc-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dc-meta dt {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: #8A8F9E; margin-bottom: 2px;
+}
+.dc-meta dd { margin: 0; font-size: 0.92rem; color: #35394A; word-break: break-word; }
+
+/* The resident's own words. Whitespace preserved, because paragraphing is part
+   of an account and collapsing it changes how it reads. */
+.dc-body {
+  white-space: pre-wrap; line-height: 1.7; color: #22262F; font-size: 0.97rem;
+  padding: 16px 18px; background: #FBFBFC; border: 1px solid #EDEFF3;
+  border-radius: 10px; margin-bottom: 20px; overflow-wrap: anywhere;
+}
+
+.dc-note-block { display: grid; gap: 8px; margin-bottom: 18px; justify-items: start; }
+.dc-note-block label {
+  font-size: 0.76rem; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; color: #5B6072;
+}
+.dc-note-block textarea {
+  width: 100%; padding: 11px 13px; font: inherit; font-size: 0.94rem; line-height: 1.6;
+  border: 1px solid #CFD3DC; border-radius: 8px; resize: vertical;
+}
+.dc-note-block textarea:focus-visible { outline: 3px solid var(--yellow); outline-offset: 1px; }
+
+.dc-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.dc-action-status { margin: 12px 0 0; font-size: 0.86rem; color: #5B6072; min-height: 1.2em; }
+
+.dc-history { margin-top: 22px; padding-top: 18px; border-top: 1px solid #EDEFF3; }
+.dc-history h3 {
+  margin: 0 0 10px; font-size: 0.76rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; color: #8A8F9E;
+}
+.dc-events { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.dc-event { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.85rem; color: #4A5061; }
+.dc-event span { color: #8A8F9E; font-variant-numeric: tabular-nums; }
+
+/* --- phones ------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .dc-desk-name { padding-left: 0; border-left: 0; }
+  .dc-controls { flex-direction: column; align-items: stretch; }
+  .dc-search { max-width: none; }
+  .dc-actions .dc-action { flex: 1 1 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-primary, .dc-quiet, .dc-action, .dc-row { transition: none; }
+}
+
+/* --- structural classes ------------------------------------------------- */
+
+/* The signed-in view and the detail template's wrapper. Both exist to be
+   toggled and to group, so they carry layout rather than decoration — but
+   check-stylesheets.py is right to insist every class used has a rule, since a
+   class styled nowhere is usually a rename that half-landed. */
+/* NEVER `display` on these. Both are toggled with the hidden attribute, and a
+   class selector setting display beats the UA stylesheet's [hidden] rule — the
+   first version of this file said `display: block` and the signed-out queue was
+   visible to anybody who opened the console. assistance-qa.mjs caught it.
+   They carry the layout they actually need and nothing else. */
+.dc-desk { min-width: 0; }
+.dc-detail-inner { min-width: 0; }
+
+/* And a belt for the braces: on this page an element asked to be hidden stays
+   hidden, whatever a later rule sets. */
+.desk-console [hidden] { display: none !important; }
+
+.dc-footer {
+  margin-top: 40px;
+  padding: 18px clamp(16px, 4vw, 32px);
+  border-top: 1px solid #E1E4EA;
+  background: #fff;
+}
+.dc-footer .footer-bottom {
+  display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between;
+  font-size: 0.78rem; color: #8A8F9E;
+}
+.dc-footer-nav { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 10px; }
+.dc-footer-nav a { font-size: 0.82rem; color: var(--blue); text-decoration: none; }
+.dc-footer-nav a:hover { text-decoration: underline; }

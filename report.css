@@ -1,0 +1,270 @@
+/* Message a Masinloc desk.
+
+   Layered on help-desk.css, which this page also loads: the shell, the
+   breadcrumb and the call-target styling are shared, because the two pages are
+   one Help Desk in a reader's mind and should not look like two products.
+
+   The one thing this sheet exists to guarantee: the emergency block reads as
+   more urgent than the form under it. It is the only place on the site using a
+   warning ground, and that is deliberate — it is the only place where reading
+   past something could cost somebody time they do not have. */
+
+/* --- the emergency block ------------------------------------------------ */
+
+.rp-emergency {
+  margin: clamp(14px, 2.5vw, 22px) 0 0;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid #E4C7A8;
+  border-left: 5px solid #B4501E;
+  border-radius: 12px;
+  background: #FDF7F1;
+}
+.rp-emergency h2 {
+  margin: 0 0 8px;
+  color: #8A3A12;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  letter-spacing: -0.01em;
+}
+.rp-emergency > p { margin: 0; max-width: 64ch; color: #52402F; line-height: 1.6; }
+
+.rp-calls { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 0; }
+
+/* Same call target as the Help Desk — the number is the button, not an icon
+   beside it — but stacked so the office name sits above the digits. Under
+   pressure, "PNP Masinloc" is what somebody is looking for first. */
+.rp-call {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 18px;
+  min-height: 52px;
+  justify-content: center;
+  border-radius: 9px;
+  background: var(--navy-deep);
+  color: #fff;
+  text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+.rp-call:hover { background: #0A1E44; }
+.rp-call:active { transform: translateY(1px); }
+.rp-call:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.rp-call-who { font-size: 0.74rem; letter-spacing: 0.07em; text-transform: uppercase; opacity: 0.8; }
+.rp-call-number { font-size: 1.06rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.rp-emergency-more { margin: 14px 0 0; font-size: 0.9rem; }
+.rp-emergency-more a { color: #8A3A12; }
+
+/* --- intro -------------------------------------------------------------- */
+
+.rp-intro { padding: clamp(24px, 4vw, 38px) 0 0; }
+.rp-intro h1 { margin: 6px 0 12px; max-width: 18ch; }
+.rp-intro .lead { margin: 0; max-width: 58ch; font-size: clamp(1rem, 1.5vw, 1.14rem); }
+
+/* --- form --------------------------------------------------------------- */
+
+.rp-form-section, .rp-check {
+  padding: clamp(22px, 3.4vw, 34px) 0;
+  border-top: 1px solid #E7E4DC;
+  margin-top: clamp(22px, 3.4vw, 34px);
+}
+
+.rp-form { display: grid; gap: 18px; max-width: 720px; }
+.rp-fieldset { margin: 0; padding: 0; border: 0; }
+.rp-fieldset legend {
+  padding: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5B6072;
+  margin-bottom: 10px;
+}
+
+.rp-desks { display: grid; gap: 10px; }
+@media (min-width: 640px) { .rp-desks { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* The whole card is the label, so the tap target is the card rather than a
+   12px radio somebody has to hit exactly. */
+.rp-desk {
+  display: flex;
+  gap: 11px;
+  padding: 15px 16px;
+  background: #fff;
+  border: 1px solid #E3E0D8;
+  border-radius: 11px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.rp-desk:hover { border-color: #B9B3A6; }
+.rp-desk:has(input:checked) {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue);
+}
+.rp-desk:has(input:focus-visible) { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.rp-desk input { margin: 3px 0 0; flex: none; accent-color: var(--blue); }
+.rp-desk-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.rp-desk-body strong { font-size: 1rem; }
+.rp-desk-body span { font-size: 0.85rem; color: #5B6072; line-height: 1.5; }
+
+.rp-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.rp-field label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5B6072;
+}
+.rp-optional { font-weight: 500; letter-spacing: 0; text-transform: none; color: #8A8F9E; }
+
+.rp-field input, .rp-field select, .rp-field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  font: inherit;
+  font-size: 1rem;
+  border: 1px solid #CFCBC0;
+  border-radius: 9px;
+  background: #fff;
+  color: inherit;
+}
+.rp-field textarea { resize: vertical; min-height: 150px; line-height: 1.6; }
+.rp-field input:focus-visible, .rp-field select:focus-visible, .rp-field textarea:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 1px;
+  border-color: #9AA0AE;
+}
+
+.rp-hint { margin: 0; font-size: 0.8rem; color: #8A8F9E; font-variant-numeric: tabular-nums; }
+
+.rp-two { display: grid; gap: 18px; }
+@media (min-width: 640px) { .rp-two { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+.rp-privacy { margin: 0; font-size: 0.87rem; line-height: 1.65; color: #5B6072; max-width: 64ch; }
+
+.rp-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+
+.rp-submit, .rp-secondary {
+  padding: 13px 26px;
+  min-height: 48px;
+  font: inherit;
+  font-weight: 650;
+  border-radius: 9px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease;
+}
+.rp-submit { background: var(--blue); color: #fff; }
+.rp-submit:hover:not(:disabled) { background: var(--blue-bright); }
+.rp-submit:disabled { opacity: 0.6; cursor: default; }
+.rp-secondary { background: #fff; color: var(--blue); border-color: #CFCBC0; }
+.rp-secondary:hover { border-color: var(--blue); }
+.rp-submit:focus-visible, .rp-secondary:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 2px;
+}
+
+.rp-status { margin: 0; font-size: 0.9rem; color: #5B6072; }
+.rp-status.is-error { color: #A3341B; font-weight: 600; }
+
+/* The honeypot. Off-screen rather than display:none, which some bots skip. */
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* --- receipt ------------------------------------------------------------ */
+
+.rp-receipt {
+  max-width: 720px;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid #D9D3C6;
+  border-radius: 12px;
+  background: #FBFAF7;
+}
+.rp-receipt h2 { margin: 0 0 10px; }
+.rp-receipt-honest { margin: 0 0 18px; max-width: 62ch; line-height: 1.65; color: #43485A; }
+
+.rp-receipt-codes { display: grid; gap: 12px; margin: 0 0 16px; }
+@media (min-width: 560px) { .rp-receipt-codes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rp-receipt-codes dt {
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6B7183;
+  margin-bottom: 4px;
+}
+/* Selectable and monospace: these are transcribed, and an ambiguous glyph in a
+   code somebody is copying by hand is a support call later. */
+.rp-receipt-codes dd {
+  margin: 0;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #E3E0D8;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.94rem;
+  word-break: break-all;
+  user-select: all;
+}
+.rp-receipt-keep { margin: 0 0 14px; font-size: 0.88rem; color: #5B6072; max-width: 62ch; line-height: 1.6; }
+
+/* --- status check ------------------------------------------------------- */
+
+.rp-check > p { margin: 8px 0 0; color: #43485A; max-width: 60ch; }
+.rp-check-form { display: grid; gap: 14px; max-width: 460px; margin: 16px 0 0; justify-items: start; }
+.rp-check-form .rp-field { width: 100%; }
+.rp-check-result { margin: 12px 0 0; font-size: 0.94rem; color: #35394A; min-height: 1.3em; }
+
+/* --- phones ------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .rp-intro h1 { max-width: none; }
+  .rp-calls { flex-direction: column; align-items: stretch; }
+  .rp-call { align-items: center; }
+  .rp-actions { flex-direction: column; align-items: stretch; }
+  .rp-submit, .rp-secondary { width: 100%; }
+}
+
+/* --- motion ------------------------------------------------------------- */
+
+/* Same opt-out as the Help Desk: the emergency block must be painted the
+   instant the page does, not when an observer decides it has scrolled in. */
+html.js .rp-emergency[data-reveal],
+html.js .rp-intro[data-reveal],
+html.js .rp-form-section[data-reveal],
+html.js .rp-check[data-reveal] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rp-call, .rp-desk, .rp-submit, .rp-secondary { transition: none; }
+  .rp-call:active { transform: none; }
+}
+
+/* --- the closed state --------------------------------------------------- */
+
+/* Shown while no desk has an officer signed in. It is not an error state and
+   should not read like one: nothing has gone wrong, the channel simply is not
+   open, and the useful thing to do is call. So it sits between the hotlines
+   and the form, in the same calm register as the rest of the page. */
+.rp-closed {
+  margin: clamp(22px, 3.4vw, 34px) 0 0;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid #D9D3C6;
+  border-left: 5px solid var(--blue);
+  border-radius: 12px;
+  background: #F7F8FB;
+}
+.rp-closed h2 { margin: 0 0 8px; font-size: clamp(1.06rem, 1.9vw, 1.3rem); }
+.rp-closed p { margin: 0 0 10px; max-width: 64ch; color: #43485A; line-height: 1.65; }
+.rp-closed p:last-child { margin-bottom: 0; }
+
+/* A disabled fieldset carries no visual weight of its own, so the whole form
+   is dimmed and made non-interactive. The dimming is deliberately mild: this
+   is still readable reference for somebody who wants to know what the desk
+   will ask for once it opens. */
+.rp-all { margin: 0; padding: 0; border: 0; display: grid; gap: 18px; }
+.rp-all:disabled { opacity: 0.55; }
+.rp-form.is-closed { cursor: not-allowed; }
+.rp-form.is-closed .rp-desk { cursor: not-allowed; }
+.rp-form.is-closed .rp-submit { background: #8A8F9E; }
+
+/* The page-level class. report.html loads help-desk.css for the shared shell
+   and this sheet on top, so .report-page exists to scope anything that must
+   not leak back onto the Help Desk itself. */
+.report-page { display: block; }

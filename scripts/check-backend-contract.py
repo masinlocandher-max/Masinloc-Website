@@ -104,14 +104,18 @@ migration_source = "\n".join(
 # function accepts. A stale CHECK constraint previously allowed only the four
 # original Connect categories, so Contact and Dictionary rejections could fail
 # to enter security_events without affecting the visitor-facing request.
-security_category_constraint = re.search(
+# The LAST declaration wins, not the first. Migrations are concatenated in
+# order, and this constraint is dropped and re-added each time the category
+# list grows — so reading the first match reports the constraint as it was
+# originally written and no later migration could ever satisfy this check.
+security_category_constraints = re.findall(
     r"add\s+constraint\s+security_events_category_check\s+check\s*\((.*?)\);",
     migration_source,
     re.I | re.S,
 )
-if security_category_constraint:
+if security_category_constraints:
     allowed_security_categories = set(
-        re.findall(r"'([^']+)'", security_category_constraint.group(1))
+        re.findall(r"'([^']+)'", security_category_constraints[-1])
     )
     missing_security_categories = set(implemented) - allowed_security_categories
     if missing_security_categories:

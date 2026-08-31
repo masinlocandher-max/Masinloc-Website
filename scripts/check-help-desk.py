@@ -34,6 +34,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "help-desk.json"
 PAGE = ROOT / "help-desk.html"
+# report.html carries the two desk hotlines above its form, because the page
+# that says "call, do not write" has to be the page you can call from. It is
+# held to exactly the same rule as help-desk.html rather than exempted: both
+# are generated from data/help-desk.json, and a number on either that the data
+# file does not declare fails the build. Two pages printing the same emergency
+# number is precisely how one of them goes stale.
+# The desk consoles print their own escalation hotline, so an officer who
+# opens a report that turns out to be urgent has the number on screen rather
+# than in another tab. They are generated from data/help-desk.json like the
+# other two, so the one-source rule still holds and they are held to it.
+PUBLISHING_PAGES = ["help-desk.html", "report.html", "pnp-desk.html", "mdrrmo-desk.html"]
 
 problems: list[str] = []
 
@@ -76,58 +87,71 @@ for entry in spec["barangay"]:
 if not declared:
     problems.append("data/help-desk.json declares no numbers at all")
 
-# 1. Nothing on the page that the data file does not declare.
-on_page = {digits(m) for m in PHONE.findall(page)}
-for found in sorted(on_page - set(declared)):
-    problems.append(
-        f"help-desk.html renders the number 0{found}, which data/help-desk.json "
-        f"does not declare. Numbers are edited in the data file and the page is "
-        f"rebuilt — never the other way round.")
+# 1. Nothing on either page that the data file does not declare.
+publishing = {}
+for name in PUBLISHING_PAGES:
+    path = ROOT / name
+    if not path.is_file():
+        sys.exit(f"{name} has not been built — run its build script")
+    publishing[name] = path.read_text(encoding="utf-8")
 
-# 2. Nothing declared that the page drops.
+for name, raw in publishing.items():
+    for found in sorted({digits(m) for m in PHONE.findall(raw)} - set(declared)):
+        problems.append(
+            f"{name} renders the number 0{found}, which data/help-desk.json "
+            f"does not declare. Numbers are edited in the data file and the page is "
+            f"rebuilt — never the other way round.")
+
+# 2. Nothing declared that the directory page drops. Only help-desk.html is
+# held to completeness — report.html deliberately carries just the two desk
+# hotlines, and demanding all twenty-two there would defeat its purpose.
+on_page = {digits(m) for m in PHONE.findall(page)}
 for missing in sorted(set(declared) - on_page):
     problems.append(
         f"data/help-desk.json declares {declared[missing]} but it does not appear "
         f"on help-desk.html — a declared emergency number that never reaches the "
         f"page cannot be called.")
 
-# 3. Every tel: dials exactly what it prints.
-for href in TEL.findall(page):
-    if digits(href) not in declared:
-        problems.append(
-            f"help-desk.html has a tel: link to {href}, which is not a declared number")
-    if not href.startswith("+63"):
-        problems.append(
-            f"help-desk.html tel: link {href} is not in +63 form, so it will not "
-            f"dial correctly from a phone roaming abroad")
+# 3. Every tel: on either page dials exactly what it prints.
+for name, raw in publishing.items():
+    for href in TEL.findall(raw):
+        if digits(href) not in declared:
+            problems.append(
+                f"{name} has a tel: link to {href}, which is not a declared number")
+        if not href.startswith("+63"):
+            problems.append(
+                f"{name} tel: link {href} is not in +63 form, so it will not "
+                f"dial correctly from a phone roaming abroad")
 
 # The printed number and its own link must agree. Checked pairwise in document
 # order rather than as two sets, because two numbers on one card that were
 # swapped between each other would pass a set comparison and still dial the
 # wrong office.
-pairs = re.findall(r'href="tel:([^"]+)"[^>]*>.*?<span class="hd-call-number">([^<]+)</span>',
-                   page, re.S)
-if len(pairs) != len(TEL.findall(page)):
-    problems.append("help-desk.html: a tel: link is not paired with a printed number")
-for href, printed in pairs:
-    if digits(href) != digits(printed):
-        problems.append(
-            f"help-desk.html displays {printed} but the link dials {href} — a call "
-            f"button must dial the number it shows")
+for name, raw in publishing.items():
+    pairs = re.findall(
+        r'href="tel:([^"]+)"[^>]*>.*?<span class="(?:hd|rp)-call-number">([^<]+)</span>',
+        raw, re.S)
+    if len(pairs) != len(TEL.findall(raw)):
+        problems.append(f"{name}: a tel: link is not paired with a printed number")
+    for href, printed in pairs:
+        if digits(href) != digits(printed):
+            problems.append(
+                f"{name} displays {printed} but the link dials {href} — a call "
+                f"button must dial the number it shows")
 
 # 4. The exception does not spread beyond this page.
 for other in sorted(ROOT.glob("*.html")):
-    if other.name == "help-desk.html":
+    if other.name in PUBLISHING_PAGES:
         continue
     raw = other.read_text(encoding="utf-8")
     if "tel:" in raw.lower():
         problems.append(
-            f"{other.name}: contains a tel: link. Only help-desk.html publishes "
-            f"phone numbers on this site.")
+            f"{other.name}: contains a tel: link. Only {' and '.join(PUBLISHING_PAGES)} "
+            f"publish phone numbers on this site.")
     for number in set(PHONE.findall(raw)):
         problems.append(
-            f"{other.name}: contains the phone number {number}. Only help-desk.html "
-            f"publishes phone numbers on this site.")
+            f"{other.name}: contains the phone number {number}. Only "
+            f"{' and '.join(PUBLISHING_PAGES)} publish phone numbers on this site.")
 
 # 5. The boundary statement is on the page. Compared against whitespace-
 # normalised text, because these sentences wrap across source lines and an
@@ -137,7 +161,12 @@ flat = " ".join(page.split())
 for required, why in (
     ("not the municipal government",
      "readers must not mistake this for an official government service"),
-    ("nothing you send through this website reaches",
+    # Deliberately about summoning help rather than about reaching an office at
+    # all: report.html can carry a non-emergency message to a desk once one is
+    # activated, so a blanket "nothing reaches them" would become a lie the day
+    # that happens. What must never become false is that writing is not how you
+    # get help in an emergency.
+    ("no message sent through this website summons help",
      "readers must not believe a message here summons help"),
 ):
     if required not in flat:
