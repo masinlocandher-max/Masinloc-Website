@@ -150,6 +150,40 @@ for(const path of ['/emergency/pnp.html','/emergency/mdrrmo.html']){
   for(const v of ['all','emergency','assistance','unacknowledged','active','resolved']){
     if(!views.includes(v))fail(`${path}: missing '${v}' view — one console must cover both modes`);
   }
+
+  /* The hidden attribute must actually hide. .login-wrap sets display:grid,
+     which beats the UA [hidden] rule, so `loginView.hidden = true` silently
+     did nothing and a signed-in responder was still shown the sign-in card
+     with the console pushed below it. Asserted on painted visibility, not on
+     the attribute, because the attribute was set correctly the whole time. */
+  const hiddenWorks=await page.evaluate(()=>{
+    const login=document.querySelector('#loginView');
+    const was=login.hidden;
+    login.hidden=true;
+    const painted=login.getBoundingClientRect().height;
+    login.hidden=was;
+    return painted===0;
+  });
+  if(!hiddenWorks)fail(`${path}: the sign-in view stays painted when hidden — a responder who signs in would still see it`);
+
+  // The supplied logo keeps its own colours; it is never filtered to suit a
+  // dark header.
+  const logoFilter=await page.$eval('.agency-brand img',n=>getComputedStyle(n).filter);
+  if(logoFilter&&logoFilter!=='none'){
+    fail(`${path}: the Masinloc logo is filtered (${logoFilter}) — supplied artwork is not recoloured`);
+  }
+
+  // The map is present and carries its required OpenStreetMap attribution.
+  if(!(await page.locator('#incidentMap').count()))fail(`${path}: no incident map`);
+  const legend=await page.$$eval('.legend-pin',ns=>ns.map(n=>getComputedStyle(n).backgroundColor+'|'+getComputedStyle(n).boxShadow));
+  if(legend.length<5)fail(`${path}: map legend has ${legend.length} keys`);
+  // A key that shows nothing is not a key: each swatch must paint a fill or a
+  // ring.
+  legend.forEach((s,i)=>{
+    const [bg,shadow]=s.split('|');
+    const blank=(bg==='rgba(0, 0, 0, 0)'||bg==='transparent')&&(!shadow||shadow==='none');
+    if(blank)fail(`${path}: legend swatch ${i+1} paints nothing`);
+  });
   overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
   if(overflow>1)fail(`${path}: horizontal overflow ${overflow}px`);
 }

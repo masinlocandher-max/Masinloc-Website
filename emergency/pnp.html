@@ -8,12 +8,12 @@
 <title>PNP Emergency Console | Masinloc Connect</title>
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
-<link rel="stylesheet" href="agency.css?v=20260831-1">
+<link rel="stylesheet" href="agency.css?v=20260831-2">
 </head>
 <body class="pnp-page" data-agency="pnp">
 <header class="agency-top">
-  <div class="agency-brand"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><span>PNP RESPONSE</span></div>
-  <div class="agency-top-actions"><div class="live-indicator" id="liveIndicator"><i></i><span>Checking connection</span></div><button id="logoutBtn" hidden>Sign out</button></div>
+  <div class="agency-brand"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><span class="agency-shield" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.6 4.6 5.6v6.1c0 4.5 3.1 8.7 7.4 9.7 4.3-1 7.4-5.2 7.4-9.7V5.6Z"/><path d="m9.2 12 2 2 3.6-3.8"/></svg></span><span>PNP CONSOLE</span></div>
+  <div class="agency-top-actions"><div class="live-indicator" id="liveIndicator"><i></i><span>Checking connection</span></div><span class="agency-account" id="agencyAccount" hidden></span><button id="logoutBtn" hidden>Sign out</button></div>
 </header>
 
 <section class="login-wrap" id="loginView">
@@ -37,8 +37,23 @@
     <div class="console-head-actions"><button id="refreshBtn">Refresh</button></div>
   </div>
   <section class="metrics" id="metrics"></section>
+  <section class="map-section" aria-labelledby="mapTitle">
+    <div class="map-head">
+      <h2 id="mapTitle">Live incident map</h2>
+      <p class="map-legend">
+        <span class="legend-pin p-critical"></span>Critical
+        <span class="legend-pin p-high"></span>High
+        <span class="legend-pin p-normal"></span>Normal
+        <span class="legend-pin p-low"></span>Low
+        <span class="legend-pin p-unassessed"></span>Unassessed
+        <span class="legend-pin is-stale"></span>Last known
+      </p>
+    </div>
+    <div class="opmap-host" id="incidentMap"></div>
+  </section>
+
   <section class="workspace">
-    <div class="incident-column">
+    <div class="incident-column"><h2 class="queue-title">Recent incidents</h2>
       <!-- One console, both kinds of traffic. These are views over the same
            queue, not separate backends: Emergency and Assistance filter on the
            resident's declared report_mode, the rest on operational state. -->
@@ -57,6 +72,6 @@
   </section>
 </main>
 <div class="toast" id="toast" hidden></div>
-<script type="module" src="agency.js?v=20260831-1"></script>
+<script type="module" src="agency.js?v=20260831-2"></script>
 </body>
 </html>

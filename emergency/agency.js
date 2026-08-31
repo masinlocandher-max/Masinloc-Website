@@ -1,3 +1,4 @@
+import { createMap } from './map.js?v=20260831-2';
 import { createClient } from '../assets/vendor/supabase.js?v=2.112.3';
 const sb=createClient('https://uwcqvsitjtknxsaypjxj.supabase.co','sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const A=document.body.dataset.agency,L=A==='pnp'?'PNP':'MDRRMO',OTHER=A==='pnp'?'mdrrmo':'pnp',OL=OTHER.toUpperCase(),$=s=>document.querySelector(s);
@@ -10,13 +11,58 @@ function online(){const e=$('#liveIndicator'),yes=navigator.onLine;e.classList.t
 function note(t,bad=false){const e=$('#toast');e.textContent=t;e.classList.toggle('error',bad);e.hidden=false;setTimeout(()=>e.hidden=true,2600)}
 async function allowed(s){if(admin(s))return true;const {data}=await sb.from('emergency_agency_members').select('agency').eq('user_id',s.user.id).eq('agency',A).eq('active',true).maybeSingle();return !!data}
 function login(){$('#loginView').hidden=false;$('#consoleView').hidden=true;$('#logoutBtn').hidden=true}
-function consoleView(){$('#loginView').hidden=true;$('#consoleView').hidden=false;$('#logoutBtn').hidden=false}
+function consoleView(){$('#loginView').hidden=true;$('#consoleView').hidden=false;$('#logoutBtn').hidden=false;/* The signed-in account, taken from the authenticated session and
+   nothing else. No display name is invented for a responder, and none is
+   read from anywhere a person could set it to somebody else's. */
+const who=$('#agencyAccount');if(who&&session?.user){who.textContent=session.user.email||'Authorized account';who.hidden=false}}
 async function boot(){online();const {data:{session:s}}=await sb.auth.getSession();if(s&&await allowed(s)){session=s;consoleView();await load()}else{if(s)$('#unauthorized').hidden=false;login()}}
 $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginMessage').textContent='Signing in…';const {data,error}=await sb.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#password').value});if(error){$('#loginMessage').textContent=error.message;return}if(!await allowed(data.session)){await sb.auth.signOut();$('#unauthorized').hidden=false;$('#loginMessage').textContent='';return}session=data.session;consoleView();await load()});
 $('#magicBtn').addEventListener('click',async()=>{const email=$('#email').value.trim();if(!email)return $('#loginMessage').textContent='Enter your email first.';const {error}=await sb.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:location.href.split('#')[0]}});$('#loginMessage').textContent=error?error.message:'Check your email for the secure sign-in link.'});
 $('#logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();session=null;login()});$('#refreshBtn').addEventListener('click',()=>load(true));
 async function load(show=false){if(!navigator.onLine){if(show)note('No connection. Live incident records are not cached here.',true);return}const {data:links,error:e1}=await sb.from('emergency_incident_agencies').select('incident_id').eq('agency',A);if(e1)return note(e1.message,true);const ids=[...new Set((links||[]).map(x=>x.incident_id))];if(!ids.length){rows=[];render();return}const {data,error}=await sb.from('emergency_incidents').select('*').in('id',ids).order('received_at',{ascending:false}).limit(500);if(error)return note(error.message,true);rows=data||[];render();if(active&&rows.some(x=>x.id===active.id))await open(active.id);if(show)note('Refreshed')}
-function render(){const live=rows.filter(x=>!['resolved','closed'].includes(x.status));renderViewCounts();$('#metrics').innerHTML=`<div class="metric"><span>Active incidents</span><strong>${live.length}</strong></div><div class="metric"><span>Awaiting acknowledgement</span><strong>${rows.filter(x=>x.status==='received').length}</strong></div><div class="metric"><span>Critical active</span><strong>${live.filter(x=>x.priority==='critical').length}</strong></div><div class="metric"><span>On scene</span><strong>${rows.filter(x=>x.status==='on_scene').length}</strong></div>`;renderList()}
+/* A fix older than this is no longer "live" — it is the last thing anybody
+   actually reported, and the console says so in those words. */
+const LIVE_WINDOW_MS = 90 * 1000;
+
+function locationState(row){
+  const at = row.location_updated_at || row.location_captured_at;
+  if(!at) return { live:false, label:'NO LOCATION', detail:'No coordinates were captured.' };
+  const age = Date.now() - new Date(at).getTime();
+  /* Live only while the resident is actively sharing AND an update arrived
+     inside the window. Anything else is last-known, never interpolated. */
+  const live = !!row.live_location && age < LIVE_WINDOW_MS;
+  return {
+    live,
+    label: live ? 'LIVE LOCATION' : 'LAST KNOWN LOCATION',
+    detail: `${live?'Updated':'Last received'} ${ago(at)}${row.accuracy_m?` · accuracy ±${Math.round(row.accuracy_m)} m`:''}`,
+    at,
+  };
+}
+
+function ago(iso){
+  const s=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/1000));
+  if(s<60)return `${s} sec ago`;
+  const m=Math.round(s/60);
+  if(m<60)return `${m} min ago`;
+  const h=Math.round(m/60);
+  return h<24?`${h} hr ago`:`${Math.round(h/24)} d ago`;
+}
+
+const DEPLOYED_LABEL = A === 'mdrrmo' ? 'Deployed' : 'En route';
+const DEPLOYED_STATES = A === 'mdrrmo'
+  ? ['dispatched','en_route','on_scene']
+  : ['en_route'];
+
+function render(){
+  const live=rows.filter(x=>!['resolved','closed'].includes(x.status));
+  renderViewCounts();
+  $('#metrics').innerHTML=
+    `<div class="metric urgent"><span>Unacknowledged</span><strong>${rows.filter(x=>x.status==='received').length}</strong></div>`+
+    `<div class="metric"><span>Active</span><strong>${live.length}</strong></div>`+
+    `<div class="metric"><span>${DEPLOYED_LABEL}</span><strong>${rows.filter(x=>DEPLOYED_STATES.includes(x.status)).length}</strong></div>`+
+    `<div class="metric"><span>Resolved</span><strong>${rows.filter(x=>['resolved','closed'].includes(x.status)).length}</strong></div>`;
+  renderMap();
+  renderList()}
 let view='all';
 /* Views over one queue. Emergency and Assistance read the resident's declared
    report_mode; the operational views read status. Deliberately kept separate:
@@ -34,9 +80,30 @@ const VIEWS={
 function listRows(){const q=$('#searchInput').value.toLowerCase(),s=$('#statusFilter').value,p=$('#priorityFilter').value;const inView=VIEWS[view]||VIEWS.all;return rows.filter(x=>inView(x)&&(!s||x.status===s)&&(!p||x.priority===p)&&(!q||JSON.stringify([x.public_reference,x.incident_type,x.description,x.barangay,x.landmark]).toLowerCase().includes(q)))}
 function renderViewCounts(){document.querySelectorAll('.view-chip').forEach(chip=>{const key=chip.dataset.view;const count=rows.filter(VIEWS[key]||VIEWS.all).length;const slot=chip.querySelector('[data-count]');if(slot)slot.textContent=String(count);chip.classList.toggle('is-active',key===view)})}
 document.querySelectorAll('.view-chip').forEach(chip=>chip.addEventListener('click',()=>{view=chip.dataset.view;renderViewCounts();renderList()}));
+let opmap=null;
+function renderMap(){
+  const host=$('#incidentMap');
+  if(!host)return;
+  if(!opmap)opmap=createMap(host,{onSelect:id=>open(id)});
+  const pins=rows.filter(x=>Number.isFinite(x.latitude)&&Number.isFinite(x.longitude)).map(x=>{
+    const where=locationState(x);
+    return {
+      id:x.id,lat:x.latitude,lon:x.longitude,
+      priority:['resolved','closed'].includes(x.status)?'resolved':(x.priority||'unassessed'),
+      stale:!where.live,
+      /* The accessible name carries reference, mode, type and location state,
+         so a pin means the same thing to a screen reader as to an eye. */
+      label:`${x.public_reference} · ${(x.report_mode||'emergency')==='assistance'?'Assistance':'Emergency'} · ${pretty(x.incident_type)} · ${where.label} · ${where.detail}`,
+    };
+  });
+  opmap.setMarkers(pins);
+  if(active)opmap.select(active.id);
+  else opmap.fit();
+}
+
 function renderList(){const a=listRows();$('#incidentList').innerHTML=a.length?a.map(x=>`<button class="incident-row ${active?.id===x.id?'active':''}" data-id="${x.id}"><div class="row-top"><span class="reference">${esc(x.public_reference)}</span><span class="row-time">${date(x.received_at)}</span></div><div class="row-title">${esc(pretty(x.incident_type))}</div><div class="row-location">${esc([x.barangay,x.landmark].filter(Boolean).join(' · ')||'GPS / location in report')}</div><div class="badges"><span class="badge mode-${(x.report_mode||'emergency')}">${(x.report_mode||'emergency')==='assistance'?'Assistance':'Emergency'}</span><span class="badge ${x.status}">${pretty(x.status)}</span><span class="badge ${x.priority}">${pretty(x.priority)}</span></div></button>`).join(''):'<div class="empty-list">No incidents match this view.</div>';document.querySelectorAll('.incident-row').forEach(b=>b.onclick=()=>open(b.dataset.id))}
 ['searchInput','statusFilter','priorityFilter'].forEach(id=>$('#'+id).addEventListener(id==='searchInput'?'input':'change',renderList));
-async function open(id){active=rows.find(x=>x.id===id);if(!active)return;const [m,e]=await Promise.all([sb.from('emergency_messages').select('*').eq('incident_id',id).order('created_at'),sb.from('emergency_events').select('*').eq('incident_id',id).order('created_at')]);if(m.error||e.error)return note((m.error||e.error).message,true);messages=m.data||[];events=e.data||[];detail();renderList()}
+async function open(id){active=rows.find(x=>x.id===id);if(!active)return;const [m,e]=await Promise.all([sb.from('emergency_messages').select('*').eq('incident_id',id).order('created_at'),sb.from('emergency_events').select('*').eq('incident_id',id).order('created_at')]);if(m.error||e.error)return note((m.error||e.error).message,true);messages=m.data||[];events=e.data||[];detail();renderList();if(opmap)opmap.focus(active.id)}
 function detail(){const x=active,gps=x.latitude!=null&&x.longitude!=null;$('#detailColumn').innerHTML=`<div class="detail"><div class="detail-head"><div><p>${L} INCIDENT</p><h2>${esc(x.public_reference)}</h2><small>Received ${date(x.received_at)}</small></div>${x.status==='received'?'<button class="ack-btn" id="ack">Acknowledge</button>':''}</div><div class="incident-summary"><div class="summary-item"><span>Incident</span><strong>${esc(pretty(x.incident_type))}</strong></div><div class="summary-item"><span>Barangay</span><strong>${esc(x.barangay||'—')}</strong></div><div class="summary-item"><span>Landmark</span><strong>${esc(x.landmark||'—')}</strong></div><div class="summary-item"><span>GPS</span><strong>${gps?`${Number(x.latitude).toFixed(6)}, ${Number(x.longitude).toFixed(6)}`:'Not captured'}</strong></div><div class="summary-item"><span>Accuracy</span><strong>${x.accuracy_m!=null?`±${Math.round(x.accuracy_m)} m`:'—'}</strong></div><div class="summary-item"><span>Contact</span><strong>${esc(x.reporter_contact||'Not provided')}</strong></div></div><div class="description-box"><span>Resident report</span><p>${esc(x.description)}</p></div><div class="ops-controls"><label>Status<select id="st">${['received','acknowledged','assigned','dispatched','en_route','on_scene','resolved','closed'].map(v=>`<option ${x.status===v?'selected':''} value="${v}">${pretty(v)}</option>`).join('')}</select></label><label>Priority<select id="pr">${['unassessed','critical','high','normal'].map(v=>`<option ${x.priority===v?'selected':''} value="${v}">${pretty(v)}</option>`).join('')}</select></label><label>Assigned unit<input id="unit" maxlength="160" value="${esc(x.assigned_unit||'')}"></label></div><div class="ops-buttons"><button id="save">Save operations status</button>${gps?`<a target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(x.latitude+','+x.longitude)}">Open map</a><button id="copy">Copy GPS</button>`:''}<button class="refer" id="refer">Request ${OL} support</button></div><div class="thread-tabs"><button data-mode="public" class="${mode==='public'?'active':''}">Resident chat</button><button data-mode="internal" class="${mode==='internal'?'active':''}">Internal notes</button><button data-mode="timeline" class="${mode==='timeline'?'active':''}">Timeline</button></div><div class="thread" id="thread"></div><form class="reply-form" id="reply"><div class="reply-mode"><label><input type="radio" name="vis" value="public" ${mode!=='internal'?'checked':''}> Public reply</label><label><input type="radio" name="vis" value="internal" ${mode==='internal'?'checked':''}> Internal note</label></div><textarea id="body" rows="3" maxlength="4000"></textarea><div class="reply-actions"><small>Human-operated responder communication.</small><button>Send</button></div></form></div>`;bind(gps);thread()}
 function thread(){const box=$('#thread');if(mode==='timeline'){box.innerHTML=events.length?events.map(e=>`<div class="thread-message internal"><strong>${pretty(e.event_type)}</strong><p>${esc(JSON.stringify(e.metadata||{}))}</p><small>${date(e.created_at)}</small></div>`).join(''):'<div class="empty-list">No timeline events yet.</div>';return}const a=messages.filter(m=>m.visibility===mode);box.innerHTML=a.length?a.map(m=>`<div class="thread-message ${mode==='internal'?'internal':m.sender_kind==='resident'?'resident':'agency'}"><strong>${m.sender_kind==='resident'?'Resident':m.sender_kind==='system'?'System':esc(String(m.sender_agency||m.sender_kind).toUpperCase())}</strong><p>${esc(m.body)}</p><small>${date(m.created_at)}</small></div>`).join(''):'<div class="empty-list">No messages yet.</div>';box.scrollTop=box.scrollHeight}
 function bind(gps){$('#ack')?.addEventListener('click',()=>patch({status:'acknowledged'}));$('#save').onclick=()=>patch({status:$('#st').value,priority:$('#pr').value,assigned_unit:$('#unit').value.trim()||null});$('#copy')?.addEventListener('click',()=>navigator.clipboard.writeText(`${active.latitude}, ${active.longitude}`).then(()=>note('GPS copied')).catch(()=>note('Copy failed',true)));$('#refer').onclick=async()=>{const {error}=await sb.rpc('emergency_refer_incident',{p_incident_id:active.id,p_agency:OTHER});if(error)return note(error.message,true);note(`${OL} support requested`);await load();await open(active.id)};document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;detail()});$('#reply').onsubmit=async e=>{e.preventDefault();const body=$('#body').value.trim();if(!body)return;const visibility=document.querySelector('input[name="vis"]:checked').value;const {error}=await sb.from('emergency_messages').insert({incident_id:active.id,sender_kind:A,sender_agency:A,sender_user_id:session.user.id,visibility,body});if(error)return note(error.message,true);mode=visibility;await open(active.id);note(visibility==='public'?'Reply added to resident chat':'Internal note saved')}}
