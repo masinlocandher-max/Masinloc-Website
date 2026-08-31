@@ -8,6 +8,29 @@
 
   root.classList.add('js');
 
+  const exposeHelpDesk = () => {
+    const heroCta = document.querySelector('.hero-cta');
+    if (heroCta && !heroCta.querySelector('a[href="emergency/"]')) {
+      const link = document.createElement('a');
+      link.className = 'cta-secondary';
+      link.href = 'emergency/';
+      link.textContent = 'Help Desk';
+      heroCta.appendChild(link);
+    }
+
+    const footerNav = document.querySelector('.foot-nav');
+    if (footerNav && !footerNav.querySelector('a[href="emergency/"]')) {
+      const link = document.createElement('a');
+      link.href = 'emergency/';
+      link.textContent = 'Help Desk';
+      const connect = footerNav.querySelector('a[href="connect.html"]');
+      if (connect) connect.insertAdjacentElement('afterend', link);
+      else footerNav.appendChild(link);
+    }
+  };
+
+  exposeHelpDesk();
+
   const closeMenu = () => {
     if (!toggle || !nav) return;
     toggle.setAttribute('aria-expanded', 'false');
