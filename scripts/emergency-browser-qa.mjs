@@ -190,6 +190,129 @@ for(const path of ['/emergency/pnp.html','/emergency/mdrrmo.html']){
 
 for(const e of pageErrors)fail(`emergency/browser: ${e}`);
 await context.close();
+
+/* --- the console as a signed-in responder actually sees it ---------------
+
+   Everything above stops at the sign-in gate, so the console's own rendering
+   was never executed by any test. That gap shipped a console that threw
+   `MARK is not defined` on its first render: the gate looked perfect, the
+   queue never drew a single row, and both suites passed. Rendering the
+   authorised view is the only assertion that catches that class of defect.
+
+   Nothing here touches the database or creates a membership. The Supabase
+   REST and auth endpoints are intercepted in the browser, so this proves the
+   console renders what it is given — it says nothing about who is authorised,
+   which is the server's decision and is covered by emergency-qa.mjs. */
+
+const PROJECT='uwcqvsitjtknxsaypjxj';
+const at=m=>new Date(Date.now()-m*60000).toISOString();
+const FIXTURE=[
+  {id:'c1',public_reference:'QA-0001',incident_type:'accident',report_mode:'emergency',status:'received',priority:'critical',barangay:'Bani',landmark:'National Road',latitude:15.5401,longitude:119.9490,accuracy_m:12,received_at:at(4),updated_at:at(4),description:'QA',location_updated_at:at(1)},
+  {id:'c2',public_reference:'QA-0002',incident_type:'fire',report_mode:'emergency',status:'dispatched',priority:'high',barangay:'Inhobol',landmark:'Sitio Malapad',latitude:15.5312,longitude:119.9601,accuracy_m:20,received_at:at(19),updated_at:at(9),description:'QA',location_updated_at:at(18)},
+  {id:'c3',public_reference:'QA-0003',incident_type:'suspicious_activity',report_mode:'assistance',status:'acknowledged',priority:'unassessed',barangay:'San Lorenzo',landmark:'Public market',latitude:15.5350,longitude:119.9548,accuracy_m:45,received_at:at(96),updated_at:at(70),description:'QA',location_updated_at:at(95)},
+  {id:'c4',public_reference:'QA-0004',incident_type:'rescue',report_mode:'emergency',status:'resolved',priority:'high',barangay:'Collat',landmark:'Shoreline',latitude:15.5405,longitude:119.9382,accuracy_m:18,received_at:at(320),updated_at:at(200),resolved_at:at(200),description:'QA',location_updated_at:at(318)},
+  // Deliberately within a few metres of c1, so the map has something to group.
+  {id:'c5',public_reference:'QA-0005',incident_type:'traffic',report_mode:'assistance',status:'received',priority:'unassessed',barangay:'Bani',landmark:'Near the plaza',latitude:15.5403,longitude:119.9493,accuracy_m:15,received_at:at(8),updated_at:at(8),description:'QA',location_updated_at:at(7)},
+];
+const UNACKNOWLEDGED=FIXTURE.filter(x=>x.status==='received').length;
+const STUB_ROLE='duty officer';
+
+for(const agency of ['pnp','mdrrmo']){
+  const path=`/emergency/${agency}.html`;
+  const ctx=await browser.newContext({viewport:{width:1440,height:1000}});
+  const consoleErrors=[];
+  const cp=await ctx.newPage();
+  cp.on('pageerror',e=>consoleErrors.push(`pageerror: ${e.message}`));
+  cp.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon'))consoleErrors.push(`console: ${m.text()}`)});
+
+  await ctx.addInitScript(({ref})=>{
+    localStorage.setItem(`sb-${ref}-auth-token`,JSON.stringify({
+      access_token:'qa',token_type:'bearer',refresh_token:'qa',
+      expires_in:999999,expires_at:Math.floor(Date.now()/1000)+999999,
+      user:{id:'qa-user',email:'duty.officer@example.invalid',app_metadata:{},user_metadata:{},aud:'authenticated'},
+    }));
+  },{ref:PROJECT});
+
+  await cp.route('**/rest/v1/**',route=>{
+    const url=route.request().url();
+    const json=body=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(body)});
+    if(url.includes('emergency_agency_members'))return json({agency,role:STUB_ROLE});
+    if(url.includes('emergency_incident_agencies'))return json(FIXTURE.map(x=>({incident_id:x.id})));
+    if(url.includes('emergency_incidents'))return json(FIXTURE);
+    return json([]);
+  });
+  await cp.route('**/auth/v1/**',route=>route.fulfill({status:200,contentType:'application/json',body:'{}'}));
+  /* Basemap tiles are served locally so this suite never depends on reaching
+     openstreetmap.org. A sandbox that blocks it would otherwise fill the log
+     with load failures and hide a real console error among them. The map's
+     offline behaviour — flat backdrop, honest notice, exact pin positions —
+     is a property of the module, not of whether CI has outbound network. */
+  await cp.route('**/tile.openstreetmap.org/**',route=>route.fulfill({
+    status:200,contentType:'image/png',
+    body:Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=','base64'),
+  }));
+
+  await cp.goto(`${baseURL}${path}`,{waitUntil:'networkidle'});
+
+  // The queue must actually draw. A console that renders nothing is the exact
+  // failure this block exists for, so it is asserted before anything else.
+  try{
+    await cp.waitForSelector('.incident-row',{timeout:12000});
+  }catch{
+    fail(`${path}: the authorised console rendered no incident rows for ${FIXTURE.length} incidents`);
+  }
+  const rowCount=await cp.locator('.incident-row').count();
+  if(rowCount!==FIXTURE.length)fail(`${path}: queue drew ${rowCount} rows for ${FIXTURE.length} incidents`);
+
+  // Every row carries its mark and a legible time. Both are template calls
+  // that throw the whole render when their helper is missing.
+  const rows=await cp.$$eval('.incident-row',ns=>ns.map(n=>({
+    icon:!!n.querySelector('.row-icon svg'),
+    time:n.querySelector('.row-time')?.textContent?.trim()||'',
+    title:n.querySelector('.row-title')?.textContent?.trim()||'',
+  })));
+  rows.forEach((r,i)=>{
+    if(!r.icon)fail(`${path}: row ${i+1} has no incident mark`);
+    if(!r.title)fail(`${path}: row ${i+1} has no incident type`);
+    if(!r.time||r.time==='—')fail(`${path}: row ${i+1} shows no received time`);
+  });
+
+  // The header reports the account and the role the membership row grants —
+  // never a title invented for the screen.
+  if(!(await cp.locator('#agencyWho').isVisible()))fail(`${path}: the signed-in account is not shown`);
+  const account=(await cp.locator('#agencyAccount').innerText()).trim();
+  if(account!=='duty.officer@example.invalid')fail(`${path}: header account was '${account}', not the authenticated address`);
+  const role=(await cp.locator('#agencyRole').innerText()).trim().toLowerCase();
+  if(role!==STUB_ROLE)fail(`${path}: header role was '${role}', not the '${STUB_ROLE}' the membership row grants`);
+
+  // The bell counts unacknowledged incidents and says so. It is a count, not
+  // a notification feed, and it must agree with the metric beside it.
+  const bellCount=(await cp.locator('#alertCount').innerText()).trim();
+  if(bellCount!==String(UNACKNOWLEDGED))fail(`${path}: alert count '${bellCount}' does not match ${UNACKNOWLEDGED} unacknowledged incidents`);
+  const metricUnack=(await cp.locator('.metric.m-unack strong').innerText()).trim();
+  if(metricUnack!==String(UNACKNOWLEDGED))fail(`${path}: unacknowledged metric '${metricUnack}' disagrees with the queue`);
+  for(const m of ['m-unack','m-active','m-deployed','m-resolved']){
+    if(!(await cp.locator(`.metric.${m}`).count()))fail(`${path}: the ${m} metric is missing`);
+  }
+
+  /* Overlapping pins are grouped, and the group carries its count. Without
+     this the map silently shows fewer incidents than the console holds.
+     Asserted as a sum: every incident with coordinates is represented once,
+     whether it is drawn alone or inside a group. */
+  const pinned=await cp.$$eval('.opmap-pin',ns=>ns.map(n=>Number(n.dataset.count||1)));
+  const total=pinned.reduce((a,b)=>a+b,0);
+  if(total!==FIXTURE.length)fail(`${path}: map accounts for ${total} of ${FIXTURE.length} incidents`);
+  if(!pinned.some(c=>c>1))fail(`${path}: two incidents metres apart were not grouped — overlapping pins hide incidents`);
+  const clusterBadge=await cp.locator('.opmap-pin.is-cluster b').first().innerText().catch(()=>'');
+  if(!/^\d+$/.test(clusterBadge.trim()))fail(`${path}: a grouped pin does not show how many incidents it stands for`);
+
+  const consoleOverflow=await cp.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+  if(consoleOverflow>1)fail(`${path}: authorised console horizontal overflow ${consoleOverflow}px`);
+
+  for(const e of consoleErrors)fail(`${path}: ${e}`);
+  await ctx.close();
+}
+
 await browser.close();
 
 if(failures.length){
@@ -198,4 +321,4 @@ if(failures.length){
   process.exit(1);
 }
 console.log('EMERGENCY BROWSER QA PASSED');
-console.log('GPS capture, confirmed receipt, offline not-received state, reconnect delivery, mobile layout and both responder gates are healthy.');
+console.log('GPS capture, confirmed receipt, offline not-received state, reconnect delivery, mobile layout, both responder gates, and both authorised consoles rendering their queue, header, metrics and grouped map are healthy.');

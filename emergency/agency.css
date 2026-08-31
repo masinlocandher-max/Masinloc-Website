@@ -106,6 +106,18 @@
 .opmap-pin.is-selected span{box-shadow:0 0 0 3px rgba(255,199,0,.85)}
 .opmap-pin:focus-visible{outline:3px solid #ffc700;outline-offset:2px;border-radius:4px}
 
+/* A group of overlapping incidents. The count is the whole point of drawing
+   one pin for several, so it is legible at pin size and sits on a solid chip
+   rather than over the pin's own colour. */
+.opmap-pin.is-cluster{width:28px;height:28px}
+.opmap-pin.is-cluster span{width:22px;height:22px}
+.opmap-pin.is-cluster b{
+  position:absolute;top:-5px;right:-6px;min-width:17px;height:17px;padding:0 4px;
+  border-radius:999px;background:#0d1526;color:#fff;border:1.5px solid #e8ecf4;
+  font-size:10.5px;font-weight:900;line-height:1;
+  display:grid;place-items:center;font-variant-numeric:tabular-nums;
+}
+
 .opmap-zoom{position:absolute;right:10px;top:10px;display:grid;gap:6px}
 .opmap-zoom button{
   width:34px;height:34px;border-radius:9px;border:1px solid #2b3a58;
@@ -159,3 +171,157 @@
    console pushed below it. The consoles toggle every view this way, so the
    guarantee belongs here once rather than as a display:none on each. */
 .pnp-page [hidden],.mdrrmo-page [hidden]{display:none!important}
+
+/* ==========================================================================
+   Console shell — approved mockup pass.
+   ========================================================================== */
+
+.console-shell{display:flex;align-items:stretch;min-height:calc(100vh - 68px)}
+.console-body{flex:1 1 auto;min-width:0}
+
+/* --- right rail --------------------------------------------------------- */
+
+.console-rail{
+  flex:0 0 132px;display:flex;flex-direction:column;gap:2px;
+  padding:14px 10px;background:#0b1f4d;
+}
+.mdrrmo-page .console-rail{background:#8f1418}
+
+.rail-item{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  padding:14px 6px;border:0;border-radius:12px;background:none;
+  color:#cbd7ef;font:inherit;font-size:12px;font-weight:700;
+  cursor:pointer;text-align:center;line-height:1.2;
+}
+.mdrrmo-page .rail-item{color:#f6d4d5}
+.rail-ico{display:grid;place-items:center}
+.rail-ico svg{width:22px;height:22px}
+.rail-item:hover{background:rgba(255,255,255,.09)}
+.rail-item.is-active{background:#1e63e9;color:#fff}
+.mdrrmo-page .rail-item.is-active{background:#e61e25;color:#fff}
+.rail-item:focus-visible{outline:3px solid #ffc700;outline-offset:-2px}
+
+/* Nothing here pretends to work. A section without a backend is dimmed, is
+   not a button, and carries the word "Soon" — an operator should never wait
+   on a screen that was never going to open. */
+.rail-item.is-pending{opacity:.44;cursor:not-allowed;position:relative}
+.rail-item.is-pending:hover{background:none}
+.rail-soon{
+  font-style:normal;font-size:9px;letter-spacing:.09em;
+  padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.18);
+}
+.rail-logout{margin-top:auto}
+
+.rail-toggle{
+  display:none;width:38px;height:38px;border:0;border-radius:10px;
+  background:rgba(255,255,255,.12);color:#fff;cursor:pointer;place-items:center;
+}
+.rail-toggle svg{width:20px;height:20px}
+
+/* --- header ------------------------------------------------------------- */
+
+.agency-top-actions{gap:14px}
+.alert-bell{position:relative;display:grid;place-items:center;color:#cbd7ef}
+.mdrrmo-page .alert-bell{color:#f6d4d5}
+.alert-bell svg{width:21px;height:21px}
+.alert-bell b{
+  position:absolute;top:-5px;right:-7px;min-width:18px;height:18px;padding:0 4px;
+  border-radius:999px;background:#e61e25;color:#fff;font-size:10.5px;font-weight:900;
+  display:grid;place-items:center;
+}
+.mdrrmo-page .alert-bell b{background:#ffc700;color:#3a2c00}
+
+.agency-who{display:flex;align-items:center;gap:9px;min-width:0}
+.who-avatar{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.14);color:#fff;flex:none;
+}
+.who-avatar svg{width:19px;height:19px}
+.who-text{display:flex;flex-direction:column;min-width:0}
+.who-text strong{font-size:12.5px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.who-text small{font-size:11px;color:#a9b8d6}
+.mdrrmo-page .who-text small{color:#efc2c4}
+
+/* --- metrics, coloured as the design specifies -------------------------- */
+
+.metric strong{font-size:30px;line-height:1}
+.metric.m-unack strong{color:#e61e25}
+.metric.m-active strong{color:#ef7a10}
+.metric.m-deployed strong{color:#1e63e9}
+.metric.m-resolved strong{color:#1e8a4c}
+
+/* --- incident rows ------------------------------------------------------ */
+
+.row-icon{
+  width:40px;height:40px;border-radius:50%;display:grid;place-items:center;
+  flex:none;color:#fff;
+}
+.row-icon svg{width:21px;height:21px}
+.row-icon.p-critical{background:#e61e25}
+.row-icon.p-high{background:#ef7a10}
+.row-icon.p-normal{background:#f0b429}
+.row-icon.p-low,.row-icon.p-unassessed{background:#8b95a6}
+.row-icon.p-resolved{background:#5c6b82}
+.row-icon.mode-assistance{background:#1e63e9}
+
+.incident-row{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center;text-align:left}
+.row-main{min-width:0;display:flex;flex-direction:column;gap:2px}
+.row-side{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex:none}
+.row-status{font-size:11.5px;color:#93a0ba}
+
+.badge.critical{background:#e61e25;color:#fff}
+.badge.high{background:#ef7a10;color:#fff}
+.badge.normal{background:#f0b429;color:#3a2c00}
+.badge.low{background:#8b95a6;color:#fff}
+.badge.mode-assistance{background:#1e63e9;color:#fff}
+
+.view-more{font-weight:700}
+.view-extra{display:contents}
+
+/* --- the queue card's own inset ----------------------------------------- */
+
+/* The card is edge-to-edge on purpose: rows and filters carry their own
+   padding, so giving the card padding would double theirs. The heading, the
+   chips and the footer button carry none, which left the heading painted
+   across the card's rounded corner. They take the row inset instead. */
+.queue-title{padding:16px 15px 0}
+.view-chips{padding:0 15px}
+
+/* The chips and this button were coloured for a dark surface and landed on a
+   white card as heavy black pills with the selected one reading as the
+   unselected one. On this card the resting state is quiet and selection
+   carries the agency's own accent. */
+.view-chip{border-color:#cbd5e1;background:#f4f7fb;color:#3d4a63}
+.view-chip:hover{border-color:#9fb0cc;background:#eaf0f8}
+.view-chip.is-active{background:#0d3b9e;border-color:#0d3b9e;color:#fff}
+.view-chip.is-active span{opacity:.72}
+.mdrrmo-page .view-chip.is-active{background:#b8171d;border-color:#b8171d}
+
+.view-all{
+  display:block;width:auto;margin:12px 15px 15px;padding:13px;
+  border:1px solid #c8d3e2;border-radius:12px;background:none;
+  color:#0d3b9e;font:inherit;font-weight:800;letter-spacing:.05em;
+  text-align:center;cursor:pointer;
+}
+.mdrrmo-page .view-all{color:#b8171d}
+.view-all:hover{background:#f2f6fc}
+.view-all:focus-visible{outline:3px solid #ffc700;outline-offset:2px}
+
+/* --- narrow widths ------------------------------------------------------ */
+
+/* The rail becomes a horizontal strip rather than eating a third of a tablet.
+   Operational data must stay readable; it is never collapsed into a card. */
+@media(max-width:1100px){
+  .console-shell{flex-direction:column}
+  .console-rail{
+    flex:none;flex-direction:row;overflow-x:auto;gap:4px;
+    padding:8px 10px;order:2;
+  }
+  .rail-item{flex-direction:row;gap:8px;padding:10px 13px;white-space:nowrap}
+  .rail-soon{display:none}
+  .rail-logout{margin-top:0;margin-left:auto}
+}
+@media(max-width:720px){
+  .who-text{display:none}
+  .agency-top-actions{gap:10px}
+}

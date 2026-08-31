@@ -28,6 +28,30 @@ const ATTRIBUTION = '© OpenStreetMap contributors';
 
 const clamp = (value, low, high) => Math.min(high, Math.max(low, value));
 
+/* Two incidents on the same street corner draw one pin on top of the other,
+   and the console silently reports fewer incidents than it holds. Pins closer
+   together than this on screen are grouped and the group carries its count.
+
+   The group is anchored on one of its members — an exact reported position —
+   and never on an average of them. A centroid would be a coordinate nobody
+   reported, drawn at pin precision, which is the one thing this module does
+   not do. Zooming apart separates the group into its real positions. */
+const CLUSTER_PX = 34;
+
+// Highest wins the group's colour, so a critical incident is never hidden
+// behind a resolved one it happens to sit beside.
+const RANK = { critical: 5, high: 4, normal: 3, low: 2, unassessed: 1, resolved: 0 };
+
+function cluster(points) {
+  const groups = [];
+  points.forEach((point) => {
+    const near = groups.find((g) => Math.hypot(g.x - point.x, g.y - point.y) <= CLUSTER_PX);
+    if (near) near.members.push(point);
+    else groups.push({ x: point.x, y: point.y, members: [point] });
+  });
+  return groups;
+}
+
 /* Web Mercator, in world pixels at a given zoom. */
 function project(lat, lon, zoom) {
   const scale = TILE * Math.pow(2, zoom);
@@ -122,19 +146,59 @@ export function createMap(host, options = {}) {
   }
 
   function drawPins(originX, originY) {
-    pins.innerHTML = state.markers.map((marker) => {
+    const placed = state.markers.map((marker) => {
       const point = project(marker.lat, marker.lon, state.zoom);
-      const left = point.x - originX;
-      const top = point.y - originY;
-      const selected = marker.id === state.selected ? ' is-selected' : '';
+      return { marker, x: point.x - originX, y: point.y - originY };
+    });
+
+    pins.innerHTML = cluster(placed).map((group) => {
+      // Highest priority in the group decides its colour; the group is stale
+      // only when every position inside it is.
+      const lead = group.members.reduce((best, m) =>
+        (RANK[m.marker.priority] ?? 1) > (RANK[best.marker.priority] ?? 1) ? m : best);
+      const stale = group.members.every((m) => m.marker.stale);
+      const selected = group.members.some((m) => m.marker.id === state.selected);
+      const count = group.members.length;
+
       /* The pin's class carries priority and staleness, and its accessible
-         name spells both out — colour never carries the meaning alone. */
-      return `<button class="opmap-pin p-${marker.priority || 'unassessed'}${marker.stale ? ' is-stale' : ''}${selected}" ` +
-             `type="button" data-id="${marker.id}" style="left:${left}px;top:${top}px" ` +
-             `title="${marker.label}" aria-label="${marker.label}"><span></span></button>`;
+         name spells both out — colour never carries the meaning alone. A
+         group names its count and says how to open it, because a number a
+         screen reader cannot read is a number that is not there. */
+      const label = count === 1
+        ? lead.marker.label
+        : `${count} incidents within a few metres of each other. ` +
+          `Highest priority here: ${lead.marker.label}. Activate to zoom in and separate them.`;
+
+      return `<button class="opmap-pin p-${lead.marker.priority || 'unassessed'}` +
+             `${stale ? ' is-stale' : ''}${selected ? ' is-selected' : ''}` +
+             `${count > 1 ? ' is-cluster' : ''}" type="button" ` +
+             `data-id="${lead.marker.id}" data-count="${count}" ` +
+             `data-x="${group.x}" data-y="${group.y}" ` +
+             `style="left:${group.x}px;top:${group.y}px" ` +
+             `title="${label}" aria-label="${label}"><span></span>` +
+             `${count > 1 ? `<b aria-hidden="true">${count}</b>` : ''}</button>`;
     }).join('');
+
     pins.querySelectorAll('.opmap-pin').forEach((pin) => {
-      pin.addEventListener('click', () => state.onSelect(pin.dataset.id));
+      pin.addEventListener('click', () => {
+        // A single incident opens. A group does not guess which of its
+        // incidents you meant — it zooms until they are separate pins.
+        if (Number(pin.dataset.count) > 1 && state.zoom < 18) {
+          const w = host.clientWidth;
+          const h = host.clientHeight;
+          const scale = TILE * Math.pow(2, state.zoom);
+          const centre = project(state.lat, state.lon, state.zoom);
+          const worldX = centre.x - w / 2 + Number(pin.dataset.x);
+          const worldY = centre.y - h / 2 + Number(pin.dataset.y);
+          state.lon = (worldX / scale) * 360 - 180;
+          const n = Math.PI - (2 * Math.PI * worldY) / scale;
+          state.lat = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
+          state.zoom = clamp(state.zoom + 2, 3, 18);
+          draw();
+          return;
+        }
+        state.onSelect(pin.dataset.id);
+      });
     });
   }
 
