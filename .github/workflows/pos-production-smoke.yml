@@ -64,7 +64,7 @@ jobs:
           const crypto = require('node:crypto');
           (async () => {
             const nonce = crypto.randomBytes(18).toString('hex');
-            const email = `launch-e2e-${nonce}@masinloc-pos-test.invalid`;
+            const email = `launch-e2e-${nonce}@example.com`;
             const password = `Qa!${crypto.randomBytes(24).toString('base64url')}9aZ`;
             const res = await fetch(`${process.env.SUPABASE_URL}/auth/v1/signup`, {
               method: 'POST',
