@@ -8,12 +8,6 @@ on:
     branches: [main]
   push:
     branches: [main]
-  # A run that fails at startup — before any step executes — cannot be retried
-  # through the API: GitHub answers "this workflow run cannot be retried". That
-  # happened on 37888d1, and with no manual trigger the only way to re-run the
-  # suite that gates production was to push another commit. This is the escape
-  # hatch for that, so a transient platform failure does not leave a deployed
-  # commit unverified.
   workflow_dispatch:
 
 permissions:
@@ -70,6 +64,9 @@ jobs:
 
       - name: Run Masinloc Connect privacy and mobile checks
         run: node scripts/connect-qa.mjs
+
+      - name: Run emergency offline and responder checks
+        run: node scripts/emergency-browser-qa.mjs
 
       - name: Run Masinloc Jobs and Career checks
         run: node scripts/jobs-qa.mjs
