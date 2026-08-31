@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
-<link rel="stylesheet" href="emergency.css?v=20260831-1">
+<link rel="stylesheet" href="emergency.css?v=20260831-2">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to emergency form</a>
@@ -49,9 +49,31 @@
     </div>
   </section>
 
+  <!-- STEP 2. What the resident says they are sending. This is intent, not
+       priority: PNP and MDRRMO decide priority, and an assistance report can
+       still be escalated by an officer. Emergency is preselected, because the
+       safe default when somebody is rushing is to treat the report as urgent. -->
+  <section class="mode-picker" id="modePicker" hidden aria-labelledby="modeTitle">
+    <div class="section-heading">
+      <p>STEP 2</p><h2 id="modeTitle">Is this happening now?</h2>
+    </div>
+    <div class="mode-grid">
+      <button class="mode-card emergency selected" type="button" data-mode="emergency" aria-pressed="true">
+        <strong>EMERGENCY</strong>
+        <small>Immediate danger, rescue, or something happening right now.</small>
+      </button>
+      <button class="mode-card assistance" type="button" data-mode="assistance" aria-pressed="false">
+        <small>Not urgent</small>
+        <strong>ASSISTANCE</strong>
+        <small>A concern, request, or follow-up that does not need someone sent now.</small>
+      </button>
+    </div>
+    <p class="mode-note" id="modeNote">Either way the same desk receives it. If you are unsure, choose Emergency.</p>
+  </section>
+
   <section class="report-panel" id="reportPanel" hidden aria-labelledby="reportTitle">
     <div class="section-heading">
-      <p>STEP 2</p><h2 id="reportTitle">Tell us what is happening.</h2>
+      <p>STEP 3</p><h2 id="reportTitle">Tell us what is happening.</h2>
     </div>
 
     <div class="location-card" id="locationCard">
@@ -149,6 +171,6 @@
 </main>
 
 <footer><a href="../connect.html">Masinloc Connect</a><span>Emergency reporting pilot</span></footer>
-<script src="emergency.js?v=20260831-1" defer></script>
+<script src="emergency.js?v=20260831-2" defer></script>
 </body>
 </html>

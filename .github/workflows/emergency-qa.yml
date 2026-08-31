@@ -36,3 +36,5 @@ jobs:
           node --check emergency/agency.js
       - name: Emergency contract checks
         run: node scripts/emergency-qa.mjs
+      - name: Verify one PNP/MDRRMO architecture, not two
+        run: python3 scripts/check-emergency-consolidation.py

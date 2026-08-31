@@ -39,7 +39,18 @@
   <section class="metrics" id="metrics"></section>
   <section class="workspace">
     <div class="incident-column">
-      <div class="filters"><input id="searchInput" placeholder="Search reference, incident, place…"><select id="statusFilter"><option value="">All statuses</option><option value="received">Received</option><option value="acknowledged">Acknowledged</option><option value="assigned">Assigned</option><option value="dispatched">Dispatched</option><option value="en_route">En route</option><option value="on_scene">On scene</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select><select id="priorityFilter"><option value="">All priorities</option><option value="unassessed">Unassessed</option><option value="critical">Critical</option><option value="high">High</option><option value="normal">Normal</option></select></div>
+      <!-- One console, both kinds of traffic. These are views over the same
+           queue, not separate backends: Emergency and Assistance filter on the
+           resident's declared report_mode, the rest on operational state. -->
+      <div class="view-chips" role="group" aria-label="Filter incidents">
+        <button class="view-chip is-active" type="button" data-view="all">All <span data-count>0</span></button>
+        <button class="view-chip" type="button" data-view="emergency">Emergency <span data-count>0</span></button>
+        <button class="view-chip" type="button" data-view="assistance">Assistance <span data-count>0</span></button>
+        <button class="view-chip" type="button" data-view="unacknowledged">Unacknowledged <span data-count>0</span></button>
+        <button class="view-chip" type="button" data-view="active">Active <span data-count>0</span></button>
+        <button class="view-chip" type="button" data-view="resolved">Resolved <span data-count>0</span></button>
+      </div>
+      <div class="filters"><input id="searchInput" placeholder="Search reference, incident, place…"><select id="statusFilter"><option value="">All statuses</option><option value="received">Received</option><option value="acknowledged">Acknowledged</option><option value="assigned">Assigned</option><option value="dispatched">Dispatched</option><option value="en_route">En route</option><option value="on_scene">On scene</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select><select id="priorityFilter"><option value="">All priorities</option><option value="unassessed">Unassessed</option><option value="critical">Critical</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
       <div class="incident-list" id="incidentList"></div>
     </div>
     <div class="detail-column" id="detailColumn"><div class="detail-empty"><div><strong>Select an incident</strong><p>Location, messages, assignment and response actions will appear here.</p></div></div></div>
