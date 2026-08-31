@@ -31,6 +31,10 @@ function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(D
 async function tx(store,mode,work){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction(store,mode),s=t.objectStore(store);let value;try{value=work(s)}catch(e){db.close();reject(e);return}t.oncomplete=()=>{db.close();resolve(value)};t.onerror=()=>{db.close();reject(t.error)};})}
 async function putReport(r){await tx('reports','readwrite',s=>s.put(r))}
 async function putMessage(m){await tx('messages','readwrite',s=>s.put(m))}
+// One report by key. Used to re-read a report's committed state immediately
+// before sending, so a caller holding a stale snapshot cannot re-deliver
+// something another pass already confirmed.
+async function getReport(clientReportId){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('reports','readonly'),r=t.objectStore('reports').get(clientReportId);r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>reject(r.error);t.oncomplete=()=>db.close();})}
 async function getReports(){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('reports','readonly'),r=t.objectStore('reports').getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error);t.oncomplete=()=>db.close();})}
 async function getMessages(clientReportId){const db=await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('messages','readonly'),r=t.objectStore('messages').getAll();r.onsuccess=()=>resolve((r.result||[]).filter(x=>x.client_report_id===clientReportId));r.onerror=()=>reject(r.error);t.oncomplete=()=>db.close();})}
 
@@ -63,7 +67,29 @@ function validateForm(){if(!selectedAgency)return 'Choose PNP or MDRRMO.';if(!$(
 
 $('#reportForm').addEventListener('submit',async e=>{e.preventDefault();showError('');const error=validateForm();if(error){showError(error);return}setSending(true);try{try{await captureGPS(true)}catch{}const recheck=validateForm();if(recheck){showError(recheck);return}const report=buildReport();await putReport(report);active=report;serverMessages=[];await showActive();if(navigator.onLine)await flushReport(active);else registerSync();}catch(err){showError(err instanceof Error?err.message:'Could not save the report on this device.')}finally{setSending(false)}});
 
-async function flushReport(report){if(!navigator.onLine||report.sync_state==='delivered')return report;report.sync_state='sending';report.status='sending';report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderStatus();try{const data=await api({action:'submit',report});report.sync_state='delivered';report.status=data.status||'received';report.reference=data.reference||report.reference;report.received_at=data.received_at||report.received_at;report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderActiveMeta();renderStatus();await refreshStatus(false);return report}catch(err){report.sync_state='queued';report.status='saved_offline';report.last_error=err instanceof Error?err.message:'Delivery failed';report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderStatus();registerSync();return report}}
+/* Delivery is single-flight, per report and overall.
+
+   Reconnecting fires more than one trigger at once — the browser's own
+   'online' event, the focus handler, visibilitychange, and Background Sync can
+   all land within the same tick. Each used to start its own flushAll, and each
+   read the queue before the others had written back, so a report that one pass
+   had already delivered was re-sent by the next. The visible effect was the
+   one thing this page must never do: a confirmed reference flickering back to
+   'Pending delivery' and the status card back to 'Sending', on somebody's
+   emergency report. Caught by emergency-browser-qa.mjs.
+
+   Two guards. inFlight keeps one send per client_report_id, so overlapping
+   triggers coalesce instead of racing. And the report's state is re-read from
+   IndexedDB immediately before sending rather than trusted from the caller's
+   snapshot, because that snapshot may have been taken before another pass
+   delivered it. */
+const inFlight=new Set();
+async function flushReport(report){if(!navigator.onLine||report.sync_state==='delivered')return report;
+if(inFlight.has(report.client_report_id))return report;
+const stored=await getReport(report.client_report_id);
+if(stored&&stored.sync_state==='delivered'){/* Another pass got there first. Adopt its result rather than re-sending: the reference it holds is the confirmed one. */if(active&&active.client_report_id===stored.client_report_id){active=stored;renderActiveMeta();renderStatus();}return stored}
+inFlight.add(report.client_report_id);
+try{report.sync_state='sending';report.status='sending';report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderStatus();try{const data=await api({action:'submit',report});report.sync_state='delivered';report.status=data.status||'received';report.reference=data.reference||report.reference;report.received_at=data.received_at||report.received_at;report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderActiveMeta();renderStatus();await refreshStatus(false);return report}catch(err){report.sync_state='queued';report.status='saved_offline';report.last_error=err instanceof Error?err.message:'Delivery failed';report.updated_local_at=new Date().toISOString();await putReport(report);active=report;renderStatus();registerSync();return report}}finally{inFlight.delete(report.client_report_id)}}
 
 async function refreshStatus(showFailure=true){if(!active||active.sync_state!=='delivered'||!navigator.onLine)return;try{const data=await api({action:'status',client_report_id:active.client_report_id,report_secret:active.report_secret});const i=data.incident||{};active.status=i.status||active.status;active.reference=i.public_reference||active.reference;active.received_at=i.received_at||active.received_at;active.acknowledged_at=i.acknowledged_at||null;active.assigned_unit=i.assigned_unit||null;active.priority=i.priority||active.priority;active.resolved_at=i.resolved_at||null;active.updated_local_at=new Date().toISOString();serverMessages=data.messages||[];await putReport(active);renderActiveMeta();renderStatus();await renderMessages();}catch(err){if(showFailure)$('#messageHint').textContent='Could not refresh right now. Your saved report remains on this device.';}}
 
@@ -81,7 +107,9 @@ $('#messageForm').addEventListener('submit',async e=>{e.preventDefault();if(!act
 
 async function flushMessage(m){if(!navigator.onLine||!active||active.sync_state!=='delivered')return;try{await api({action:'message',client_report_id:active.client_report_id,report_secret:active.report_secret,client_message_id:m.client_message_id,message:m.body});m.sync_state='delivered';await putMessage(m);$('#messageHint').textContent='Message delivered to the report thread.';await refreshStatus(false);}catch{$('#messageHint').textContent='Message saved on this device and queued for retry.';registerSync();await renderMessages();}}
 
-async function flushAll(){setConnection();if(!navigator.onLine)return;const reports=(await getReports()).sort((a,b)=>new Date(a.source_created_at).getTime()-new Date(b.source_created_at).getTime());for(const r of reports.filter(x=>x.sync_state!=='delivered'))await flushReport(r);for(const r of reports.filter(x=>x.sync_state==='delivered')){const msgs=await getMessages(r.client_report_id);for(const m of msgs.filter(x=>x.sync_state!=='delivered')){const previous=active;active=r;await flushMessage(m);active=previous;}}if(active&&active.sync_state==='delivered')await refreshStatus(false)}
+let flushing=null;
+function flushAll(){/* Overlapping callers share one pass rather than starting their own. */if(flushing)return flushing;flushing=runFlush().finally(()=>{flushing=null});return flushing}
+async function runFlush(){setConnection();if(!navigator.onLine)return;const reports=(await getReports()).sort((a,b)=>new Date(a.source_created_at).getTime()-new Date(b.source_created_at).getTime());for(const r of reports.filter(x=>x.sync_state!=='delivered'))await flushReport(r);for(const r of reports.filter(x=>x.sync_state==='delivered')){const msgs=await getMessages(r.client_report_id);for(const m of msgs.filter(x=>x.sync_state!=='delivered')){const previous=active;active=r;await flushMessage(m);active=previous;}}if(active&&active.sync_state==='delivered')await refreshStatus(false)}
 
 async function registerSync(){if(!('serviceWorker'in navigator))return;try{const reg=await navigator.serviceWorker.ready;if('sync'in reg)await reg.sync.register('masinloc-emergency-sync')}catch{}}
 
