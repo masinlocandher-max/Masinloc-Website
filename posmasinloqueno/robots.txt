@@ -1,0 +1,4 @@
+# Masinloc POS is in private staging. No public access yet.
+# Keep this file as-is until the launch decision is made.
+User-agent: *
+Disallow: /
