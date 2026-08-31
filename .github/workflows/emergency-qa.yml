@@ -1,0 +1,38 @@
+name: Emergency Response QA
+
+on:
+  pull_request:
+    paths:
+      - 'emergency/**'
+      - 'supabase/functions/emergency-response/**'
+      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
+      - 'scripts/emergency-qa.mjs'
+      - '.github/workflows/emergency-qa.yml'
+  push:
+    branches:
+      - 'agent/emergency-pnp-mdrrmo-mvp'
+    paths:
+      - 'emergency/**'
+      - 'supabase/functions/emergency-response/**'
+      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
+      - 'scripts/emergency-qa.mjs'
+      - '.github/workflows/emergency-qa.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  emergency-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: |
+          node --check emergency/emergency.js
+          node --check emergency/sw.js
+          node --check emergency/agency.js
+      - name: Emergency contract checks
+        run: node scripts/emergency-qa.mjs
