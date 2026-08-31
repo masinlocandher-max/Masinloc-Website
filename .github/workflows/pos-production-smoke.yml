@@ -12,6 +12,9 @@ jobs:
   smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      SUPABASE_URL: https://uwcqvsitjtknxsaypjxj.supabase.co
+      SUPABASE_PUBLISHABLE_KEY: sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,5 +55,29 @@ jobs:
 
             console.log('Production POS browser smoke passed.');
             await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+      - name: Probe disposable Supabase signup session
+        run: |
+          node <<'NODE'
+          const assert = require('node:assert/strict');
+          const crypto = require('node:crypto');
+          (async () => {
+            const nonce = crypto.randomBytes(18).toString('hex');
+            const email = `launch-e2e-${nonce}@masinloc-pos-test.invalid`;
+            const password = `Qa!${crypto.randomBytes(24).toString('base64url')}9aZ`;
+            const res = await fetch(`${process.env.SUPABASE_URL}/auth/v1/signup`, {
+              method: 'POST',
+              headers: {
+                apikey: process.env.SUPABASE_PUBLISHABLE_KEY,
+                Authorization: `Bearer ${process.env.SUPABASE_PUBLISHABLE_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ email, password }),
+            });
+            const body = await res.json();
+            assert(res.ok, `Signup HTTP ${res.status}: ${body?.msg || body?.message || 'unknown error'}`);
+            assert(body.user?.id, 'Signup did not create a user');
+            console.log(`Disposable signup created user=${body.user.id}; session=${Boolean(body.access_token)}`);
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
