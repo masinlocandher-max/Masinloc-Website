@@ -1,0 +1,56 @@
+name: POS production smoke
+
+on:
+  push:
+    branches: [qa/pos-production-smoke]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Exercise deployed POS route and live storefront edge
+        run: |
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const assert = require('node:assert/strict');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            const base = 'https://www.masinloc-zambales.com/posmasinloqueno';
+
+            const home = await page.goto(base + '/', { waitUntil: 'networkidle', timeout: 60000 });
+            assert(home && home.ok(), `POS home HTTP ${home && home.status()}`);
+            assert.equal(await page.title(), 'Masinloc POS');
+            const homeText = await page.locator('body').innerText();
+            assert(!homeText.includes('ABC Café'), 'Old ABC Café demo is still deployed');
+            assert(!homeText.includes('CUSTOMER DEMO'), 'Old customer demo is still deployed');
+            assert(/Sign in|Review mode|Masinloc POS/i.test(homeText), 'Real POS shell did not render');
+
+            const ops = await page.goto(base + '/operations', { waitUntil: 'networkidle', timeout: 60000 });
+            assert(ops && ops.ok(), `Operations route HTTP ${ops && ops.status()}`);
+            assert.equal(await page.title(), 'Masinloc POS');
+            const opsText = await page.locator('body').innerText();
+            assert(!/404|not found/i.test(opsText), 'Operations route fell through to 404');
+
+            await page.goto(base + '/?store=__launch_smoke_missing__&source=marketplace', { waitUntil: 'networkidle', timeout: 60000 });
+            await page.getByText('Store unavailable', { exact: false }).waitFor({ timeout: 30000 });
+            const storeText = await page.locator('body').innerText();
+            assert(/Store unavailable/i.test(storeText), 'Live storefront edge did not answer the deployed browser');
+
+            console.log('Production POS browser smoke passed.');
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
