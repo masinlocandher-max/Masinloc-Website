@@ -254,21 +254,59 @@ markup = f"""<!doctype html>
     </form>
 
     <div class="rp-receipt" id="reportReceipt" hidden>
-      <h2>Your message was submitted.</h2>
+      <h2>Your message was sent.</h2>
       <p class="rp-receipt-honest" id="receiptHonest"></p>
       <dl class="rp-receipt-codes">
         <div><dt>Reference code</dt><dd id="receiptReference"></dd></div>
         <div><dt>Your access key</dt><dd id="receiptToken"></dd></div>
       </dl>
-      <p class="rp-receipt-keep">Keep both. Together they are the only way to check this
-        message later, and neither is shown again. The reference code alone is what a desk
-        officer will ask for on the phone.</p>
-      <p><a href="help-desk.html">Back to the Help Desk</a></p>
+      <p class="rp-receipt-keep">Write both down. Together they are the only way back into
+        this conversation from another device or after this tab is closed, and the access key
+        is not shown again. The reference code alone is what a desk officer will ask for on
+        the phone.</p>
     </div>
   </section>
 
+  <!-- The conversation. Hidden until a thread is opened, either by sending a
+       new message or by entering a reference code and key below. -->
+  <section class="rp-thread" id="threadView" hidden aria-labelledby="threadTitle">
+    <div class="rp-thread-head">
+      <div>
+        <p class="section-label">Conversation</p>
+        <h2 id="threadTitle" data-field="subject">Your conversation</h2>
+        <p class="rp-thread-meta">
+          <span class="rp-badge" data-field="status"></span>
+          <span class="rp-thread-ref" data-field="reference"></span>
+        </p>
+      </div>
+      <button class="rp-secondary" type="button" id="refreshThread">Check for a reply</button>
+    </div>
+
+    <!-- The honest line. Never a presence indicator: it says when the desk
+         last replied, or that it has not, and how long the message has been
+         waiting. There is no green dot to be wrong about. -->
+    <p class="rp-thread-wait" id="threadWait" role="status" aria-live="polite"></p>
+
+    <ol class="rp-messages" id="threadMessages"></ol>
+
+    <form class="rp-reply" id="replyForm" novalidate>
+      <div class="rp-field">
+        <label for="replyBody">Add to this conversation</label>
+        <textarea id="replyBody" rows="4" maxlength="4000"
+                  placeholder="Anything further the desk should know."></textarea>
+      </div>
+      <div class="rp-actions">
+        <button class="rp-submit" type="submit" id="replySubmit">Send</button>
+        <p class="rp-status" id="replyStatus" role="status" aria-live="polite"></p>
+      </div>
+    </form>
+
+    <p class="rp-thread-foot">This conversation is not monitored continuously. If something
+      is happening now, <a href="help-desk.html">call instead</a>.</p>
+  </section>
+
   {'<section class="rp-check" aria-labelledby="rpCheckTitle">' if OPEN else '<section class="rp-check" aria-labelledby="rpCheckTitle" hidden>'}
-    <h2 id="rpCheckTitle">Check a message you already sent</h2>
+    <h2 id="rpCheckTitle">Open a conversation you already started</h2>
     <p>Enter the reference code and access key you were given.</p>
     <form class="rp-check-form" id="checkForm" novalidate>
       <div class="rp-field">
@@ -279,7 +317,7 @@ markup = f"""<!doctype html>
         <label for="checkToken">Access key</label>
         <input id="checkToken" type="text" maxlength="60" autocomplete="off">
       </div>
-      <button class="rp-secondary" type="submit">Check status</button>
+      <button class="rp-secondary" type="submit">Open conversation</button>
     </form>
     <p class="rp-check-result" id="checkResult" role="status" aria-live="polite"></p>
   </section>

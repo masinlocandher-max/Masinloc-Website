@@ -115,6 +115,37 @@ for phrase, why in (
     if phrase not in flat:
         problems.append(f"report.html no longer says {phrase!r} — {why}")
 
+# --- 2b. the conversation must not imply somebody is there -----------------
+
+# A thread invites an expectation a form does not: that there is somebody on
+# the other end, roughly now. There is not. So the vocabulary of presence is
+# refused outright — not because these words are wrong in general, but because
+# on this page each one is a claim about staffing that nothing can keep.
+LIVENESS = [
+    ("online now", "presence"),
+    ("is typing", "presence"),
+    ("typing…", "presence"),
+    ("live chat", "immediacy"),
+    ("chat now", "immediacy"),
+    ("we are here", "presence"),
+    ("respond immediately", "a response time nobody promised"),
+    ("reply immediately", "a response time nobody promised"),
+    ("instant reply", "a response time nobody promised"),
+    ("24/7", "a staffing claim nobody made"),
+]
+lowered = flat.lower()
+for phrase, why in LIVENESS:
+    if phrase in lowered:
+        problems.append(
+            f"report.html says {phrase!r}, which implies {why}. This channel is "
+            f"asynchronous and nothing about it may suggest otherwise.")
+
+# And the page must keep saying, on the thread itself, that it is not watched.
+if "rp-thread" in report and "not monitored continuously" not in flat:
+    problems.append(
+        "report.html shows a conversation without saying it is not monitored "
+        "continuously — a thread implies presence unless it says it does not")
+
 # --- 3. no emergency report kind, anywhere --------------------------------
 
 for desk in desks:

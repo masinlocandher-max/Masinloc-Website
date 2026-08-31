@@ -177,8 +177,22 @@ def console(desk: dict) -> str:
       <div><dt>Contact</dt><dd data-field="contact"></dd></div>
     </dl>
     <div class="dc-body" data-field="body"></div>
+
+    <div class="dc-thread">
+      <h3>Conversation</h3>
+      <ol class="dc-messages" data-field="messages"></ol>
+      <div class="dc-reply">
+        <label for="deskReply">Reply to the resident</label>
+        <textarea id="deskReply" rows="3" maxlength="4000"
+                  placeholder="What you can tell them."></textarea>
+        <p class="dc-reply-warn">This is sent to the resident and cannot be edited or
+          withdrawn afterwards. If the matter is urgent, call them instead.</p>
+        <button class="dc-primary" type="button" id="sendReplyBtn">Send reply</button>
+      </div>
+    </div>
+
     <div class="dc-note-block">
-      <label for="deskNote">Desk note</label>
+      <label for="deskNote">Desk note <span class="dc-private">not shown to the resident</span></label>
       <textarea id="deskNote" rows="3" maxlength="2000"
                 placeholder="What the desk did, or what it is waiting on."></textarea>
       <button class="dc-quiet" type="button" id="saveNoteBtn">Save note</button>

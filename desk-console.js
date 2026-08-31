@@ -113,15 +113,25 @@ async function load() {
   const { data, error } = await supabase
     .from('assistance_reports')
     .select('id, reference_code, report_kind, subject, body, barangay, reporter_name, ' +
-            'reporter_contact, status, acknowledged_at, desk_note, created_at, updated_at')
+            'reporter_contact, status, acknowledged_at, desk_note, created_at, updated_at, ' +
+            'last_message_at, last_message_sender, desk_reply_count')
     .eq('desk_code', DESK)
     .order('created_at', { ascending: false });
+
+  /* A queue is read to find what needs answering. Threads where the resident
+     spoke last are what the desk owes a reply to, so they come first; within
+     each group, oldest-waiting first, because the person who has waited
+     longest should not be buried under newer arrivals. */
 
   if (error) {
     status.textContent = 'Could not load reports. Try again, or reload the page.';
     return;
   }
-  reports = data || [];
+  const owed = (report) =>
+    report.last_message_sender === 'resident' || report.status === 'submitted' ? 0 : 1;
+  reports = (data || []).sort((a, b) =>
+    owed(a) - owed(b)
+    || new Date(a.last_message_at || a.created_at) - new Date(b.last_message_at || b.created_at));
   status.textContent = '';
   render();
 }
@@ -170,7 +180,9 @@ function render() {
         </span>
         <span class="dc-row-subject">${escapeHtml(report.subject)}</span>
         <span class="dc-row-meta">${escapeHtml(KINDS[report.report_kind] || report.report_kind)}${
-          report.barangay ? ` · ${escapeHtml(report.barangay)}` : ''}</span>
+          report.barangay ? ` · ${escapeHtml(report.barangay)}` : ''}</span>${
+          report.last_message_sender === 'resident'
+            ? '<span class="dc-row-owed">Waiting on a reply</span>' : ''}
       </button>
     </li>`).join('');
 }
@@ -224,8 +236,72 @@ function openReport() {
     button.addEventListener('click', () => setStatus(report, button.dataset.setStatus));
   });
   detail.querySelector('#saveNoteBtn')?.addEventListener('click', () => saveNote(report));
+  detail.querySelector('#sendReplyBtn')?.addEventListener('click', () => sendReply(report));
 
+  loadThread(report.id);
   loadEvents(report.id);
+}
+
+/* --- the conversation ---------------------------------------------------- */
+
+async function loadThread(reportId) {
+  const list = $('#reportDetail').querySelector('[data-field="messages"]');
+  if (!list) return;
+
+  const { data, error } = await supabase
+    .from('assistance_messages')
+    .select('sender, body, created_at')
+    .eq('report_id', reportId)
+    .order('created_at', { ascending: true });
+
+  if (error) {
+    list.innerHTML = '<li class="dc-message-empty">Could not load the conversation.</li>';
+    return;
+  }
+  if (!data.length) {
+    list.innerHTML = '<li class="dc-message-empty">Nothing beyond the original report yet.</li>';
+    return;
+  }
+  list.innerHTML = data.map((message) => `
+    <li class="dc-message is-${escapeHtml(message.sender)}">
+      <span class="dc-message-who">${message.sender === 'desk' ? 'Desk' : 'Resident'} · ${
+        escapeHtml(when(message.created_at))}</span>
+      <span class="dc-message-body">${escapeHtml(message.body)}</span>
+    </li>`).join('');
+}
+
+async function sendReply(report) {
+  const box = $('#deskReply');
+  const say = $('#reportDetail').querySelector('[data-field="actionStatus"]');
+  const text = String(box?.value || '').trim();
+  if (!text) { say.textContent = 'Write a reply first.'; return; }
+
+  const button = $('#sendReplyBtn');
+  button.disabled = true;
+  button.textContent = 'Sending…';
+
+  /* author_user_id is set here and checked again by the insert policy, which
+     refuses anything not posted as 'desk' by the signed-in officer. A console
+     bug cannot file an officer's words as the resident's. */
+  const { data: { user } } = await supabase.auth.getUser();
+  const { error } = await supabase.from('assistance_messages').insert({
+    report_id: report.id,
+    sender: 'desk',
+    author_user_id: user?.id,
+    body: text,
+  });
+
+  button.disabled = false;
+  button.textContent = 'Send reply';
+
+  if (error) { say.textContent = 'Could not send that reply.'; return; }
+  box.value = '';
+  say.textContent = 'Reply sent to the resident.';
+  /* Reloaded rather than appended: sending a reply also moves the report off
+     'submitted' and stamps the acknowledgement, by trigger, so the row and the
+     badge would otherwise be stale on screen. */
+  await load();
+  openReport();
 }
 
 async function setStatus(report, status) {

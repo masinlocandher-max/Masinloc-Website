@@ -268,3 +268,85 @@ html.js .rp-check[data-reveal] { opacity: 1; transform: none; }
    and this sheet on top, so .report-page exists to scope anything that must
    not leak back onto the Help Desk itself. */
 .report-page { display: block; }
+
+/* --- the conversation --------------------------------------------------- */
+
+/* A thread, not a chat window. No bubbles tapering to an avatar, no presence
+   dot, no "typing" — every one of those signals somebody is there, and nobody
+   is. What it does show is who spoke, when, and how long the last message has
+   been waiting. The desk's replies are distinguished by ground and a rule, the
+   way a quoted reply is set in print. */
+
+.rp-thread {
+  padding: clamp(22px, 3.4vw, 34px) 0;
+  border-top: 1px solid #E7E4DC;
+  margin-top: clamp(22px, 3.4vw, 34px);
+}
+
+.rp-thread-head {
+  display: flex; flex-wrap: wrap; gap: 14px;
+  align-items: flex-start; justify-content: space-between; margin-bottom: 14px;
+}
+.rp-thread-head h2 { margin: 4px 0 8px; font-size: clamp(1.16rem, 2.1vw, 1.5rem); }
+.rp-thread-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 0; }
+.rp-thread-ref {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem; color: #6B7183; user-select: all;
+}
+
+.rp-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 0.7rem; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase;
+  background: #EEF0F4; color: #5B6072;
+}
+.rp-badge.is-submitted { background: #FDECE4; color: #8A3A12; }
+.rp-badge.is-received { background: #E8F1FD; color: #1B4C9B; }
+.rp-badge.is-in_progress { background: #FFF4D6; color: #7A5600; }
+.rp-badge.is-closed { background: #EAF3EC; color: #2C6138; }
+
+/* The honest line. It carries no colour while nothing has been answered,
+   because a waiting message is not a warning — it is the normal state of an
+   asynchronous channel, and dressing it as an alert would be its own lie. */
+.rp-thread-wait {
+  margin: 0 0 16px; padding: 11px 14px;
+  background: #F7F8FA; border-radius: 8px;
+  font-size: 0.9rem; color: #5B6072;
+}
+.rp-thread-wait.is-replied { background: #EAF3EC; color: #2C6138; font-weight: 600; }
+
+.rp-messages { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 12px; }
+
+.rp-message {
+  padding: 14px 16px; border-radius: 12px;
+  border: 1px solid #E3E0D8; background: #fff; max-width: 100%;
+}
+.rp-message-who {
+  font-size: 0.74rem; font-weight: 650; letter-spacing: 0.04em;
+  text-transform: uppercase; color: #8A8F9E; margin-bottom: 6px;
+}
+/* Whitespace preserved: paragraphing is part of an account, and collapsing it
+   changes how the account reads. */
+.rp-message-body {
+  white-space: pre-wrap; line-height: 1.65; color: #22262F;
+  font-size: 0.96rem; overflow-wrap: anywhere;
+}
+
+/* The opening report — what started the thread, set apart from the replies. */
+.rp-message.is-opening { border-left: 4px solid var(--blue); }
+
+/* The desk's voice. Inset and on its own ground so a resident scanning the
+   thread can find the answer without reading their own words again. */
+.rp-message.is-desk {
+  background: #F4F7FD; border-color: #CFDCF3;
+}
+.rp-message.is-desk .rp-message-who { color: #1B4C9B; }
+@media (min-width: 640px) {
+  .rp-message.is-desk { margin-left: 32px; }
+  .rp-message.is-resident:not(.is-opening) { margin-right: 32px; }
+}
+
+.rp-reply { display: grid; gap: 14px; max-width: 720px; }
+.rp-thread-foot {
+  margin: 18px 0 0; padding-top: 14px; border-top: 1px solid #EDEFF3;
+  font-size: 0.87rem; color: #6B7183;
+}

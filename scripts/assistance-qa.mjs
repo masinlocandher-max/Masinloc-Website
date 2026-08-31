@@ -82,6 +82,41 @@ if (closed) {
 const h1 = await page.$$eval("h1", (n) => n.length);
 if (h1 !== 1) fail(`report.html: expected exactly one H1, found ${h1}`);
 
+/* --- the conversation ---------------------------------------------------- */
+
+// While the channel is closed the thread cannot be reachable either: there is
+// nothing to converse about, and a visible reply box would be the same lie the
+// closed form exists to avoid.
+if (closed) {
+  if (await page.locator("#threadView").isVisible()) {
+    fail("the channel is closed but the conversation view is showing");
+  }
+  if (await page.locator("#checkForm").isVisible()) {
+    fail("the channel is closed but the conversation lookup form is showing");
+  }
+}
+
+// Nothing anywhere on the page may imply somebody is present. The guard checks
+// the built source; this checks what a reader actually sees rendered, which is
+// where an injected widget or a stray template would show up.
+const visibleText = (await page.locator("body").innerText()).toLowerCase();
+for (const phrase of ["online now", "is typing", "typing…", "live chat",
+                      "chat now", "we are here", "reply immediately", "24/7"]) {
+  if (visibleText.includes(phrase)) {
+    fail(`report.html shows "${phrase}" to a reader — this channel is asynchronous ` +
+         `and must not suggest anybody is waiting`);
+  }
+}
+
+// The thread must say it is not watched — but only once it is on screen. While
+// the channel is closed the section is hidden, so its text is not in innerText
+// and asserting on it here would fail on a page that is behaving correctly.
+// check-assistance-desks.py holds the markup to the same rule either way.
+if (await page.locator(".rp-thread").isVisible()
+    && !visibleText.includes("not monitored continuously")) {
+  fail("the conversation is on screen without telling the reader it is unmonitored");
+}
+
 if (errors.length) fail(`report.html console errors: ${errors.join(" | ")}`);
 await page.close();
 
@@ -109,6 +144,19 @@ for (const desk of ["pnp", "mdrrmo"]) {
     if (!robots?.includes(directive)) {
       fail(`${desk}-desk.html is missing robots ${directive}`);
     }
+  }
+
+  /* The console holds two boxes: one whose text reaches a member of the public
+     and one that never does. Confusing them is the worst mistake an officer
+     can make here, so the distinction has to be in the markup rather than in
+     training. */
+  const template = await console_.locator("#detailTemplate").evaluate(
+    (node) => node.innerHTML.toLowerCase());
+  if (!template.includes("not shown to the resident")) {
+    fail(`${desk}-desk.html: the internal desk note is not labelled as private`);
+  }
+  if (!template.includes("cannot be edited or")) {
+    fail(`${desk}-desk.html: the reply box does not warn that a reply is final`);
   }
 
   const consoleH1 = await console_.$$eval("h1", (n) => n.length);
