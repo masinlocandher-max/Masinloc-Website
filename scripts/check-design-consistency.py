@@ -15,6 +15,7 @@ PUBLIC_PAGES = [
     "founder-of-masinloc.html",
     "masinloc-bulletin.html",
     "connect.html",
+    "help-desk.html",
 ]
 # Pages that sit under a primary destination rather than being one. They carry
 # the same shared shell, but the current-page state belongs to their parent, so
@@ -34,6 +35,9 @@ SUBPAGES = {
     # them holding its own place in a bar that would then need ten items.
     "verified-history.html": "discover/index.html",
     "founder-of-masinloc.html": "discover/index.html",
+    # The Help Desk is a Masinloc Connect utility, so Connect keeps the
+    # current-page state rather than the bar growing a sixth destination.
+    "help-desk.html": "connect.html",
 }
 # Pages that carry the shared shell but are not themselves a nav destination
 # with their own current-page state beyond the one they already mark.

@@ -1,0 +1,267 @@
+/* Help Desk — emergency and assistance numbers.
+
+   Two things drive every decision on this sheet.
+
+   First, this page is read under pressure. Numbers are the largest type on it,
+   the tap target is the whole number rather than an icon beside it, and the
+   emergency block is above everything else. Nothing here animates in: a page
+   somebody opened because something is happening should be complete the
+   instant it paints.
+
+   Second, it is still a page of this website, not an app screen. The palette
+   is the locked one, the type is the site's editorial scale, and the layout
+   uses the width it is given rather than becoming a column of phone cards on
+   a 1440px display.
+
+   It prints. People put this on a fridge, and a printed emergency list that
+   loses its numbers to a dark background is useless paper. */
+
+.help-desk-page main {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 clamp(18px, 5vw, 40px) 80px;
+}
+
+/* --- breadcrumb ------------------------------------------------------- */
+
+/* .crumbs is styled per section stylesheet rather than in site.css, so a page
+   that omits these rules renders its breadcrumb as a raw numbered list under
+   the masthead. Same rules as the other section pages, so the trail reads
+   identically wherever it appears. The top padding clears the fixed masthead. */
+.help-desk-page .crumbs { padding: 104px 0 0; }
+.help-desk-page .crumbs ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font: 500 11.5px/1.4 var(--font-ui);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.help-desk-page .crumbs li { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+.help-desk-page .crumbs li + li::before { content: "/"; color: var(--line); }
+.help-desk-page .crumbs a { color: var(--blue); text-decoration: none; }
+.help-desk-page .crumbs a:hover { text-decoration: underline; }
+.help-desk-page .crumbs [aria-current] { color: var(--ink); }
+@media (max-width: 700px) { .help-desk-page .crumbs { padding-top: 92px; } }
+
+/* --- hero ------------------------------------------------------------- */
+
+.hd-hero { padding: clamp(20px, 4vw, 40px) 0 clamp(24px, 4vw, 36px); }
+.hd-hero h1 { margin: 6px 0 14px; max-width: 20ch; }
+.hd-hero .lead { font-size: clamp(1.02rem, 1.6vw, 1.2rem); max-width: 58ch; margin: 0 0 18px; }
+
+/* The independence line is a boundary statement, not a footnote: somebody who
+   believes this page reaches an office would wait for a reply that is not
+   coming. It is set apart so it cannot be skimmed past. */
+.hd-independent {
+  margin: 0;
+  padding: 14px 16px;
+  border-left: 3px solid var(--yellow);
+  background: #FBFAF7;
+  font-size: 0.93rem;
+  line-height: 1.6;
+  color: #43485A;
+  max-width: 68ch;
+  border-radius: 0 8px 8px 0;
+}
+
+/* --- services --------------------------------------------------------- */
+
+.help-desk-page h2 {
+  font-size: clamp(1.24rem, 2.1vw, 1.62rem);
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+
+.hd-emergency, .hd-support, .hd-guidance, .hd-barangay, .hd-note {
+  padding: clamp(22px, 3.4vw, 34px) 0;
+  border-top: 1px solid #E7E4DC;
+}
+
+.hd-services { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 14px; }
+
+/* Two columns from tablet up. The emergency block earns the wider cards, so it
+   holds at two while the assistance block may go to three — the difference is
+   deliberate: the top block should never look like a dense list of options. */
+@media (min-width: 720px) {
+  .hd-services { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+}
+@media (min-width: 1080px) {
+  .hd-services-priority { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.hd-service {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 16px;
+  background: #fff;
+  border: 1px solid #E3E0D8;
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.hd-services-priority .hd-service {
+  border-color: #D9D3C6;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 6px 18px rgba(16, 24, 40, 0.045);
+}
+
+.hd-service-head { display: flex; flex-direction: column; gap: 3px; }
+.hd-service h3 { margin: 0; font-size: 1.06rem; letter-spacing: -0.01em; }
+.hd-full { margin: 0; font-size: 0.79rem; color: #6B7183; line-height: 1.45; }
+.hd-role { margin: 4px 0 0; font-size: 0.88rem; color: #4A5061; line-height: 1.5; }
+
+/* --- the call target -------------------------------------------------- */
+
+/* The number is the button. An icon-sized tap target next to text you cannot
+   press is the single most common way an emergency list fails on a phone. */
+.hd-calls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+
+.hd-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 15px;
+  min-height: 46px;
+  border-radius: 9px;
+  background: var(--navy-deep);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+  font-size: 1.02rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.hd-call:hover { background: #0A1E44; }
+.hd-call:active { transform: translateY(1px); }
+.hd-call:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
+.hd-call-icon { display: inline-flex; opacity: 0.75; flex: none; }
+.hd-call-number { white-space: nowrap; }
+
+/* --- guidance --------------------------------------------------------- */
+
+.hd-guidance > p { margin: 8px 0 0; max-width: 62ch; color: #43485A; }
+.hd-steps {
+  margin: 16px 0 0;
+  padding: 0 0 0 1.15em;
+  display: grid;
+  gap: 9px;
+  max-width: 66ch;
+  color: #35394A;
+  line-height: 1.6;
+}
+.hd-steps li::marker { color: #8A8F9E; font-variant-numeric: tabular-nums; }
+.hd-steps strong { color: var(--navy-deep); }
+.hd-steps-note { margin: 14px 0 0; font-size: 0.9rem; color: #5B6072; max-width: 62ch; }
+
+/* --- barangay --------------------------------------------------------- */
+
+.hd-barangay > p { margin: 8px 0 0; max-width: 62ch; color: #43485A; }
+
+.hd-filter { margin: 18px 0 0; max-width: 380px; }
+.hd-filter label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #5B6072;
+  margin-bottom: 6px;
+}
+.hd-filter input {
+  width: 100%;
+  padding: 11px 13px;
+  font: inherit;
+  font-size: 1rem;
+  border: 1px solid #CFCBC0;
+  border-radius: 9px;
+  background: #fff;
+  color: inherit;
+}
+.hd-filter input:focus-visible {
+  outline: 3px solid var(--yellow);
+  outline-offset: 1px;
+  border-color: #9AA0AE;
+}
+
+.hd-filter-status { margin: 10px 0 0; font-size: 0.88rem; color: #5B6072; min-height: 1.2em; }
+
+.hd-brgy-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+@media (min-width: 720px) { .hd-brgy-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1080px) { .hd-brgy-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.hd-brgy {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 15px 16px;
+  background: #fff;
+  border: 1px solid #E3E0D8;
+  border-radius: 11px;
+  min-width: 0;
+}
+.hd-brgy-head { display: flex; flex-direction: column; gap: 2px; }
+.hd-brgy h3 { margin: 0; font-size: 1rem; letter-spacing: -0.005em; }
+.hd-brgy-head p { margin: 0; font-size: 0.84rem; color: #6B7183; }
+.hd-brgy[hidden] { display: none; }
+
+/* --- closing note ----------------------------------------------------- */
+
+.hd-note p { margin: 8px 0 0; max-width: 66ch; color: #43485A; line-height: 1.65; }
+
+/* --- phones ----------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .hd-hero h1 { max-width: none; }
+  /* Full-width call targets: on a narrow screen a number that stretches the
+     card is both easier to hit and unambiguous about what pressing it does. */
+  .hd-calls { flex-direction: column; align-items: stretch; }
+  .hd-call { justify-content: center; font-size: 1.06rem; min-height: 50px; }
+}
+
+/* --- motion ----------------------------------------------------------- */
+
+/* Opted out of the site-wide scroll reveal, which holds every `main > section`
+   at opacity 0 and translateY(26px) until it is scrolled into view. That is
+   right on an editorial page and wrong here: somebody opened this page because
+   something is happening, and the numbers below the fold should already be
+   painted when they get there rather than waiting on an observer. Ctrl+F for a
+   barangay, or a screenshot taken to send to somebody, both find nothing while
+   a section is still transparent. Same idiom jobs.css uses for its workspace. */
+html.js .hd-hero[data-reveal],
+html.js .hd-emergency[data-reveal],
+html.js .hd-support[data-reveal],
+html.js .hd-guidance[data-reveal],
+html.js .hd-barangay[data-reveal],
+html.js .hd-note[data-reveal] { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hd-call { transition: none; }
+  .hd-call:active { transform: none; }
+}
+
+/* --- print ------------------------------------------------------------ */
+
+/* Somebody will print this and put it on a wall. Ink-cheap, everything
+   visible, no interactive furniture, and the numbers stay numbers. */
+@media print {
+  .site-nav, .site-footer, .crumbs, .skip-link,
+  .hd-filter, .hd-filter-status, .hd-note { display: none !important; }
+  .help-desk-page main { max-width: none; padding: 0; }
+  .hd-services, .hd-brgy-list { grid-template-columns: repeat(2, 1fr) !important; gap: 8px; }
+  .hd-service, .hd-brgy { border: 1px solid #999; box-shadow: none; break-inside: avoid; }
+  .hd-call {
+    background: none !important;
+    color: #000 !important;
+    padding: 2px 0;
+    min-height: 0;
+    font-size: 1.05rem;
+  }
+  .hd-call-icon { display: none; }
+  .hd-independent { border-left-color: #999; background: none; }
+}

@@ -50,6 +50,10 @@ jobs:
         run: python3 scripts/check-stylesheets.py
       - name: Verify the Marketplace publishes no private submission data
         run: python3 scripts/check-marketplace-privacy.py
+      - name: Verify Help Desk numbers match their source and dial what they print
+        run: python3 scripts/check-help-desk.py
+      - name: Rebuild the Help Desk and verify it reproduces
+        run: python3 scripts/build-help-desk.py && git diff --exit-code help-desk.html
       - name: Rebuild the Marketplace and verify it reproduces
         run: python3 scripts/build-marketplace.py
       - name: Validate JavaScript syntax

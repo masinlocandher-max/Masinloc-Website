@@ -1,0 +1,88 @@
+{
+  "note": "Emergency and assistance numbers for Masinloc, supplied by the project. This file is the single source of truth: scripts/build-help-desk.py renders help-desk.html from it and scripts/check-help-desk.py refuses any number on the page that is not declared here. Correct a number here, never in the HTML.",
+  "rules": [
+    "This site is an independent community platform and is not the municipal government. These numbers are published so a resident can reach the office directly — nothing routes through this website, and no message sent through Masinloc Connect reaches any of these offices.",
+    "Every number here is a published emergency or assistance contact for an office or an elected barangay official acting in that role. No private residential number, and no number belonging to a private individual in a personal capacity, belongs on this page.",
+    "A number that can no longer be verified is removed rather than left to sit. An emergency number that rings nowhere is worse than an absent one, because somebody will dial it instead of a number that works.",
+    "tel: links are the point of this page — on a phone, one tap is the difference between calling and copying digits under pressure. scripts/check-help-desk.py keeps tel: links confined to this page so the site-wide no-phone rule stays intact everywhere else.",
+    "Numbers are stored exactly as they are dialled, grouped in threes and fours the way they are written and read locally. The tel: href is derived from the digits, so the printed form stays human and the link stays machine-correct."
+  ],
+  "reviewed": {
+    "date": "2026-08-31",
+    "source": "Supplied by the project for publication.",
+    "note": "Transcribed from the list as given, digit for digit, and read back against it. No number was inferred, completed or corrected."
+  },
+  "municipal": [
+    {
+      "id": "mdrrmo",
+      "name": "MDRRMO",
+      "full": "Municipal Disaster Risk Reduction and Management Office",
+      "role": "Disaster response, rescue, flooding, evacuation",
+      "numbers": ["0921-405-9748", "0939-917-6335"],
+      "priority": true
+    },
+    {
+      "id": "pnp",
+      "name": "PNP Masinloc",
+      "full": "Philippine National Police, Masinloc Municipal Police Station",
+      "role": "Police assistance, crimes in progress, public safety",
+      "numbers": ["0998-598-5516"],
+      "priority": true
+    },
+    {
+      "id": "bfp",
+      "name": "BFP Masinloc",
+      "full": "Bureau of Fire Protection, Masinloc",
+      "role": "Fire, rescue, fire safety",
+      "numbers": ["0961-460-0793"],
+      "priority": true
+    },
+    {
+      "id": "coast-guard",
+      "name": "Philippine Coast Guard",
+      "full": "Philippine Coast Guard, Masinloc Station",
+      "role": "Sea incidents, fishing and boating emergencies, maritime search and rescue",
+      "numbers": ["0927-832-8377"],
+      "priority": true
+    },
+    {
+      "id": "mho",
+      "name": "MHO Masinloc",
+      "full": "Municipal Health Office, Masinloc",
+      "role": "Medical assistance and public health concerns",
+      "numbers": ["0947-581-8397"],
+      "priority": true
+    },
+    {
+      "id": "mswdo",
+      "name": "MSWDO",
+      "full": "Municipal Social Welfare and Development Office",
+      "role": "Social welfare assistance and support for families in crisis",
+      "numbers": ["0960-827-3856"],
+      "priority": false
+    },
+    {
+      "id": "zameco",
+      "name": "ZAMECO II",
+      "full": "Zambales II Electric Cooperative",
+      "role": "Power interruption, downed lines, electrical hazards",
+      "numbers": ["0969-591-7305", "0948-037-4505"],
+      "priority": false
+    }
+  ],
+  "barangay": [
+    { "barangay": "Baloganon", "official": "Kap. Roy Ariola Ebdane", "numbers": ["0907-660-4600"] },
+    { "barangay": "Bamban", "official": "Kap. Gina Eduad", "numbers": ["0950-079-5979"] },
+    { "barangay": "Bani", "official": "Kap. Sean Elad", "numbers": ["0949-634-6731"] },
+    { "barangay": "Collat", "official": "Kap. Marlon Delos Reyes", "numbers": ["0969-336-7020"] },
+    { "barangay": "Inhobol", "official": "Kap. Edgar Angeles", "numbers": ["0963-364-9155"] },
+    { "barangay": "North Poblacion", "official": "Kap. Rey Merete Jr.", "numbers": ["0999-370-5218"] },
+    { "barangay": "San Lorenzo", "official": "Kap. Benjamin Alquiza", "numbers": ["0948-765-8674"] },
+    { "barangay": "San Salvador", "official": "Kap. Richard Pascual", "numbers": ["0907-691-8232"] },
+    { "barangay": "Sta. Rita", "official": "Kap. Rolando Ponilas", "numbers": ["0908-303-0202"] },
+    { "barangay": "Sto. Rosario", "official": "Kap. Christian Nacin", "numbers": ["0960-365-1353"] },
+    { "barangay": "South Poblacion", "official": "Kap. Orlino Ednilao", "numbers": ["0928-940-7607"] },
+    { "barangay": "Taltal", "official": "Kap. Ramir Hermosilla", "numbers": ["0998-271-1237"] },
+    { "barangay": "Tapuac", "official": "Kap. Harrison Hebron", "numbers": ["0907-219-0850"] }
+  ]
+}

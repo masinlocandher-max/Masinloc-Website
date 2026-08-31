@@ -91,6 +91,8 @@ jobs:
 
       - name: Run Marketplace checks
         run: node scripts/marketplace-qa.mjs
+      - name: Run Help Desk checks
+        run: node scripts/help-desk-qa.mjs
 
       - name: Run hidden MANAMBALI word-connect checks
         run: node scripts/wordscapes-qa.mjs
