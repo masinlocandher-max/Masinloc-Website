@@ -106,7 +106,59 @@ if(stored&&stored.sync_state==='delivered'){if(active&&active.client_report_id==
 
 async function refreshStatus(showFailure=true){if(!active||active.sync_state!=='delivered'||!navigator.onLine)return;try{const data=await api({action:'status',client_report_id:active.client_report_id,report_secret:active.report_secret});const i=data.incident||{};active.status=i.status||active.status;active.reference=i.public_reference||active.reference;active.received_at=i.received_at||active.received_at;active.acknowledged_at=i.acknowledged_at||null;active.assigned_unit=i.assigned_unit||null;active.priority=i.priority||active.priority;active.resolved_at=i.resolved_at||null;active.updated_local_at=new Date().toISOString();serverMessages=data.messages||[];await putReport(active);renderActiveMeta();renderStatus();await renderMessages();}catch(err){if(showFailure)$('#messageHint').textContent='Could not refresh right now. Your saved report remains on this device.';}}
 
-function renderStatus(){if(!active)return;const state=active.sync_state!=='delivered'?(active.status==='sending'?'sending':'saved_offline'):active.status;const copy=STATUS_COPY[state]||[state,'Status updated.'];const card=$('#statusCard');card.className=`status-card ${state}`;$('#statusLabel').textContent=copy[0];$('#statusExplanation').textContent=copy[1];}
+/* The delivery rail.
+
+   Two things it exists to keep apart, because collapsing them is the failure
+   this whole page is built around:
+
+     RECEIVED      the server accepted the report. Nobody has read it.
+     ACKNOWLEDGED  an authorised responder has.
+
+   And "Saved Offline · Not Yet Received" is not a step forward. It is rendered
+   as a warning row, never as progress, and it is never treated as reaching
+   RECEIVED — not visually and not in the data this reads. */
+const RAIL = [
+  ['received',     'RECEIVED',     'The server accepted your report.'],
+  ['acknowledged', 'ACKNOWLEDGED', 'An authorised responder has seen it.'],
+  ['assigned',     'ASSIGNED',     'A unit or responder was assigned.'],
+  ['dispatched',   'DISPATCHED',   'A unit was dispatched.'],
+  ['en_route',     'EN ROUTE',     'The unit is on the way.'],
+  ['on_scene',     'ON SCENE',     'The unit has arrived.'],
+  ['resolved',     'RESOLVED',     'The agency closed this incident.'],
+];
+
+function renderRail(){
+  const rail=$('#statusRail');
+  if(!rail||!active)return;
+  const delivered=active.sync_state==='delivered';
+  const sending=active.sync_state==='sending';
+  /* Only a delivered report has an operational status worth reading. An
+     undelivered one has not reached the server, so nothing after it can have
+     happened yet, whatever a stale local field says. */
+  const reached=delivered?RAIL.findIndex(s=>s[0]===(active.status==='closed'?'resolved':active.status)):-1;
+
+  const rows=[];
+  if(!delivered){
+    rows.push(sending
+      ? ['is-current','SENDING','Attempting delivery now.']
+      : ['is-offline','SAVED OFFLINE · NOT YET RECEIVED','Stored on this device. PNP/MDRRMO has not received it.']);
+  }
+  RAIL.forEach(([key,name,what],i)=>{
+    let state='';
+    if(delivered&&reached>=0){
+      if(i<reached)state='is-done';
+      else if(i===reached)state='is-current';
+    }
+    rows.push([state,name,what]);
+  });
+
+  rail.innerHTML=rows.map(([state,name,what])=>
+    `<li class="rail-step ${state}"><span class="rail-mark" aria-hidden="true"></span>`+
+    `<span class="rail-body"><span class="rail-name">${esc(name)}</span>`+
+    `<span class="rail-what">${esc(what)}</span></span></li>`).join('');
+}
+
+function renderStatus(){if(!active)return;const state=active.sync_state!=='delivered'?(active.status==='sending'?'sending':'saved_offline'):active.status;const copy=STATUS_COPY[state]||[state,'Status updated.'];const card=$('#statusCard');card.className=`status-card ${state}`;$('#statusLabel').textContent=copy[0];$('#statusExplanation').textContent=copy[1];renderRail();}
 function renderActiveMeta(){if(!active)return;$('#activeReportTitle').textContent=`${AGENCY_LABEL[active.target_agency]} emergency report`;$('#referenceValue').textContent=active.reference||'Pending delivery';$('#agencyValue').textContent=AGENCY_LABEL[active.target_agency];$('#createdValue').textContent=formatDate(active.source_created_at);$('#gpsValue').textContent=active.latitude!==null&&active.latitude!==undefined?`${Number(active.latitude).toFixed(5)}, ${Number(active.longitude).toFixed(5)}${active.accuracy_m?` ±${Math.round(active.accuracy_m)}m`:''}`:'Manual location';}
 async function renderMessages(){const local=(await getMessages(active.client_report_id)).filter(m=>m.sync_state!=='delivered');const combined=[...serverMessages.map(m=>({...m,local:false})),...local.map(m=>({...m,local:true}))].sort((a,b)=>new Date(a.created_at||a.source_created_at).getTime()-new Date(b.created_at||b.source_created_at).getTime());const box=$('#messages');if(!combined.length){box.innerHTML='<div class="message system">No responder messages yet.<small>Updates will appear here after delivery.</small></div>';return}box.innerHTML=combined.map(m=>{const kind=m.sender_kind==='resident'?'resident':m.sender_kind==='system'?'system':'agency';const who=kind==='resident'?'You':kind==='system'?'System':String(m.sender_agency||m.sender_kind||'Responder').toUpperCase();return `<div class="message ${kind}"><strong>${esc(who)}</strong><div>${esc(m.body)}</div><small>${m.local?'Queued · not yet received':formatDate(m.created_at)}</small></div>`}).join('');box.scrollTop=box.scrollHeight;}
 
