@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#061634">
+<title>MDRRMO Emergency Console | Masinloc Connect</title>
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../tokens.css?v=20260823-1">
+<link rel="stylesheet" href="agency.css?v=20260831-1">
+</head>
+<body class="mdrrmo-page" data-agency="mdrrmo">
+<header class="agency-top">
+  <div class="agency-brand"><img src="../assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"><span>MDRRMO RESPONSE</span></div>
+  <div class="agency-top-actions"><div class="live-indicator" id="liveIndicator"><i></i><span>Checking connection</span></div><button id="logoutBtn" hidden>Sign out</button></div>
+</header>
+
+<section class="login-wrap" id="loginView">
+  <div class="login-card">
+    <p class="login-kicker">AUTHORIZED MDRRMO ACCESS</p>
+    <h1>Emergency Console</h1>
+    <p>For authorized MDRRMO personnel assigned to Masinloc emergency reports. Accounts must be explicitly activated for MDRRMO access.</p>
+    <form id="loginForm">
+      <label>Email<input id="email" type="email" autocomplete="username" required></label>
+      <label>Password<input id="password" type="password" autocomplete="current-password" required></label>
+      <div class="login-actions"><button class="primary" type="submit">Sign in</button><button class="secondary" type="button" id="magicBtn">Email sign-in link</button></div>
+      <div class="login-message" id="loginMessage" role="alert"></div>
+    </form>
+    <div class="unauthorized" id="unauthorized" hidden>This account is authenticated but is not currently authorized for the MDRRMO emergency console.</div>
+  </div>
+</section>
+
+<main class="console" id="consoleView" hidden>
+  <div class="console-head">
+    <div><p>MDRRMO · MASINLOC EMERGENCY RESPONSE</p><h1>Incident Operations</h1></div>
+    <div class="console-head-actions"><button id="refreshBtn">Refresh</button></div>
+  </div>
+  <section class="metrics" id="metrics"></section>
+  <section class="workspace">
+    <div class="incident-column">
+      <div class="filters"><input id="searchInput" placeholder="Search reference, incident, place…"><select id="statusFilter"><option value="">All statuses</option><option value="received">Received</option><option value="acknowledged">Acknowledged</option><option value="assigned">Assigned</option><option value="dispatched">Dispatched</option><option value="en_route">En route</option><option value="on_scene">On scene</option><option value="resolved">Resolved</option><option value="closed">Closed</option></select><select id="priorityFilter"><option value="">All priorities</option><option value="unassessed">Unassessed</option><option value="critical">Critical</option><option value="high">High</option><option value="normal">Normal</option></select></div>
+      <div class="incident-list" id="incidentList"></div>
+    </div>
+    <div class="detail-column" id="detailColumn"><div class="detail-empty"><div><strong>Select an incident</strong><p>Location, messages, assignment and response actions will appear here.</p></div></div></div>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+<script type="module" src="agency.js?v=20260831-1"></script>
+</body>
+</html>
