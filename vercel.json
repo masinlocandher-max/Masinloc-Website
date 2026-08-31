@@ -12,7 +12,17 @@
     { "source": "/posmasinloqueño", "destination": "/posmasinloqueno/index.html" },
     { "source": "/posmasinloqueño/", "destination": "/posmasinloqueno/index.html" },
     { "source": "/posmasinloqueno", "destination": "/posmasinloqueno/index.html" },
-    { "source": "/posmasinloqueno/", "destination": "/posmasinloqueno/index.html" }
+    { "source": "/posmasinloqueno/", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/retail", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/retail/", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/operations", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/operations/", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/launch", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/launch/", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/billing", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/billing/", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/refunds", "destination": "/posmasinloqueno/index.html" },
+    { "source": "/posmasinloqueno/refunds/", "destination": "/posmasinloqueno/index.html" }
   ],
   "headers": [
     {
@@ -31,6 +41,12 @@
     },
     {
       "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/posmasinloqueno/assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
