@@ -3,15 +3,6 @@
   const toggles = [...document.querySelectorAll('.connect-menu-toggle')];
 
   const exposeHelpDesk = () => {
-    const primaryNav = document.querySelector('#connectPrimaryNav');
-    if (primaryNav && !primaryNav.querySelector('a[href="emergency/"]')) {
-      const link = document.createElement('a');
-      link.href = 'emergency/';
-      link.textContent = 'Help Desk';
-      const current = primaryNav.querySelector('.connect-current');
-      primaryNav.insertBefore(link, current || null);
-    }
-
     const pathList = document.querySelector('.connect-path-list');
     if (pathList && !pathList.querySelector('[data-help-desk-path]')) {
       const path = document.createElement('div');
