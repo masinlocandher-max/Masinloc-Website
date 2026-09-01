@@ -39,7 +39,7 @@ pre,code{max-width:100%;overflow-wrap:anywhere}
 
 /* Editorial / information pages: reading rhythm is authored for a phone. */
 .about-hero{width:auto!important;padding:44px 16px 38px!important}
-.about-hero h1{font-size:clamp(40px,13vw,60px)!important;line-height:.98!important}
+.about-hero h1{font-size:clamp(28px,8.7vw,60px)!important;line-height:1.04!important}
 .about-hero .lead{margin-top:18px!important;font-size:17px!important;line-height:1.62!important}
 .about-photo{width:calc(100% - 32px)!important;margin-inline:auto!important}
 .about-body{padding:48px 16px 72px!important}
@@ -51,7 +51,7 @@ pre,code{max-width:100%;overflow-wrap:anywhere}
 
 /* Contact is a first-class phone form, not a desktop two-column form collapsed late. */
 .contact-hero{padding:24px 16px 0!important}
-.contact-hero h1{font-size:clamp(38px,12vw,54px)!important;line-height:1!important}
+.contact-hero h1{font-size:clamp(26px,8.2vw,54px)!important;line-height:1.05!important}
 .contact-hero .lead{font-size:16px!important;line-height:1.62!important}
 .contact-body{padding:32px 16px 72px!important;grid-template-columns:1fr!important;gap:42px!important}
 .contact-form{padding:22px 16px!important;border-radius:16px!important;box-shadow:none!important}
@@ -71,7 +71,7 @@ pre,code{max-width:100%;overflow-wrap:anywhere}
 /* Jobs and Career remain WEBSITE features and are phone-native. */
 .jobs-main,.career-wrap{padding-left:16px!important;padding-right:16px!important;padding-bottom:68px!important}
 .jobs-hero{grid-template-columns:1fr!important;gap:18px!important;padding-top:16px!important}
-.jobs-hero h1,.career-hero h1{font-size:clamp(38px,11vw,50px)!important;line-height:.98!important}
+.jobs-hero h1,.career-hero h1{font-size:clamp(26px,8.2vw,50px)!important;line-height:1.05!important}
 .jobs-hero p,.career-hero p{font-size:16px!important;line-height:1.62!important}
 .jobs-summary{grid-template-columns:1fr!important}
 .jobs-summary>div{min-height:68px!important}
@@ -90,7 +90,7 @@ pre,code{max-width:100%;overflow-wrap:anywhere}
 /* Marketplace keeps its editorial directory concept while prioritizing phone scanning. */
 .mk-hero,.mk-results,.mk-submit,.mk-detail{padding-left:16px!important;padding-right:16px!important}
 .mk-hero{padding-top:24px!important;padding-bottom:28px!important}
-.mk-hero h1{font-size:clamp(38px,11vw,52px)!important;line-height:1.02!important}
+.mk-hero h1{font-size:clamp(26px,8.2vw,52px)!important;line-height:1.06!important}
 .mk-lead{font-size:16px!important;line-height:1.62!important}
 .mk-search{max-width:none!important}
 .mk-filters{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none;padding-bottom:4px!important;overscroll-behavior-x:contain}
@@ -177,3 +177,29 @@ pre,code{max-width:100%;overflow-wrap:anywhere}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 
 .visually-hidden{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+
+
+/* --- mobile display type ------------------------------------------------
+
+   Every display clamp on this site was written clamp(MIN, vw, MAX) with a MIN
+   taken from the desktop scale. On a phone the floor wins every time, so
+   clamp() never got to do its job and the viewport term never governed: the
+   homepage hero resolved to 59px and the page headings to 43-51px against a
+   390px screen. That is a desktop scale shrunk to fit, which is what makes a
+   responsive site still feel like a desktop site.
+
+   The floors above are now phone-sized and each clamp keeps its original MAX,
+   so every width from roughly 640px up resolves exactly as it did before.
+   Desktop composition is untouched by design, not by luck. */
+@media(max-width:760px){
+  .hero h1{font-size:clamp(32px,10.4vw,56px)!important;line-height:.96!important}
+  .hero-tagline{font-size:clamp(18px,4.6vw,25px)!important}
+  .start-here h2,.closer-preview h2,.connect-preview h2{
+    font-size:clamp(25px,7.4vw,40px)!important;line-height:1.1!important;
+  }
+  /* Editorial statement copy set at display size reads as shouting on a
+     phone. It keeps its emphasis at a size that still fits the measure. */
+  .community-statement p,.about-closing p{
+    font-size:clamp(19px,5vw,30px)!important;line-height:1.36!important;
+  }
+}

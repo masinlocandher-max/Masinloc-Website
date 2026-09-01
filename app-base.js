@@ -43,7 +43,17 @@ resume:{label:'RESUME SUPPORT',icon:'●',color:'var(--blue)',ink:'var(--blue)',
 function show(name){if(!views[name])name='landing';Object.entries(views).forEach(([k,v])=>{const active=k===name;v.hidden=!active;v.classList.toggle('active',active)});$('#overlayNav').style.display=(name==='landing'||name==='chooser')?'flex':'none';window.scrollTo({top:0,behavior:'auto'});}
 function openCategory(t,restore=false){type=t;if(!restore){step=0;data={}};renderForm();show('form');saveDraft()}
 document.addEventListener('click',e=>{const chooser=e.target.closest('[data-choose]');if(chooser){e.preventDefault();show('chooser');return}const opener=e.target.closest('[data-open]');if(opener){e.preventDefault();openCategory(opener.dataset.open);return}if(e.target.closest('[data-about]')){e.preventDefault();aboutOrigin=Object.entries(views).find(([k,v])=>v.classList.contains('active'))?.[0]||'landing';show('about');return}if(e.target.closest('[data-home]')){e.preventDefault();show(aboutOrigin||'landing');return}});
-$('#homeLogo').addEventListener('click',e=>{e.preventDefault();show('landing')});
+/* A logo goes home. Inside a Connect sub-view "home" means this section's
+   landing, which is the useful thing there. But once you are already on that
+   landing the old handler swallowed the click and did nothing, so the one
+   affordance every visitor reaches for was a dead end — and the only route
+   back to the website was a link at the foot of a long page. On the landing,
+   the logo now goes up a level, to the site itself. */
+$('#homeLogo').addEventListener('click',e=>{
+  const onLanding=views.landing&&views.landing.classList.contains('active');
+  if(onLanding)return;            // let the href carry us to index.html
+  e.preventDefault();show('landing');
+});
 $('#chooserBack')?.addEventListener('click',()=>show('landing'));
 $('#changeCategory').addEventListener('click',()=>show('chooser'));
 
