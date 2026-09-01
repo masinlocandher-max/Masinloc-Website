@@ -109,7 +109,7 @@ def shell_head(title: str, description: str, canonical: str, *, page_class: str,
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
 <link rel="stylesheet" href="site.css?v=20260825-2">
 <link rel="stylesheet" href="site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="site-stability.css?v=20260825-1">
+<link rel="stylesheet" href="site-stability.css?v=20260901-1">
 <link rel="stylesheet" href="history.css?v=20260825-1">
 </head>
 <body class="about-page {esc(page_class)}">
