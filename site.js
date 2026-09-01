@@ -10,7 +10,7 @@
      this script. Using currentScript keeps nested pages working whether they
      reference site.js as site.js, ../site.js or an absolute URL. */
   const scriptUrl = document.currentScript?.src;
-  if (scriptUrl && !document.querySelector('link[data-mobile-foundation]')) {
+  if (scriptUrl && !document.querySelector('link[href*="mobile-first.css"]')) {
     const mobile = document.createElement('link');
     mobile.rel = 'stylesheet';
     mobile.href = new URL('mobile-first.css?v=20260901-1', scriptUrl).href;
