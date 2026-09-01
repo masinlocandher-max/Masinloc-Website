@@ -386,6 +386,7 @@ async function fileReport(page,text,label){
   for(let i=0;i<60&&!sent.length;i++)await page.waitForTimeout(100);
   if(!sent.length)fail('emergency/account: an anonymous report never reached intake');
   else if(sent[0].auth)fail('emergency/account: an Authorization header was sent with no session');
+  await page.waitForFunction(()=>/this device only/i.test(document.querySelector('#accessValue')?.textContent||''),null,{timeout:8000}).catch(()=>{});
   const anonAccess=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
   if(!/this device only/i.test(anonAccess)){
     fail(`emergency/account: an anonymous report does not warn it is readable only here: "${anonAccess}"`);
@@ -414,6 +415,7 @@ async function fileReport(page,text,label){
   /* The stub answered attributed:false while the page holds a valid session.
      The delivered report must report what the server said, not what the token
      suggests — the same rule that governs 'Received'. */
+  await page.waitForFunction(()=>/this device only/i.test(document.querySelector('#accessValue')?.textContent||''),null,{timeout:8000}).catch(()=>{});
   const access=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
   if(/linked to your account/i.test(access)){
     fail(`emergency/account: report shown as linked although the server said it was not: "${access}"`);
