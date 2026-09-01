@@ -216,3 +216,18 @@
 @media(min-width:760px){
   .desk-state{margin-top:clamp(20px,3vw,28px)}
 }
+
+/* --- signing in is optional, and the page says so ----------------------- */
+
+/* Deliberately quieter than .desk-state. That block is a warning about
+   whether help can read this; this one is a convenience note. Ranking them
+   the same would put an account prompt at the same visual weight as "nobody
+   is receiving your report", which is the wrong thing to be reading first. */
+.account-state{
+  max-width:1180px;margin:14px auto 0;
+  padding:13px clamp(18px,4vw,20px);
+  border:1px solid #dce3ed;background:#fff;border-radius:12px;color:#44506a;
+}
+.account-state strong{display:block;font-size:14px;color:#1a2745}
+.account-state p{margin:5px 0 0;line-height:1.55;font-size:13px}
+.account-state a{color:#0d3b9e;font-weight:800}

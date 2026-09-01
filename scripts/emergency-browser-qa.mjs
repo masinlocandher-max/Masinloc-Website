@@ -26,7 +26,7 @@ await page.route('**/functions/v1/emergency-response',async route=>{
   try{body=req.postDataJSON()||{}}catch{}
   const action=body.action;
   if(action==='submit'){
-    submitted.push(body.report||{});
+    submitted.push({...(body.report||{}),__auth:req.headers()['authorization']||null});
     const agency=body.report?.target_agency||'pnp';
     await route.fulfill({status:201,contentType:'application/json',body:JSON.stringify({ok:true,reference:`QA-${String(agency).toUpperCase()}-001`,status:'received',received_at:new Date().toISOString()})});
     return;
@@ -292,6 +292,150 @@ for(const [name,readinessBody,expect] of [
   await rp.waitForTimeout(300);
   if(!(await rp.evaluate(()=>document.querySelector('#deskState').getBoundingClientRect().height>0))){
     fail('emergency/readiness(staffed): MDRRMO is not active but the page does not say so');
+  }
+  await ctx.close();
+}
+
+
+/* --- an account is a convenience, never a gate --------------------------
+
+   Signing in attaches a report to its author so they can open it from another
+   device. It must never become a precondition for reporting: somebody on a
+   borrowed phone, with an expired session, or who simply has no account, is
+   often exactly the person least able to fix that and most in need of sending
+   something. These assertions exist so that stays true. */
+
+const sent=[];
+
+// A context per case. Sharing one and adding the session partway meant the
+// route was bound to the first page only, and the second talked to the real
+// network — the sort of test that fails for a reason unrelated to the code.
+async function residentPage(session){
+  const ctx=await browser.newContext({
+    viewport:{width:390,height:844},
+    geolocation:{latitude:15.536321,longitude:119.952441},
+    permissions:['geolocation'],
+  });
+  if(session){
+    await ctx.addInitScript(({key,value})=>localStorage.setItem(key,value),
+      {key:'sb-uwcqvsitjtknxsaypjxj-auth-token',value:JSON.stringify(session)});
+  }
+  await ctx.route('**/functions/v1/emergency-response',async route=>{
+    const req=route.request();
+    let body={};try{body=req.postDataJSON()||{}}catch{}
+    if(body.action==='readiness')return route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({ok:true,determined:true,staffed:{pnp:true,mdrrmo:true}})});
+    if(body.action==='submit'){
+      sent.push({auth:req.headers()['authorization']||null});
+      /* The server answers attributed:false even when a token was sent. That
+         is the case that matters: the page holds a valid-looking session, so
+         this is exactly where it would be tempting to show the report as
+         linked on the strength of the token alone. It must believe the
+         server, the same way it does for 'Received'. */
+      return route.fulfill({status:201,contentType:'application/json',
+        body:JSON.stringify({ok:true,reference:'QA-ACC-001',status:'received',
+          received_at:new Date().toISOString(),attributed:false})});
+    }
+    return route.fulfill({status:200,contentType:'application/json',
+      body:JSON.stringify({ok:true,incident:{},messages:[]})});
+  });
+  const page=await ctx.newPage();
+  await page.goto(`${baseURL}/emergency/`,{waitUntil:'networkidle'});
+  await page.waitForTimeout(300);
+  return {ctx,page};
+}
+
+async function fileReport(page,text,label){
+  await page.locator('[data-agency="pnp"]').click();
+  await page.locator('#reportPanel').waitFor({state:'visible'});
+  await page.locator('#incidentType').selectOption('threat');
+  await page.locator('#description').fill(text);
+  await page.locator('#barangay').fill('QA Barangay');
+  await page.locator('#reportForm').evaluate(f=>f.requestSubmit());
+  /* A form that refuses to submit must be reported as that, not as a raw
+     timeout. The most likely cause is exactly the regression these cases
+     exist to catch — a gate added in front of reporting — and "TimeoutError"
+     would say nothing about it. */
+  try{
+    await page.locator('#activeReport').waitFor({state:'visible',timeout:8000});
+    return true;
+  }catch{
+    const why=(await page.locator('#formError').innerText().catch(()=>''))
+      .replace(/\s+/g,' ').trim();
+    fail(`emergency/account(${label}): the form refused to submit`+
+         (why?` — it said "${why}"`:' and gave no reason'));
+    return false;
+  }
+}
+
+// --- signed out: reporting must work completely ---------------------------
+{
+  const {ctx,page}=await residentPage(null);
+  const note=await page.evaluate(()=>{
+    const e=document.querySelector('#accountState');
+    return {painted:e.getBoundingClientRect().height>0,text:e.innerText.replace(/\s+/g,' ').trim()};
+  });
+  if(!note.painted)fail('emergency/account: signed-out state is not shown');
+  if(!/without an account|that is fine/i.test(note.text)){
+    fail(`emergency/account: signed-out copy does not say an account is optional: "${note.text}"`);
+  }
+  if(await page.locator('#submitReport').isDisabled()){
+    fail('emergency/account: submit is disabled while signed out — reporting must never require an account');
+  }
+  await fileReport(page,'QA anonymous report.','signed out');
+  for(let i=0;i<60&&!sent.length;i++)await page.waitForTimeout(100);
+  if(!sent.length)fail('emergency/account: an anonymous report never reached intake');
+  else if(sent[0].auth)fail('emergency/account: an Authorization header was sent with no session');
+  const anonAccess=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
+  if(!/this device only/i.test(anonAccess)){
+    fail(`emergency/account: an anonymous report does not warn it is readable only here: "${anonAccess}"`);
+  }
+  await ctx.close();
+}
+
+// --- signed in: the token is offered, the server decides ------------------
+{
+  const {ctx,page}=await residentPage({
+    access_token:'qa-token',refresh_token:'qa',token_type:'bearer',
+    expires_at:Math.floor(Date.now()/1000)+9999,
+    user:{id:'qa-resident',email:'resident@example.invalid'},
+  });
+  const signedIn=(await page.locator('#accountState').innerText()).replace(/\s+/g,' ').trim();
+  if(!signedIn.includes('resident@example.invalid')){
+    fail(`emergency/account: signed-in account is not named: "${signedIn}"`);
+  }
+  await fileReport(page,'QA signed-in report.','signed in');
+  for(let i=0;i<60&&sent.length<2;i++)await page.waitForTimeout(100);
+  if(sent.length<2)fail('emergency/account: signed-in report never reached intake');
+  else if(sent[1].auth!=='Bearer qa-token'){
+    fail(`emergency/account: session token was not offered to intake (got ${sent[1].auth})`);
+  }
+
+  /* The stub answered attributed:false while the page holds a valid session.
+     The delivered report must report what the server said, not what the token
+     suggests — the same rule that governs 'Received'. */
+  const access=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
+  if(/linked to your account/i.test(access)){
+    fail(`emergency/account: report shown as linked although the server said it was not: "${access}"`);
+  }
+  if(!/this device only/i.test(access)){
+    fail(`emergency/account: an unattached report does not say it is readable only here: "${access}"`);
+  }
+  await ctx.close();
+}
+
+// --- expired session: shown as signed out, never as signed in -------------
+{
+  const {ctx,page}=await residentPage({
+    access_token:'stale-token',expires_at:Math.floor(Date.now()/1000)-60,
+    user:{id:'qa-resident',email:'resident@example.invalid'},
+  });
+  const stale=(await page.locator('#accountState').innerText()).replace(/\s+/g,' ').trim();
+  if(stale.includes('resident@example.invalid')){
+    fail('emergency/account: an expired session is presented as signed in');
+  }
+  if(await page.locator('#submitReport').isDisabled()){
+    fail('emergency/account: an expired session disabled reporting');
   }
   await ctx.close();
 }
