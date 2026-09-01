@@ -39,9 +39,7 @@ img[src="assets/masinloc-logo.webp"]{
 
 /* Shared phone-first guardrails. These are intentionally conservative so
    page-specific art direction stays intact while touch, forms and overflow
-   behave correctly on real phones. `clip`, rather than `hidden`, prevents
-   horizontal paint from escaping without creating a scrolling ancestor that
-   would break sticky wayfinding such as MABAYANI's story map. */
+   behave correctly on real phones. */
 html{
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
@@ -56,6 +54,13 @@ input,select,textarea{font-size:16px}
 textarea{resize:vertical}
 :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]){min-height:44px}
 :where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+/* MABAYANI has two sticky wayfinding bars. Root overflow clipping can become
+   their containing scroll box in Chromium/WebKit, so this reading surface
+   deliberately leaves the viewport roots unclipped. Responsive QA enforces
+   that the page itself still produces no horizontal overflow. */
+:root:has(body.mabayani-page){overflow-x:visible}
+body.mabayani-page{overflow-x:visible}
 
 @media(max-width:1099px){
   .site-nav .brand img{width:120px!important;max-width:120px!important}
