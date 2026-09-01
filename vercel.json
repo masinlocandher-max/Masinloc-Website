@@ -7,6 +7,8 @@
     }
   },
   "rewrites": [
+    { "source": "/Songbird@50", "destination": "/admin.html" },
+    { "source": "/Songbird@50/", "destination": "/admin.html" },
     { "source": "/wordscapes", "destination": "/wordscapes/index.html" },
     { "source": "/wordscapes/", "destination": "/wordscapes/index.html" },
     { "source": "/posmasinloqueño", "destination": "/posmasinloqueno/index.html" },
@@ -37,6 +39,20 @@
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "Cross-Origin-Resource-Policy", "value": "same-site" },
         { "key": "X-Permitted-Cross-Domain-Policies", "value": "none" }
+      ]
+    },
+    {
+      "source": "/Songbird@50",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/Songbird@50/",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive" },
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     },
     {
