@@ -17,18 +17,37 @@ const CATEGORY_LABELS: Record<string, string> = {
   other: "Other",
 };
 
+// Exact origins only.
+//
+// The previous check trusted any https origin whose hostname ended in
+// ".vercel.app" and began with "masinloc-website-" or "masinloc-connect-".
+// Vercel project names are not reserved: anyone can create a project called
+// "masinloc-website-anything" and receive a preview origin that satisfies both
+// halves of that test. Because this endpoint reflects the caller's origin back
+// in Access-Control-Allow-Origin, the pattern handed an attacker-controlled
+// page cross-origin read access to the response.
+//
+// The body is public directory data, so nothing private leaked, but the shape
+// is wrong and scripts/check-security.py rejects it outright.
+//
+// A specific preview deployment can be allowed by listing its full origin in
+// MARKETPLACE_ALLOWED_ORIGINS (comma-separated). Values are compared exactly;
+// no prefix, suffix or wildcard matching is performed on them either.
+const ALLOWED_ORIGINS: ReadonlySet<string> = new Set([
+  "https://masinloc-zambales.com",
+  "https://www.masinloc-zambales.com",
+  "https://masinloc-website.vercel.app",
+  ...(Deno.env.get("MARKETPLACE_ALLOWED_ORIGINS") || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value.startsWith("https://")),
+]);
+
 function originAllowed(origin: string) {
-  if (!origin) return true; // The response contains public directory data only.
-  if (origin === "https://masinloc-zambales.com" || origin === "https://www.masinloc-zambales.com") return true;
-  try {
-    const url = new URL(origin);
-    if (url.protocol !== "https:") return false;
-    if (url.hostname === "masinloc-website.vercel.app") return true;
-    return url.hostname.endsWith(".vercel.app") &&
-      (url.hostname.startsWith("masinloc-website-") || url.hostname.startsWith("masinloc-connect-"));
-  } catch {
-    return false;
-  }
+  // A same-origin fetch and a non-browser client send no Origin header at all.
+  // There is nothing to reflect in that case and the body is public.
+  if (!origin) return true;
+  return ALLOWED_ORIGINS.has(origin);
 }
 
 function headers(req: Request) {
