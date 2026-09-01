@@ -2,6 +2,29 @@
   const headers = [...document.querySelectorAll('.overlay-nav, .form-header')];
   const toggles = [...document.querySelectorAll('.connect-menu-toggle')];
 
+  const exposeHelpDesk = () => {
+    const pathList = document.querySelector('.connect-path-list');
+    if (pathList && !pathList.querySelector('[data-help-desk-path]')) {
+      const path = document.createElement('div');
+      path.className = 'connect-path';
+      path.dataset.helpDeskPath = 'true';
+      path.innerHTML = '<span>Help Desk</span><div><h3>Reach PNP or MDRRMO.</h3><p>Report an emergency or request assistance, share your location when available, and keep the report queued on your device if your connection drops.</p></div><a href="emergency/">Open Help Desk</a>';
+      pathList.appendChild(path);
+    }
+
+    const footerNav = document.querySelector('.footer-links');
+    if (footerNav && !footerNav.querySelector('a[href="emergency/"]')) {
+      const link = document.createElement('a');
+      link.href = 'emergency/';
+      link.textContent = 'Help Desk';
+      const connect = footerNav.querySelector('a[href="connect.html"]');
+      if (connect) connect.insertAdjacentElement('afterend', link);
+      else footerNav.appendChild(link);
+    }
+  };
+
+  exposeHelpDesk();
+
   const closeAll = () => {
     headers.forEach(header => header.classList.remove('nav-open'));
     toggles.forEach(toggle => {
