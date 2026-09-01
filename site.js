@@ -6,6 +6,18 @@
   const siteNav = document.getElementById('siteNav');
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+  /* Load the shared phone-first hardening layer from the same directory as
+     this script. Using currentScript keeps nested pages working whether they
+     reference site.js as site.js, ../site.js or an absolute URL. */
+  const scriptUrl = document.currentScript?.src;
+  if (scriptUrl && !document.querySelector('link[href*="mobile-first.css"]')) {
+    const mobile = document.createElement('link');
+    mobile.rel = 'stylesheet';
+    mobile.href = new URL('mobile-first.css?v=20260901-1', scriptUrl).href;
+    mobile.dataset.mobileFoundation = 'true';
+    document.head.appendChild(mobile);
+  }
+
   root.classList.add('js');
 
   const exposeHelpDesk = () => {
@@ -59,7 +71,6 @@
     }, { passive: true });
   }
 
-  /* Persistent navigation state. */
   if (siteNav) {
     let navFrame = 0;
     const syncNav = () => {
@@ -74,7 +85,6 @@
     window.addEventListener('scroll', requestNavSync, { passive: true });
   }
 
-  /* Scroll reveals are added at runtime so no-JS rendering stays complete. */
   const revealTargets = [
     ...document.querySelectorAll('main > section:not(.hero)'),
     ...document.querySelectorAll('.editorial-link'),
@@ -102,21 +112,11 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-      /* threshold stays 0: a section taller than the viewport can never show a
-         given percentage of itself, so any fractional threshold would leave it
-         permanently hidden. */
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
 
     uniqueTargets.forEach((element) => observer.observe(element));
   }
 
-  /* The hero parallax is gone with the crop it depended on.
-     It nudged the photograph on scroll while the frame held it slightly
-     oversized, so the movement was absorbed by the overflow. The homepage now
-     shows the whole photograph at its own height with nothing clipped, and the
-     same nudge would drag the picture off its own edge. */
-
-  /* Fast same-origin fade for browsers without useful cross-document transitions. */
   document.addEventListener('click', (event) => {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     const link = event.target.closest('a[href]');
