@@ -1,0 +1,56 @@
+/* Shared mobile hardening for Masinloc Website.
+   This layer is intentionally conservative: it improves phone usability without
+   changing page-specific visual identity or desktop composition. */
+
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;overflow-x:hidden}
+body{overflow-x:hidden}
+img,video,svg{max-width:100%}
+input,select,textarea,button{font-family:inherit}
+input,select,textarea{font-size:16px}
+textarea{resize:vertical}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]){min-height:44px}
+:where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
+
+@media(max-width:760px){
+  :root{--content:calc(100% - 32px);--wide:calc(100% - 24px)}
+
+  /* Phone spacing and readable type. */
+  main{min-width:0}
+  p,li{overflow-wrap:anywhere}
+  h1,h2,h3{overflow-wrap:normal;text-wrap:balance}
+
+  /* Navigation becomes a deliberate touch surface, not a compressed desktop bar. */
+  .site-nav,.home-nav{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  .menu-toggle,.nav-toggle{min-width:48px;min-height:48px}
+  .primary-nav.open,.home-links.open{max-height:calc(100dvh - 68px);overflow:auto;overscroll-behavior:contain;padding-bottom:max(24px,env(safe-area-inset-bottom))}
+  .primary-nav a,.home-links a{min-height:48px;display:flex;align-items:center}
+
+  /* Controls must be finger-friendly and must not trigger iOS input zoom. */
+  .button,.cta-primary,.cta-secondary,.form-submit,.submit-button{min-height:48px}
+  input:not([type="checkbox"]):not([type="radio"]),select,textarea{width:100%;min-height:48px}
+
+  /* Long data stays usable rather than forcing the whole page sideways. */
+  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  pre,code{max-width:100%;overflow-wrap:anywhere}
+
+  /* Common editorial layouts collapse cleanly. */
+  .about-section,.closer-inner,.connect-inner,.start-here{grid-template-columns:1fr!important}
+  .about-body{padding-left:16px;padding-right:16px}
+  .about-hero{padding-left:0;padding-right:0}
+
+  /* Cards and media should not carry desktop hover movement on touch. */
+  @media(hover:none){
+    a:hover,button:hover{transform:none!important}
+  }
+}
+
+@media(max-width:390px){
+  :root{--content:calc(100% - 28px)}
+  .button,.cta-primary,.cta-secondary{width:100%}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
