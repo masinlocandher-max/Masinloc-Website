@@ -312,7 +312,7 @@ def render() -> str:
 <link rel="stylesheet" href="tokens.css?v=20260823-1">
 <link rel="stylesheet" href="site.css?v=20260825-2">
 <link rel="stylesheet" href="site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="site-stability.css?v=20260901-1">
+<link rel="stylesheet" href="site-stability.css?v=20260901-2">
 <link rel="stylesheet" href="homepage.css?v=20260826-1">
 </head>
 <body class="home">

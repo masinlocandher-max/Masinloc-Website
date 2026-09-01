@@ -211,7 +211,7 @@ def head(*, title: str, description: str, url: str, depth: int, ld: str,
 <link rel="stylesheet" href="{up}site.css?v=20260825-2">
 <link rel="stylesheet" href="{up}site-polish.css?v=20260825-2">
 <link rel="stylesheet" href="{up}marketplace.css?v=20260827-1">
-<link rel="stylesheet" href="{up}site-stability.css?v=20260901-1">
+<link rel="stylesheet" href="{up}site-stability.css?v=20260901-2">
 </head>
 <!-- .about-page is the light shell used by Contact, Trust, Sources and every
      Discover page. Without it the shared navigation paints white links on a
