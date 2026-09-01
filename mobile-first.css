@@ -12,10 +12,15 @@ button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
 :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]){min-height:44px}
 :where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
+/* Homepage v2 resets a few generic desktop rules from site.css. The higher
+   specificity keeps these safe even when this file is linked before the page stylesheet. */
+.home .hero{height:auto;max-height:none}
+.home .hero-copy{position:static;left:auto;right:auto;bottom:auto;width:auto}
+.home .home-footer{display:block;grid-template-columns:none;gap:0}
+
 @media(max-width:760px){
   :root{--content:calc(100% - 32px);--wide:calc(100% - 24px)}
 
-  /* Phone spacing and readable type. */
   main{min-width:0}
   p,li{overflow-wrap:anywhere}
   h1,h2,h3{overflow-wrap:normal;text-wrap:balance}
@@ -39,7 +44,6 @@ button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
   .about-body{padding-left:16px;padding-right:16px}
   .about-hero{padding-left:0;padding-right:0}
 
-  /* Cards and media should not carry desktop hover movement on touch. */
   @media(hover:none){
     a:hover,button:hover{transform:none!important}
   }
