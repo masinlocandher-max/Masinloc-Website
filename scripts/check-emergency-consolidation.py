@@ -19,6 +19,8 @@ WHAT IT ENFORCES.
      unassessed whatever mode it carries, and priority is a human judgement.
   6. Internal notes never reach the resident.
   7. A responder cannot rewrite the resident's own report.
+  8. Offline-shell fixes can reach returning devices.
+  9. Trigger-only functions cannot become public RPC endpoints.
 """
 import re
 import sys
@@ -155,6 +157,31 @@ if SW.is_file() and INDEX.is_file():
         problems.append(
             f"the service worker caches shell {version.group(1)} but the page loads "
             f"{stamp.group(1)} — returning devices would keep the old delivery logic")
+
+# --- 9. trigger machinery is not a browser RPC ---------------------------
+
+# PostgreSQL grants EXECUTE on newly created functions to PUBLIC by default.
+# Trigger functions do not need direct execution from anon/authenticated roles;
+# leaving that grant in place exposes SECURITY DEFINER machinery through the
+# Data API even though the intended path is only the attached trigger.
+TRIGGER_FUNCTIONS = (
+    "emergency_freeze_resident_fields",
+    "emergency_intake_priority_guard",
+    "emergency_log_incident_change",
+    "emergency_touch_incident",
+    "emergency_validate_assignment",
+)
+for function in TRIGGER_FUNCTIONS:
+    revoke = re.search(
+        rf"revoke\s+all\s+on\s+function\s+public\.{function}\(\)\s+"
+        rf"from\s+public\s*,\s*anon\s*,\s*authenticated\s*;",
+        SQL,
+        re.I | re.S,
+    )
+    if not revoke:
+        problems.append(
+            f"{function}() is trigger-only but is not explicitly revoked from "
+            "PUBLIC, anon and authenticated; it could become a browser-callable RPC")
 
 if problems:
     print("EMERGENCY CONSOLIDATION CHECK FAILED")
