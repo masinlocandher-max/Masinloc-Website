@@ -149,7 +149,7 @@ body:has(.leader-grid){overflow-x:visible}
   .mk-filters::-webkit-scrollbar{display:none}
   .mk-chip{flex:0 0 auto;min-height:46px}
   .mk-item>a{grid-template-columns:1fr!important;gap:14px!important;padding:28px 0!important}
-  .mk-logo{width:124px!important;height:124px!important}
+  .mk-logo{width:132px!important;height:132px!important}
   .mk-name{font-size:27px!important}
   .mk-desc{font-size:15.5px!important;line-height:1.68!important}
   .mk-submit-cta,.mk-detail-cta{display:flex!important;align-items:center;justify-content:center;width:100%!important;min-height:50px}
