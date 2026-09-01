@@ -37,9 +37,7 @@ img[src="assets/masinloc-logo.webp"]{
   top:auto!important;
 }
 
-/* Shared phone-first guardrails. These are intentionally conservative so
-   page-specific art direction stays intact while touch, forms and overflow
-   behave correctly on real phones. */
+/* Shared phone-first guardrails. */
 html{
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
@@ -56,15 +54,16 @@ textarea{resize:vertical}
 :where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
 /* Some long-form surfaces depend on the viewport itself remaining the scroll
-   container. Applying overflow clipping to html/body makes Chromium treat the
-   root as a separate scroll container: that hid MABAYANI's sticky story map
-   and froze Leadership's CSS view timelines at their completed state. Leave
-   the viewport roots visible on those surfaces; responsive QA still rejects
-   any actual horizontal overflow at every phone width. */
+   container. Leave those roots visible while responsive QA catches real
+   horizontal overflow. */
 :root:has(body.mabayani-page),
 :root:has(.leader-grid){overflow-x:visible}
 body.mabayani-page,
 body:has(.leader-grid){overflow-x:visible}
+
+/* Homepage specificity repair: .home a otherwise wins over .cta-primary and
+   turns the yellow primary CTA text white. */
+.home .hero-cta .cta-primary{background:var(--yellow);color:var(--navy-deep)}
 
 @media(max-width:1099px){
   .site-nav .brand img{width:120px!important;max-width:120px!important}
@@ -73,6 +72,7 @@ body:has(.leader-grid){overflow-x:visible}
 }
 
 @media(max-width:800px){
+  /* Phone is the primary composition for shared public pages. */
   .overlay-nav img,
   .form-header img{width:120px!important;max-width:120px!important}
   .site-footer .footer-brand img{width:136px!important;max-width:136px!important}
@@ -87,6 +87,7 @@ body:has(.leader-grid){overflow-x:visible}
     padding-left:max(16px,env(safe-area-inset-left))!important;
     padding-right:max(16px,env(safe-area-inset-right))!important;
   }
+  .about-page .site-nav{height:68px!important;min-height:68px}
   .menu-toggle,.nav-toggle,.connect-menu-toggle{min-width:48px;min-height:48px}
   .primary-nav.open,.home-links.open,#connectPrimaryNav.open{
     max-height:calc(100dvh - 68px);
@@ -102,9 +103,66 @@ body:has(.leader-grid){overflow-x:visible}
   table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
   pre,code{max-width:100%;overflow-wrap:anywhere}
 
+  /* Editorial and information surfaces: mobile reading rhythm first. */
+  .about-hero{width:auto!important;padding:52px 18px 42px!important}
+  .about-hero h1{font-size:clamp(42px,13vw,64px)!important;line-height:.98!important}
+  .about-hero .lead{margin-top:20px!important;font-size:17px!important;line-height:1.62!important}
+  .about-photo{width:calc(100% - 36px)!important;margin-inline:auto!important}
+  .about-body{padding:52px 18px 76px!important}
+  .about-intro{margin-bottom:48px!important;font-size:22px!important;line-height:1.5!important}
   .about-section,.closer-inner,.connect-inner,.start-here{grid-template-columns:1fr!important}
-  .about-body{padding-left:16px;padding-right:16px}
-  .about-hero{padding-left:0;padding-right:0}
+  .about-section{gap:14px!important;padding:32px 0!important}
+  .about-section h2{font-size:20px!important}
+  .about-section div p{font-size:16px!important;line-height:1.75!important}
+
+  /* Shared breadcrumbs stay readable and do not steal a full viewport row. */
+  .crumbs,.jobs-crumbs{font-size:12px!important}
+  .crumbs ol{display:flex;flex-wrap:wrap;gap:6px 8px}
+
+  /* Jobs and Career are website features; make them phone-native rather than
+     removing them. */
+  .jobs-main,.career-wrap{padding-left:18px!important;padding-right:18px!important;padding-bottom:68px!important}
+  .jobs-hero{grid-template-columns:1fr!important;gap:18px!important;padding-top:16px!important}
+  .jobs-hero h1,.career-hero h1{font-size:clamp(38px,11vw,50px)!important;line-height:.98!important}
+  .jobs-hero p,.career-hero p{font-size:16px!important;line-height:1.62!important}
+  .jobs-summary{grid-template-columns:1fr 1fr!important}
+  .jobs-quickmatch{grid-template-columns:1fr!important;gap:22px!important;padding:22px 18px!important;border-radius:18px!important}
+  .jobs-quickmatch-form,.career-grid{grid-template-columns:1fr!important}
+  .quick-field-wide,.career-field.full{grid-column:auto!important}
+  .jobs-toolbar{grid-template-columns:1fr!important}
+  .jobs-career-link{width:100%!important}
+  .jobs-workspace{grid-template-columns:1fr!important;gap:20px!important}
+  .jobs-detail{position:static!important;top:auto!important;padding:22px 18px!important;border-radius:16px!important}
+  .jobs-list-head{align-items:flex-end!important}
+  .jobs-actions,.career-actions,.jobs-quickmatch-actions{display:grid!important;grid-template-columns:1fr!important}
+  .jobs-actions>* , .career-actions>* , .jobs-quickmatch-actions>*{width:100%!important}
+  .career-card{padding:22px 18px!important;border-radius:16px!important}
+
+  /* Marketplace: preserve the directory concept but make the phone scan
+     tighter, with full-width actions and horizontally scrollable filters. */
+  .mk-hero,.mk-results,.mk-submit,.mk-detail,.crumbs{padding-left:18px!important;padding-right:18px!important}
+  .mk-hero{padding-top:26px!important;padding-bottom:30px!important}
+  .mk-hero h1{font-size:clamp(38px,11vw,52px)!important;line-height:1.02!important}
+  .mk-lead{font-size:16px!important;line-height:1.62!important}
+  .mk-search{max-width:none!important}
+  .mk-filters{flex-wrap:nowrap!important;overflow-x:auto!important;scrollbar-width:none;padding-bottom:4px!important;overscroll-behavior-x:contain}
+  .mk-filters::-webkit-scrollbar{display:none}
+  .mk-chip{flex:0 0 auto;min-height:46px}
+  .mk-item>a{grid-template-columns:1fr!important;gap:14px!important;padding:28px 0!important}
+  .mk-logo{width:124px!important;height:124px!important}
+  .mk-name{font-size:27px!important}
+  .mk-desc{font-size:15.5px!important;line-height:1.68!important}
+  .mk-submit-cta,.mk-detail-cta{display:flex!important;align-items:center;justify-content:center;width:100%!important;min-height:50px}
+  .mk-facts{grid-template-columns:1fr!important}
+
+  /* Shared footer becomes an intentional phone footer, not a desktop footer
+     squeezed into the viewport. */
+  .site-footer{padding-left:18px!important;padding-right:18px!important;padding-bottom:max(28px,env(safe-area-inset-bottom))!important}
+  .site-footer .footer-main{grid-template-columns:1fr!important;gap:24px!important}
+  .site-footer .footer-links{display:grid!important;grid-template-columns:1fr 1fr!important;gap:0 18px!important}
+  .site-footer .footer-links a{display:flex;align-items:center;min-height:44px}
+  .site-footer .footer-bottom{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+  .site-footer .footer-bottom span:last-child{text-align:left!important}
 }
 
 @media(max-width:520px){
@@ -117,10 +175,16 @@ body:has(.leader-grid){overflow-x:visible}
   .home-footer .footer-brand img,
   .site-footer .footer-brand img{width:128px!important;max-width:128px!important}
   .footer-bottom{gap:10px;flex-wrap:wrap}
+  .jobs-summary{grid-template-columns:1fr!important}
+  .jobs-summary>div{min-height:68px!important}
+  .site-footer .footer-links{grid-template-columns:1fr!important}
 }
 
 @media(max-width:390px){
   .button,.cta-primary,.cta-secondary,.form-submit,.submit-button{width:100%}
+  .about-hero{padding-top:44px!important}
+  .about-body{padding-left:16px!important;padding-right:16px!important}
+  .jobs-main,.career-wrap,.mk-hero,.mk-results,.mk-submit,.mk-detail,.crumbs{padding-left:16px!important;padding-right:16px!important}
 }
 
 @media(hover:none){
@@ -137,14 +201,6 @@ body:has(.leader-grid){overflow-x:visible}
   }
 }
 
-/* Screen-reader-only text ---------------------------------------------------
-   This utility was defined in contact.css and sambal-tina.css but nowhere
-   that Masinloc Connect loads, so connect.html's <span class="visually-hidden">
-   Connect</span> — there to complete the accessible heading "MASINLOC
-   Connect" — was rendering at full size. The hero read "MASINLOC / Connect /
-   CONNECT", the last two being the same word twice.
-
-   It lives here because every page that uses the class loads this file. */
 .visually-hidden{
   position:absolute;width:1px;height:1px;margin:-1px;padding:0;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
