@@ -88,13 +88,21 @@ for (const [label, width, height] of [
     fail(`${label}: Help Desk section has no direct resident entry route`);
   }
 
+  /* Destination photos are intentionally lazy. Scroll to the mosaic before
+     asserting decode so the test verifies browser behaviour rather than
+     demanding that offscreen images defeat lazy-loading. */
+  await page.locator('.place-mosaic').scrollIntoViewIfNeeded();
+  await page.waitForFunction(() => [...document.querySelectorAll('.place-shot img')]
+    .every(img => img.complete && img.naturalWidth > 0 && img.naturalHeight > 0),
+  { timeout: 5000 }).catch(() => {});
+
   const discoverImages = await page.$$eval('.place-shot img', imgs => imgs.map(img => ({
     src: img.getAttribute('src') || '', decoded: img.naturalWidth > 0 && img.naturalHeight > 0,
   })));
   if (discoverImages.length < 3) fail(`${label}: destination mosaic has fewer than three real place images`);
   discoverImages.forEach((image, index) => {
     if (!image.src.startsWith('assets/locations/')) fail(`${label}: place image ${index + 1} is not from repository assets`);
-    if (!image.decoded) fail(`${label}: place image ${index + 1} did not decode`);
+    if (!image.decoded) fail(`${label}: place image ${index + 1} did not decode after the mosaic entered view`);
   });
 
   const cultureSrc = await page.locator('.culture-photo img').getAttribute('src');
