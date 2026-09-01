@@ -345,6 +345,29 @@ async function residentPage(session){
   return {ctx,page};
 }
 
+
+/* Wait for delivery to actually reach the screen before reading the access
+   line. `sent.length` only says the request arrived at the stub — the page
+   sets `attributed` and re-renders after the RESPONSE is processed, so
+   reading straight after the request is a race. Locally it won; in CI it
+   lost, and the assertion saw the honest pre-delivery state "Not sent yet".
+
+   This waits for the state under test to exist, and changes nothing about
+   what is then demanded of it. It cannot pass by accident: a page wrongly
+   claiming "Linked to your account" also leaves "Not sent yet", so the wait
+   succeeds and the assertion below still fails on the content. */
+async function deliveredAccess(page,label){
+  try{
+    await page.waitForFunction(
+      ()=>{const e=document.querySelector('#accessValue');
+           return e && e.textContent.trim() && !/not sent yet/i.test(e.textContent);},
+      null,{timeout:10000});
+  }catch{
+    fail(`emergency/account(${label}): the report never reached a delivered state on screen`);
+  }
+  return (await page.locator('#accessValue').innerText().catch(()=>'')).trim();
+}
+
 async function fileReport(page,text,label){
   await page.locator('[data-agency="pnp"]').click();
   await page.locator('#reportPanel').waitFor({state:'visible'});
@@ -386,7 +409,7 @@ async function fileReport(page,text,label){
   for(let i=0;i<60&&!sent.length;i++)await page.waitForTimeout(100);
   if(!sent.length)fail('emergency/account: an anonymous report never reached intake');
   else if(sent[0].auth)fail('emergency/account: an Authorization header was sent with no session');
-  const anonAccess=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
+  const anonAccess=await deliveredAccess(page,'signed out');
   if(!/this device only/i.test(anonAccess)){
     fail(`emergency/account: an anonymous report does not warn it is readable only here: "${anonAccess}"`);
   }
@@ -414,7 +437,7 @@ async function fileReport(page,text,label){
   /* The stub answered attributed:false while the page holds a valid session.
      The delivered report must report what the server said, not what the token
      suggests — the same rule that governs 'Received'. */
-  const access=(await page.locator('#accessValue').innerText().catch(()=>'')).trim();
+  const access=await deliveredAccess(page,'signed in');
   if(/linked to your account/i.test(access)){
     fail(`emergency/account: report shown as linked although the server said it was not: "${access}"`);
   }
