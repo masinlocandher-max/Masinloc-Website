@@ -17,6 +17,7 @@ button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
 .home .hero{height:auto;max-height:none}
 .home .hero-copy{position:static;left:auto;right:auto;bottom:auto;width:auto}
 .home .home-footer{display:block;grid-template-columns:none;gap:0}
+.intro-side,.culture-content,.app-content{min-width:0}
 
 @media(max-width:760px){
   :root{--content:calc(100% - 32px);--wide:calc(100% - 24px)}
