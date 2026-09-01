@@ -780,7 +780,7 @@ def page() -> str:
 <link rel="stylesheet" href="../tokens.css?v=20260823-1">
 <link rel="stylesheet" href="../site.css?v=20260825-2">
 <link rel="stylesheet" href="../site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="../site-stability.css?v=20260825-1">
+<link rel="stylesheet" href="../site-stability.css?v=20260901-1">
 <link rel="stylesheet" href="../mabayani.css?v=20260828-16">
 </head>
 <body class="about-page mabayani-page">

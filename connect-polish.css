@@ -231,7 +231,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .option-card p{font-size:11px;line-height:1.5}
 .file-box{border-radius:12px;padding:17px;background:#FAFBFD}
 .review-list{gap:12px}.review-row{padding-bottom:12px}
-.review-row span{font-size:9px}.review-row strong{font-size:12px}
+.review-row span{font-size:11px}.review-row strong{font-size:12px}
 .consent{gap:10px;padding-top:18px;margin-top:18px;border-top:1px solid #e9ebf0}.consent label{font-size:11px;line-height:1.55}
 .form-actions{gap:12px;margin-top:26px}
 .prev,.next{min-height:46px;border-radius:999px;padding:0 18px;font-size:11px;letter-spacing:.03em;transition:transform 220ms var(--ease),box-shadow 220ms ease}
@@ -246,7 +246,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .resume-modal-card{border-radius:20px;padding:38px;box-shadow:0 30px 90px rgba(3,17,47,.24)}
 .modal-kicker{font-size:10px}.resume-modal-card h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:34px;color:var(--navy)}
 .resume-modal-card>p:not(.modal-kicker){font-size:13px;line-height:1.65}.modal-actions button{border-radius:999px;padding:13px 16px;font-size:11px}
-.success-view{background:var(--soft);padding:96px 22px}.success-panel{max-width:640px;border-radius:22px;box-shadow:var(--shadow);padding:54px}.success-mark{width:68px;height:68px;font-size:28px}.success-panel h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:42px;color:var(--navy)}.success-panel>p{font-size:14px}.ref-box{width:230px;border-radius:12px;padding:15px}.ref-box small{font-size:9px}.ref-box strong{font-size:17px}.success-small{font-size:12px!important;line-height:1.6}.success-buttons button{border-radius:999px;padding:12px 16px;font-size:10px}
+.success-view{background:var(--soft);padding:96px 22px}.success-panel{max-width:640px;border-radius:22px;box-shadow:var(--shadow);padding:54px}.success-mark{width:68px;height:68px;font-size:28px}.success-panel h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:42px;color:var(--navy)}.success-panel>p{font-size:14px}.ref-box{width:230px;border-radius:12px;padding:15px}.ref-box small{font-size:11px}.ref-box strong{font-size:17px}.success-small{font-size:12px!important;line-height:1.6}.success-buttons button{border-radius:999px;padding:12px 16px;font-size:10px}
 
 @media(max-width:800px){
   /* Mobile navigation for both headers belongs to connect-shell.css, which
@@ -257,7 +257,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
   .quick-grid{grid-template-columns:1fr;gap:12px}
   .quick-card{min-height:0;padding:20px;grid-template-columns:54px 1fr 24px}
   .form-grid{grid-template-columns:1fr;padding:0 16px 62px}.category-aside{display:grid;grid-template-columns:54px 1fr;gap:13px;align-items:center;padding:0}.side-icon{width:54px;height:54px;margin:0}.category-aside h3{margin:0 0 4px}.category-aside p{max-width:none}
-  .progress-rail{margin:20px 14px 34px}.step-node strong{font-size:9px}
+  .progress-rail{margin:20px 14px 34px}.step-node strong{font-size:11px}
   .form-card{border-radius:18px;padding:24px 18px}.field-grid,.option-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
   .form-actions{grid-template-columns:1fr}.prev,.next{width:100%}
   .resume-modal-card{padding:30px 22px}.success-panel{padding:40px 22px}
@@ -290,7 +290,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
      top of it. */
   .quick-card{grid-template-columns:48px 1fr 20px}.icon-circle{width:46px;height:46px}
   .form-tools{padding:0 16px}.progress-rail{grid-template-columns:repeat(4,1fr)}
-  .step-node strong{font-size:8px;line-height:1.2}
+  .step-node strong{font-size:11px;line-height:1.2}
 }
 
 @media(prefers-reduced-motion:reduce){

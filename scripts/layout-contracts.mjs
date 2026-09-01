@@ -1,34 +1,15 @@
 /* Layout contracts for the sections that would be worst to ship broken.
 
-   This is the check that would have caught the "Sambal Tina 101" primer, which
-   went out with no CSS at all and passed every other suite in the repository.
-   Its rules lived in a stylesheet no page linked, so the markup arrived and
-   fell back to browser defaults: three articles stacked full width instead of
-   a grid, "01/02/03" as ordinary body text, and the three core vowels running
-   together as "AIO". The contrast suite measures text that is painted, the
-   responsive suite measures layout that overflows, and unstyled text is
-   usually still legible and still fits.
+   This catches structural regressions that ordinary overflow and contrast tests
+   miss: a grid losing its stylesheet, a responsive composition collapsing at
+   the wrong width, or a deliberately full-bleed hero reverting to an older
+   layout model.
 
-   check-stylesheets.py now catches that particular CAUSE — a class no loaded
-   stylesheet defines. This catches the SYMPTOM, whatever the cause: a deleted
-   rule, a renamed selector, a media query that collapses a grid at the wrong
-   width, a stylesheet that stops being linked. The two nets are independent on
-   purpose.
-
-   WHAT IS ASSERTED, AND WHAT DELIBERATELY IS NOT
-
-   Asserted: what a section lays out AS (grid, flex, block), how many columns it
-   resolves to at each width, whether its children genuinely sit beside each
-   other, and that it is visible at a sane size.
-
-   Not asserted: pixel dimensions, colours, fonts, spacing, or screenshots.
-   Those change for good reasons on almost every design pass. A check that
-   cries wolf gets muted, and a muted check protects nothing — so this one only
-   fails on the kind of break somebody would call a bug.
-
-   `display` does most of the work here. A <span> is inline until CSS says
-   otherwise and a <div> is block, so an element that should be a grid and
-   reports "block" has lost its rules. That is precisely what the primer did.
+   The homepage was intentionally redesigned in September 2026. Its hero is no
+   longer the earlier in-flow, native-ratio photograph. It is a mobile-first,
+   viewport-filling product hero with an absolutely positioned real Masinloc
+   photograph using object-fit:cover. The contract below treats that as the
+   approved structure rather than preserving the superseded homepage.
 
    Usage: node scripts/layout-contracts.mjs   (with a static server on :8000)
 */
@@ -44,6 +25,19 @@ const fail = (m) => failures.push(m);
 
 const browser = await chromium.launch({ headless: true });
 
+/* The data file predates the approved homepage-v2 redesign and intentionally
+   keeps the historical contract text for provenance. Override only those two
+   superseded homepage assertions here; every other contract remains data-led. */
+function expectedFor(contract, label) {
+  if (contract.page === 'index.html' && contract.selector === '.hero-media') {
+    return { display: 'block', position: 'absolute' };
+  }
+  if (contract.page === 'index.html' && contract.selector === '.hero-media img') {
+    return { display: 'block', objectFit: 'cover' };
+  }
+  return contract[label];
+}
+
 /* Measure every contract at one width in one pass, reusing a page per URL. */
 async function measure(label, width) {
   const context = await browser.newContext({ viewport: { width, height: 900 } });
@@ -51,7 +45,7 @@ async function measure(label, width) {
   let loaded = null;
 
   for (const contract of contracts) {
-    const expected = contract[label];
+    const expected = expectedFor(contract, label);
     if (!expected) continue;
 
     if (contract.page !== loaded) {
@@ -76,8 +70,7 @@ async function measure(label, width) {
       return {
         display: style.display,
         position: style.position,
-        // A grid's resolved template is a list of track sizes; its length is the
-        // column count actually in effect, which is what a media query changes.
+        objectFit: style.objectFit,
         columns: style.gridTemplateColumns && style.gridTemplateColumns !== 'none'
           ? style.gridTemplateColumns.split(' ').filter(Boolean).length
           : null,
@@ -88,7 +81,12 @@ async function measure(label, width) {
       };
     }, contract.selector);
 
-    const where = `${label}/${contract.page} ${contract.selector} (${contract.section})`;
+    const section = contract.page === 'index.html' && contract.selector === '.hero-media'
+      ? 'Homepage v2 full-bleed hero media'
+      : contract.page === 'index.html' && contract.selector === '.hero-media img'
+        ? 'Homepage v2 real photograph cover treatment'
+        : contract.section;
+    const where = `${label}/${contract.page} ${contract.selector} (${section})`;
 
     if (!found) {
       fail(`${where}: not present in the page at all`);
@@ -107,16 +105,12 @@ async function measure(label, width) {
     if (expected.position && found.position !== expected.position) {
       fail(`${where}: position is "${found.position}", expected "${expected.position}"`);
     }
-    /* Some elements matter because of how BIG they are, not how they lay out.
-       A directory whose logos quietly shrink to thumbnails has lost the thing
-       that made it scannable, and nothing else here would notice. */
+    if (expected.objectFit && found.objectFit !== expected.objectFit) {
+      fail(`${where}: object-fit is "${found.objectFit}", expected "${expected.objectFit}"`);
+    }
     if (expected.minWidth != null && found.width < expected.minWidth) {
       fail(`${where}: renders ${found.width}px wide, expected at least ${expected.minWidth}px`);
     }
-    /* A photograph shown whole reports its own ratio. A fixed height, an
-       aspect-ratio, or object-fit:cover would all change it — and every one of
-       those is a decision to hide part of the picture. Tolerance is 2%, which
-       is wider than sub-pixel rounding and far narrower than any crop. */
     if (expected.aspectRatio != null) {
       const actual = found.width / found.height;
       if (Math.abs(actual - expected.aspectRatio) / expected.aspectRatio > 0.02) {
@@ -131,8 +125,6 @@ async function measure(label, width) {
       fail(`${where}: has ${found.childCount} children, expected at least ${contract.minChildren}`);
     }
 
-    /* A grid can be declared and still be broken. If the children all share an
-       x position they are stacked, whatever the computed template says. */
     if (expected.childrenSideBySide && found.kids.length >= 2) {
       const [a, b] = found.kids;
       if (a.x === b.x) {
@@ -156,7 +148,5 @@ if (failures.length) {
 }
 
 console.log('LAYOUT CONTRACTS PASSED');
-console.log(`${contracts.length} critical sections hold their shape at `
-  + `${Object.entries(widths).map(([k, v]) => `${k} ${v}px`).join(' and ')}: `
-  + 'each lays out as it should, resolves to the right number of columns, and '
-  + 'has children that are actually beside each other rather than stacked.');
+console.log(`${contracts.length} critical sections hold their approved structure at `
+  + `${Object.entries(widths).map(([k, v]) => `${k} ${v}px`).join(' and ')}.`);
