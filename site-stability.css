@@ -39,13 +39,15 @@ img[src="assets/masinloc-logo.webp"]{
 
 /* Shared phone-first guardrails. These are intentionally conservative so
    page-specific art direction stays intact while touch, forms and overflow
-   behave correctly on real phones. */
+   behave correctly on real phones. `clip`, rather than `hidden`, prevents
+   horizontal paint from escaping without creating a scrolling ancestor that
+   would break sticky wayfinding such as MABAYANI's story map. */
 html{
   -webkit-text-size-adjust:100%;
   text-size-adjust:100%;
-  overflow-x:hidden;
+  overflow-x:clip;
 }
-body{overflow-x:hidden}
+body{overflow-x:clip}
 main{min-width:0}
 img,video,svg{max-width:100%}
 button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
