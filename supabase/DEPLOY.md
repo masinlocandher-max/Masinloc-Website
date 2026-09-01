@@ -24,14 +24,15 @@ supabase functions list --project-ref uwcqvsitjtknxsaypjxj
 supabase migration list --project-ref uwcqvsitjtknxsaypjxj
 ```
 
-The two public form functions are:
+The public intake functions are:
 
 - `submit-masinloc`
 - `business-dashboard-interest`
+- `emergency-response`
 
-Both must be deployed with JWT verification disabled. These endpoints are called by anonymous visitors; the functions enforce their own origin allowlist, rate limiting, honeypot, input limits, upload validation, and optional Turnstile checks.
+All must be deployed with JWT verification disabled. These endpoints are called by anonymous visitors. Each enforces its own origin allowlist, validation, and abuse controls appropriate to its intake contract.
 
-`submit-professional-profile` also exists in the project but is a separate professional-profile flow and is not part of this two-function deploy command.
+`submit-professional-profile` also exists in the project as a separate professional-profile flow and is included in the complete deploy command below.
 
 ## Database migrations
 
@@ -77,9 +78,10 @@ The statement is safe if the columns already exist. Verify before changing anyth
 supabase functions deploy submit-masinloc --no-verify-jwt
 supabase functions deploy business-dashboard-interest --no-verify-jwt
 supabase functions deploy submit-professional-profile --no-verify-jwt
+supabase functions deploy emergency-response --no-verify-jwt
 ```
 
-Do not omit `--no-verify-jwt` for these three public submission endpoints.
+Do not omit `--no-verify-jwt` for these four public intake endpoints.
 
 `submit-professional-profile` was missing from this list until 2026-08-25, and
 its source was missing from the repository entirely. That is why it kept a
@@ -146,3 +148,43 @@ For each test, record the HTTP result/reference code, confirm the matching row, 
 `security_events.category` must accept every category handled by `submit-masinloc`: `business`, `story`, `dictionary`, `contact`, `professional`, and `resume`. `scripts/check-backend-contract.py` enforces this relationship so a new form category cannot silently lose security logging.
 
 After schema changes, review Supabase security and performance advisors. Treat service-role-only tables with RLS and no browser policy as intentional only when their grants confirm that design.
+
+## Emergency Help Desk activation and handoff
+
+The resident Help Desk is operational only when the emergency migrations, Edge Function, and verified responder memberships are all present. The PNP and MDRRMO consoles intentionally show no incident data to an unprovisioned account.
+
+1. Create each responder in Supabase Auth. Do not enable public sign-up for responder access.
+2. Independently resolve the Auth user id, agency, and duty role with the receiving office.
+3. As a platform administrator, add the user to `public.emergency_agency_members`. Allowed roles are `operator`, `dispatcher`, and `supervisor`.
+4. Confirm PNP cannot read MDRRMO-only reports, and MDRRMO cannot read PNP-only reports, unless an authorized responder requests cross-agency support.
+5. Submit one clearly labelled acceptance-test report to each agency from `/emergency/`. Verify receipt, acknowledgement, assignment, dispatch/en-route, on-scene, resident reply, private internal note, and resolution.
+6. Capture the acceptance record, then remove only the identified test incidents. Never alter or remove resident reports during testing.
+
+Use a verified Auth user id in this statement. The zero UUID is deliberately non-operational and must never be pasted unchanged:
+
+```sql
+insert into public.emergency_agency_members
+  (user_id, agency, role, display_name, active)
+values
+  ('00000000-0000-0000-0000-000000000000', 'pnp', 'dispatcher', 'Verified duty officer', true)
+on conflict (user_id, agency) do update
+set role = excluded.role,
+    display_name = excluded.display_name,
+    active = excluded.active;
+```
+
+Verify the deployed public boundary without creating a report:
+
+```bash
+# No browser Origin: must be rejected with HTTP 403.
+curl -sS -o /dev/null -w '%{http_code}\n' \
+  https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/emergency-response
+
+# Production Origin with an invalid report identity: HTTP 404, Report not found.
+curl -sS -H 'Origin: https://www.masinloc-zambales.com' \
+  -H 'Content-Type: application/json' \
+  --data '{"action":"status","client_report_id":"00000000-0000-4000-8000-000000000000","report_secret":"invalid"}' \
+  https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/emergency-response
+```
+
+The emergency endpoint is anonymous by design and must be deployed with `--no-verify-jwt`. It authenticates resident status and messaging with a high-entropy per-report secret. Agency consoles authenticate through Supabase Auth and RLS. Never place a service-role key in `emergency/` or any browser-delivered asset.
