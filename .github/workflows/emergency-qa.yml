@@ -7,6 +7,7 @@ on:
       - 'supabase/functions/emergency-response/**'
       - 'supabase/migrations/**'
       - 'scripts/check-migrations-apply.py'
+      - 'scripts/check-privilege-boundaries.py'
       - 'scripts/emergency-*.mjs'
       - 'scripts/check-emergency-consolidation.py'
       - '.github/workflows/emergency-qa.yml'
@@ -19,6 +20,7 @@ on:
       - 'supabase/functions/emergency-response/**'
       - 'supabase/migrations/**'
       - 'scripts/check-migrations-apply.py'
+      - 'scripts/check-privilege-boundaries.py'
       - 'scripts/emergency-*.mjs'
       - 'scripts/check-emergency-consolidation.py'
       - '.github/workflows/emergency-qa.yml'
@@ -43,6 +45,11 @@ jobs:
         run: node scripts/emergency-qa.mjs
       - name: Verify one PNP/MDRRMO architecture, not two
         run: python3 scripts/check-emergency-consolidation.py
+      # A SECURITY DEFINER function runs past row-level security. Every one of
+      # them needs a door: a caller check inside, or a revoke that stops users
+      # reaching it. Today they all have one; this keeps the next one honest.
+      - name: Privilege boundaries on SECURITY DEFINER functions
+        run: python3 scripts/check-privilege-boundaries.py
       # Every other check on the schema reads the SQL as text. This one runs it.
       # A migration is applied to production by a person, once, under pressure;
       # finding out there that a function body does not compile is too late.
