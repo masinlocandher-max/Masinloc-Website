@@ -5,17 +5,20 @@ on:
     paths:
       - 'emergency/**'
       - 'supabase/functions/emergency-response/**'
-      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
-      - 'scripts/emergency-qa.mjs'
+      - 'supabase/migrations/*emergency*.sql'
+      - 'scripts/emergency-*.mjs'
+      - 'scripts/check-emergency-consolidation.py'
       - '.github/workflows/emergency-qa.yml'
   push:
     branches:
+      - main
       - 'agent/emergency-pnp-mdrrmo-mvp'
     paths:
       - 'emergency/**'
       - 'supabase/functions/emergency-response/**'
-      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
-      - 'scripts/emergency-qa.mjs'
+      - 'supabase/migrations/*emergency*.sql'
+      - 'scripts/emergency-*.mjs'
+      - 'scripts/check-emergency-consolidation.py'
       - '.github/workflows/emergency-qa.yml'
 
 permissions:
