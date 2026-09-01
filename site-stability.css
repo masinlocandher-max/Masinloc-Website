@@ -37,24 +37,6 @@ img[src="assets/masinloc-logo.webp"]{
   top:auto!important;
 }
 
-/* Shared phone-first guardrails. These are intentionally conservative so
-   page-specific art direction stays intact while touch, forms and overflow
-   behave correctly on real phones. */
-html{
-  -webkit-text-size-adjust:100%;
-  text-size-adjust:100%;
-  overflow-x:hidden;
-}
-body{overflow-x:hidden}
-main{min-width:0}
-img,video,svg{max-width:100%}
-button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
-input,select,textarea,button{font-family:inherit}
-input,select,textarea{font-size:16px}
-textarea{resize:vertical}
-:where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]){min-height:44px}
-:where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
-
 @media(max-width:1099px){
   .site-nav .brand img{width:120px!important;max-width:120px!important}
   .home-footer .footer-brand img{width:136px!important;max-width:136px!important}
@@ -68,62 +50,18 @@ textarea{resize:vertical}
   .quick-choices{padding-top:44px!important}
   .quick-choices h2{margin-bottom:22px!important}
   .quick-intro{margin:-8px auto 26px;padding:0 4px;font-size:12px}
-
-  p,li{overflow-wrap:anywhere}
-  h1,h2,h3{overflow-wrap:normal;text-wrap:balance}
-
-  .site-nav,.overlay-nav,.form-header{
-    padding-left:max(16px,env(safe-area-inset-left))!important;
-    padding-right:max(16px,env(safe-area-inset-right))!important;
-  }
-  .menu-toggle,.nav-toggle,.connect-menu-toggle{min-width:48px;min-height:48px}
-  .primary-nav.open,.home-links.open,#connectPrimaryNav.open{
-    max-height:calc(100dvh - 68px);
-    overflow:auto;
-    overscroll-behavior:contain;
-    padding-bottom:max(24px,env(safe-area-inset-bottom));
-  }
-  .primary-nav a,.home-links a,#connectPrimaryNav a{min-height:48px;display:flex;align-items:center}
-
-  .button,.cta-primary,.cta-secondary,.form-submit,.submit-button,.jobs-primary,.jobs-secondary{min-height:48px}
-  input:not([type="checkbox"]):not([type="radio"]),select,textarea{max-width:100%;min-height:48px}
-
-  table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  pre,code{max-width:100%;overflow-wrap:anywhere}
-
-  .about-section,.closer-inner,.connect-inner,.start-here{grid-template-columns:1fr!important}
-  .about-body{padding-left:16px;padding-right:16px}
-  .about-hero{padding-left:0;padding-right:0}
 }
 
 @media(max-width:520px){
-  .site-nav{padding-left:max(18px,env(safe-area-inset-left))!important;padding-right:max(16px,env(safe-area-inset-right))!important}
+  .site-nav{padding-left:18px!important;padding-right:16px!important}
   .site-nav .brand img{width:116px!important;max-width:116px!important}
   .overlay-nav,
-  .form-header{padding-left:max(18px,env(safe-area-inset-left))!important;padding-right:max(14px,env(safe-area-inset-right))!important}
+  .form-header{padding-left:18px!important;padding-right:14px!important}
   .overlay-nav img,
   .form-header img{width:116px!important;max-width:116px!important}
   .home-footer .footer-brand img,
   .site-footer .footer-brand img{width:128px!important;max-width:128px!important}
   .footer-bottom{gap:10px;flex-wrap:wrap}
-}
-
-@media(max-width:390px){
-  .button,.cta-primary,.cta-secondary,.form-submit,.submit-button{width:100%}
-}
-
-@media(hover:none){
-  a:hover,button:hover{transform:none!important}
-}
-
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  *,*::before,*::after{
-    scroll-behavior:auto!important;
-    animation-duration:.001ms!important;
-    animation-iteration-count:1!important;
-    transition-duration:.001ms!important;
-  }
 }
 
 /* Screen-reader-only text ---------------------------------------------------
