@@ -34,16 +34,21 @@
 .hero-media{position:absolute;inset:0}
 .hero-media picture,.hero-media img{width:100%;height:100%}
 .hero-media img{object-fit:cover;object-position:55% 50%}
-.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(3,17,47,.95) 0%,rgba(3,17,47,.72) 42%,rgba(3,17,47,.18) 74%,rgba(3,17,47,.22) 100%)}
+/* Phone copy sits over the lower half of the photograph. The darker lower
+   field is deliberately local to that reading zone; the upper image remains
+   open so the real Masinloc photograph still leads the composition. */
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(3,17,47,.985) 0%,rgba(3,17,47,.93) 52%,rgba(3,17,47,.62) 78%,rgba(3,17,47,.42) 100%)}
 .hero-inner{position:relative;z-index:2;width:calc(100% - 32px);margin-inline:auto;padding:132px 0 max(36px,env(safe-area-inset-bottom))}
 .hero-copy{max-width:760px}
 .hero h1{margin:0;max-width:8.8ch;color:var(--white);font:650 clamp(52px,15vw,82px)/.88 var(--font-display);letter-spacing:-.065em;text-wrap:balance}
 .hero h1 em{display:block;margin-top:7px;color:var(--yellow);font:400 italic .8em/1.02 var(--font-editorial);letter-spacing:-.03em}
-.hero-note{margin:24px 0 0;max-width:44ch;color:rgba(255,255,255,.84);font:400 17px/1.62 var(--font-ui)}
+.hero-note{width:fit-content;margin:24px 0 0;max-width:44ch;padding:10px 12px;border-left:2px solid var(--yellow);border-radius:0 12px 12px 0;background:rgba(3,17,47,.76);color:var(--white);font:400 17px/1.62 var(--font-ui)}
 .hero-cta{display:grid;gap:10px;margin-top:28px}
 .hero-cta a{display:flex;align-items:center;justify-content:center;min-height:50px;padding:0 20px;border-radius:999px;font:800 14px/1 var(--font-ui);text-decoration:none;transition:transform 180ms ease,background 180ms ease}
 .cta-primary{background:var(--yellow);color:var(--navy-deep)}
-.cta-secondary{border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.08);color:var(--white)}
+/* Secondary hero actions need their own stable reading surface: a translucent
+   white wash can become pale over a bright photograph and fail contrast. */
+.cta-secondary{border:1px solid rgba(255,255,255,.56);background:rgba(3,17,47,.88);color:var(--white)}
 .hero-cta .cta-help{border-color:var(--red);background:var(--red);color:var(--white)}
 .hero-cta a:active{transform:scale(.985)}
 .hero-foot{display:grid;grid-template-columns:1fr 1fr;gap:12px 22px;margin-top:42px;padding-top:18px;border-top:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.64);font:500 11.5px/1.5 var(--font-ui)}
@@ -138,7 +143,9 @@
 @media(min-width:700px){
   .landing-shell,.hero-inner{width:calc(100% - 64px)}
   .hero-media img{object-position:center 50%}
-  .hero-media::after{background:linear-gradient(90deg,rgba(3,17,47,.92) 0%,rgba(3,17,47,.76) 48%,rgba(3,17,47,.2) 78%),linear-gradient(to top,rgba(3,17,47,.72),rgba(3,17,47,0) 48%)}
+  /* Desktop keeps the right half of the photograph open while the left copy
+     field stays dark enough for normal-sized supporting text and controls. */
+  .hero-media::after{background:linear-gradient(90deg,rgba(3,17,47,.975) 0%,rgba(3,17,47,.93) 50%,rgba(3,17,47,.52) 72%,rgba(3,17,47,.12) 100%),linear-gradient(to top,rgba(3,17,47,.74),rgba(3,17,47,0) 52%)}
   .hero h1{font-size:clamp(70px,10vw,104px)}
   .hero-cta{display:flex;flex-wrap:wrap}
   .hero-cta a{width:auto;min-width:170px}
