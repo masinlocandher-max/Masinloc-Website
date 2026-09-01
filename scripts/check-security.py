@@ -34,6 +34,26 @@ for rel in sorted(required_edge_functions):
     if not (ROOT / rel).is_file():
         fail(f"production Edge Function is not version-controlled: {rel}")
 
+# Trigger functions run through their triggers and must not inherit PostgreSQL's
+# default PUBLIC EXECUTE privilege. That default exposed the POS publication
+# limiter as an anonymous Supabase RPC in production. Keep the revocation in
+# source control even though the POS schema is delivered separately and may be
+# absent when this repository's migrations are replayed in CI.
+pos_trigger_acl_migration = (
+    ROOT / "supabase/migrations/20260901031500_revoke_pos_trigger_rpc_execution.sql"
+)
+if not pos_trigger_acl_migration.is_file():
+    fail("POS trigger RPC privilege revocation migration is missing")
+else:
+    acl_sql = pos_trigger_acl_migration.read_text(encoding="utf-8").lower()
+    required_acl_fragments = (
+        "pos_enforce_marketplace_publish_limit() from public, anon, authenticated",
+        "pos_enforce_marketplace_publish_limit() to postgres, service_role",
+    )
+    for fragment in required_acl_fragments:
+        if fragment not in acl_sql:
+            fail(f"POS trigger RPC privilege migration is missing: {fragment}")
+
 # A 204 carries no body.
 #
 # Returning `new Response("", {status: 204})` makes some browsers treat the
