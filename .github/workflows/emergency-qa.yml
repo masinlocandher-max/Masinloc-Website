@@ -5,7 +5,8 @@ on:
     paths:
       - 'emergency/**'
       - 'supabase/functions/emergency-response/**'
-      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
+      - 'supabase/migrations/**'
+      - 'scripts/check-migrations-apply.py'
       - 'scripts/emergency-qa.mjs'
       - '.github/workflows/emergency-qa.yml'
   push:
@@ -14,7 +15,8 @@ on:
     paths:
       - 'emergency/**'
       - 'supabase/functions/emergency-response/**'
-      - 'supabase/migrations/20260831143000_emergency_response_core.sql'
+      - 'supabase/migrations/**'
+      - 'scripts/check-migrations-apply.py'
       - 'scripts/emergency-qa.mjs'
       - '.github/workflows/emergency-qa.yml'
 
@@ -38,3 +40,10 @@ jobs:
         run: node scripts/emergency-qa.mjs
       - name: Verify one PNP/MDRRMO architecture, not two
         run: python3 scripts/check-emergency-consolidation.py
+      # Every other check on the schema reads the SQL as text. This one runs it.
+      # A migration is applied to production by a person, once, under pressure;
+      # finding out there that a function body does not compile is too late.
+      - name: Install PostgreSQL
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql
+      - name: Migrations apply, re-apply, and activation actually works
+        run: python3 scripts/check-migrations-apply.py
