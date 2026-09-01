@@ -55,12 +55,16 @@ textarea{resize:vertical}
 :where(button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]){min-height:44px}
 :where(a,button,input,select,textarea):focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
-/* MABAYANI has two sticky wayfinding bars. Root overflow clipping can become
-   their containing scroll box in Chromium/WebKit, so this reading surface
-   deliberately leaves the viewport roots unclipped. Responsive QA enforces
-   that the page itself still produces no horizontal overflow. */
-:root:has(body.mabayani-page){overflow-x:visible}
-body.mabayani-page{overflow-x:visible}
+/* Some long-form surfaces depend on the viewport itself remaining the scroll
+   container. Applying overflow clipping to html/body makes Chromium treat the
+   root as a separate scroll container: that hid MABAYANI's sticky story map
+   and froze Leadership's CSS view timelines at their completed state. Leave
+   the viewport roots visible on those surfaces; responsive QA still rejects
+   any actual horizontal overflow at every phone width. */
+:root:has(body.mabayani-page),
+:root:has(.leader-grid){overflow-x:visible}
+body.mabayani-page,
+body:has(.leader-grid){overflow-x:visible}
 
 @media(max-width:1099px){
   .site-nav .brand img{width:120px!important;max-width:120px!important}
