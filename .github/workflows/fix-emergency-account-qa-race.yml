@@ -31,11 +31,10 @@ jobs:
           text = path.read_text()
 
           old_anon = "  const anonAccess=(await page.locator('#accessValue').innerText().catch(()=>'')) .trim();"
-          old_anon = old_anon.replace(") .trim()", ")).trim()")
+          old_anon = "  const anonAccess=(await page.locator('#accessValue').innerText().catch(()=>''))" + ".trim();"
           new_anon = "  await page.waitForFunction(()=>/this device only/i.test(document.querySelector('#accessValue')?.textContent||''),null,{timeout:8000}).catch(()=>{});\n" + old_anon
 
-          old_signed = "  const access=(await page.locator('#accessValue').innerText().catch(()=>'')) .trim();"
-          old_signed = old_signed.replace(") .trim()", ")).trim()")
+          old_signed = "  const access=(await page.locator('#accessValue').innerText().catch(()=>''))" + ".trim();"
           new_signed = "  await page.waitForFunction(()=>/this device only/i.test(document.querySelector('#accessValue')?.textContent||''),null,{timeout:8000}).catch(()=>{});\n" + old_signed
 
           if text.count(old_anon) != 1:
