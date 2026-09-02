@@ -123,6 +123,15 @@ $PSQL -f "$HERE/04-recovered-schema-fidelity.sql"
 echo "== seed two tenants =="
 $PSQL -f "$HERE/02-seed-two-tenants.sql" >/dev/null
 
+echo "== order lifecycle (every step must pass) =="
+psql -h /tmp -p "$PGPORT" -U postgres -q -v ON_ERROR_STOP=1 -f "$HERE/05-order-lifecycle.sql" 2>&1 \
+  | sed 's#psql:.*05-order-lifecycle.sql:[0-9]*: ##' \
+  | grep -vE '^(SET|BEGIN|COMMIT|CREATE TABLE|INSERT|\s*$)' \
+  | sed 's/^NOTICE:  //'
+lifecycle_rc=${PIPESTATUS[0]}
+[ "$lifecycle_rc" -eq 0 ] || { echo "order lifecycle failed" >&2; exit 1; }
+
+echo
 echo "== cross-tenant attacks (every line must deny) =="
 psql -h /tmp -p "$PGPORT" -U postgres -f "$HERE/03-tenant-isolation-attacks.sql" 2>&1 \
   | grep -vE '^(SAVEPOINT|ROLLBACK|BEGIN|SET|Pager|\s*$)' \
