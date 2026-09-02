@@ -66,20 +66,59 @@ PSQL="psql -h /tmp -p $PGPORT -U postgres -q -v ON_ERROR_STOP=1"
 echo "== supabase substrate =="
 $PSQL -f "$HERE/01-supabase-shim.sql" >/dev/null
 
-echo "== replay migrations =="
-# security_events predates the POS work but one POS migration alters it.
-$PSQL -f "$REPO_ROOT/supabase/migrations/20260823000000_rate_limit_and_security_events.sql" >/dev/null
+echo "== replay migrations (every file, in version order) =="
+# No hand-picked subset: a from-scratch rebuild has to survive the whole
+# directory in the order Supabase would apply it, or the repo is not
+# reproducible.
 fails=0
-for f in $(ls "$REPO_ROOT"/supabase/migrations/2026082813*.sql \
-                "$REPO_ROOT"/supabase/migrations/2026082814*.sql \
-                "$REPO_ROOT"/supabase/migrations/202608291*.sql 2>/dev/null | sort); do
-  if $PSQL -f "$f" >/dev/null 2>&1; then
+for f in $(ls "$REPO_ROOT"/supabase/migrations/*.sql | sort); do
+  if err=$($PSQL -f "$f" 2>&1 >/dev/null); then
     printf '  ok    %s\n' "$(basename "$f")"
   else
-    printf '  FAIL  %s\n' "$(basename "$f")"; fails=$((fails+1))
+    printf '  FAIL  %s\n' "$(basename "$f")"
+    printf '%s\n' "$err" | sed 's/^/          /'
+    fails=$((fails+1))
   fi
 done
 [ "$fails" -eq 0 ] || { echo "$fails migration(s) failed to replay" >&2; exit 1; }
+
+echo "== every foreign key resolves =="
+# A dangling FK cannot exist in Postgres, but a *missing* one can: if a table
+# were stubbed away the constraint would simply be absent. Assert the ones the
+# POS depends on are really there.
+$PSQL -v ON_ERROR_STOP=1 <<'SQL'
+do $$
+declare missing text;
+begin
+  select string_agg(t || '.' || c, ', ') into missing
+  from (values
+    ('pos_merchants','business_submission_id'),
+    ('marketplace_listings','business_submission_id'),
+    ('marketplace_listings','pos_merchant_id'),
+    ('pos_outlets','merchant_id'),
+    ('pos_products','merchant_id'),
+    ('pos_orders','merchant_id'),
+    ('pos_order_items','order_id'),
+    ('pos_payments','order_id'),
+    ('pos_chat_messages','order_id'),
+    ('pos_memberships','merchant_id')
+  ) as want(t,c)
+  where not exists (
+    select 1
+    from pg_constraint k
+    join pg_class rel on rel.oid = k.conrelid
+    join pg_attribute a on a.attrelid = k.conrelid and a.attnum = any(k.conkey)
+    where k.contype = 'f' and rel.relname = want.t and a.attname = want.c
+  );
+  if missing is not null then
+    raise exception 'missing foreign keys: %', missing;
+  end if;
+  raise notice 'all expected foreign keys present';
+end $$;
+SQL
+
+echo "== recovered schema matches production =="
+$PSQL -f "$HERE/04-recovered-schema-fidelity.sql"
 
 echo "== seed two tenants =="
 $PSQL -f "$HERE/02-seed-two-tenants.sql" >/dev/null
@@ -90,5 +129,10 @@ psql -h /tmp -p "$PGPORT" -U postgres -f "$HERE/03-tenant-isolation-attacks.sql"
   | sed 's#psql:.*03-tenant-isolation-attacks.sql:[0-9]*: ##'
 
 echo
-echo "== done; stopping cluster =="
-run "$PGBIN/pg_ctl -D $PGDATA_DIR stop -m fast" >/dev/null 2>&1 || true
+if [ "${KEEP:-0}" = "1" ]; then
+  echo "== done; cluster left running on port $PGPORT (KEEP=1) =="
+  echo "   psql -h /tmp -p $PGPORT -U postgres"
+else
+  echo "== done; stopping cluster =="
+  run "$PGBIN/pg_ctl -D $PGDATA_DIR stop -m fast" >/dev/null 2>&1 || true
+fi

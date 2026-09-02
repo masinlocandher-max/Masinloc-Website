@@ -71,13 +71,7 @@ grant execute on function storage.foldername(text) to anon, authenticated, servi
 -- Realtime publication the guardrails migration adds tables to.
 create publication supabase_realtime;
 
--- PREREQUISITE STUB, NOT A FAITHFUL COPY.
--- public.business_submissions is an FK target of pos_merchants and
--- marketplace_listings, but it predates this repository and has NO migration
--- here (scripts/check-backend-contract.py reports exactly this). A from-scratch
--- replay therefore cannot succeed on the repo alone. Stubbed to the single
--- column the FKs need so the POS surface can be exercised; recovering the real
--- table is required before the repo is genuinely reproducible.
-create table public.business_submissions (
-  id uuid primary key default gen_random_uuid()
-);
+-- business_submissions is no longer stubbed here. It is an FK target of
+-- pos_merchants and marketplace_listings, and it now has a real migration
+-- (20260816000000_create_business_submissions.sql) recovered from the live
+-- schema, so the replay below builds it the same way production has it.
