@@ -46,16 +46,21 @@ const RANK = {
 
 const state = { order: null, error: '', sending: false };
 
+const OFFLINE = 'We could not reach the store. Check your connection and try again.';
+
 async function api(path, options = {}) {
-  const response = await fetch(`${API}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-  });
+  let response;
+  try {
+    response = await fetch(`${API}${path}`, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    });
+  } catch {
+    throw new Error(OFFLINE);
+  }
   let body = null;
   try { body = await response.json(); } catch { /* handled below */ }
-  if (!response.ok || !body?.ok) {
-    throw new Error(body?.error || 'We could not reach the store. Please try again.');
-  }
+  if (!response.ok || !body?.ok) throw new Error(body?.error || OFFLINE);
   return body;
 }
 
@@ -121,6 +126,8 @@ async function load() {
     state.order = body.order;
     state.error = '';
   } catch (err) {
+    // A failed refresh must not blank an order the customer is already
+    // reading; it becomes a note above the order they already have.
     state.error = err.message;
   }
   render();

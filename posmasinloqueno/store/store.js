@@ -35,16 +35,23 @@ const state = {
 
 /* ------------------------------------------------------------------- api */
 
+const OFFLINE = 'We could not reach the store. Check your connection and try again.';
+
 async function api(path, options = {}) {
-  const response = await fetch(`${API}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-  });
+  let response;
+  try {
+    response = await fetch(`${API}${path}`, {
+      ...options,
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    });
+  } catch {
+    // A dropped connection throws a TypeError whose message ("Failed to fetch")
+    // means nothing to a customer standing at a counter.
+    throw new Error(OFFLINE);
+  }
   let body = null;
   try { body = await response.json(); } catch { /* handled below */ }
-  if (!response.ok || !body?.ok) {
-    throw new Error(body?.error || 'We could not reach the store. Please try again.');
-  }
+  if (!response.ok || !body?.ok) throw new Error(body?.error || OFFLINE);
   return body;
 }
 
@@ -87,7 +94,14 @@ function render() {
 }
 
 function viewMenu() {
-  if (!state.store) return `<p class="note is-bad">${esc(state.error)}</p>`;
+  if (!state.store) {
+    return `<div class="empty">
+      <h3>This store is not available</h3>
+      <p>${esc(state.error)}</p>
+      <p style="margin-top:10px">If you scanned a table QR code, ask the staff for a new link.
+        If you followed a link from Masinloc Marketplace, the store may have paused ordering.</p>
+    </div>`;
+  }
 
   const categories = state.menu.filter((c) => (c.products || []).length);
   if (!categories.length) {

@@ -92,6 +92,9 @@ jobs:
       - name: Run hidden MANAMBALI word-connect checks
         run: node scripts/wordscapes-qa.mjs
 
+      - name: Run POS checks
+        run: node scripts/pos-qa.mjs
+
       - name: Verify critical sections still hold their shape
         run: node scripts/layout-contracts.mjs
 
