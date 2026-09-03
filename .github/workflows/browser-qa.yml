@@ -109,6 +109,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: masinloc-browser-qa
-          path: artifacts/browser-qa/*.png
+          path: |
+            artifacts/browser-qa/*.png
+            artifacts/pos-qa/*.png
           if-no-files-found: warn
           retention-days: 7
