@@ -1,8 +1,9 @@
 -- Fidelity assertion for the recovered pre-repository objects.
 --
 -- business_submissions, professional_submissions, the two professional
--- challenge tables and the profile-code allocator all predate this repository.
--- Their migrations here (20260816000000, 20260816000001, 20260902090000) were
+-- challenge tables, the profile-code allocator, story_submissions and
+-- resume_support_submissions all predate this repository. Their migrations here
+-- (20260816000000, 20260816000001, 20260816000002, 20260902090000) were
 -- written by reading the live schema, so "it replays without error" is not
 -- enough: the from-zero rebuild has to land on the same catalog state that
 -- production actually has.
@@ -21,12 +22,13 @@ do $fidelity$
 declare
   v_fp text;
   v_lines integer;
-  v_expected constant text := 'e7807d4a5e8ccdcaff7f14bc8639a9e0';
+  v_expected constant text := '63b33eb4f65d4642cde627854ca08565';
 begin
   with objs(t) as (values
     ('business_submissions'),('professional_submissions'),
     ('professional_duplicate_challenges'),('professional_recovery_challenges'),
-    ('masinloc_profile_code_sequences'))
+    ('masinloc_profile_code_sequences'),
+    ('story_submissions'),('resume_support_submissions'))
   select md5(string_agg(line, chr(10) order by line)), count(*)
     into v_fp, v_lines
   from (
