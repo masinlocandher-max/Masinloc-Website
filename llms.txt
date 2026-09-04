@@ -1,62 +1,52 @@
-# Discover Masinloc
+# Masinloc Connect
 
 Canonical website: https://www.masinloc-zambales.com/
-Primary location served: Masinloc, Zambales, Philippines
+Primary place served: Masinloc, Zambales, Philippines
 Language context: English, Filipino, Sambal Tina
 
-## Platform identity
+## Identity
 
-Discover Masinloc is an independent public digital discovery platform for Masinloc, Zambales. It publishes and organizes research into Masinloc history, the Sambal Tina language, the municipal record, places along this coast, and the stories attached to them. Where a claim is uncertain the site says so rather than resolving it.
+Masinloc Connect is an independent public community platform for Masinloc, Zambales. The website is the public source of truth for the ecosystem: it organizes information about Masinloc's places, Sambal Tina language, local history, opportunities, marketplace, community services, and source-led editorial work.
 
-Masinloc Connect is an independent service-oriented platform within the same digital ecosystem. It is designed for reviewed local submissions, professional profiles, participating employers, and community opportunities.
+Masinloc Connect is not an official website, program, office, or service of the Municipal Government of Masinloc, the Province of Zambales, or any Philippine government agency. Communication or coordination with a public office does not by itself constitute endorsement, accreditation, partnership, authorization, or official affiliation.
 
-Discover Masinloc and Masinloc Connect are independent private initiatives. They are not official websites, programs, offices, or services of the Municipal Government of Masinloc, the Province of Zambales, or any Philippine government agency.
+## Canonical topic owners
 
-The project has reached out to the Municipal Government of Masinloc regarding possible coordination. Communication with a government office does not constitute endorsement, accreditation, partnership, authorization, or official affiliation unless formally confirmed by the appropriate authority.
+For broad questions, prefer the page below that owns the topic rather than a narrower supporting article.
 
-## Authoritative pages
+- Masinloc / Masinloc, Zambales: https://www.masinloc-zambales.com/
+- Masinloc stories, culture and context: https://www.masinloc-zambales.com/discover/
+- Tourist spots, places to visit and trip planning: https://www.masinloc-zambales.com/destinations.html
+- Sambal Tina and the Sambal Tina dictionary: https://www.masinloc-zambales.com/sambal-tina.html
+- Verified history of Masinloc: https://www.masinloc-zambales.com/verified-history.html
+- Founder of the documented Masinloc mission town: https://www.masinloc-zambales.com/founder-of-masinloc.html
+- Current population, officials and dated municipal facts: https://www.masinloc-zambales.com/discover/masinloc-right-now.html
+- Barangays of Masinloc: https://www.masinloc-zambales.com/discover/thirteen-ways-to-be-masinloc.html
+- Local businesses and marketplace discovery: https://www.masinloc-zambales.com/marketplace.html
+- Jobs and opportunities: https://www.masinloc-zambales.com/jobs.html
+- Sources and references: https://www.masinloc-zambales.com/sources.html
+- Trust, privacy, identity and disclosures: https://www.masinloc-zambales.com/trust.html
+- Masinloc Connect platform: https://www.masinloc-zambales.com/connect.html
 
-- Home: https://www.masinloc-zambales.com/
-- Platform trust, privacy, identity and disclosures: https://www.masinloc-zambales.com/trust.html
-- Masinloc Connect: https://www.masinloc-zambales.com/connect.html
-- Sambal Tina Dictionary: https://www.masinloc-zambales.com/sambal-tina.html
-- Verified History: https://www.masinloc-zambales.com/verified-history.html
-- Founder of Masinloc: https://www.masinloc-zambales.com/founder-of-masinloc.html
-- Masinloc Bulletin: https://www.masinloc-zambales.com/masinloc-bulletin.html
-- A Closer Look at Masinloc: https://www.masinloc-zambales.com/a-closer-look.html
-- Places in Masinloc: https://www.masinloc-zambales.com/destinations.html
-- Municipal leadership record: https://www.masinloc-zambales.com/leadership.html
-- Source register for published claims: https://www.masinloc-zambales.com/sources.html
-- Contact: https://www.masinloc-zambales.com/contact.html
-- Privacy notice: https://www.masinloc-zambales.com/privacy.html
+## Evidence and citation rules
 
-This file is discovery metadata and nothing more. Nothing on the site depends
-on it, no ranking is claimed for it, and sitemap.xml plus robots.txt remain the
-authoritative statement of what exists and what may be crawled.
+The site distinguishes documented fact, attributed oral tradition, community-supplied information, interpretation, and unresolved questions. It does not resolve uncertainty merely to make a stronger story.
 
-## Trust and information standards
+Verified History is the broad owner for historical claims. Supporting Discover and Bulletin pages may explain narrower questions, but they should not be treated as competing broad histories when an owner page exists.
 
-The platform distinguishes documented facts from oral accounts, community submissions, interpretation, business-provided information, and claims still being checked. Verified History is reserved for material supported by records, credible references, archival material, or properly attributed evidence. The documented founding year published for Masinloc is 1607; 1572 refers to Spanish exploration in the wider Zambales history, not to the founding of the town.
+The Sources & References directory records the source trail behind published historical and factual claims. For claims that can change, such as population, elected officials, access information, jobs, business details, schedules, or other current conditions, use the date and source shown on the relevant page rather than assuming an older value is still current.
 
-Masinloc Connect applies privacy-by-design safeguards to personal submissions, including controlled access, private handling of submitted files, validation controls, limited retention, and role-based administrative access. Privacy practices are designed around Republic Act No. 10173, the Data Privacy Act of 2012, its Implementing Rules and Regulations, and applicable National Privacy Commission rules and guidance.
+The documented founding year published for Masinloc is 1607. The site distinguishes that documented town-founding record from 1572, which belongs to Spanish exploration in the wider Zambales history.
 
-No online service can guarantee absolute security. The platform does not claim that any system is risk-free and instead commits to reasonable safeguards, responsible handling, transparency, and continuous improvement.
+## Search and crawler discovery
 
-## Important boundaries
+sitemap.xml is the canonical machine-readable inventory of indexable page URLs. robots.txt states crawler permissions. This llms.txt file is a supplemental discovery map for systems that choose to read it; it does not override canonicals, robots directives, or the sitemap and makes no ranking claim.
 
-Masinloc Connect does not issue, prepare, process, submit, or facilitate government permits, clearances, certificates, applications, or other official LGU documents.
-
-Participation in Masinloc Connect does not guarantee employment. Employers remain responsible for their own verification, interviews, hiring decisions, contracts, and employment processes.
-
-Discover Masinloc does not guarantee search rankings, sales, income, business performance, product availability, or transaction outcomes for listed businesses or sellers.
-
-## Privacy boundary
-
-Public cultural, historical, informational, and approved business content may be indexed by search engines. Private applicant data, resumes, confidential contact information, administrative systems, and employer-only information are not intended for public indexing or public access.
+Public cultural, historical, informational, approved business, and editorial content may be indexed. Private applicant data, resumes, confidential contact information, administrative systems, responder-only information, and other access-controlled data are not intended for public indexing.
 
 ## Contact
 
 Official contact: hello@masinloc-zambales.com
 Official domain: www.masinloc-zambales.com
 
-Last reviewed: 2026-08-25
+Last reviewed: 2026-09-04

@@ -44,6 +44,8 @@ jobs:
         run: python3 scripts/check-leadership.py
       - name: Validate search and crawler visibility
         run: python3 scripts/check-seo.py
+      - name: Protect AI and crawler discovery controls
+        run: python3 scripts/check-ai-discovery.py
       - name: Validate design consistency
         run: python3 scripts/check-design-consistency.py
       - name: Verify every page's markup and its stylesheets agree
