@@ -2,11 +2,17 @@
 //
 // No Supabase client here on purpose. The public POS RPCs are granted to
 // service_role only (migration 20260828134204, "route_public_pos_catalog_
-// through_edge"), so this page talks to the pos-public Edge Function and
-// nothing else. That keeps every anonymous read behind one audited surface
-// with rate limiting, rather than handing the browser a database connection.
+// through_edge"), so this page talks to the Edge Functions and nothing else.
+// That keeps every anonymous read behind one audited surface with rate
+// limiting, rather than handing the browser a database connection.
+//
+// pos-storefront serves the store and menu; pos-order places the order. Both
+// hold the service key, sign QR payment images out of private storage, and
+// apply device- and network-level rate limits.
 
-const API = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/pos-public';
+const FUNCTIONS = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1';
+const STOREFRONT = `${FUNCTIONS}/pos-storefront`;
+const ORDER = `${FUNCTIONS}/pos-order`;
 
 const el = (id) => document.getElementById(id);
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (m) => (
@@ -20,7 +26,10 @@ const params = new URLSearchParams(location.search);
 const SLUG = (params.get('s') || '').trim().toLowerCase();
 const TABLE = (params.get('t') || '').trim().slice(0, 60);
 
-const FULFILLMENT_LABEL = { dine_in: 'Dine in', pickup: 'Pickup', delivery: 'Delivery' };
+// A table QR carries a table label and orders as "qr"; a Marketplace link has
+// none and orders as "marketplace", which the storefront serves with dine-in
+// switched off.
+const SOURCE = TABLE ? 'qr' : 'marketplace';
 
 const state = {
   store: null,
@@ -37,10 +46,10 @@ const state = {
 
 const OFFLINE = 'We could not reach the store. Check your connection and try again.';
 
-async function api(path, options = {}) {
+async function api(url, options = {}) {
   let response;
   try {
-    response = await fetch(`${API}${path}`, {
+    response = await fetch(url, {
       ...options,
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
     });
@@ -53,6 +62,22 @@ async function api(path, options = {}) {
   try { body = await response.json(); } catch { /* handled below */ }
   if (!response.ok || !body?.ok) throw new Error(body?.error || OFFLINE);
   return body;
+}
+
+// One id per browser, kept so pos-order can rate-limit a single device without
+// needing an account. It identifies the device to the store's own abuse
+// controls and nothing else.
+function clientId() {
+  const KEY = 'masinloc-pos-client-id';
+  try {
+    let id = localStorage.getItem(KEY);
+    if (!id) { id = crypto.randomUUID(); localStorage.setItem(KEY, id); }
+    return id;
+  } catch {
+    // Private mode, or storage blocked. A per-session id still works.
+    if (!clientId._fallback) clientId._fallback = crypto.randomUUID();
+    return clientId._fallback;
+  }
 }
 
 /* ------------------------------------------------------------------ cart */
@@ -216,6 +241,8 @@ function viewDetails() {
       </div>` : `<p class="note is-bad">This store has no payment method enabled yet.</p>`}
 
       ${selectedMethod?.instructions ? `<p class="note">${esc(selectedMethod.instructions)}</p>` : ''}
+      ${selectedMethod?.qr_url ? `<img class="payqr" src="${esc(selectedMethod.qr_url)}"
+        alt="${esc(selectedMethod.label)} payment QR code" loading="lazy">` : ''}
 
       ${selectedMethod?.requires_manual_verification ? `
         <label class="field"><span>Reference number</span>
@@ -298,26 +325,26 @@ el('body').addEventListener('submit', async (e) => {
   const value = (k) => String(data.get(k) || '').trim() || null;
 
   try {
-    const body = await api('', {
+    const body = await api(ORDER, {
       method: 'POST',
       body: JSON.stringify({
-        action: 'order',
         slug: SLUG,
         // "qr" when a table QR carried a table label, "marketplace" otherwise.
-        source: TABLE ? 'qr' : 'marketplace',
+        source: SOURCE,
         fulfillment: state.fulfillment,
-        customer_name: value('customer_name'),
-        customer_phone: value('customer_phone'),
-        table_label: value('table_label'),
-        delivery_address: value('delivery_address'),
-        delivery_landmark: value('delivery_landmark'),
-        payment_method: state.method,
-        payment_reference: value('payment_reference'),
-        loyalty_opt_in: data.get('loyalty_opt_in') === 'on',
+        customerName: value('customer_name'),
+        customerPhone: value('customer_phone'),
+        tableLabel: value('table_label'),
+        deliveryAddress: value('delivery_address'),
+        deliveryLandmark: value('delivery_landmark'),
+        paymentMethod: state.method,
+        paymentReference: value('payment_reference'),
+        loyaltyOptIn: data.get('loyalty_opt_in') === 'on',
         items: cartLines().map((l) => ({ product_id: l.product.id, quantity: l.quantity })),
+        clientId: clientId(),
         // Generated once per attempt, so a double tap or a retry on a flaky
         // connection returns the same order instead of creating a second one.
-        idempotency_key: idempotencyKey(),
+        idempotencyKey: idempotencyKey(),
       }),
     });
     state.placed = body.order;
@@ -351,7 +378,7 @@ async function boot() {
     return;
   }
   try {
-    const body = await api(`?action=storefront&slug=${encodeURIComponent(SLUG)}`);
+    const body = await api(`${STOREFRONT}?slug=${encodeURIComponent(SLUG)}&source=${SOURCE}`);
     state.store = body.store;
     state.menu = body.menu || [];
     el('storeName').textContent = state.store.name;

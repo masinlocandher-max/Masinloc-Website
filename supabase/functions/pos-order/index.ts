@@ -11,21 +11,43 @@ type Severity = "low" | "medium" | "high" | "critical";
 
 type AuthUser = { id: string; email?: string | null };
 
+// Exact origins only.
+//
+// Both of these functions reflect the caller's origin back in
+// Access-Control-Allow-Origin, and both used to decide whether to do that with
+// a prefix test on the hostname: any https host ending ".vercel.app" whose name
+// began "masinloc-website-" (and, in pos-order, "pos-masinloc-"). Vercel project
+// names are not reserved. Anyone can create a project called
+// "masinloc-website-anything", receive a preview origin that satisfies both
+// halves of the test, and read these responses cross-origin from a page they
+// control. For pos-order that reaches order placement and order tracking.
+//
+// This is the same defect already fixed once in marketplace-directory, and the
+// pattern scripts/check-security.py exists to reject.
+//
+// A specific preview deployment can be allowed by listing its full origin in
+// POS_ALLOWED_ORIGINS (comma-separated). Values are compared exactly; no
+// prefix, suffix or wildcard matching is performed on them either, and only
+// https origins are accepted.
+//
+// The plain-http localhost exemption is gone as well: a production endpoint
+// that trusts http://localhost hands live order data to any page running on a
+// developer's machine, and nothing here needs it.
+const ALLOWED_ORIGINS: ReadonlySet<string> = new Set([
+  "https://masinloc-zambales.com",
+  "https://www.masinloc-zambales.com",
+  "https://masinloc-website.vercel.app",
+  "https://pos-masinloc.vercel.app",
+  "https://masinlocandher-max.github.io",
+  ...(Deno.env.get("POS_ALLOWED_ORIGINS") || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter((value) => value.startsWith("https://")),
+]);
+
 function originAllowed(origin: string) {
   if (!origin) return false;
-  if (origin === "https://masinloc-zambales.com" || origin === "https://www.masinloc-zambales.com") return true;
-  try {
-    const u = new URL(origin);
-    if ((u.hostname === "localhost" || u.hostname === "127.0.0.1") && u.protocol === "http:") return true;
-    if (u.protocol !== "https:") return false;
-    if (u.hostname === "masinlocandher-max.github.io") return true;
-    if (!u.hostname.endsWith(".vercel.app")) return false;
-    return u.hostname === "pos-masinloc.vercel.app" ||
-      u.hostname.startsWith("pos-masinloc-") ||
-      u.hostname.startsWith("masinloc-website-");
-  } catch {
-    return false;
-  }
+  return ALLOWED_ORIGINS.has(origin);
 }
 
 function corsHeaders(req: Request) {

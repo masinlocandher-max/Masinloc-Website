@@ -5,7 +5,7 @@
 // exactly one order — so it is treated like a bearer token: never logged,
 // never put in a query the page shows, and the page is noindex.
 
-const API = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/pos-public';
+const ORDER = 'https://uwcqvsitjtknxsaypjxj.supabase.co/functions/v1/pos-order';
 
 const el = (id) => document.getElementById(id);
 const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (m) => (
@@ -44,14 +44,14 @@ const RANK = {
   paid: 1, preparing: 2, ready: 3, out_for_delivery: 3, completed: 4,
 };
 
-const state = { order: null, error: '', sending: false };
+const state = { order: null, error: '' };
 
 const OFFLINE = 'We could not reach the store. Check your connection and try again.';
 
-async function api(path, options = {}) {
+async function api(url, options = {}) {
   let response;
   try {
-    response = await fetch(`${API}${path}`, {
+    response = await fetch(url, {
       ...options,
       headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
     });
@@ -101,28 +101,23 @@ function render() {
             <li class="${m.sender_type === 'customer' ? 'me' : 'them'}">
               ${esc(m.message)}<time>${esc(time(m.created_at))}</time>
             </li>`).join('')
-        : '<li class="them">No messages yet. Ask the store anything about this order.</li>'}
+        : '<li class="them">No messages yet.</li>'}
     </ul>
 
     <p class="note" id="chatNote" role="status" aria-live="polite">${esc(state.error)}</p>
 
     ${['completed', 'cancelled'].includes(o.status)
       ? '<p class="note">This order is closed, so the chat is read-only.</p>'
-      : `<form class="chatform" id="chatForm" novalidate>
-          <label class="field" style="flex:1;margin:0">
-            <span class="visually-hidden-label">Your message</span>
-            <input class="input" type="text" name="message" maxlength="1000" required
-                   placeholder="Type a message" autocomplete="off">
-          </label>
-          <button class="btn btn-primary" type="submit" ${state.sending ? 'disabled' : ''}>Send</button>
-        </form>`}
+      : `<p class="note">Messages from the store appear here as they send them.
+          Replying needs a buyer account, which is not open yet — until then,
+          call the store if you need to change something.</p>`}
 
     <p class="foot">This page updates on its own. Keep the link — it is the only way back to this order.</p>`;
 }
 
 async function load() {
   try {
-    const body = await api(`?action=track&token=${encodeURIComponent(TOKEN)}`);
+    const body = await api(`${ORDER}?resource=track&token=${encodeURIComponent(TOKEN)}`);
     state.order = body.order;
     state.error = '';
   } catch (err) {
@@ -132,26 +127,6 @@ async function load() {
   }
   render();
 }
-
-el('body').addEventListener('submit', async (e) => {
-  if (e.target.id !== 'chatForm') return;
-  e.preventDefault();
-  const input = e.target.elements.message;
-  const message = input.value.trim();
-  if (!message) return;
-
-  state.sending = true; render();
-  try {
-    await api('', { method: 'POST', body: JSON.stringify({ action: 'message', token: TOKEN, message }) });
-    state.error = '';
-    await load();
-  } catch (err) {
-    state.error = err.message;
-    render();
-  } finally {
-    state.sending = false;
-  }
-});
 
 if (!TOKEN) {
   state.error = 'This link is missing its order code. Use the link the store gave you when you ordered.';
