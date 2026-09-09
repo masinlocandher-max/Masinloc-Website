@@ -21,6 +21,7 @@ verified against it:
 | `professional_submissions`, both challenge tables, `masinloc_profile_code_sequences`, `next_masinloc_profile_code()`, `sync_professional_employer_visibility()` | `20260816000001` |
 | `story_submissions`, `resume_support_submissions` | `20260816000002` |
 | `sync_professional_employer_visibility()` search_path realignment | `20260902090000` |
+| Buyer accounts: `pos_orders.buyer_user_id`, `pos_chat_messages.sender_user_id`, the tightened `pos_chat_staff_insert` policy, and `pos_buyer_tracking_internal` / `pos_buyer_message_internal` / `pos_attach_buyer_to_order_internal` | `20260903000000` |
 
 `scripts/pos-local-replay/04-recovered-schema-fidelity.sql` hashes the full
 catalog state of those objects and compares it to the hash taken from
@@ -45,12 +46,6 @@ of which had been live for weeks with no source in version control.
 Roughly thirty functions exist in production with no migration here. Grouped
 by what they belong to:
 
-- **Buyer accounts** — `pos_buyer_tracking_internal`,
-  `pos_buyer_message_internal`, `pos_attach_buyer_to_order_internal`. These
-  replace the repo's `pos_guest_tracking_internal` /
-  `pos_guest_message_internal` on the live public path. **This is the most
-  important gap**: the local lifecycle test exercises the repo's guest RPCs,
-  which is no longer what production serves.
 - **Marketplace ordering** — `pos_marketplace_storefront`,
   `pos_public_marketplace_menu`, `pos_set_product_marketplace`,
   `pos_enforce_marketplace_publish_limit`.
@@ -75,18 +70,17 @@ and the rest) are missing with them.
 
 ## Consequences to keep in mind
 
-1. **The local lifecycle test proves the repo's contract, not production's.**
-   It is a real end-to-end test against a real Postgres, and it passes — but
-   the public ordering path it exercises is the guest one, and production now
-   serves the buyer one.
-2. **The merchant console is built against the repo's contract.** It works,
+1. **The merchant console is built against the repo's contract.** It works,
    but it does not use the richer production RPCs. Reports are aggregated
    client-side instead of through `pos_report_summary`; plan limits come from
    `pos_plan_limits` instead of `pos_plan_access`; there is no marketplace
    product-visibility control because `pos_set_product_marketplace` has no
    migration here.
-3. **Recovering the buyer RPCs is the highest-value next step.** It unblocks
-   both the lifecycle test and the console.
+2. **The remaining gap is feature surface, not the ordering path.** The public
+   path — storefront, order, payment, kitchen, tracking, buyer chat — is now
+   fully in version control and covered by the lifecycle test. What is still
+   live-only is billing, staff management, onboarding applications, purchase
+   orders, refunds and marketplace product publishing.
 
 ## How to recover an object
 

@@ -298,3 +298,134 @@ begin
   if v_orders < 1 then raise exception 'step 10: orders_today is %', v_orders; end if;
   raise notice 'PASS 10b sales report shows sales_today=% orders_today=%', v_sales, v_orders;
 end $$;
+
+-- ---------------------------------------------------------------------------
+-- 11. The buyer-account path (recovered in 20260903000000).
+--
+-- This is what the live pos-order function actually calls. It runs as
+-- service_role, the way the Edge Function does. Three properties matter, and
+-- all three are security properties rather than features:
+--
+--   a. Someone holding only the tracking link sees the order's progress but
+--      not the conversation. A leaked link must not leak the chat.
+--   b. The buyer who claimed the order sees both.
+--   c. A second account asking for the same order is refused, not silently
+--      handed it.
+-- ---------------------------------------------------------------------------
+select id as buyer_a from auth.users where email = 'a@test.invalid' \gset
+select id as buyer_b from auth.users where email = 'b@test.invalid' \gset
+select tracking_token as trk from public.pos_orders where id = current_setting('qa.ordid')::uuid \gset
+select set_config('qa.trk', :'trk', false) as _g \gset
+select set_config('qa.buyer_a', :'buyer_a', false) as _g \gset
+
+-- A fresh order to exercise chat on: the lifecycle order is completed, and a
+-- completed order's chat is closed.
+begin;
+set local role service_role;
+select set_config('request.jwt.claims', '', true) as _claims \gset
+select public.pos_create_guest_order_internal(
+  p_slug           => :'mslug',
+  p_source         => 'qr',
+  p_fulfillment    => 'pickup',
+  p_customer_name  => 'Buyer Path',
+  p_items          => jsonb_build_array(jsonb_build_object('product_id', :'prod', 'quantity', 1)),
+  p_payment_method => 'cash'
+) as ord2 \gset
+commit;
+
+select ((:'ord2')::jsonb ->> 'tracking_token') as trk2 \gset
+select set_config('qa.trk2', :'trk2', false) as _g \gset
+
+begin;
+set local role service_role;
+select set_config('request.jwt.claims', '', true) as _claims \gset
+select public.pos_attach_buyer_to_order_internal(:'trk2', :'buyer_a') as _r \gset
+select public.pos_buyer_message_internal(:'trk2', :'buyer_a', 'Is it ready?') as _r \gset
+select public.pos_buyer_tracking_internal(:'trk2', null) as anon_view \gset
+select public.pos_buyer_tracking_internal(:'trk2', :'buyer_a') as buyer_view \gset
+commit;
+
+select set_config('qa.anon_view', :'anon_view', false) as _g \gset
+select set_config('qa.buyer_view', :'buyer_view', false) as _g \gset
+
+do $$
+declare a jsonb; b jsonb;
+begin
+  a := current_setting('qa.anon_view')::jsonb;
+  b := current_setting('qa.buyer_view')::jsonb;
+
+  -- (a) link only: progress yes, conversation no.
+  if (a ->> 'status') is null then raise exception 'step 11: link holder cannot see the order at all'; end if;
+  if jsonb_array_length(a -> 'messages') <> 0 then
+    raise exception 'step 11: a bare tracking link leaked % chat message(s)', jsonb_array_length(a -> 'messages');
+  end if;
+  if (a ->> 'chat_account_required') <> 'true' then
+    raise exception 'step 11: link holder was not told an account is required';
+  end if;
+  if (a ->> 'chat_available') <> 'false' then
+    raise exception 'step 11: chat offered to someone with no account';
+  end if;
+
+  -- (b) the buyer who claimed it sees the conversation.
+  if jsonb_array_length(b -> 'messages') <> 1 then
+    raise exception 'step 11: buyer sees % message(s), expected 1', jsonb_array_length(b -> 'messages');
+  end if;
+  if (b ->> 'chat_available') <> 'true' then raise exception 'step 11: buyer cannot chat on their own order'; end if;
+  if (b ->> 'chat_account_mismatch') <> 'false' then raise exception 'step 11: buyer reported as a mismatch'; end if;
+
+  raise notice 'PASS 11  a tracking link alone shows progress but no conversation';
+end $$;
+
+-- (c) a different account must not be able to take the order over.
+do $$
+declare v_taken boolean := false; v_msg text;
+begin
+  begin
+    perform public.pos_attach_buyer_to_order_internal(
+      current_setting('qa.trk2')::uuid,
+      (select id from auth.users where email = 'b@test.invalid')
+    );
+    v_taken := true;
+  exception when others then
+    v_msg := sqlerrm;
+  end;
+
+  if v_taken then
+    raise exception 'step 12: a second account took over an order that already had a buyer';
+  end if;
+  if v_msg not like '%another buyer account%' then
+    raise exception 'step 12: refused, but with the wrong reason: %', v_msg;
+  end if;
+
+  -- And the refusal must not have changed anything.
+  if (select buyer_user_id from public.pos_orders where tracking_token = current_setting('qa.trk2')::uuid)
+     <> current_setting('qa.buyer_a')::uuid then
+    raise exception 'step 12: the order changed hands anyway';
+  end if;
+
+  raise notice 'PASS 12  a second buyer account is refused, and the order does not change hands';
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- 13. Chat closes with the order.
+-- ---------------------------------------------------------------------------
+do $$
+declare v_sent boolean := false; v_msg text;
+begin
+  begin
+    perform public.pos_buyer_message_internal(
+      current_setting('qa.trk')::uuid,
+      current_setting('qa.buyer_a')::uuid,
+      'Anything else?'
+    );
+    v_sent := true;
+  exception when others then
+    v_msg := sqlerrm;
+  end;
+
+  if v_sent then raise exception 'step 13: a completed order still accepted a customer message'; end if;
+  if v_msg not like '%Chat closed%' and v_msg not like '%another buyer account%' then
+    raise exception 'step 13: refused, but with the wrong reason: %', v_msg;
+  end if;
+  raise notice 'PASS 13  a completed order refuses new customer messages';
+end $$;
