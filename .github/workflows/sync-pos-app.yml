@@ -19,13 +19,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out Masinloc website
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: launch/pos-real-app
           fetch-depth: 0
 
       - name: Check out verified POS source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: masinlocandher-max/POS-Masinloc
           ref: d4a70b93b8c2b11fae60223c0f6a40b7aae4e606
