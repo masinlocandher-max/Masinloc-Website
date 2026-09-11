@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Delete Account | Masinloc Connect</title>
+  <meta name="description" content="Sign in securely to delete your Masinloc Connect account and optional personal app data.">
+  <link rel="canonical" href="https://www.masinloc-zambales.com/account-deletion/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/app-support.css">
+</head>
+<body>
+<div class="support-shell">
+  <header class="support-header"><div class="support-header-inner">
+    <a class="support-brand" href="/"><img src="/assets/masinloc-logo.webp" alt="Masinloc"><span>Masinloc Connect</span></a>
+    <a class="support-home" href="/privacy/">Privacy</a>
+  </div></header>
+
+  <main class="support-main">
+    <section class="support-hero">
+      <p class="support-kicker">Account control</p>
+      <h1>Delete your account.</h1>
+      <p class="support-lead">Use the email connected to Masinloc Connect. We will send a secure sign-in link before any deletion can happen. Browsing and incident reporting never require an account.</p>
+    </section>
+
+    <section class="support-card" id="signInCard">
+      <h2>Verify your account</h2>
+      <form class="support-form" id="signInForm">
+        <label>Email address
+          <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+        </label>
+        <button class="support-button" id="signInButton" type="submit">Send secure sign-in link</button>
+        <p class="support-status" id="signInStatus" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="support-card" id="deleteCard" hidden>
+      <h2>Delete Masinloc Connect account</h2>
+      <p id="accountIdentity"></p>
+      <div class="support-note warning">This removes the active account and optional profile, saved items, saved jobs and career/resume data. Emergency reports and required transaction or audit records may be retained where needed for safety or recordkeeping without an active personal account.</div>
+      <p>This action cannot be undone. If you return later, you may create a new Masinloc Connect account with an email address.</p>
+      <div class="support-actions">
+        <button class="support-button danger" id="deleteButton" type="button">Delete account permanently</button>
+        <button class="support-button secondary" id="signOutButton" type="button">Sign out instead</button>
+      </div>
+      <p class="support-status" id="deleteStatus" aria-live="polite"></p>
+    </section>
+
+    <section class="support-card">
+      <h2>You can also delete inside the app</h2>
+      <p>Open Masinloc Connect, go to your Profile, and choose <strong>Delete account</strong>. Both paths use the same authenticated deletion service.</p>
+      <p><a href="/privacy/">Read the Masinloc Connect privacy information</a></p>
+    </section>
+  </main>
+
+  <footer class="support-footer"><div class="support-footer-inner">Masinloc Connect · Connecting Masinloqueños to the world.</div></footer>
+</div>
+
+<script type="module">
+  import { createClient } from '/assets/vendor/supabase.js';
+
+  const SUPABASE_URL = 'https://uwcqvsitjtknxsaypjxj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_qsC-udp3YoJQFuE-lHPivg_wa8gYMeg';
+  const REDIRECT_URL = `${location.origin}/account-deletion/`;
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
+  });
+
+  const signInCard = document.querySelector('#signInCard');
+  const deleteCard = document.querySelector('#deleteCard');
+  const signInForm = document.querySelector('#signInForm');
+  const email = document.querySelector('#email');
+  const signInButton = document.querySelector('#signInButton');
+  const signInStatus = document.querySelector('#signInStatus');
+  const accountIdentity = document.querySelector('#accountIdentity');
+  const deleteButton = document.querySelector('#deleteButton');
+  const signOutButton = document.querySelector('#signOutButton');
+  const deleteStatus = document.querySelector('#deleteStatus');
+
+  function setSession(session) {
+    const user = session?.user;
+    signInCard.hidden = Boolean(user);
+    deleteCard.hidden = !user;
+    accountIdentity.textContent = user?.email ? `Signed in as ${user.email}` : '';
+  }
+
+  const { data: initial } = await supabase.auth.getSession();
+  setSession(initial.session);
+  supabase.auth.onAuthStateChange((_event, session) => setSession(session));
+
+  signInForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    signInButton.disabled = true;
+    signInStatus.className = 'support-status';
+    signInStatus.textContent = 'Sending secure sign-in link…';
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.value.trim().toLowerCase(),
+      options: { emailRedirectTo: REDIRECT_URL },
+    });
+    if (error) {
+      signInStatus.className = 'support-status error';
+      signInStatus.textContent = error.message || 'Could not send the sign-in link.';
+    } else {
+      signInStatus.className = 'support-status success';
+      signInStatus.textContent = 'Check your email, then open the secure sign-in link to return here.';
+    }
+    signInButton.disabled = false;
+  });
+
+  deleteButton.addEventListener('click', async () => {
+    const confirmed = window.confirm('Permanently delete this Masinloc Connect account? This cannot be undone.');
+    if (!confirmed) return;
+    deleteButton.disabled = true;
+    deleteStatus.className = 'support-status';
+    deleteStatus.textContent = 'Deleting account…';
+
+    const { data, error } = await supabase.functions.invoke('delete-mobile-account', { body: { confirm: true } });
+    if (error || !data?.ok) {
+      deleteStatus.className = 'support-status error';
+      deleteStatus.textContent = data?.error || error?.message || 'Could not delete the account right now.';
+      deleteButton.disabled = false;
+      return;
+    }
+
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+    deleteStatus.className = 'support-status success';
+    deleteStatus.textContent = 'Your Masinloc Connect account has been deleted.';
+    deleteButton.hidden = true;
+    signOutButton.hidden = true;
+  });
+
+  signOutButton.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    location.reload();
+  });
+</script>
+</body>
+</html>
