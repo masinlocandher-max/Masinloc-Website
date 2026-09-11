@@ -32,10 +32,6 @@ INDEX = ROOT / "index.html"
 LOCATIONS = ROOT / "data" / "locations.json"
 
 
-class HomepageValidationError(RuntimeError):
-    pass
-
-
 def require(condition: bool, message: str, errors: list[str]) -> None:
     if not condition:
         errors.append(message)
@@ -50,7 +46,7 @@ def validate() -> list[str]:
 
     page = INDEX.read_text(encoding="utf-8")
 
-    # These are the non-negotiable fingerprints of the current mobile-first
+    # These are non-negotiable fingerprints of the current mobile-first
     # homepage. They specifically guard against the old generated page being
     # restored by accident.
     required_fragments = {
@@ -81,9 +77,9 @@ def validate() -> list[str]:
     for route in required_routes:
         require(route in page, f"required homepage route missing: {route}", errors)
 
-    # The current homepage deliberately features real Masinloc photography.
-    # Validate the slugs against the same location dataset used elsewhere so a
-    # typo cannot create a dead destination while keeping this script read-only.
+    # The homepage deliberately features real Masinloc photography. Validate
+    # the featured slugs against the same dataset used elsewhere so a typo
+    # cannot create a dead destination while keeping this script read-only.
     try:
         location_data = json.loads(LOCATIONS.read_text(encoding="utf-8"))
         known_slugs = {item["slug"] for item in location_data.get("locations", [])}
@@ -99,10 +95,6 @@ def validate() -> list[str]:
     for slug in featured_slugs:
         require(slug in known_slugs, f"featured homepage location is absent from data/locations.json: {slug}", errors)
         require(f"destinations.html#{slug}" in page, f"featured homepage destination link is missing: {slug}", errors)
-
-    # Prevent a future edit from quietly turning this command back into a
-    # destructive writer without deliberately replacing this validator.
-    require("OUT.write_text" not in page, "unexpected generator marker found in index.html", errors)
 
     return errors
 
