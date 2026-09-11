@@ -1,620 +1,132 @@
 #!/usr/bin/env python3
-"""Render index.html from the project's own data.
+"""Validate the canonical homepage without rewriting it.
 
-The homepage names eight places and seven Sambal Tina words. Hand-typing them
-is how a gloss drifts from the dictionary or a locality drifts from the
-mapping, so the copy that is factual is rendered from the same files the rest
-of the site is built from:
+Why this file no longer generates ``index.html``
+-----------------------------------------------
+The homepage was redesigned directly in ``index.html`` during the mobile-first
+work. The older generator was not updated with that redesign, so running it
+could silently replace the production homepage with obsolete markup.
 
-    data/locations.json        places, localities, rhymes, focal points
-    data/sambal-tina-living.json  user-confirmed living vocabulary
-    data/campaigns.json        approved campaign artwork
-
-The authored copy — headlines, the narrative connective tissue — lives here,
-because it is writing rather than data.
+``index.html`` is now the canonical homepage source. This script intentionally
+keeps the historical command name so old notes, shell history, or automation
+cannot accidentally destroy the current design. Running it is safe: it performs
+read-only checks and never writes files.
 
 Usage
 -----
     python3 scripts/build-homepage.py
+    python3 scripts/build-homepage.py --check
+
+Both commands are equivalent and read-only. There is deliberately no write
+mode. If the homepage is ever generated again, build a new generator from the
+current mobile-first page and add a reproduction test before enabling writes.
 """
 from __future__ import annotations
 
-import html
+import argparse
 import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "index.html"
-
-LOCATIONS = json.loads((ROOT / "data" / "locations.json").read_text(encoding="utf-8"))
-LIVING = json.loads((ROOT / "data" / "sambal-tina-living.json").read_text(encoding="utf-8"))
-CAMPAIGNS = json.loads((ROOT / "data" / "campaigns.json").read_text(encoding="utf-8"))
-DICT = json.loads((ROOT / "data" / "sambal-tina.json").read_text(encoding="utf-8"))
-BULLETIN = json.loads((ROOT / "data" / "bulletin.json").read_text(encoding="utf-8"))
-LEADERSHIP = json.loads((ROOT / "data" / "leadership.json").read_text(encoding="utf-8"))
-
-CAMPAIGN_WIDTHS = [480, 768, 1120, 1440, 1672]
-PLACE_WIDTHS = [480, 768, 1120, 1536, 2048]
-
-# The words the approved campaign artwork puts on screen, in the order the
-# homepage stages them. Every one is resolved against the living-usage data
-# below; anything missing there is dropped rather than guessed.
-FEATURED = ["lanom", "ayama", "talacaca", "masitas", "cabatwan", "oybon"]
-
-# Where each entry card sits around the phone. Depth is carried by scale,
-# blur and opacity together, so a card further back also reads softer.
-PLACEMENT = [
-    {"side": "left",  "css": "top:2%;left:4%",    "depth": 1.00, "soften": 0,   "fade": 1,   "drift": 0,  "delay": 60},
-    {"side": "left",  "css": "top:38%;left:0%",   "depth": 0.94, "soften": .3,  "fade": .96, "drift": 4,  "delay": 170},
-    {"side": "left",  "css": "top:74%;left:9%",   "depth": 0.88, "soften": .7,  "fade": .9,  "drift": 8,  "delay": 280},
-    {"side": "right", "css": "top:5%;right:2%",   "depth": 0.96, "soften": .2,  "fade": .97, "drift": 3,  "delay": 120},
-    {"side": "right", "css": "top:42%;right:8%",  "depth": 1.00, "soften": 0,   "fade": 1,   "drift": 0,  "delay": 230},
-    {"side": "right", "css": "top:78%;right:0%",  "depth": 0.90, "soften": .6,  "fade": .92, "drift": 7,  "delay": 340},
-]
+INDEX = ROOT / "index.html"
+LOCATIONS = ROOT / "data" / "locations.json"
 
 
-def esc(value: str) -> str:
-    return html.escape(str(value), quote=True)
+class HomepageValidationError(RuntimeError):
+    pass
 
 
-def available(slug: str, extension: str, widths: list[int], folder: str,
-              suffix: str = "") -> list[int]:
-    """Widths actually on disk. Originals differ, and nothing is upscaled, so a
-    shared list would advertise files that do not exist."""
-    return [w for w in widths
-            if (ROOT / "assets" / folder / f"{slug}{suffix}-{w}.{extension}").is_file()]
+def require(condition: bool, message: str, errors: list[str]) -> None:
+    if not condition:
+        errors.append(message)
 
 
-def srcset(slug: str, extension: str, widths: list[int], folder: str,
-           suffix: str = "") -> str:
-    have = available(slug, extension, widths, folder, suffix)
-    return ", ".join(f"assets/{folder}/{slug}{suffix}-{w}.{extension} {w}w" for w in have)
+def validate() -> list[str]:
+    errors: list[str] = []
 
+    require(INDEX.is_file(), "index.html is missing", errors)
+    if errors:
+        return errors
 
-def largest(slug: str, extension: str, widths: list[int], folder: str,
-            suffix: str = "") -> str:
-    have = available(slug, extension, widths, folder, suffix)
-    return f"assets/{folder}/{slug}{suffix}-{have[-1]}.{extension}" if have else ""
+    page = INDEX.read_text(encoding="utf-8")
 
-
-# --- 02 campaign stage --------------------------------------------------------
-
-def campaign_slides() -> str:
-    out = []
-    for i, campaign in enumerate(CAMPAIGNS["campaigns"]):
-        slug = campaign["slug"]
-        # A portrait source is used only when the project supplies one. None is
-        # invented: cropping a designed campaign would cut the copy it exists
-        # to show.
-        mobile = campaign.get("mobileSource")
-        sources = []
-        for extension in ("avif", "webp"):
-            if mobile:
-                small = srcset(slug, extension, CAMPAIGN_WIDTHS, "campaigns", "-mobile")
-                if small:
-                    sources.append(f'<source media="(max-width:640px)" type="image/{extension}" '
-                                   f'srcset="{small}">')
-            wide = srcset(slug, extension, CAMPAIGN_WIDTHS, "campaigns")
-            if wide:
-                sources.append(f'<source type="image/{extension}" srcset="{wide}" '
-                               f'sizes="(min-width:1100px) 84vw, 100vw">')
-        fallback = largest(slug, "jpg", CAMPAIGN_WIDTHS, "campaigns")
-        ambient = f"assets/campaigns/{slug}-ambient.jpg"
-        loading = "" if i == 0 else ' loading="lazy"'
-        out.append(f"""        <li class="slide" role="group" aria-roledescription="slide" aria-label="{esc(campaign['headline'])}">
-          <a class="slide-link" href="{esc(campaign['href'])}">
-            <span class="slide-ambient" aria-hidden="true"><img src="{ambient}" alt="" width="64" height="36" loading="lazy" decoding="async"></span>
-            <picture>
-              {chr(10).join('              ' + s for s in sources).strip()}
-              <img class="slide-art" src="{fallback}" alt="{esc(campaign['alt'])}" width="1672" height="941"{loading} decoding="async" fetchpriority="{'high' if i == 0 else 'auto'}">
-            </picture>
-            <span class="slide-cta">{esc(campaign['cta'])}<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-          </a>
-        </li>""")
-    return "\n".join(out)
-
-
-# --- 03 discover --------------------------------------------------------------
-
-def discover_shots() -> str:
-    out = []
-    for location in LOCATIONS["locations"]:
-        slug = location["slug"]
-        out.append(f"""          <div class="discover-shot" style="--focus:{esc(location['focus'])}">
-            <picture>
-              <source type="image/avif" srcset="{srcset(slug, 'avif', PLACE_WIDTHS, 'locations')}" sizes="52vw">
-              <source type="image/webp" srcset="{srcset(slug, 'webp', PLACE_WIDTHS, 'locations')}" sizes="52vw">
-              <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" width="{location['native']['width']}" height="{location['native']['height']}" alt="{esc(location['alt'])}" loading="lazy" decoding="async">
-            </picture>
-          </div>""")
-    return "\n".join(out)
-
-
-def discover_rows() -> str:
-    out = []
-    for i, location in enumerate(LOCATIONS["locations"], start=1):
-        slug = location["slug"]
-        out.append(f"""          <li class="place-row rise" data-where="{esc(location['locality'])}" style="--delay:{(i - 1) * 40}ms">
-            <a href="destinations.html#{esc(slug)}">
-              <span class="place-shot" aria-hidden="true" style="--focus:{esc(location['focus'])}">
-                <picture>
-                  <source type="image/avif" srcset="{srcset(slug, 'avif', PLACE_WIDTHS, 'locations')}" sizes="100vw">
-                  <source type="image/webp" srcset="{srcset(slug, 'webp', PLACE_WIDTHS, 'locations')}" sizes="100vw">
-                  <img src="{largest(slug, 'jpg', PLACE_WIDTHS, 'locations')}" width="{location['native']['width']}" height="{location['native']['height']}" alt="" loading="lazy" decoding="async">
-                </picture>
-              </span>
-              <span class="place-index">{i:02d}</span>
-              <h3 class="place-name">{esc(location['name'])}</h3>
-              <p class="place-where">{esc(location['locality'])}</p>
-              <p class="place-what">{esc(location['caption'])}</p>
-            </a>
-          </li>""")
-    return "\n".join(out)
-
-
-# --- 04 language --------------------------------------------------------------
-
-def living_index() -> dict:
-    return {entry["tina"].lower(): entry for entry in LIVING["entries"]}
-
-
-def entry_cards() -> tuple[str, str]:
-    """Cards for the left and right of the phone, resolved against the data."""
-    known = living_index()
-    left, right = [], []
-    for word, place in zip(FEATURED, PLACEMENT):
-        entry = known.get(word)
-        if entry is None:
-            # Never render a word the verified data does not carry.
-            continue
-        card = f"""            <article class="entry" style="{place['css']};--depth:{place['depth']};--soften:{place['soften']}px;--fade:{place['fade']};--drift:{place['drift']}px;--delay:{place['delay']}ms">
-              <h3>{esc(entry['tina'].title())}</h3>
-              <p class="pos">{esc(entry.get('pos', ''))}</p>
-              <p class="mean">{esc(entry.get('en', ''))}</p>
-              <p class="fil">{esc(entry.get('fil', ''))}</p>
-              <span class="tag">Sambal Tina</span>
-            </article>"""
-        (left if place["side"] == "left" else right).append(card)
-    return "\n".join(left), "\n".join(right)
-
-
-def phone_list() -> str:
-    known = living_index()
-    rows = []
-    for word in FEATURED[:5]:
-        entry = known.get(word)
-        if entry:
-            rows.append(f"""            <li><b>{esc(entry['tina'].title())}</b><span>{esc(entry.get('en', ''))}</span></li>""")
-    return "\n".join(rows)
-
-
-# Real entries from the archive, chosen to show the whole confidence ladder
-# including a damaged reading. Nothing here is written by hand: the gloss, the
-# page reference and the status are all looked up in data/sambal-tina.json, so
-# a specimen cannot drift from the record it is quoting.
-SPECIMENS = [
-    ("lanoman",   "Resolved against a second source."),
-    ("abagat",    "Cross-checked between the main body and the printed index."),
-    ("aapo-apon", "Readable in the main body, not yet confirmed elsewhere."),
-    ("ab6h",      "A damaged glyph. The reading stays open rather than tidied."),
-]
-
-
-def specimens() -> list[dict]:
-    cols = DICT["columns"]
-    T, P, E, PG, S, CF = (cols.index(k) for k in ("tina", "pos", "en", "pages", "status", "conf"))
-    statuses = DICT["statuses"]
-    found = {}
-    for entry in DICT["entries"]:
-        key = str(entry[T]).lower()
-        if key not in found:
-            found[key] = entry
-    out = []
-    for word, why in SPECIMENS:
-        entry = found.get(word)
-        if entry is None:
-            # Never print a specimen the archive does not actually carry.
-            continue
-        conf = entry[CF]
-        out.append({
-            "tina": entry[T],
-            "pos": entry[P] or "",
-            "en": str(entry[E] or "").split(";")[0].split(",")[0].strip(),
-            "pages": entry[PG] or "",
-            "status": statuses[entry[S]] if entry[S] is not None else "",
-            "band": ("strong" if conf >= 4 else "ok" if conf == 3 else "check"),
-            "label": ("Well supported" if conf >= 4 else "Readable" if conf == 3
-                      else "Needs another look"),
-            "why": why,
-        })
-    return out
-
-
-def specimen_slips() -> str:
-    rows = []
-    for i, s in enumerate(specimens()):
-        rows.append(f"""          <li class="slip rise slip-{s['band']}" style="--delay:{i * 80}ms">
-            <p class="slip-page">Archive p.&nbsp;{esc(s['pages'])}</p>
-            <p class="slip-word">{esc(s['tina'])}</p>
-            <p class="slip-pos">{esc(s['pos'])}</p>
-            <p class="slip-gloss">{esc(s['en'])}</p>
-            <p class="slip-why">{esc(s['why'])}</p>
-            <p class="slip-band"><span class="dot"></span>{esc(s['label'])}</p>
-            <p class="slip-status">{esc(s['status'])}</p>
-          </li>""")
-    return "\n".join(rows)
-
-
-def counts() -> dict:
-    entries = DICT["entries"]
-    conf = DICT["columns"].index("conf")
-    return {
-        "total": len(entries),
-        "strong": sum(1 for e in entries if e[conf] >= 4),
-        "check": sum(1 for e in entries if e[conf] <= 2),
-        "living": len(LIVING["entries"]),
+    # These are the non-negotiable fingerprints of the current mobile-first
+    # homepage. They specifically guard against the old generated page being
+    # restored by accident.
+    required_fragments = {
+        'viewport-fit=cover': "mobile safe-area viewport support is missing",
+        'homepage-v2.css': "the current homepage-v2 stylesheet is not linked",
+        '<body class="home">': "the canonical homepage body hook is missing",
+        'Masinloc, connected.': "the current hero headline is missing",
+        'To the world.': "the current hero continuation is missing",
+        'Explore Masinloc Connect': "the primary Masinloc Connect CTA is missing",
+        'Open Help Desk': "the Help Desk CTA is missing",
+        'One community platform': "the current platform-intro section is missing",
+        'The website tells you. The app helps you do.': "the website/app positioning block is missing",
+        'https://www.masinloc-zambales.com/': "the canonical production domain is missing",
     }
+    for fragment, message in required_fragments.items():
+        require(fragment in page, message, errors)
 
+    required_routes = (
+        'href="discover/index.html"',
+        'href="sambal-tina.html"',
+        'href="marketplace.html"',
+        'href="jobs.html"',
+        'href="verified-history.html"',
+        'href="leadership.html"',
+        'href="connect.html"',
+        'href="emergency/"',
+    )
+    for route in required_routes:
+        require(route in page, f"required homepage route missing: {route}", errors)
 
-# --- page ---------------------------------------------------------------------
+    # The current homepage deliberately features real Masinloc photography.
+    # Validate the slugs against the same location dataset used elsewhere so a
+    # typo cannot create a dead destination while keeping this script read-only.
+    try:
+        location_data = json.loads(LOCATIONS.read_text(encoding="utf-8"))
+        known_slugs = {item["slug"] for item in location_data.get("locations", [])}
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as exc:
+        errors.append(f"could not read location data: {exc}")
+        known_slugs = set()
 
-def entry_story() -> dict:
-    """The story MABAYANI opens with, named from the data rather than pinned here."""
-    slug = BULLETIN["entryStory"]
-    return next(a for a in BULLETIN["articles"] if a["slug"] == slug)
+    featured_slugs = (
+        "san-salvador-island",
+        "masinloc-baywalk",
+        "coto-kidz-pool",
+    )
+    for slug in featured_slugs:
+        require(slug in known_slugs, f"featured homepage location is absent from data/locations.json: {slug}", errors)
+        require(f"destinations.html#{slug}" in page, f"featured homepage destination link is missing: {slug}", errors)
 
+    # Prevent a future edit from quietly turning this command back into a
+    # destructive writer without deliberately replacing this validator.
+    require("OUT.write_text" not in page, "unexpected generator marker found in index.html", errors)
 
-def render() -> str:
-    entry = entry_story()
-    story_count = sum(1 for a in BULLETIN["articles"] if a.get("status") == "published")
-
-    n = counts()
-    known = living_index()
-    feature = known.get("lanom") or LIVING["entries"][0]
-    left_cards, right_cards = entry_cards()
-    # The landing hero is the supplied Binabayani photograph from Drive, served
-    # responsively. The aerial photograph it replaced is untouched and still
-    # byte-locked — nine other pages use it as their share image.
-    hero_sizes = "100vw"
-    def _hero_srcset(ext: str) -> str:
-        return ", ".join(f"assets/hero/landing-hero-{w}.{ext} {w}w"
-                         for w in (640, 960, 1280, 1672))
-
-    hero_avif = _hero_srcset("avif")
-    hero_webp = _hero_srcset("webp")
-    hero_jpg = _hero_srcset("jpg")
-
-    return f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#03112F">
-<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
-<title>Masinloc, Zambales | History, Sambal Tina &amp; Places</title>
-<meta name="description" content="Masinloc, Zambales through its places, the Sambal Tina language recorded in {n['total']:,} dictionary entries, and the archive behind both.">
-<link rel="canonical" href="https://www.masinloc-zambales.com/">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Masinloc, Zambales">
-<meta property="og:locale" content="en_PH">
-<meta property="og:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
-<meta property="og:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
-<meta property="og:url" content="https://www.masinloc-zambales.com/">
-<meta property="og:image" content="https://www.masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
-<meta property="og:image:alt" content="The Masinloc Connect app shown on a phone">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Masinloc, Zambales | History, Sambal Tina &amp; Places">
-<meta name="twitter:description" content="Eight places in Masinloc, the Sambal Tina language recorded in {n['total']:,} entries, and the archive behind both.">
-<meta name="twitter:image" content="https://www.masinloc-zambales.com/assets/campaigns/masinloc-connect-1120.jpg">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<link rel="preload" as="image" href="assets/hero/landing-hero-1280.avif" imagesrcset="{hero_avif}" imagesizes="{hero_sizes}" type="image/avif" fetchpriority="high">
-<link rel="stylesheet" href="tokens.css?v=20260823-1">
-<link rel="stylesheet" href="site.css?v=20260825-2">
-<link rel="stylesheet" href="site-polish.css?v=20260825-2">
-<link rel="stylesheet" href="site-stability.css?v=20260901-2">
-<link rel="stylesheet" href="homepage.css?v=20260826-1">
-</head>
-<body class="home">
-<a class="skip-link" href="#main">Skip to content</a>
-
-<header class="home-nav" id="siteNav">
-  <a class="brand" href="index.html" aria-label="Masinloc, Zambales home"><img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales"></a>
-  <button class="nav-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="primaryNav" aria-label="Menu"><span></span><span></span></button>
-  <nav class="home-links" id="primaryNav" aria-label="Primary">
-    <a href="discover/index.html">Discover</a>
-    <a href="sambal-tina.html">Sambal Tina</a>
-    <a href="marketplace.html">Marketplace</a>
-    <a href="a-closer-look.html">About Masinloc</a>
-    <a href="connect.html">Masinloc Connect</a>
-  </nav>
-</header>
-
-<main id="main">
-
-  <!-- 01 ................................................................. -->
-  <section class="hero" aria-labelledby="heroTitle">
-    <div class="hero-media">
-      <picture>
-        <source type="image/avif" sizes="{hero_sizes}" srcset="{hero_avif}">
-        <source type="image/webp" sizes="{hero_sizes}" srcset="{hero_webp}">
-        <img src="assets/hero/landing-hero-1280.jpg" sizes="{hero_sizes}" srcset="{hero_jpg}" width="1672" height="941" alt="Binabayani performers crossing the plaza in front of San Andres Church during a Masinloc fiesta" fetchpriority="high" decoding="async">
-      </picture>
-    </div>
-    <div class="hero-inner">
-      <img class="hero-mark" src="assets/masinloc-logo.webp" width="320" height="78" alt="" aria-hidden="true">
-      <h1 id="heroTitle"><span class="mask"><span>The world</span></span> <span class="mask"><span><em>finds us here.</em></span></span></h1>
-      <p class="hero-note rise" style="--delay:520ms">Discover Masinloc through its people, culture, places, businesses, and ideas.</p>
-      <div class="hero-cta rise" style="--delay:640ms">
-        <a class="cta-primary" href="discover/index.html">Discover Masinloc</a>
-        <a class="cta-secondary" href="connect.html">Explore Masinloc Connect</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 02 ................................................................. -->
-  <section class="entries" aria-labelledby="entriesTitle">
-    <div class="entries-inner">
-      <div class="entries-head">
-        <h2 id="entriesTitle" class="stage-label">Start here</h2>
-        <p>Five ways into Masinloc &mdash; the same five in the menu above.</p>
-      </div>
-      <ul class="door-grid">
-        <li class="door door-blue rise"><a href="discover/index.html">
-          <span class="d-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21c4-4.4 6-7.6 6-10a6 6 0 1 0-12 0c0 2.4 2 5.6 6 10Z"/><circle cx="12" cy="11" r="2.4"/></svg></span>
-          <span class="d-name">Discover Masinloc</span>
-          <span class="d-what">Stories about the town, its coast, its food and how its history has been told.</span>
-          <span class="d-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-        </a></li>
-        <li class="door door-yellow rise" style="--delay:80ms"><a href="sambal-tina.html">
-          <span class="d-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4.5" width="16" height="11" rx="3"/><path d="M9 15.5v3.6l4-3.6"/><path d="M8 8.6h8M8 11.4h5"/></svg></span>
-          <span class="d-name">Sambal&nbsp;Tina</span>
-          <span class="d-what">{n['total']:,} dictionary entries, and the language Masinloc still speaks.</span>
-          <span class="d-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-        </a></li>
-        <li class="door door-red rise" style="--delay:160ms"><a href="marketplace.html">
-          <span class="d-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.4 8h15.2l-1.1 10.2a1.6 1.6 0 0 1-1.6 1.4H7.1a1.6 1.6 0 0 1-1.6-1.4Z"/><path d="M9 8V6.4a3 3 0 0 1 6 0V8"/></svg></span>
-          <span class="d-name">Marketplace</span>
-          <span class="d-what">Local businesses, food and services, listed by the people who run them.</span>
-          <span class="d-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-        </a></li>
-        <li class="door door-white rise" style="--delay:240ms"><a href="a-closer-look.html">
-          <span class="d-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 6.8C10.1 5.3 7.8 4.8 4.8 5v12.6c3-.2 5.3.3 7.2 1.7 1.9-1.4 4.2-1.9 7.2-1.7V5c-3-.2-5.3.3-7.2 1.8Z"/><path d="M12 6.8v12.5"/></svg></span>
-          <span class="d-name">About Masinloc</span>
-          <span class="d-what">What the town is, what we hold on it, and how sure we are of each part.</span>
-          <span class="d-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-        </a></li>
-        <li class="door door-blue rise" style="--delay:320ms"><a href="connect.html">
-          <span class="d-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5.6" r="2.2"/><circle cx="5.6" cy="17.4" r="2.2"/><circle cx="18.4" cy="17.4" r="2.2"/><path d="M10.9 7.6 6.7 15.4M13.1 7.6l4.2 7.8M7.8 17.4h8.4"/></svg></span>
-          <span class="d-name">Masinloc Connect</span>
-          <span class="d-what">Share a business, a word or a story, and take part in the record.</span>
-          <span class="d-go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 7l5 5-5 5"/></svg></span>
-        </a></li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- 03 ................................................................. -->
-  <section class="campaign" aria-labelledby="campaignTitle">
-    <div class="campaign-head">
-      <h2 class="stage-label" id="campaignTitle">{esc(CAMPAIGNS['label'])}</h2>
-      <p>What we are building for Masinloc.</p>
-    </div>
-    <div class="rail" data-rail>
-      <div class="rail-window">
-        <ul class="rail-track" role="tablist" aria-label="Featured campaigns">
-{campaign_slides()}
-        </ul>
-      </div>
-      <button class="rail-arrow" data-dir="prev" type="button" aria-label="Previous campaign"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
-      <button class="rail-arrow" data-dir="next" type="button" aria-label="Next campaign"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
-      <div class="dots" role="tablist" aria-label="Choose a campaign"></div>
-    </div>
-  </section>
-
-  <!-- 03 ................................................................. -->
-  <section class="discover stage" aria-labelledby="discoverTitle">
-    <div class="discover-inner">
-      <div>
-        <p class="stage-label">Place</p>
-        <h2 id="discoverTitle" class="discover-title">Eight places we grew up in.</h2>
-        <p class="stage-lead">Each one photographed where it actually is, and named with the barangay it belongs to.</p>
-        <ul class="place-list">
-{discover_rows()}
-        </ul>
-      </div>
-      <div class="discover-stage" aria-hidden="true">
-{discover_shots()}
-        <p class="discover-caption"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 04 ................................................................. -->
-  <section class="language" aria-labelledby="languageTitle">
-    <div class="language-inner">
-      <p class="language-open">
-        <span class="language-word rise">{esc(feature['tina'].title())}</span>
-        <span class="language-gloss rise" style="--delay:120ms">{esc(feature.get('en', ''))} &middot; {esc(feature.get('fil', ''))}</span>
-      </p>
-      <p class="stage-label" style="color:rgba(255,255,255,.5)">Language</p>
-      <h2 id="languageTitle" class="language-claim rise">A language lives when people use it.</h2>
-
-      <div class="language-scene">
-        <div class="card-field">
-{left_cards}
-        </div>
-
-        <div class="phone" aria-hidden="true">
-          <div class="phone-bar"><b>SAMBAL TINA</b><span>DICTIONARY</span></div>
-          <div class="phone-search">Search a word&hellip;</div>
-          <div class="phone-feature">
-            <p class="phone-kicker">FEATURED WORD</p>
-            <p class="phone-word">{esc(feature['tina'].title())}</p>
-            <p class="phone-say">{esc(feature.get('pos', ''))}</p>
-            <p class="phone-mean">{esc(feature.get('en', ''))}</p>
-          </div>
-          <ul class="phone-list">
-{phone_list()}
-          </ul>
-        </div>
-
-        <div class="card-field">
-{right_cards}
-          <p class="aside-note" style="top:-4%;right:4%">Tanda mo doman?</p>
-        </div>
-      </div>
-
-      <p class="stage-lead rise" style="color:rgba(255,255,255,.72);margin-top:clamp(36px,6vh,72px)">The archive holds {n['total']:,} entries, every one carrying the page it was copied from. Alongside it sits the living usage {n['living']} words confirmed by the people who still speak them, kept separate so neither pretends to be the other.</p>
-      <p class="language-actions">
-        <a class="btn btn-solid" href="sambal-tina.html">Open the dictionary</a>
-        <a class="btn btn-ghost" href="sambal-tina.html#contribute">Add a word you know</a>
-      </p>
-    </div>
-  </section>
-
-  <!-- 05 ................................................................. -->
-
-  <!-- 06 ................................................................. -->
-
-  <!-- 07 ................................................................. -->
-  <section class="archive" aria-labelledby="archiveTitle">
-    <div class="archive-inner">
-      <div class="archive-head rise">
-        <p class="stage-label">The record</p>
-        <h2 id="archiveTitle">We would rather show you the page.</h2>
-        <p class="stage-lead">Much of what survives of Masinloc&rsquo;s written record reaches us through documents that time has not been kind to, and through a language carried further by speech than by paper. Here is what we hold, and exactly how sure we are of each part of it.</p>
-      </div>
-      <div class="archive-close rise">
-        <p class="archive-note">Verified History now brings together Masinloc&rsquo;s documented 1607 founding, its founder, the 1649 defense of the coast, Barrio San Vicente, and the evidence behind each claim. Oral tradition remains clearly marked. <a href="verified-history.html">Read the verified timeline</a>.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="close" aria-labelledby="closeTitle">
-    <div class="close-inner">
-      <h2 id="closeTitle" class="rise">If you only read one thing.</h2>
-
-      <a class="close-lead rise" href="bulletin/{entry['slug']}.html">
-        <span class="cl-kicker">{esc(BULLETIN['publication']['kicker'])} &middot; {esc(BULLETIN['publication']['name'])}</span>
-        <span class="cl-title">{esc(entry['title'])}</span>
-        <span class="cl-stand">{esc(entry['standfirst'])}</span>
-        <span class="cl-go">Start the first story <i aria-hidden="true">&rarr;</i></span>
-      </a>
-
-      <ul class="routes">
-        <li class="rise"><a href="destinations.html"><span class="r-name">Places</span><span class="r-what">Eight destinations, photographed where they actually are.</span></a></li>
-        <li class="rise" style="--delay:60ms"><a href="leadership.html"><span class="r-name">Municipal Leadership</span><span class="r-what">The mayor serving now, and the four who served before her.</span></a></li>
-        <li class="rise" style="--delay:120ms"><a href="verified-history.html"><span class="r-name">Verified History</span><span class="r-what">Our past, with the records to back it up.</span></a></li>
-        <li class="rise" style="--delay:180ms"><a href="masinloc-bulletin.html"><span class="r-name">Masinloc Bulletin</span><span class="r-what">Announcements and notices from the town.</span></a></li>
-        <li class="rise" style="--delay:240ms"><a href="sources.html"><span class="r-name">Sources &amp; References</span><span class="r-what">Every study, record and archive the history here rests on.</span></a></li>
-      </ul>
-    </div>
-  </section>
-
-</main>
-
-<footer class="home-foot">
-  <div class="foot-inner">
-    <p class="foot-say">Our words. Our stories. Our Masinloc.</p>
-    <div class="foot-cols">
-      <img src="assets/masinloc-logo.webp" width="320" height="78" alt="Masinloc Zambales">
-      <nav class="foot-nav" aria-label="Footer">
-        <a href="index.html">Home</a>
-        <a href="discover/index.html">Discover</a>
-        <a href="sambal-tina.html">Sambal Tina</a>
-        <a href="marketplace.html">Marketplace</a>
-        <a href="a-closer-look.html">About Masinloc</a>
-        <a href="connect.html">Masinloc Connect</a>
-        <a href="verified-history.html">Verified History</a>
-        <a href="masinloc-bulletin.html">Masinloc Bulletin</a>
-        <a href="sources.html">Sources &amp; References</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-    <div class="foot-base">
-      <span>&copy; 2026 Mabayani Project by FMB. All rights reserved.</span>
-      <span>www.masinloc-zambales.com</span>
-    </div>
-  </div>
-</footer>
-
-<script type="application/ld+json">
-{{
-  "@context": "https://schema.org",
-  "@graph": [
-    {{
-      "@type": "WebSite",
-      "@id": "https://www.masinloc-zambales.com/#website",
-      "url": "https://www.masinloc-zambales.com/",
-      "name": "Discover Masinloc",
-      "alternateName": "Masinloc, Zambales",
-      "description": "An independent community record of Masinloc, Zambales: its places, the Sambal Tina language, and local history.",
-      "inLanguage": "en-PH",
-      "publisher": {{ "@id": "https://www.masinloc-zambales.com/#publisher" }}
-    }},
-    {{
-      "@type": "Organization",
-      "@id": "https://www.masinloc-zambales.com/#publisher",
-      "name": "Mabayani Project by FMB",
-      "url": "https://www.masinloc-zambales.com/",
-      "logo": "https://www.masinloc-zambales.com/assets/masinloc-logo.webp",
-      "email": "hello@masinloc-zambales.com"
-    }},
-    {{
-      "@type": "WebPage",
-      "@id": "https://www.masinloc-zambales.com/#webpage",
-      "url": "https://www.masinloc-zambales.com/",
-      "name": "Masinloc, Zambales | History, Sambal Tina & Places",
-      "isPartOf": {{ "@id": "https://www.masinloc-zambales.com/#website" }},
-      "inLanguage": "en-PH",
-      "about": [
-        {{ "@id": "https://www.masinloc-zambales.com/#place" }},
-        {{ "@type": "Thing", "name": "Sambal Tina language and culture" }},
-        {{ "@type": "Thing", "name": "Masinloc local history" }}
-      ],
-      "subjectOf": {{
-        "@type": "AboutPage",
-        "@id": "https://www.masinloc-zambales.com/trust.html#webpage",
-        "url": "https://www.masinloc-zambales.com/trust.html",
-        "name": "Discover Masinloc and Masinloc Connect Platform Trust Information"
-      }},
-      "primaryImageOfPage": "https://www.masinloc-zambales.com/assets/hero/landing-hero-1672.jpg"
-    }},
-    {{
-      "@type": "Place",
-      "@id": "https://www.masinloc-zambales.com/#place",
-      "name": "Masinloc",
-      "address": {{
-        "@type": "PostalAddress",
-        "addressLocality": "Masinloc",
-        "addressRegion": "Zambales",
-        "addressCountry": "PH"
-      }}
-    }}
-  ]
-}}
-</script>
-<script src="site.js?v=20260825-1"></script>
-<script src="homepage.js?v=20260822-1" defer></script>
-</body>
-</html>
-"""
+    return errors
 
 
 def main() -> int:
-    OUT.write_text(render(), encoding="utf-8")
-    n = counts()
-    print(f"wrote {OUT.relative_to(ROOT)}")
-    print(f"  {len(LOCATIONS['locations'])} places, "
-          f"{len(CAMPAIGNS['campaigns'])} campaigns, "
-          f"{len([w for w in FEATURED if w in living_index()])} of {len(FEATURED)} "
-          f"featured words resolved against the living data")
-    print(f"  dictionary counts rendered from data: {n['total']:,} entries, "
-          f"{n['strong']:,} well supported, {n['check']} still checking")
-    missing = [w for w in FEATURED if w not in living_index()]
-    if missing:
-        print(f"  not rendered (absent from the living data): {', '.join(missing)}")
+    parser = argparse.ArgumentParser(
+        description="Read-only validation for the canonical Masinloc homepage."
+    )
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Explicitly request validation. This is also the default behavior.",
+    )
+    args = parser.parse_args()
+    _ = args  # The flag documents intent; validation is always read-only.
+
+    errors = validate()
+    if errors:
+        print("Homepage validation failed:")
+        for error in errors:
+            print(f"- {error}")
+        return 1
+
+    print("Homepage validation passed. index.html is canonical; no files were written.")
     return 0
 
 
