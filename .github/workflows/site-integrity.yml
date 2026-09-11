@@ -30,6 +30,8 @@ jobs:
           fetch-depth: 0
       - name: Validate Stage 1 integrity
         run: python3 scripts/check-site.py
+      - name: Guard the canonical mobile-first homepage
+        run: python3 scripts/build-homepage.py --check
       - name: Validate Sambal Tina dictionary
         run: python3 scripts/check-dictionary.py
       - name: Validate Sambal Tina living usage
